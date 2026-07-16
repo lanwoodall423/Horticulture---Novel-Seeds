@@ -5,6 +5,8 @@ Plants can naturally mutate, developing unique traits that can alter appearance 
 New discoveries are intentionally rare, growing alongside your colony as another avenue of progression.
 
 Features
+
+
 🌱 Plant Mutations
 
 Plants have a rare chance to develop mutations, granting them one or more unique traits.
