@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <ThoughtDef>
+    <defName>HNS_JoyresinTouched</defName>
+    <thoughtClass>Thought_Memory</thoughtClass>
+    <durationDays>0.333</durationDays>
+    <stackLimit>1</stackLimit>
+    <stages>
+      <li>
+        <label>joyresin glow</label>
+        <description>Handling joyresin-coated plants left me feeling pleasantly calm.</description>
+        <baseMoodEffect>4</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+  <ThoughtDef>
+    <defName>HNS_JoycompoundConsumed</defName>
+    <thoughtClass>Thought_Memory</thoughtClass>
+    <durationDays>0.5</durationDays>
+    <stackLimit>1</stackLimit>
+    <stages>
+      <li>
+        <label>joycompound afterglow</label>
+        <description>A naturally pleasant compound in my food left me feeling content.</description>
+        <baseMoodEffect>5</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef></Defs>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <JobDef>
+    <defName>HNS_UnlockVariety</defName>
+    <label>unlock plant variety</label>
+    <driverClass>HorticultureNovelSeeds.JobDriver_UnlockVariety</driverClass>
+    <reportString>Inspecting novel seed pack.</reportString>
+    <casualInterruptible>false</casualInterruptible>
+  </JobDef>
+  <JobDef>
+    <defName>HNS_FertilizePlant</defName>
+    <label>fertilize novel plant</label>
+    <driverClass>HorticultureNovelSeeds.JobDriver_FertilizeNovelPlant</driverClass>
+    <reportString>Delivering fertilizer to TargetA.</reportString>
+  </JobDef>
+</Defs>

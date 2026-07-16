@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <ThingDef>
+    <defName>HNS_NovelSeedPack</defName>
+    <label>novel seed pack</label>
+    <description>A seed pack carrying a newly discovered plant variety. Right-click it with a colonist to inspect its traits and name the variety.</description>
+    <thingClass>ThingWithComps</thingClass>
+    <graphicData>
+      <texPath>SeedBundle</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <shaderType>Cutout</shaderType>
+    </graphicData>
+    <thingCategories><li>SeedBundles</li></thingCategories>
+    <stackLimit>1</stackLimit>
+    <tradeability>None</tradeability>
+    <selectable>true</selectable>
+    <useHitPoints>false</useHitPoints>
+    <alwaysHaulable>true</alwaysHaulable>
+    <category>Item</category>
+    <altitudeLayer>Item</altitudeLayer>
+    <tickerType>Never</tickerType>
+    <rotatable>false</rotatable>
+    <pathCost>14</pathCost>
+    <drawGUIOverlay>true</drawGUIOverlay>
+    <statBases>
+      <MaxHitPoints>100</MaxHitPoints>
+      <MarketValue>300</MarketValue>
+      <Mass>0.02</Mass>
+      <SellPriceFactor>0.04</SellPriceFactor>
+    </statBases>
+    <techLevel>Neolithic</techLevel>
+    <scatterableOnMapGen>false</scatterableOnMapGen>
+    <resourceReadoutPriority>Middle</resourceReadoutPriority>
+    <tradeTags><li>Seeds</li></tradeTags>
+    <comps>
+      <li Class="HorticultureNovelSeeds.CompProperties_NovelSeedPack" />
+      <li Class="RimWorld.CompProperties_Forbiddable" />
+    </comps>
+  </ThingDef>
+</Defs>
+

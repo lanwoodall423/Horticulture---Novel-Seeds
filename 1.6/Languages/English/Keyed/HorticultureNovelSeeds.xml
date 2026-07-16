@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <HNS_NameAndUnlockVariety>Name and unlock {0} variety</HNS_NameAndUnlockVariety>
+  <HNS_AlreadyUnlocked>These traits are already unlocked as {0}.</HNS_AlreadyUnlocked>
+  <HNS_InvalidSeedPack>Seed pack data is missing.</HNS_InvalidSeedPack>
+  <HNS_NovelSeedPackLabel>{0} novel seed pack</HNS_NovelSeedPackLabel>
+  <HNS_Traits>Traits</HNS_Traits>
+  <HNS_PlantVariety>Variety</HNS_PlantVariety>
+  <HNS_VarietyLabel>Variety: {0}</HNS_VarietyLabel>
+  <HNS_StatChanges>Stat Changes</HNS_StatChanges>
+  <HNS_NoVarietyData>No variety data.</HNS_NoVarietyData>
+  <HNS_NoTraits>No traits.</HNS_NoTraits>
+  <HNS_NoStatChanges>No stat changes.</HNS_NoStatChanges>
+  <HNS_StatYieldMultiplier>Harvest yield: {0} of base</HNS_StatYieldMultiplier>
+  <HNS_StatVisualScale>Visual size: {0} of base</HNS_StatVisualScale>
+  <HNS_StatColdOffset>Lower growth temperature range: {0}</HNS_StatColdOffset>
+  <HNS_StatHeatOffset>Upper growth temperature range: {0}</HNS_StatHeatOffset>
+  <HNS_StatBlightChance>Blight chance: {0} of base</HNS_StatBlightChance>
+  <HNS_StatBlightDamage>Blight damage: {0} of base</HNS_StatBlightDamage>
+  <HNS_StatWorkMultiplier>Sowing and harvest work: {0} of base</HNS_StatWorkMultiplier>
+  <HNS_StatHitPoints>Plant hit points: {0} of base</HNS_StatHitPoints>
+  <HNS_StatBeauty>Plant beauty: {0}</HNS_StatBeauty>
+  <HNS_StatVisualTint>Visual tint: {0}</HNS_StatVisualTint>
+  <HNS_StatVisualRadiance>Visual effect: golden radiance</HNS_StatVisualRadiance>
+  <HNS_StatVisualDullness>Visual effect: dull and muted</HNS_StatVisualDullness>
+  <HNS_StatVisualGloom>Visual effect: gloomy haze</HNS_StatVisualGloom>
+  <HNS_StatVisualWidth>Visual width: {0}</HNS_StatVisualWidth>
+  <HNS_StatVisualHeight>Visual height: {0}</HNS_StatVisualHeight>
+  <HNS_StatVisualDensity>Visual density: {0}</HNS_StatVisualDensity>
+  <HNS_StatVisualSpikes>Visual effect: spikes overlay</HNS_StatVisualSpikes>
+  <HNS_StatVisualSetting>{0}: {1}</HNS_StatVisualSetting>
+  <HNS_StatVisualOverlay>Visual overlay: {0}</HNS_StatVisualOverlay>
+  <HNS_StatSowSkill>Sowing skill requirement: {0}</HNS_StatSowSkill>
+  <HNS_StatSowWork>Sowing work: {0} of base</HNS_StatSowWork>
+  <HNS_StatHarvestWork>Harvest work: {0} of base</HNS_StatHarvestWork>
+  <HNS_StatColdDormancy>Cold dormancy: {0} growth while too cold</HNS_StatColdDormancy>
+  <HNS_StatSelfSeeding>Self-seeding: sows one adjacent cell at maturity</HNS_StatSelfSeeding>
+  <HNS_StatTrampling>Trampling damage: {0} plant HP per pawn or animal</HNS_StatTrampling>
+  <HNS_StatForage>Standing plant nutrition: {0} of base</HNS_StatForage>
+  <HNS_StatSpacing>Spacing: blocks sowing in adjacent cells</HNS_StatSpacing>
+  <HNS_StatZone>Required growing zone: {0}</HNS_StatZone>
+  <HNS_StatFishingYield>Nearby fishing yield: {0} of base</HNS_StatFishingYield>
+  <HNS_StatCompanion>Growth near a different crop: {0} of base</HNS_StatCompanion>
+  <HNS_StatByproduct>Byproduct: {0} ({1} chance)</HNS_StatByproduct>
+  <HNS_StatResin>Resin contact effect on sowing or harvesting; fully covered hands prevent harvesting exposure</HNS_StatResin>
+  <HNS_NeedsResource>Needs fertilizer: {0} x {1}</HNS_NeedsResource>
+  <HNS_StatResourceNeed>Required fertilizer: {0} x {1}</HNS_StatResourceNeed>
+  <HNS_RequiresZone>requires {0} growing zone</HNS_RequiresZone>
+  <HNS_StatSynergyTyped>Synergy near {0}: {1} at {2} of base</HNS_StatSynergyTyped>
+  <HNS_StatPerennial>Reharvestable: resets to {0} growth after each harvest</HNS_StatPerennial>
+  <HNS_StatJoyresin>Joyresin: sowing or harvesting gives a temporary mood boost; fully covered hands prevent harvesting exposure</HNS_StatJoyresin>
+  <HNS_StatThorny>Thorn scratches: {0} chance, {1} damage to an uncovered hand; hand-covering apparel prevents it</HNS_StatThorny>
+  <HNS_StatTraitEffect>{0}: {1}</HNS_StatTraitEffect>
+  <HNS_PendingVariety>unnamed variety</HNS_PendingVariety>
+  <HNS_EvolvingVarietyLabel>evolving {0}</HNS_EvolvingVarietyLabel>
+  <HNS_CrossPollinatedLabel>cross-pollinated ({0})</HNS_CrossPollinatedLabel>
+  <HNS_CrossPollinatedWith>Cross-pollinated with: {0}</HNS_CrossPollinatedWith>
+  <HNS_UnknownVariety>unknown variety</HNS_UnknownVariety>
+  <HNS_PendingAdditionalTraits>Additional traits: {0}</HNS_PendingAdditionalTraits>
+  <HNS_SelectStandard>Standard {0}</HNS_SelectStandard>
+  <HNS_SelectVariety>{0} ({1})</HNS_SelectVariety>
+  <HNS_SelectVarietySubmenu>{0} varieties...</HNS_SelectVarietySubmenu>
+  <HNS_NameDialogTitle>Name plant variety</HNS_NameDialogTitle>
+  <HNS_NameDialogPrompt>Name this {0} variety.</HNS_NameDialogPrompt>
+  <HNS_NameDialogConfirm>Unlock</HNS_NameDialogConfirm>
+  <HNS_NameDialogCancel>Cancel</HNS_NameDialogCancel>
+  <HNS_RenameDialogTitle>Rename plant variety</HNS_RenameDialogTitle>
+  <HNS_RenameDialogPrompt>Rename this {0} variety.</HNS_RenameDialogPrompt>
+  <HNS_RenameDialogConfirm>Rename</HNS_RenameDialogConfirm>
+  <HNS_VarietyUnlocked>{0} unlocked</HNS_VarietyUnlocked>
+  <HNS_VarietyUnlockedDesc>{0} can now be selected as a variety of {1} in growing-zone plant menus.</HNS_VarietyUnlockedDesc>
+  <HNS_RenameVariety>Rename</HNS_RenameVariety>
+  <HNS_NicePlantsMenuVarietyHeader>Variety</HNS_NicePlantsMenuVarietyHeader>
+  <HNS_NicePlantsMenuVarietyTitle>Selected variety: {0}</HNS_NicePlantsMenuVarietyTitle>
+  <HNS_NicePlantsMenuTraitsLine>Traits: {0}</HNS_NicePlantsMenuTraitsLine>
+  <HNS_NicePlantsMenuEffectsHeader>Trait Effects</HNS_NicePlantsMenuEffectsHeader>
+  <HNS_NicePlantsMenuBullet>- {0}</HNS_NicePlantsMenuBullet>
+  <HNS_VarietyTab>Variety</HNS_VarietyTab>
+  <HNS_Lineage>Lineage</HNS_Lineage>
+  <HNS_LineageTitle>{0} lineage</HNS_LineageTitle>
+  <HNS_LineageSubtitle>Recorded cross-pollination history</HNS_LineageSubtitle>
+  <HNS_LineageCurrent>Current variety</HNS_LineageCurrent>
+  <HNS_LineageSeedParent>Seed parent</HNS_LineageSeedParent>
+  <HNS_LineagePollenParent>Pollen parent</HNS_LineagePollenParent>
+  <HNS_LineageParent>Parent</HNS_LineageParent>
+  <HNS_LineageTraits>Traits: {0}</HNS_LineageTraits>
+  <HNS_NoCrossLineage>No recorded cross-pollination lineage. This variety originated as a mutation or wild discovery.</HNS_NoCrossLineage>
+  <HNS_LineageMissingParent>This parent variety is no longer available in the variety registry.</HNS_LineageMissingParent>
+  <HNS_SeedDiscovered>{0} novel seed pack discovered</HNS_SeedDiscovered>
+  <HNS_SeedDiscoveredDesc>Seeds were preserved from a novel {0} plant with these traits: {1}.</HNS_SeedDiscoveredDesc>
+  <HNS_SaveSeeds>Save seeds</HNS_SaveSeeds>
+  <HNS_SaveSeedsDesc>Harvest this plant while carefully preserving its novel seeds. Harvesting it normally will lose the seeds.</HNS_SaveSeedsDesc>
+  <HNS_SaveSeedsRequested>Seeds are marked to be saved when this plant is harvested.</HNS_SaveSeedsRequested>
+  <HNS_VarietyProduce>Variety Produce</HNS_VarietyProduce>
+  <HNS_SourceVariety>Source Variety: {0}</HNS_SourceVariety>
+  <HNS_SourceVarieties>Source Varieties: {0}</HNS_SourceVarieties>
+  <HNS_InheritedQualities>Inherited Qualities</HNS_InheritedQualities>
+  <HNS_NoInheritedQualities>This variety has no traits that alter harvested produce.</HNS_NoInheritedQualities>
+  <HNS_EffectiveNutrition>Effective Nutrition: {0} of base</HNS_EffectiveNutrition>
+  <HNS_ProduceQualityNutrition>Nutrition: {0} of base; proportionally inherited by prepared food.</HNS_ProduceQualityNutrition>
+  <HNS_ProduceQualityMedicalPotency>Medical potency: {0} of base.</HNS_ProduceQualityMedicalPotency>
+  <HNS_ProduceQualityCompound>Eating this produce or food prepared with it grants: {0}.</HNS_ProduceQualityCompound>
+  <HNS_StatProduceNutrition>Produce nutrition: {0} of base; proportionally inherited by prepared food</HNS_StatProduceNutrition>
+  <HNS_StatMedicalPotency>Harvested medicine potency: {0} of base</HNS_StatMedicalPotency>
+  <HNS_StatCompound>Food compound when eaten: {0}; inherited by prepared food</HNS_StatCompound>
+  <HNS_FirstDiscoveredHeader>First Discovered</HNS_FirstDiscoveredHeader>
+  <HNS_FirstDiscoveredLine>{0} on {1}</HNS_FirstDiscoveredLine>
+  <HNS_UnknownDiscoverer>Unknown</HNS_UnknownDiscoverer>
+</LanguageData>
+
+
+
+
