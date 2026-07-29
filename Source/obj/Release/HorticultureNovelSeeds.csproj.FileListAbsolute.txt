@@ -1,0 +1,6 @@
+C:\Games\Steam\steamapps\common\RimWorld\Mods\Horticulture - Novel Seeds\1.6\Assemblies\HorticultureNovelSeeds.dll
+C:\Games\Steam\steamapps\common\RimWorld\Mods\Horticulture - Novel Seeds\Source\obj\Release\HorticultureNovelSeeds.csproj.AssemblyReference.cache
+C:\Games\Steam\steamapps\common\RimWorld\Mods\Horticulture - Novel Seeds\Source\obj\Release\HorticultureNovelSeeds.GeneratedMSBuildEditorConfig.editorconfig
+C:\Games\Steam\steamapps\common\RimWorld\Mods\Horticulture - Novel Seeds\Source\obj\Release\HorticultureNovelSeeds.csproj.CoreCompileInputs.cache
+C:\Games\Steam\steamapps\common\RimWorld\Mods\Horticulture - Novel Seeds\Source\obj\Release\HorticultureNovelSeeds.dll
+C:\Games\Steam\steamapps\common\RimWorld\Mods\Horticulture - Novel Seeds\Source\BuildValidation\HorticultureNovelSeeds.dll

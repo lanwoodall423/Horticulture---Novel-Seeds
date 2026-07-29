@@ -1,0 +1,5 @@
+C:\Games\Steam\steamapps\common\RimWorld\Mods\Horticulture - Novel Seeds\DevTools\BridgeAdapter\obj\Release\HorticultureNovelSeeds.BridgeAdapter.csproj.AssemblyReference.cache
+C:\Games\Steam\steamapps\common\RimWorld\Mods\Horticulture - Novel Seeds\DevTools\BridgeAdapter\obj\Release\HorticultureNovelSeeds.BridgeAdapter.GeneratedMSBuildEditorConfig.editorconfig
+C:\Games\Steam\steamapps\common\RimWorld\Mods\Horticulture - Novel Seeds\DevTools\BridgeAdapter\obj\Release\HorticultureNovelSeeds.BridgeAdapter.csproj.CoreCompileInputs.cache
+C:\Games\Steam\steamapps\common\RimWorld\Mods\Horticulture - Novel Seeds\DevTools\BridgeAdapter\Build\HorticultureNovelSeeds.BridgeAdapter.20260726182805413.dll
+C:\Games\Steam\steamapps\common\RimWorld\Mods\Horticulture - Novel Seeds\DevTools\BridgeAdapter\obj\Release\HorticultureNovelSeeds.BridgeAdapter.20260726182805413.dll

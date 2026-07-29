@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <MainButtonDef>
+    <defName>HNS_CultivarRegistry</defName>
+    <label>cultivars</label>
+    <description>Review discovered plant varieties, compare their traits, and manage breeding programs.</description>
+    <tabWindowClass>HorticultureNovelSeeds.MainTabWindow_CultivarRegistry</tabWindowClass>
+    <order>85</order>
+    <buttonVisible>false</buttonVisible>
+    <closesWorldView>true</closesWorldView>
+  </MainButtonDef>
+</Defs>

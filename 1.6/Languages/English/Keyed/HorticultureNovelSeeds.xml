@@ -106,6 +106,66 @@
   <HNS_FirstDiscoveredHeader>First Discovered</HNS_FirstDiscoveredHeader>
   <HNS_FirstDiscoveredLine>{0} on {1}</HNS_FirstDiscoveredLine>
   <HNS_UnknownDiscoverer>Unknown</HNS_UnknownDiscoverer>
+  <HNS_SelectBreedingMix>Breeding Mix...</HNS_SelectBreedingMix>
+  <HNS_BreedingMixTitle>{0} Breeding Mix</HNS_BreedingMixTitle>
+  <HNS_BreedingMixDescription>Select at least two varieties. Sowers will interleave them across the growing area, creating deliberate opportunities for cross-pollination.</HNS_BreedingMixDescription>
+  <HNS_BreedingMixRequiresTwo>Select at least two compatible varieties.</HNS_BreedingMixRequiresTwo>
+  <HNS_ApplyMix>Apply Mix</HNS_ApplyMix>
+  <HNS_BreedingMixHeader>Breeding Mix</HNS_BreedingMixHeader>
+  <HNS_BreedingMixMembers>Interleaved parents: {0}</HNS_BreedingMixMembers>
+  <HNS_RegistryTitle>Cultivar Registry</HNS_RegistryTitle>
+  <HNS_RegistryWildlifeButton>Cultivars</HNS_RegistryWildlifeButton>
+  <HNS_RegistryWildlifeButtonTip>Open the Cultivar Registry.</HNS_RegistryWildlifeButtonTip>
+  <HNS_RegistryUnavailable>The cultivar registry is unavailable outside an active game.</HNS_RegistryUnavailable>
+  <HNS_RegistryRefresh>Refresh Stock</HNS_RegistryRefresh>
+  <HNS_RegistryCatalog>Discovered Varieties</HNS_RegistryCatalog>
+  <HNS_RegistryBalanceFilter>Balance: {0}</HNS_RegistryBalanceFilter>
+  <HNS_RegistryArchived>Archived</HNS_RegistryArchived>
+  <HNS_RegistryAnyTrait>Any Trait</HNS_RegistryAnyTrait>
+  <HNS_RegistryGenerationShort>Gen {0}+</HNS_RegistryGenerationShort>
+  <HNS_RegistryGenerationMinimum>Minimum lineage depth: {0}</HNS_RegistryGenerationMinimum>
+  <HNS_RegistryProduceShort>Prod.</HNS_RegistryProduceShort>
+  <HNS_RegistryProduceFilterTip>Show only varieties with at least one programmed inherited produce effect.</HNS_RegistryProduceFilterTip>
+  <HNS_RegistryNoMatches>No varieties match these filters.</HNS_RegistryNoMatches>
+  <HNS_RegistrySelectVariety>Select a variety to inspect it.</HNS_RegistrySelectVariety>
+  <HNS_RegistryScore>Registry Score: {0}</HNS_RegistryScore>
+  <HNS_RegistryScoreTip>Summarizes trait breadth, lineage depth, rarity, and trait balance. It does not directly measure crop profitability.</HNS_RegistryScoreTip>
+  <HNS_RegistryGeneration>Lineage Depth: {0}</HNS_RegistryGeneration>
+  <HNS_RegistryAvailability>On maps - Plants: {0}, Produce: {1}, Matching Seed Packs: {2}</HNS_RegistryAvailability>
+  <HNS_RegistryFavorite>Favorite</HNS_RegistryFavorite>
+  <HNS_RegistryUnfavorite>Unfavorite</HNS_RegistryUnfavorite>
+  <HNS_RegistryArchive>Archive</HNS_RegistryArchive>
+  <HNS_RegistryRestore>Restore</HNS_RegistryRestore>
+  <HNS_RegistryLocate>Locate</HNS_RegistryLocate>
+  <HNS_RegistryCompare>Compare</HNS_RegistryCompare>
+  <HNS_RegistryPrograms>Breeding Programs</HNS_RegistryPrograms>
+  <HNS_RegistryComparison>Variety Comparison</HNS_RegistryComparison>
+  <HNS_RegistryChoose>Choose</HNS_RegistryChoose>
+  <HNS_RegistryChange>Change</HNS_RegistryChange>
+  <HNS_RegistryComparisonPrompt>Select a variety from the catalog, then choose another variety of the same plant to compare.</HNS_RegistryComparisonPrompt>
+  <HNS_RegistrySharedTraits>Shared Traits</HNS_RegistrySharedTraits>
+  <HNS_RegistryOnlySelected>Only {0}</HNS_RegistryOnlySelected>
+  <HNS_RegistryOnlyCompared>Only {0}</HNS_RegistryOnlyCompared>
+  <HNS_RegistryProduceEffects>Inherited Produce Effects</HNS_RegistryProduceEffects>
+  <HNS_RegistryNone>None</HNS_RegistryNone>
+  <HNS_RegistryNewProgram>New Program</HNS_RegistryNewProgram>
+  <HNS_RegistryNoPrograms>No breeding programs have been created.</HNS_RegistryNoPrograms>
+  <HNS_RegistryNoCandidate>No discovered candidates</HNS_RegistryNoCandidate>
+  <HNS_RegistryBestCandidate>Best: {0} ({1}/{2} goals)</HNS_RegistryBestCandidate>
+  <HNS_RegistryView>View</HNS_RegistryView>
+  <HNS_RegistryDeleteProgramConfirm>Delete breeding program '{0}'?</HNS_RegistryDeleteProgramConfirm>
+  <HNS_RegistryNoComparison>No other varieties of this plant are available.</HNS_RegistryNoComparison>
+  <HNS_RegistryAll>All</HNS_RegistryAll>
+  <HNS_RegistryBalanced>Balanced</HNS_RegistryBalanced>
+  <HNS_RegistryBeneficial>Beneficial</HNS_RegistryBeneficial>
+  <HNS_RegistryDetrimental>Detrimental</HNS_RegistryDetrimental>
+  <HNS_RegistryCreateProgram>Create Breeding Program</HNS_RegistryCreateProgram>
+  <HNS_RegistryProgramName>Program Name</HNS_RegistryProgramName>
+  <HNS_RegistryPlant>Plant</HNS_RegistryPlant>
+  <HNS_RegistryDesiredTraits>Desired Traits</HNS_RegistryDesiredTraits>
+  <HNS_RegistryCreate>Create Program</HNS_RegistryCreate>
+  <HNS_BreedingProgramMatched>{0}: Goal Reached</HNS_BreedingProgramMatched>
+  <HNS_BreedingProgramMatchedDesc>{0} matches the breeding goals for {1}.\n\nTraits: {2}</HNS_BreedingProgramMatchedDesc>
 </LanguageData>
 
 
