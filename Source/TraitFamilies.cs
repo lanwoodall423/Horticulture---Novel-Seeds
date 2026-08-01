@@ -10,7 +10,7 @@ namespace HorticultureNovelSeeds
         public static VarietyTraitDef Resolve(VarietyTraitDef root, ThingDef cropDef, NovelSeedsSettings settings)
         {
             if (root == null || root.configFamily.NullOrEmpty()) return root;
-            if (ColorTraitFactory.IsColorFamily(root.configFamily)) return ColorTraitFactory.Select(root);
+            if (ColorTraitFactory.IsColorFamily(root.configFamily)) return ColorTraitFactory.Select(root, cropDef);
             if (root.configFamily == PercentageTraitFactory.NutritiousFamily) return PercentageTraitFactory.Select();
             FamilySettingsRecord family = settings?.GetFamilySettings(root.configFamily, false);
             if (family?.enabled == false) return null;
@@ -124,11 +124,11 @@ namespace HorticultureNovelSeeds
                     int blue = Mathf.Clamp(Mathf.RoundToInt(color.b * 255f), 0, 255);
                     string defName = "HNS_" + family + "_RGB_" + red + "_" + green + "_" + blue;
                     if (!names.Add(defName) || DefDatabase<VarietyTraitDef>.GetNamedSilentFail(defName) != null) continue;
-                    string layer = familyIndex == 0 ? "produce" : familyIndex == 1 ? "leaves" : "stem";
+                    string layer = (familyIndex == 0 ? "HNS_ColorLayerProduce" : familyIndex == 1 ? "HNS_ColorLayerLeaves" : "HNS_ColorLayerStem").Translate();
                     additions.Add(new VarietyTraitDef
                     {
                         defName = defName, label = root.label,
-                        description = "Changes the color of the " + layer + " layer. RGB: " + red + ", " + green + ", " + blue + ".",
+                        description = "HNS_ColorTraitDescription".Translate(layer),
                         commonality = 1f, configCategory = root.configCategory, configFamily = family,
                         configType = red + "," + green + "," + blue, hiddenFromConfig = true, generated = true,
                         tintRed = red / 255f, tintGreen = green / 255f, tintBlue = blue / 255f,
@@ -139,11 +139,34 @@ namespace HorticultureNovelSeeds
             }
             if (additions.Count > 0) DefDatabase<VarietyTraitDef>.Add(additions);
         }
-        public static VarietyTraitDef Select(VarietyTraitDef root)
+        public static VarietyTraitDef Select(VarietyTraitDef root, ThingDef cropDef = null)
+        {
+            GenerateAll();
+            if (cropDef != null) return SpeciesColorPaletteUtility.SelectTrait(root, cropDef);
+            return DefDatabase<VarietyTraitDef>.AllDefsListForReading
+                .Where(t => t.generated && t.configFamily == root.configFamily && t.visualMaskIndex >= 0).RandomElementWithFallback();
+        }
+        public static VarietyTraitDef TraitForColor(string family, Color color)
         {
             GenerateAll();
             return DefDatabase<VarietyTraitDef>.AllDefsListForReading
-                .Where(t => t.generated && t.configFamily == root.configFamily && t.visualMaskIndex >= 0).RandomElementWithFallback();
+                .Where(t => t.generated && t.configFamily == family && t.visualMaskIndex >= 0)
+                .OrderBy(t => PigmentColorUtility.PerceptualDistance(new Color(t.tintRed, t.tintGreen, t.tintBlue), color))
+                .FirstOrDefault();
+        }
+        public static List<VarietyTraitDef> Cross(IEnumerable<VarietyTraitDef> first, IEnumerable<VarietyTraitDef> second, ThingDef cropDef)
+        {
+            List<VarietyTraitDef> result = new List<VarietyTraitDef>();
+            foreach (string family in Families)
+            {
+                VarietyTraitDef left = first?.FirstOrDefault(t => t?.configFamily == family);
+                VarietyTraitDef right = second?.FirstOrDefault(t => t?.configFamily == family);
+                if (left == null || right == null) continue;
+                Color mixed = PigmentColorUtility.Blend(new Color(left.tintRed, left.tintGreen, left.tintBlue),
+                    new Color(right.tintRed, right.tintGreen, right.tintBlue));
+                result.Add(TraitForColor(family, SpeciesColorPaletteUtility.Constrain(cropDef, mixed)));
+            }
+            return result.Where(trait => trait != null).ToList();
         }
         public static List<VisualSettingsRecord> ApplyIntrinsicColor(VarietyTraitDef trait, IEnumerable<VisualSettingsRecord> source)
         {

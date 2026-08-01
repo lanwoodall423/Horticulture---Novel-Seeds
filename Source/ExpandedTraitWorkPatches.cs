@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 using HarmonyLib;
 using RimWorld;
 using UnityEngine;
@@ -13,11 +14,8 @@ namespace HorticultureNovelSeeds
     [HarmonyPatch]
     public static class GrowerSow_VarietySkill_Patch
     {
-        public class SkillState
-        {
-            public PlantProperties props;
-            public int original;
-        }
+        private static readonly FieldInfo SowMinSkillField = AccessTools.Field(typeof(PlantProperties), nameof(PlantProperties.sowMinSkill));
+        private static readonly MethodInfo EffectiveSowMinSkillMethod = AccessTools.Method(typeof(GrowerSow_VarietySkill_Patch), nameof(EffectiveSowMinSkill));
 
         public static IEnumerable<MethodBase> TargetMethods()
         {
@@ -34,23 +32,27 @@ namespace HorticultureNovelSeeds
             }
         }
 
-        public static void Prefix(Pawn pawn, IntVec3 c, out SkillState __state)
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            __state = null;
-            IPlantToGrowSettable grower = pawn?.Map == null ? null : GridsUtility.GetPlantToGrowSettable(c, pawn.Map);
-            ThingDef plantDef = grower?.GetPlantDefToGrow();
-            VarietyRecord variety = GameComponent_NovelSeeds.Instance?.VarietyForSowing(grower, c);
-            if (plantDef?.plant == null || variety?.cropDef != plantDef) return;
-            int offset = ExpandedTraitUtility.SowSkillOffset(variety.traits);
-            if (offset == 0) return;
-            __state = new SkillState { props = plantDef.plant, original = plantDef.plant.sowMinSkill };
-            plantDef.plant.sowMinSkill = Mathf.Max(0, plantDef.plant.sowMinSkill + offset);
+            foreach (CodeInstruction instruction in instructions)
+            {
+                yield return instruction;
+                if (instruction.opcode == OpCodes.Ldfld && Equals(instruction.operand, SowMinSkillField))
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_1);
+                    yield return new CodeInstruction(OpCodes.Ldarg_2);
+                    yield return new CodeInstruction(OpCodes.Call, EffectiveSowMinSkillMethod);
+                }
+            }
         }
 
-        public static Exception Finalizer(SkillState __state, Exception __exception)
+        public static int EffectiveSowMinSkill(int baseSkill, Pawn pawn, IntVec3 cell)
         {
-            if (__state?.props != null) __state.props.sowMinSkill = __state.original;
-            return __exception;
+            IPlantToGrowSettable grower = pawn?.Map == null ? null : GridsUtility.GetPlantToGrowSettable(cell, pawn.Map);
+            ThingDef plantDef = grower?.GetPlantDefToGrow();
+            VarietyRecord variety = GameComponent_NovelSeeds.Instance?.VarietyForSowing(grower, cell);
+            if (plantDef?.plant == null || variety?.cropDef != plantDef) return baseSkill;
+            return Mathf.Max(0, baseSkill + ExpandedTraitUtility.SowSkillOffset(variety.traits));
         }
     }
 

@@ -68,13 +68,15 @@ Consumable effects, including when cooked into meals
 
 Different produce varieties remain distinct and do not stack together.
 
-Products made from produce receive their traits. Clothing made from blue cloth is blue. Clothing made from red cloth and blue cloth will be the RGB average of the two. Pigment coloring is planned.
+Products made from produce receive their traits. Clothing made from blue cloth is blue. Products made from multiple inherited colors use pigment-style subtractive blending rather than an RGB average.
 
 This feature can be disabled if preferred.
 
 🎨 Dynamic Coloring
 
 Every playthrough generates unique color ranges for each plant species.
+
+The ranges are derived deterministically from the world seed, saved with the game, and remain stable after reloading. Palette size, hue range, saturation/value limits, and restricted or unrestricted species colors can be configured in the mod settings. Existing saves generate their missing palettes safely when loaded.
 
 For example:
 
@@ -173,7 +175,38 @@ Stems
 
 For example, you can make only the tomatoes on a tomato plant blue while leaving the foliage unchanged.
 
-Masks for all vanilla and most modded plants are included.
+Manual masks for vanilla and supported modded plants remain authoritative. When a loaded plant
+texture has no painted manual mask, Novel Seeds generates and caches a Produce, Leaves, and Stem
+fallback from the source texture. The mask editor labels automatic results, flags uncertain masks,
+and can promote an automatic mask to the existing editable/manual format. Automatic Stem tracing follows narrow,
+root-connected branches through sparse junctions while rejecting dense canopy and groundcover regions. Tree metadata
+can request a conservative second trace but cannot bypass the 30% structural credibility limit when Leaves compete with
+Stem. A sprite with no eligible foliage can remain entirely structural. Tree morphology
+comes from tree-category metadata rather than harvest type, and palette-only Produce matches at the root are rejected;
+ambiguous pixels remain unmasked.
+
+Automatic cache entries are per discovered texture variant and include the source mod, texture content,
+state references, produce signature, and generator version. Generation runs outside drawing; render-time
+lookups use validated cached records and derived textures/materials. Low-confidence automatic records stay
+available for inspection and manual correction but apply no semantic recoloring until promoted. Runtime and
+preview recoloring share an HSV/value-preserving transform that keeps sprite shading and attenuates changes
+on very dark outline pixels. Diagnostic overlays use red for foliage, green for produce/flowers, and blue
+for stems/branches.
+
+The mask painter keeps the existing Plant/Produce pages and three semantic channels while adding a fast
+manual workflow: Add/Remove/Replace brushes, connected-region modifiers, grow/shrink/smooth/feather commands,
+island and hole cleanup, smart edge expansion, channel locks, original/mask/final previews, validation issue
+overlays, and copy or alpha-bounds projection between discovered texture variations. These tools use the
+existing mask records and undo history; old mask files and renderer behavior remain compatible.
+
+With Dev mode enabled, **Horticulture - Novel Seeds > Plant 10x10 random varieties** activates a map
+tool that fills the clicked 10x10 footprint with mature plants. Species are shuffled without replacement,
+so every available species appears once before any base plant repeats; later passes remain balanced to within
+one plant. A random active cultivar is then chosen for each species occurrence. On a fresh save, the tool can
+create one `DEV grid` cultivar for up to 100 random growable species, matching the grid capacity. Existing
+plants are replaced; buildings, non-growing terrain, and map boundaries are left untouched and reported as
+skipped cells. Species whose own special spawn rules reject the clicked terrain are replaced by another
+least-used species for that grid.
 
 Traits with visual effects can be assigned to specific masks, allowing highly detailed customization.
 
@@ -184,4 +217,5 @@ Novel Seeds is designed with compatibility in mind.
 Plant definitions from both vanilla RimWorld and supported mods are automatically scanned and categorized based on their properties, allowing the mutation system to integrate with a wide variety of custom crops without requiring manual setup.
 
 Progression: Agriculture's seed unlock system is used and is required. 
-It should be compatible with all plant mods. Most major mods will have included masks. If no masks are present, the entire plant will still be affected by traits.
+It should be compatible with all plant mods. Existing manual masks always take priority; missing
+growth-stage, collection, and directional masks use the persistent automatic fallback.

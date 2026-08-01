@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using HarmonyLib;
+using KnowledgeFramework;
 using ProgressionAgriculture;
 using RimWorld;
 using UnityEngine;
@@ -33,9 +34,14 @@ namespace HorticultureNovelSeeds
             }
             HarmonyInstance = new Harmony("lan.horticulture.novelseeds");
             HarmonyInstance.PatchAll(typeof(HorticultureNovelSeedsMod).Assembly);
+            HorticultureSharedKnowledgeIntegration.Register();
             WildlifeRegistryIntegration.Apply(HarmonyInstance);
             NicePlantsMenuCompat.Apply(HarmonyInstance);
-            LongEventHandler.ExecuteWhenFinished(() => IPlantToGrowSettable_SetPlantDefToGrow_ClearVariety_Patch.Apply(HarmonyInstance));
+            LongEventHandler.ExecuteWhenFinished(() =>
+            {
+                IPlantToGrowSettable_SetPlantDefToGrow_ClearVariety_Patch.Apply(HarmonyInstance);
+                PlantAutoMaskCache.InitializeAndGenerateMissing();
+            });
         }
 
         public override string SettingsCategory()
@@ -264,7 +270,9 @@ namespace HorticultureNovelSeeds
     public class GameComponent_NovelSeeds : GameComponent
     {
         private List<VarietyRecord> unlockedVarieties = new List<VarietyRecord>();
-        private List<BreedingProgramRecord> breedingPrograms = new List<BreedingProgramRecord>();
+        private List<BreedingProgramRecord> legacyBreedingPrograms = new List<BreedingProgramRecord>();
+        private List<SpeciesColorPaletteRecord> speciesColorPalettes = new List<SpeciesColorPaletteRecord>();
+        private List<PlantKnowledgeRecord> legacyHorticultureKnowledge = new List<PlantKnowledgeRecord>();
         private Dictionary<string, string> selectedVarietyIdsByGrower = new Dictionary<string, string>();
         private Dictionary<string, string> breedingVarietyIdsByGrower = new Dictionary<string, string>();
         private Dictionary<string, VarietyRecord> varietiesById = new Dictionary<string, VarietyRecord>();
@@ -274,11 +282,12 @@ namespace HorticultureNovelSeeds
         private static readonly ConditionalWeakTable<object, GrowerKeyHolder> GrowerKeys = new ConditionalWeakTable<object, GrowerKeyHolder>();
         private sealed class GrowerKeyHolder { public string key; }
         private int nextVarietyId = 1;
-        private int nextBreedingProgramId = 1;
+        private int legacyNextBreedingProgramId = 1;
         private List<string> selectionKeysWorking;
         private List<string> selectionValuesWorking;
         private List<string> breedingKeysWorking;
         private List<string> breedingValuesWorking;
+        private Dictionary<string, SpeciesColorPaletteRecord> palettesByPlant = new Dictionary<string, SpeciesColorPaletteRecord>();
 
         public static GameComponent_NovelSeeds Instance => Current.Game?.GetComponent<GameComponent_NovelSeeds>();
 
@@ -296,18 +305,25 @@ namespace HorticultureNovelSeeds
         {
             base.ExposeData();
             Scribe_Collections.Look(ref unlockedVarieties, "unlockedVarieties", LookMode.Deep);
-            Scribe_Collections.Look(ref breedingPrograms, "breedingPrograms", LookMode.Deep);
+            Scribe_Collections.Look(ref speciesColorPalettes, "speciesColorPalettes", LookMode.Deep);
+            if (Scribe.mode != LoadSaveMode.Saving)
+            {
+                Scribe_Collections.Look(ref legacyBreedingPrograms, "breedingPrograms", LookMode.Deep);
+                Scribe_Collections.Look(ref legacyHorticultureKnowledge, "horticultureKnowledge", LookMode.Deep);
+                Scribe_Values.Look(ref legacyNextBreedingProgramId, "nextBreedingProgramId", 1);
+            }
             Scribe_Collections.Look(ref selectedVarietyIdsByGrower, "selectedVarietyIdsByGrower", LookMode.Value, LookMode.Value, ref selectionKeysWorking, ref selectionValuesWorking);
             Scribe_Collections.Look(ref breedingVarietyIdsByGrower, "breedingVarietyIdsByGrower", LookMode.Value, LookMode.Value, ref breedingKeysWorking, ref breedingValuesWorking);
             Scribe_Values.Look(ref nextVarietyId, "nextVarietyId", 1);
-            Scribe_Values.Look(ref nextBreedingProgramId, "nextBreedingProgramId", 1);
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
                 if (unlockedVarieties == null)
                 {
                     unlockedVarieties = new List<VarietyRecord>();
                 }
-                if (breedingPrograms == null) breedingPrograms = new List<BreedingProgramRecord>();
+                if (speciesColorPalettes == null) speciesColorPalettes = new List<SpeciesColorPaletteRecord>();
+                if (legacyBreedingPrograms == null) legacyBreedingPrograms = new List<BreedingProgramRecord>();
+                if (legacyHorticultureKnowledge == null) legacyHorticultureKnowledge = new List<PlantKnowledgeRecord>();
                 if (selectedVarietyIdsByGrower == null)
                 {
                     selectedVarietyIdsByGrower = new Dictionary<string, string>();
@@ -317,6 +333,77 @@ namespace HorticultureNovelSeeds
                     breedingVarietyIdsByGrower = new Dictionary<string, string>();
                 }
                 RebuildCache();
+                EnsureSpeciesColorPalettes();
+            }
+        }
+
+        public override void FinalizeInit()
+        {
+            base.FinalizeInit();
+            if (ImportLegacyKnowledge()) legacyHorticultureKnowledge.Clear();
+            EnsureSpeciesColorPalettes();
+        }
+
+        public IReadOnlyList<SpeciesColorPaletteRecord> SpeciesColorPalettes
+        {
+            get { EnsureSpeciesColorPalettes(); return speciesColorPalettes; }
+        }
+
+        private bool ImportLegacyKnowledge()
+        {
+            if (legacyHorticultureKnowledge == null || legacyHorticultureKnowledge.Count == 0 ||
+                KnowledgeDomainRegistry.Domain(PlantKnowledgeUtility.DomainId) == null) return legacyHorticultureKnowledge?.Count == 0;
+            if (GameComponent_KnowledgeFramework.Current == null) return false;
+            Dictionary<string, float> colonyByCrop = legacyHorticultureKnowledge.Where(record => record?.CropDef != null)
+                .GroupBy(record => record.CropDef.defName).ToDictionary(group => group.Key, group => group.Sum(record => record.experience));
+            Dictionary<Pawn, float> expertiseByPawn = legacyHorticultureKnowledge.Where(record => record?.pawn != null)
+                .GroupBy(record => record.pawn).ToDictionary(group => group.Key, group => group.Max(record => record.experience));
+            Dictionary<string, Dictionary<string, int>> eventsByCrop = legacyHorticultureKnowledge.Where(record => record?.CropDef != null)
+                .GroupBy(record => record.CropDef.defName).ToDictionary(group => group.Key, group => new Dictionary<string, int>
+                {
+                    { "sowing", group.Sum(record => record.plantsSown) },
+                    { "harvesting", group.Sum(record => record.plantsHarvested) },
+                    { "cutting", group.Sum(record => record.plantsCut) },
+                    { "fertilizing", group.Sum(record => record.plantsFertilized) },
+                    { "discovery", group.Sum(record => record.seedsDiscovered) },
+                    { "produceRecipe", group.Sum(record => record.recipesCompleted) }
+                });
+            foreach (PlantKnowledgeRecord record in legacyHorticultureKnowledge.Where(record => record?.pawn != null && record.CropDef != null))
+            {
+                Dictionary<string, int> personalEvents = new Dictionary<string, int>
+                {
+                    { "sowing", record.plantsSown }, { "harvesting", record.plantsHarvested },
+                    { "cutting", record.plantsCut }, { "fertilizing", record.plantsFertilized },
+                    { "discovery", record.seedsDiscovered }, { "produceRecipe", record.recipesCompleted }
+                };
+                KnowledgeService.ImportMinimum(PlantKnowledgeUtility.DomainId, record.CropDef.defName, record.pawn,
+                    record.experience, colonyByCrop[record.CropDef.defName], expertiseByPawn[record.pawn], personalEvents);
+                KnowledgeService.ImportMinimum(PlantKnowledgeUtility.DomainId, record.CropDef.defName, null,
+                    0f, colonyByCrop[record.CropDef.defName], 0f, eventsByCrop[record.CropDef.defName]);
+            }
+            return true;
+        }
+
+        public SpeciesColorPaletteRecord PaletteFor(ThingDef plantDef)
+        {
+            if (plantDef == null) return null;
+            EnsureSpeciesColorPalettes();
+            palettesByPlant.TryGetValue(plantDef.defName, out SpeciesColorPaletteRecord palette);
+            return palette;
+        }
+
+        private void EnsureSpeciesColorPalettes()
+        {
+            if (speciesColorPalettes == null) speciesColorPalettes = new List<SpeciesColorPaletteRecord>();
+            palettesByPlant = speciesColorPalettes.Where(record => record != null && !record.plantDefName.NullOrEmpty())
+                .GroupBy(record => record.plantDefName).ToDictionary(group => group.Key, group => group.First());
+            string worldSeed = Find.World?.info?.seedString ?? "legacy-save";
+            foreach (ThingDef plantDef in DefDatabase<ThingDef>.AllDefsListForReading.Where(NovelSeedUtility.IsGrowableCrop).OrderBy(def => def.defName))
+            {
+                if (palettesByPlant.ContainsKey(plantDef.defName)) continue;
+                SpeciesColorPaletteRecord palette = SpeciesColorPaletteUtility.Generate(plantDef, worldSeed, HorticultureNovelSeedsMod.Settings);
+                speciesColorPalettes.Add(palette);
+                palettesByPlant[plantDef.defName] = palette;
             }
         }
 
@@ -327,7 +414,6 @@ namespace HorticultureNovelSeeds
         }
 
         public IEnumerable<VarietyRecord> AllVarieties => allVisibleVarieties;
-        public IReadOnlyList<BreedingProgramRecord> BreedingPrograms => breedingPrograms;
 
         public VarietyRecord GetVariety(string id)
         {
@@ -372,11 +458,32 @@ namespace HorticultureNovelSeeds
                 firstDiscoveredTick = Find.TickManager?.TicksAbs ?? -1,
                 firstDiscoveredTile = discoverer?.Map != null ? discoverer.Map.Tile : -1
             };
+            DeriveHybridPalette(cropDef, variety.parentVarietyIds);
             unlockedVarieties.Add(variety);
             varietiesById[variety.id] = variety;
             if (!variety.hiddenFromMenus) IndexVisibleVariety(variety);
-            if (!variety.hiddenFromMenus) NotifyMatchingBreedingPrograms(variety);
             return variety;
+        }
+
+        private void DeriveHybridPalette(ThingDef cropDef, IEnumerable<string> parentIds)
+        {
+            List<ThingDef> parentSpecies = parentIds?.Select(GetVariety).Where(parent => parent?.cropDef != null)
+                .Select(parent => parent.cropDef).Distinct().ToList() ?? new List<ThingDef>();
+            if (cropDef == null || parentSpecies.Count < 2 || parentSpecies.All(parent => parent == cropDef)) return;
+            SpeciesColorPaletteRecord target = PaletteFor(cropDef);
+            List<Color> parentColors = parentSpecies.SelectMany(parent => PaletteFor(parent)?.Colors ?? Enumerable.Empty<Color>()).ToList();
+            if (target == null || parentColors.Count == 0) return;
+            List<Color> derived = parentColors.ToList();
+            for (int i = 0; i < parentSpecies.Count; i++)
+            for (int j = i + 1; j < parentSpecies.Count; j++)
+            {
+                Color left = PaletteFor(parentSpecies[i])?.Colors.FirstOrDefault() ?? SpeciesColorPaletteUtility.BaseColor(parentSpecies[i]);
+                Color right = PaletteFor(parentSpecies[j])?.Colors.FirstOrDefault() ?? SpeciesColorPaletteUtility.BaseColor(parentSpecies[j]);
+                derived.Add(PigmentColorUtility.Blend(left, right));
+            }
+            int limit = HorticultureNovelSeedsMod.Settings?.maximumPaletteSize ?? 5;
+            target.packedColors = derived.Select(SpeciesColorPaletteRecord.Pack).Distinct().Take(Mathf.Clamp(limit, 1, 24)).ToList();
+            target.hybridDerived = true;
         }
 
         public void RenameVariety(VarietyRecord variety, string customName)
@@ -387,50 +494,6 @@ namespace HorticultureNovelSeeds
                 return;
             }
             variety.customName = trimmed;
-        }
-
-        public BreedingProgramRecord AddBreedingProgram(string name, ThingDef cropDef, IEnumerable<VarietyTraitDef> desiredTraits)
-        {
-            if (cropDef == null) return null;
-            List<string> roots = desiredTraits?.Where(trait => trait != null)
-                .Select(trait => TraitConfigUtility.Root(trait)?.defName).Where(value => !value.NullOrEmpty()).Distinct().ToList()
-                ?? new List<string>();
-            if (roots.Count == 0) return null;
-            BreedingProgramRecord program = new BreedingProgramRecord
-            {
-                id = "HNS_PROGRAM_" + nextBreedingProgramId++,
-                name = name.NullOrEmpty() ? cropDef.LabelCap + " Program" : name.Trim(),
-                cropDef = cropDef,
-                desiredTraitRootDefNames = roots
-            };
-            breedingPrograms.Add(program);
-            return program;
-        }
-
-        public void RemoveBreedingProgram(BreedingProgramRecord program)
-        {
-            if (program != null) breedingPrograms.Remove(program);
-        }
-
-        public IEnumerable<VarietyRecord> CandidateVarieties(BreedingProgramRecord program)
-        {
-            if (program?.cropDef == null) return Enumerable.Empty<VarietyRecord>();
-            return VarietiesFor(program.cropDef)
-                .OrderByDescending(program.MatchCount)
-                .ThenBy(variety => Mathf.Abs(NovelSeedUtility.TraitBalanceScore(variety.traits)))
-                .ThenBy(variety => variety.Label);
-        }
-
-        private void NotifyMatchingBreedingPrograms(VarietyRecord variety)
-        {
-            foreach (BreedingProgramRecord program in breedingPrograms.Where(item => item?.active == true && item.Matches(variety)))
-            {
-                if (program.notifiedVarietyIds.Contains(variety.id)) continue;
-                program.notifiedVarietyIds.Add(variety.id);
-                Find.LetterStack?.ReceiveLetter("HNS_BreedingProgramMatched".Translate(program.name),
-                    "HNS_BreedingProgramMatchedDesc".Translate(variety.Label, program.name, NovelSeedUtility.TraitSummary(variety.traits)),
-                    LetterDefOf.PositiveEvent);
-            }
         }
 
         public VarietyRecord SelectedVarietyFor(IPlantToGrowSettable settable)

@@ -11,6 +11,7 @@ namespace HorticultureNovelSeeds
 {
     public static class ExpandedTraitUtility
     {
+        private static readonly HashSet<ushort> SelfSeedingPlantDefs = new HashSet<ushort>();
         private static readonly Dictionary<SynergyCacheKey, CachedFactor> CompanionCache = new Dictionary<SynergyCacheKey, CachedFactor>();
         private static readonly Dictionary<SynergyCacheKey, CachedFactor> SowSynergyCache = new Dictionary<SynergyCacheKey, CachedFactor>();
         private struct CachedFactor { public int tick; public float factor; }
@@ -129,6 +130,16 @@ namespace HorticultureNovelSeeds
                 thing.stackCount = Mathf.Max(1, trait.byproductCount.RandomInRange);
                 GenPlace.TryPlaceThing(thing, plant.Position, plant.Map, ThingPlaceMode.Near);
             }
+        }
+
+        public static void RegisterSelfSeedingPlant(CompPlantVariety comp)
+        {
+            if (comp?.HasSelfSeeding == true && comp.parent?.def != null) SelfSeedingPlantDefs.Add(comp.parent.def.shortHash);
+        }
+
+        public static bool MayHaveSelfSeeding(ThingDef plantDef)
+        {
+            return plantDef != null && SelfSeedingPlantDefs.Contains(plantDef.shortHash);
         }
 
         public static void TrySelfSeed(Plant plant)
@@ -256,7 +267,10 @@ namespace HorticultureNovelSeeds
     [HarmonyPatch(typeof(Plant), nameof(Plant.Growth), MethodType.Setter)]
     public static class Plant_Growth_SelfSeed_Patch
     {
-        public static void Postfix(Plant __instance) => ExpandedTraitUtility.TrySelfSeed(__instance);
+        public static void Postfix(Plant __instance)
+        {
+            if (ExpandedTraitUtility.MayHaveSelfSeeding(__instance?.def)) ExpandedTraitUtility.TrySelfSeed(__instance);
+        }
     }
 
     [HarmonyPatch(typeof(Plant), nameof(Plant.GrowthRate), MethodType.Getter)]

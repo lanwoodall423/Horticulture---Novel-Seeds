@@ -11,6 +11,23 @@ namespace HorticultureNovelSeeds
     {
         private const string Category = "Horticulture - Novel Seeds";
         private const int MaxGenerationDepth = 10;
+        private const int RandomGridMaximumSpecies = 100;
+
+        [DebugAction(Category, "Show species color palettes", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.Playing)]
+        private static void ShowSpeciesColorPalettes()
+        {
+            IReadOnlyList<SpeciesColorPaletteRecord> palettes = GameComponent_NovelSeeds.Instance?.SpeciesColorPalettes;
+            if (palettes == null) return;
+            Find.WindowStack.Add(new Dialog_MessageBox(string.Join("\n", palettes.OrderBy(record => record.PlantDef?.label)
+                .Select(record => (record.PlantDef?.LabelCap.ToString() ?? record.plantDefName) + ": "
+                    + string.Join("  ", record.Colors.Select(ColorHex).ToArray())).ToArray()), "Species Color Palettes"));
+        }
+
+        private static string ColorHex(Color color)
+        {
+            Color32 value = color;
+            return "#" + value.r.ToString("X2") + value.g.ToString("X2") + value.b.ToString("X2");
+        }
 
         [DebugAction(Category, "Unlock custom variety", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.Playing)]
         private static void UnlockCustomVariety()
@@ -28,6 +45,179 @@ namespace HorticultureNovelSeeds
             }
             SpawnSeedPack(UI.MouseCell(), cropDef, traits, null);
             Messages.Message("Spawned random " + cropDef.LabelCap + " variety seed pack.", MessageTypeDefOf.TaskCompletion, false);
+        }
+
+        [DebugAction(Category, "Plant 10x10 random varieties", actionType = DebugActionType.ToolMap, allowedGameStates = AllowedGameStates.PlayingOnMap)]
+        private static void PlantRandomVarietyGrid()
+        {
+            Map map = Find.CurrentMap;
+            List<List<VarietyRecord>> varietiesByPlant = PrepareRandomGridVarieties(GameComponent_NovelSeeds.Instance);
+            if (map == null || varietiesByPlant.Count == 0)
+            {
+                Messages.Message("No active unlocked varieties are available to plant.", MessageTypeDefOf.RejectInput, false);
+                return;
+            }
+            PlantRandomVarietyGrid(UI.MouseCell(), map, varietiesByPlant);
+        }
+
+        internal static int PlantRandomVarietyGrid(IntVec3 center, Map map, List<List<VarietyRecord>> varietiesByPlant)
+        {
+            if (map == null || varietiesByPlant == null || varietiesByPlant.Count == 0) return 0;
+            int planted = 0;
+            int skipped = 0;
+            List<List<VarietyRecord>> availableSpecies = varietiesByPlant.ToList();
+            Dictionary<ThingDef, int> plantedBySpecies = availableSpecies.ToDictionary(group => group[0].cropDef, group => 0);
+            foreach (IntVec3 cell in RandomGridCells(center))
+            {
+                if (!cell.InBounds(map) || cell.GetEdifice(map) != null || map.fertilityGrid.FertilityAt(cell) <= 0f)
+                {
+                    skipped++;
+                    continue;
+                }
+
+                bool occupied = false;
+                while (availableSpecies.Count > 0 && !occupied)
+                {
+                    List<VarietyRecord> speciesVarieties = RandomLeastUsedSpecies(availableSpecies, plantedBySpecies);
+                    VarietyRecord variety = speciesVarieties.RandomElement();
+                    Plant plant = ThingMaker.MakeThing(variety.cropDef) as Plant;
+                    CompPlantVariety comp = plant?.TryGetComp<CompPlantVariety>();
+                    if (plant == null || comp == null)
+                    {
+                        plant?.Destroy(DestroyMode.Vanish);
+                        availableSpecies.Remove(speciesVarieties);
+                        continue;
+                    }
+                    comp.SetVariety(variety);
+                    plant.HitPoints = plant.MaxHitPoints;
+                    plant.Growth = 1f;
+                    plant.sown = true;
+                    Plant existing = cell.GetPlant(map);
+                    if (existing != null) existing.Destroy(DestroyMode.Vanish);
+                    GenSpawn.Spawn(plant, cell, map);
+                    if (plant.Spawned && plant.Position == cell)
+                    {
+                        plantedBySpecies[variety.cropDef]++;
+                        planted++;
+                        occupied = true;
+                    }
+                    else
+                    {
+                        if (!plant.Destroyed) plant.Destroy(DestroyMode.Vanish);
+                        availableSpecies.Remove(speciesVarieties);
+                    }
+                }
+                if (!occupied) skipped++;
+            }
+            Messages.Message("Planted " + planted + " random-variety plants in a 10x10 grid"
+                + (skipped > 0 ? "; skipped " + skipped + " blocked, non-growing, or out-of-bounds cells." : "."),
+                planted > 0 ? MessageTypeDefOf.TaskCompletion : MessageTypeDefOf.RejectInput, false);
+            return planted;
+        }
+
+        internal static List<List<VarietyRecord>> PrepareRandomGridVarieties(GameComponent_NovelSeeds registry)
+        {
+            if (registry == null) return new List<List<VarietyRecord>>();
+            List<List<VarietyRecord>> groups = RandomGridVarieties(registry.AllVarieties);
+            List<ThingDef> crops = GrowableCrops();
+            int targetSpecies = Mathf.Min(RandomGridMaximumSpecies, crops.Count);
+            if (groups.Count >= targetSpecies) return groups;
+
+            HashSet<ThingDef> represented = new HashSet<ThingDef>(groups.Select(group => group[0].cropDef));
+            foreach (ThingDef crop in crops.Where(crop => !represented.Contains(crop)).InRandomOrder())
+            {
+                VarietyRecord variety = CreateRandomGridVariety(registry, crop);
+                if (variety != null) represented.Add(crop);
+                if (represented.Count >= targetSpecies) break;
+            }
+            return RandomGridVarieties(registry.AllVarieties);
+        }
+
+        internal static List<VarietyRecord> RandomGridSelections(List<List<VarietyRecord>> varietiesByPlant, int count)
+        {
+            List<VarietyRecord> selections = new List<VarietyRecord>(count);
+            if (varietiesByPlant == null || varietiesByPlant.Count == 0 || count <= 0) return selections;
+            Dictionary<ThingDef, int> selectedBySpecies = varietiesByPlant.ToDictionary(group => group[0].cropDef, group => 0);
+            while (selections.Count < count)
+            {
+                List<VarietyRecord> speciesVarieties = RandomLeastUsedSpecies(varietiesByPlant, selectedBySpecies);
+                selections.Add(speciesVarieties.RandomElement());
+                selectedBySpecies[speciesVarieties[0].cropDef]++;
+            }
+            return selections;
+        }
+
+        private static List<VarietyRecord> RandomLeastUsedSpecies(List<List<VarietyRecord>> varietiesByPlant,
+            Dictionary<ThingDef, int> selectedBySpecies)
+        {
+            int minimum = varietiesByPlant.Min(group => selectedBySpecies[group[0].cropDef]);
+            return varietiesByPlant.Where(group => selectedBySpecies[group[0].cropDef] == minimum).RandomElement();
+        }
+
+        private static VarietyRecord CreateRandomGridVariety(GameComponent_NovelSeeds registry, ThingDef crop)
+        {
+            for (int attempt = 0; attempt < 24; attempt++)
+            {
+                List<VarietyTraitDef> traits = NovelSeedUtility.RandomTraitSet(crop);
+                if (traits.Count == 0) continue;
+                VarietyRecord existing = registry.FindMatchingVariety(crop, traits);
+                if (existing != null)
+                {
+                    existing.registryArchived = false;
+                    return existing;
+                }
+                return registry.UnlockVariety(crop, traits, "DEV grid " + crop.LabelCap);
+            }
+            return null;
+        }
+
+        internal static List<List<VarietyRecord>> RandomGridVarieties(IEnumerable<VarietyRecord> varieties)
+        {
+            return varieties?.Where(variety => variety?.cropDef != null && NovelSeedUtility.IsGrowableCrop(variety.cropDef)
+                    && !variety.registryArchived && !variety.id.NullOrEmpty())
+                .GroupBy(variety => variety.cropDef)
+                .Select(group => group.GroupBy(variety => variety.id).Select(records => records.First()).ToList())
+                .Where(group => group.Count > 0).ToList() ?? new List<List<VarietyRecord>>();
+        }
+
+        internal static IEnumerable<IntVec3> RandomGridCells(IntVec3 center)
+        {
+            int minX = center.x - 5;
+            int minZ = center.z - 5;
+            for (int z = 0; z < 10; z++)
+                for (int x = 0; x < 10; x++)
+                    yield return new IntVec3(minX + x, 0, minZ + z);
+        }
+
+        internal static bool RandomVarietyGridRegression()
+        {
+            ThingDef firstCrop = new ThingDef { defName = "HNS_GridRegressionA", plant = new PlantProperties { sowTags = new List<string> { "Ground" } } };
+            ThingDef secondCrop = new ThingDef { defName = "HNS_GridRegressionB", plant = new PlantProperties { sowTags = new List<string> { "Ground" } } };
+            ThingDef thirdCrop = new ThingDef { defName = "HNS_GridRegressionC", plant = new PlantProperties { sowTags = new List<string> { "Ground" } } };
+            firstCrop.plant.sowMinSkill = 0;
+            secondCrop.plant.sowMinSkill = 0;
+            thirdCrop.plant.sowMinSkill = 0;
+            List<VarietyRecord> records = new List<VarietyRecord>
+            {
+                new VarietyRecord { id = "a1", cropDef = firstCrop },
+                new VarietyRecord { id = "a2", cropDef = firstCrop },
+                new VarietyRecord { id = "a2", cropDef = firstCrop },
+                new VarietyRecord { id = "archived", cropDef = secondCrop, registryArchived = true },
+                new VarietyRecord { id = "b1", cropDef = secondCrop },
+                new VarietyRecord { id = "c1", cropDef = thirdCrop }
+            };
+            List<List<VarietyRecord>> grouped = RandomGridVarieties(records);
+            List<VarietyRecord> selections = RandomGridSelections(grouped, 8);
+            List<int> speciesCounts = selections.GroupBy(variety => variety.cropDef).Select(group => group.Count()).ToList();
+            List<IntVec3> cells = RandomGridCells(new IntVec3(20, 0, 30)).ToList();
+            return grouped.Count == 3 && grouped.Any(group => group.Count == 2) && grouped.Count(group => group.Count == 1) == 2
+                && grouped.SelectMany(group => group).All(variety => !variety.registryArchived)
+                && selections.Count == 8 && selections.Take(3).Select(variety => variety.cropDef).Distinct().Count() == 3
+                && selections.Skip(3).Take(3).Select(variety => variety.cropDef).Distinct().Count() == 3
+                && speciesCounts.Max() - speciesCounts.Min() <= 1
+                && cells.Count == 100 && cells.Distinct().Count() == 100
+                && cells.Min(cell => cell.x) == 15 && cells.Max(cell => cell.x) == 24
+                && cells.Min(cell => cell.z) == 25 && cells.Max(cell => cell.z) == 34;
         }
 
         [DebugAction(Category, "Spawn crossbred seed pack by generation", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
@@ -314,13 +504,13 @@ namespace HorticultureNovelSeeds
                     if (Mouse.IsOver(row)) Widgets.DrawHighlight(row);
                     bool selected = selectedTraits.Contains(trait);
                     bool previous = selected;
-                    Widgets.CheckboxLabeled(new Rect(8f, y + 2f, view.width - 16f, 24f), trait.LabelCap, ref selected);
+                    Widgets.CheckboxLabeled(new Rect(8f, y + 2f, view.width - 16f, 24f), TraitColorUI.Label(trait), ref selected);
                     if (selected != previous)
                     {
                         if (selected) selectedTraits.Add(trait);
                         else selectedTraits.Remove(trait);
                     }
-                    string tip = trait.description ?? string.Empty;
+                    string tip = TraitColorUI.Tooltip(trait);
                     if (!tip.NullOrEmpty()) tip += "\n\n";
                     tip += trait.defName;
                     TooltipHandler.TipRegion(row, tip);
@@ -395,7 +585,7 @@ namespace HorticultureNovelSeeds
                 name = "DEV " + selectedPlant.LabelCap + " variety " + number;
             }
             string finalName = name;
-            string summary = string.Join(", ", traits.Take(12).Select(trait => trait.LabelCap.ToString()).ToArray());
+            string summary = TraitColorUI.Summary(traits.Take(12));
             if (traits.Count > 12) summary += ", and " + (traits.Count - 12) + " more";
             string message = "Unlock " + finalName + " for " + selectedPlant.LabelCap + " with " + traits.Count
                 + (traits.Count == 1 ? " trait?" : " traits?") + "\n\n" + summary;

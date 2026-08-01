@@ -18,6 +18,13 @@ namespace HorticultureNovelSeeds
         public int allowedTraitImbalance = 1;
         public float exceptionalVarietyChance = 0.08f;
         public bool enableProduceVisuals = true;
+        public int minimumPaletteSize = 2;
+        public int maximumPaletteSize = 5;
+        public float allowedHueRangeDegrees = 140f;
+        public float minimumPaletteSaturation = 0.55f;
+        public float maximumPaletteSaturation = 0.95f;
+        public float minimumPaletteValue = 0.62f;
+        public float maximumPaletteValue = 0.95f;
         private List<PlantSettingsRecord> plantSettings = new List<PlantSettingsRecord>();
         private List<PlantTagOverrideRecord> plantTagOverrides = new List<PlantTagOverrideRecord>();
         private List<PlantGroupRecord> plantGroups = new List<PlantGroupRecord>();
@@ -51,6 +58,13 @@ namespace HorticultureNovelSeeds
             Scribe_Values.Look(ref allowedTraitImbalance, "allowedTraitImbalance", 1);
             Scribe_Values.Look(ref exceptionalVarietyChance, "exceptionalVarietyChance", 0.08f);
             Scribe_Values.Look(ref enableProduceVisuals, "enableProduceVisuals", true);
+            Scribe_Values.Look(ref minimumPaletteSize, "minimumPaletteSize", 2);
+            Scribe_Values.Look(ref maximumPaletteSize, "maximumPaletteSize", 5);
+            Scribe_Values.Look(ref allowedHueRangeDegrees, "allowedHueRangeDegrees", 140f);
+            Scribe_Values.Look(ref minimumPaletteSaturation, "minimumPaletteSaturation", 0.55f);
+            Scribe_Values.Look(ref maximumPaletteSaturation, "maximumPaletteSaturation", 0.95f);
+            Scribe_Values.Look(ref minimumPaletteValue, "minimumPaletteValue", 0.62f);
+            Scribe_Values.Look(ref maximumPaletteValue, "maximumPaletteValue", 0.95f);
             Scribe_Collections.Look(ref plantSettings, "plantSettings", LookMode.Deep);
             Scribe_Collections.Look(ref plantTagOverrides, "plantTagOverrides", LookMode.Deep);
             Scribe_Collections.Look(ref plantGroups, "plantGroups", LookMode.Deep);
@@ -90,6 +104,13 @@ namespace HorticultureNovelSeeds
             allowedTraitImbalance = other.allowedTraitImbalance;
             exceptionalVarietyChance = other.exceptionalVarietyChance;
             enableProduceVisuals = other.enableProduceVisuals;
+            minimumPaletteSize = other.minimumPaletteSize;
+            maximumPaletteSize = other.maximumPaletteSize;
+            allowedHueRangeDegrees = other.allowedHueRangeDegrees;
+            minimumPaletteSaturation = other.minimumPaletteSaturation;
+            maximumPaletteSaturation = other.maximumPaletteSaturation;
+            minimumPaletteValue = other.minimumPaletteValue;
+            maximumPaletteValue = other.maximumPaletteValue;
             plantSettings = other.plantSettings ?? new List<PlantSettingsRecord>();
             plantTagOverrides = other.plantTagOverrides ?? new List<PlantTagOverrideRecord>();
             plantGroups = other.plantGroups ?? new List<PlantGroupRecord>();
@@ -116,6 +137,13 @@ namespace HorticultureNovelSeeds
             traitBalanceStrength = Mathf.Clamp01(traitBalanceStrength);
             allowedTraitImbalance = Mathf.Clamp(allowedTraitImbalance, 0, 10);
             exceptionalVarietyChance = Mathf.Clamp01(exceptionalVarietyChance);
+            minimumPaletteSize = Mathf.Clamp(minimumPaletteSize, 1, 24);
+            maximumPaletteSize = Mathf.Clamp(maximumPaletteSize, minimumPaletteSize, 24);
+            allowedHueRangeDegrees = Mathf.Clamp(allowedHueRangeDegrees, 0f, 360f);
+            minimumPaletteSaturation = Mathf.Clamp01(minimumPaletteSaturation);
+            maximumPaletteSaturation = Mathf.Clamp(maximumPaletteSaturation, minimumPaletteSaturation, 1f);
+            minimumPaletteValue = Mathf.Clamp01(minimumPaletteValue);
+            maximumPaletteValue = Mathf.Clamp(maximumPaletteValue, minimumPaletteValue, 1f);
             if (plantSettings == null)
             {
                 plantSettings = new List<PlantSettingsRecord>();
@@ -168,6 +196,13 @@ namespace HorticultureNovelSeeds
             allowedTraitImbalance = 1;
             exceptionalVarietyChance = 0.08f;
             enableProduceVisuals = true;
+            minimumPaletteSize = 2;
+            maximumPaletteSize = 5;
+            allowedHueRangeDegrees = 140f;
+            minimumPaletteSaturation = 0.55f;
+            maximumPaletteSaturation = 0.95f;
+            minimumPaletteValue = 0.62f;
+            maximumPaletteValue = 0.95f;
             if (plantSettings == null)
             {
                 plantSettings = new List<PlantSettingsRecord>();
@@ -1281,9 +1316,11 @@ namespace HorticultureNovelSeeds
         public bool useCustomCrossPollinationChance;
         public float crossPollinationChance = NovelSeedUtility.DefaultCrossPollinationChance;
         public bool usePlantMasks;
+        public bool disableAutoPlantMasks;
         private List<VisualMaskLayerRecord> plantMaskLayers = new List<VisualMaskLayerRecord>();
         private List<PlantMaskVariationRecord> plantMaskVariations = new List<PlantMaskVariationRecord>();
         public bool useProduceMasks;
+        public bool unrestrictedColors;
         private List<VisualMaskLayerRecord> produceMaskLayers = new List<VisualMaskLayerRecord>();
         private List<CategorySettingsRecord> traitGroupSettings = new List<CategorySettingsRecord>();
         private List<TraitSettingsRecord> traitSettings = new List<TraitSettingsRecord>();
@@ -1294,6 +1331,8 @@ namespace HorticultureNovelSeeds
         public List<VisualMaskLayerRecord> PlantMaskLayers => plantMaskLayers ?? (plantMaskLayers = new List<VisualMaskLayerRecord>());
         public List<VisualMaskLayerRecord> ProduceMaskLayers => produceMaskLayers ?? (produceMaskLayers = new List<VisualMaskLayerRecord>());
         public bool HasActivePlantMasks => usePlantMasks;
+        public bool HasAnyManualPlantMask => PlantMaskLayers.Any(layer => layer.HasPixels)
+            || (plantMaskVariations?.Any(record => record.Layers.Any(layer => layer.HasPixels)) == true);
         public bool HasActiveProduceMasks => useProduceMasks;
 
         public PlantSettingsRecord()
@@ -1318,9 +1357,11 @@ namespace HorticultureNovelSeeds
             Scribe_Values.Look(ref useCustomCrossPollinationChance, "useCustomCrossPollinationChance", false);
             Scribe_Values.Look(ref crossPollinationChance, "crossPollinationChance", NovelSeedUtility.DefaultCrossPollinationChance);
             Scribe_Values.Look(ref usePlantMasks, "usePlantMasks", false);
+            Scribe_Values.Look(ref disableAutoPlantMasks, "disableAutoPlantMasks", false);
             Scribe_Collections.Look(ref plantMaskLayers, "plantMaskLayers", LookMode.Deep);
             Scribe_Collections.Look(ref plantMaskVariations, "plantMaskVariations", LookMode.Deep);
             Scribe_Values.Look(ref useProduceMasks, "useProduceMasks", false);
+            Scribe_Values.Look(ref unrestrictedColors, "unrestrictedColors", false);
             Scribe_Collections.Look(ref produceMaskLayers, "produceMaskLayers", LookMode.Deep);
             Scribe_Collections.Look(ref traitGroupSettings, "traitGroupSettings", LookMode.Deep);
             Scribe_Collections.Look(ref traitSettings, "traitSettings", LookMode.Deep);
@@ -1369,9 +1410,11 @@ namespace HorticultureNovelSeeds
             useCustomCrossPollinationChance = false;
             crossPollinationChance = NovelSeedUtility.DefaultCrossPollinationChance;
             usePlantMasks = false;
+            disableAutoPlantMasks = false;
             PlantMaskLayers.Clear();
             plantMaskVariations.Clear();
             useProduceMasks = false;
+            unrestrictedColors = false;
             ProduceMaskLayers.Clear();
             if (traitSettings == null)
             {
@@ -1407,6 +1450,53 @@ namespace HorticultureNovelSeeds
                 plantMaskVariations.Add(record);
             }
             return record?.Layers ?? PlantMaskLayers;
+        }
+
+        public List<VisualMaskLayerRecord> ManualPlantMaskLayersForVariation(int variationIndex)
+        {
+            if (variationIndex <= 0) return PlantMaskLayers;
+            return plantMaskVariations?.FirstOrDefault(item => item.VariationIndex == variationIndex)?.Layers ?? PlantMaskLayers;
+        }
+
+        public bool HasManualPlantMask(int variationIndex)
+        {
+            return ManualPlantMaskLayersForVariation(variationIndex)?.Any(layer => layer?.HasPixels == true) == true;
+        }
+
+        public List<VisualMaskLayerRecord> SetManualPlantMask(int variationIndex, IEnumerable<VisualMaskLayerRecord> source)
+        {
+            List<VisualMaskLayerRecord> replacement = source?.Select(layer => layer?.Clone()).Where(layer => layer != null).ToList()
+                ?? new List<VisualMaskLayerRecord>();
+            NormalizeFixedMasks(replacement, "Produce", "Leaves", "Stem");
+            if (variationIndex <= 0) plantMaskLayers = replacement;
+            else
+            {
+                if (plantMaskVariations == null) plantMaskVariations = new List<PlantMaskVariationRecord>();
+                plantMaskVariations.RemoveAll(record => record.VariationIndex == variationIndex);
+                plantMaskVariations.Add(new PlantMaskVariationRecord(variationIndex, replacement));
+            }
+            usePlantMasks = true;
+            disableAutoPlantMasks = false;
+            return ManualPlantMaskLayersForVariation(variationIndex);
+        }
+
+        public void RemoveManualPlantMask(int variationIndex)
+        {
+            if (variationIndex <= 0)
+            {
+                foreach (VisualMaskLayerRecord layer in PlantMaskLayers) layer.Clear();
+            }
+            else
+            {
+                if (plantMaskVariations == null) plantMaskVariations = new List<PlantMaskVariationRecord>();
+                plantMaskVariations.RemoveAll(record => record.VariationIndex == variationIndex);
+                plantMaskVariations.Add(new PlantMaskVariationRecord(variationIndex, new[]
+                {
+                    new VisualMaskLayerRecord { name = "Produce" },
+                    new VisualMaskLayerRecord { name = "Leaves" },
+                    new VisualMaskLayerRecord { name = "Stem" }
+                }));
+            }
         }
 
         public void EnsurePlantMaskVariationCount(int count)
@@ -1793,7 +1883,9 @@ namespace HorticultureNovelSeeds
             List<OptionDisplay> result = new List<OptionDisplay>();
             if (mode == FamilyOptionMode.Types)
             {
-                foreach (VarietyTraitDef trait in TraitConfigUtility.Types(root.configFamily)) result.Add(new OptionDisplay(trait.configType.NullOrEmpty() ? trait.LabelCap : trait.configType, family.GetType(trait), trait));
+                foreach (VarietyTraitDef trait in TraitConfigUtility.Types(root.configFamily))
+                    result.Add(new OptionDisplay(ColorTraitFactory.IsColorFamily(trait.configFamily) ? TraitColorUI.Label(trait)
+                        : trait.configType.NullOrEmpty() ? trait.LabelCap.ToString() : trait.configType, family.GetType(trait), trait));
             }
             else if (mode == FamilyOptionMode.Plants)
             {

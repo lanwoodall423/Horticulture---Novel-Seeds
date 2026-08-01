@@ -152,7 +152,7 @@ namespace HorticultureNovelSeeds
             List<VarietyTraitDef> allTraits = AllTraits();
             List<string> categories = settings.TraitGroupNames().ToList();
             List<VarietyTraitDef> shownTraits = FilterTraits(allTraits, globalTraitSearch, settings);
-            float contentHeight = 732f + Mathf.CeilToInt(categories.Count / 2f) * 32f + TraitGroupsHeight(shownTraits, settings, OpenGlobalCategories, expandedGlobalTrait, ExpandedGlobalHeight, 124f, globalTraitSearch);
+            float contentHeight = 970f + Mathf.CeilToInt(categories.Count / 2f) * 32f + TraitGroupsHeight(shownTraits, settings, OpenGlobalCategories, expandedGlobalTrait, ExpandedGlobalHeight, 124f, globalTraitSearch);
             BeginPage(rect, contentHeight, out Rect view);
             float y = 0f;
             DrawPageTitle(view, ref y, "General Settings", "Defaults used by every growable plant unless overridden.");
@@ -181,6 +181,20 @@ namespace HorticultureNovelSeeds
             Widgets.CheckboxLabeled(produceVisualsRect, "Carry Variety Visuals To Harvested Produce", ref settings.enableProduceVisuals);
             TooltipHandler.TipRegion(produceVisualsRect, "When enabled, harvested produce inherits the Produce visual configured for its variety traits. Different appearances remain separate stacks without creating extra product definitions.");
             y += 40f;
+            DrawSectionHeader(view, ref y, "Per-Save Species Color Palettes");
+            DrawStepper(new Rect(0f, y, half, 58f), "Minimum Palette Size", ref settings.minimumPaletteSize, 1, 24);
+            DrawStepper(new Rect(half + 14f, y, half, 58f), "Maximum Palette Size", ref settings.maximumPaletteSize, 1, 24);
+            y += 66f;
+            settings.maximumPaletteSize = Mathf.Max(settings.minimumPaletteSize, settings.maximumPaletteSize);
+            settings.allowedHueRangeDegrees = Widgets.HorizontalSlider(new Rect(0f, y + 24f, view.width, 24f), settings.allowedHueRangeDegrees, 0f, 360f, false,
+                "Allowed Hue Range: " + Mathf.RoundToInt(settings.allowedHueRangeDegrees) + " degrees");
+            y += 58f;
+            DrawPercentControl(new Rect(0f, y, half, 58f), "Minimum Saturation", ref settings.minimumPaletteSaturation, 0f, 1f);
+            DrawPercentControl(new Rect(half + 14f, y, half, 58f), "Maximum Saturation", ref settings.maximumPaletteSaturation, 0f, 1f);
+            y += 66f;
+            DrawPercentControl(new Rect(0f, y, half, 58f), "Minimum Value", ref settings.minimumPaletteValue, 0f, 1f);
+            DrawPercentControl(new Rect(half + 14f, y, half, 58f), "Maximum Value", ref settings.maximumPaletteValue, 0f, 1f);
+            y += 68f;
             if (Widgets.ButtonText(new Rect(0f, y, 168f, 30f), "Reset Global Weights")) Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation("Reset global trait weights to defaults? Plant-specific settings will be kept.", delegate { settings.ResetGlobalWeights(); }, true));
             if (Widgets.ButtonText(new Rect(178f, y, 110f, 30f), "Full Reset")) Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation("Reset all active Horticulture - Novel Seeds settings to the bundled mod defaults? Saved configuration profiles will be kept.", delegate { ApplyDefaults(settings); contentScroll = Vector2.zero; }, true));
             y += 46f;
@@ -217,7 +231,7 @@ namespace HorticultureNovelSeeds
                 Widgets.DrawBoxSolid(new Rect(row.x, row.y, 3f, row.height), Accent);
                 Widgets.Label(new Rect(row.x + 12f, row.y + 8f, row.width - 24f, 24f), ConfigTraitLabel(trait));
                 DrawMutedLabel(new Rect(row.x + 12f, row.y + 34f, row.width - 24f, row.height - 40f), effect);
-                TooltipHandler.TipRegion(row, trait.description);
+                TooltipHandler.TipRegion(row, TraitColorUI.Tooltip(trait));
                 y += rowHeight;
             }
             EndPage();
@@ -330,6 +344,9 @@ namespace HorticultureNovelSeeds
             if (Widgets.ButtonText(new Rect(250f, y, 110f, 30f), "Import")) Find.WindowStack.Add(new Dialog_ImportPlantMaskForPlant(settings, plantDef));
             DrawMutedLabel(new Rect(374f, y + 5f, view.width - 374f, 24f), maskStatus);
             y += 42f;
+            Widgets.CheckboxLabeled(new Rect(0f, y, view.width, 28f), "Use Unrestricted Colors", ref personalSettings.unrestrictedColors);
+            TooltipHandler.TipRegion(new Rect(0f, y, view.width, 28f), "New saves may use the full hue wheel for this species instead of staying near its configured base color.");
+            y += 38f;
             DrawSectionHeader(view, ref y, "Rates");
             DrawRateControls(view, ref y, settings, plant);
             DrawSectionHeader(view, ref y, "Trait Groups");
@@ -449,7 +466,7 @@ namespace HorticultureNovelSeeds
         {
             List<SettingsProfileInfo> profiles = SettingsProfileManager.Profiles.ToList();
             List<PlantMaskFileInfo> maskFiles = PlantMaskFileManager.Files.ToList();
-            float contentHeight = 420f + profiles.Count * 62f + maskFiles.Count * 62f;
+            float contentHeight = 468f + profiles.Count * 62f + maskFiles.Count * 62f;
             BeginPage(rect, contentHeight, out Rect view);
             float y = 0f;
             DrawPageTitle(view, ref y, "Configuration Profiles", "Save complete configurations or transfer only the painted masks for every plant.");
@@ -487,6 +504,13 @@ namespace HorticultureNovelSeeds
                 if (!PlantMaskFileManager.OpenDirectory(out string error)) Messages.Message("Could not open the plant mask folder: " + error, MessageTypeDefOf.RejectInput, false);
             }
             if (Widgets.ButtonText(new Rect(322f, y, 100f, 32f), "Refresh")) PlantMaskFileManager.Refresh();
+            if (Widgets.ButtonText(new Rect(432f, y, 230f, 32f), "Generate Missing Auto-Masks"))
+            {
+                AutoMaskBatchResult result = PlantAutoMaskCache.GenerateMissing(false);
+                Messages.Message("Auto masks: " + result.generated + " generated, " + result.reused + " cached, "
+                    + result.manualSkipped + " manual skipped, " + result.lowConfidence + " flagged for review, " + result.failed + " failed.",
+                    result.failed > 0 ? MessageTypeDefOf.CautionInput : MessageTypeDefOf.TaskCompletion, false);
+            }
             y += 38f;
             DrawMutedLabel(new Rect(0f, y, view.width, 38f), PlantMaskFileManager.DirectoryPath);
             y += 46f;
@@ -623,7 +647,7 @@ namespace HorticultureNovelSeeds
                     bool expanded = expandedWildTrait == trait.defName;
                     Rect row = new Rect(0f, y, view.width, TraitRowHeight);
                     Widgets.DrawHighlightIfMouseover(row);
-                    if (!trait.description.NullOrEmpty()) TooltipHandler.TipRegion(row, trait.description);
+                    if (!trait.description.NullOrEmpty()) TooltipHandler.TipRegion(row, TraitColorUI.Tooltip(trait));
                     Widgets.CheckboxLabeled(new Rect(8f, y + 10f, view.width - 250f, 28f), ConfigTraitLabel(trait), ref record.enabled);
                     Widgets.Label(new Rect(view.width - 214f, y + 12f, 130f, 24f), "Weight " + record.weight.ToString("0.##"));
                     DrawExpandButton(new Rect(view.width - 36f, y + 9f, 28f, 28f), expanded, delegate { expandedWildTrait = expanded ? null : trait.defName; });
@@ -656,7 +680,7 @@ namespace HorticultureNovelSeeds
                     bool expanded = expandedPlantTrait == trait.defName;
                     Rect row = new Rect(0f, y, view.width, TraitRowHeight);
                     Widgets.DrawHighlightIfMouseover(row);
-                    if (!trait.description.NullOrEmpty()) TooltipHandler.TipRegion(row, trait.description);
+                    if (!trait.description.NullOrEmpty()) TooltipHandler.TipRegion(row, TraitColorUI.Tooltip(trait));
                     Widgets.CheckboxLabeled(new Rect(8f, y + 10f, view.width - 300f, 28f), ConfigTraitLabel(trait), ref record.enabled);
                     Widgets.Label(new Rect(view.width - 264f, y + 12f, 120f, 24f), record.useCustomWeight ? "Weight " + record.weight.ToString("0.##") : "Global " + globalWeight.ToString("0.##"));
                     Rect visualActionRect = new Rect(view.width - 142f, y + 9f, 96f, 28f);
@@ -700,7 +724,7 @@ namespace HorticultureNovelSeeds
         private static void DrawTraitBaseRow(Rect row, VarietyTraitDef trait, string value, bool expanded, System.Action toggle)
         {
             Widgets.DrawHighlightIfMouseover(row);
-            if (!trait.description.NullOrEmpty()) TooltipHandler.TipRegion(row, trait.description);
+            if (!trait.description.NullOrEmpty()) TooltipHandler.TipRegion(row, TraitColorUI.Tooltip(trait));
             Widgets.Label(new Rect(row.x + 8f, row.y + 12f, row.width - 330f, 24f), ConfigTraitLabel(trait));
             Widgets.Label(new Rect(row.xMax - 270f, row.y + 12f, 140f, 24f), value);
             DrawExpandButton(new Rect(row.xMax - 36f, row.y + 9f, 28f, 28f), expanded, toggle);
@@ -708,7 +732,7 @@ namespace HorticultureNovelSeeds
 
         private static string ConfigTraitLabel(VarietyTraitDef trait)
         {
-            return trait == null ? string.Empty : trait.LabelCap + (HasSubtypes(trait) ? " (subtype)" : string.Empty);
+            return trait == null ? string.Empty : TraitColorUI.Label(trait) + (HasSubtypes(trait) ? " (subtype)" : string.Empty);
         }
 
         private static bool DrawCategoryHeader(Rect view, ref float y, string category, int count, HashSet<string> openCategories, string search)

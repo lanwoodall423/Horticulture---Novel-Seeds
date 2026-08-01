@@ -47,5 +47,9 @@
       <HintPath>C:\Games\Steam\steamapps\workshop\content\294100\3418017359\1.6\Assemblies\ProgressionAgriculture.dll</HintPath>
       <Private>false</Private>
     </Reference>
+    <Reference Include="KnowledgeFramework">
+      <HintPath>..\..\KnowledgeFramework\1.6\Assemblies\KnowledgeFramework.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
   </ItemGroup>
 </Project>

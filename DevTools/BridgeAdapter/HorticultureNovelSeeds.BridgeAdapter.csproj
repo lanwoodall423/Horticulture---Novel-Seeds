@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
     <RootNamespace>HorticultureNovelSeeds</RootNamespace>
     <AssemblyName>HorticultureNovelSeeds.BridgeAdapter</AssemblyName>
     <LangVersion>latest</LangVersion>
@@ -23,8 +23,16 @@
       <HintPath>C:\Games\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
       <Private>false</Private>
     </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>C:\Games\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
     <Reference Include="HorticultureNovelSeeds">
       <HintPath>..\..\1.6\Assemblies\HorticultureNovelSeeds.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="KnowledgeFramework">
+      <HintPath>..\..\..\KnowledgeFramework\1.6\Assemblies\KnowledgeFramework.dll</HintPath>
       <Private>false</Private>
     </Reference>
     <Reference Include="0Harmony">

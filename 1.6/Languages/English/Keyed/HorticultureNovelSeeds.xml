@@ -5,6 +5,10 @@
   <HNS_InvalidSeedPack>Seed pack data is missing.</HNS_InvalidSeedPack>
   <HNS_NovelSeedPackLabel>{0} novel seed pack</HNS_NovelSeedPackLabel>
   <HNS_Traits>Traits</HNS_Traits>
+  <HNS_ColorTraitDescription>Changes the color of the {0} layer.</HNS_ColorTraitDescription>
+  <HNS_ColorLayerProduce>produce</HNS_ColorLayerProduce>
+  <HNS_ColorLayerLeaves>leaves</HNS_ColorLayerLeaves>
+  <HNS_ColorLayerStem>stem</HNS_ColorLayerStem>
   <HNS_PlantVariety>Variety</HNS_PlantVariety>
   <HNS_VarietyLabel>Variety: {0}</HNS_VarietyLabel>
   <HNS_StatChanges>Stat Changes</HNS_StatChanges>
@@ -118,7 +122,7 @@
   <HNS_RegistryWildlifeButtonTip>Open the Cultivar Registry.</HNS_RegistryWildlifeButtonTip>
   <HNS_RegistryUnavailable>The cultivar registry is unavailable outside an active game.</HNS_RegistryUnavailable>
   <HNS_RegistryRefresh>Refresh Stock</HNS_RegistryRefresh>
-  <HNS_RegistryCatalog>Discovered Varieties</HNS_RegistryCatalog>
+  <HNS_RegistryCatalog>Discovered Plants</HNS_RegistryCatalog>
   <HNS_RegistryBalanceFilter>Balance: {0}</HNS_RegistryBalanceFilter>
   <HNS_RegistryArchived>Archived</HNS_RegistryArchived>
   <HNS_RegistryAnyTrait>Any Trait</HNS_RegistryAnyTrait>
@@ -138,7 +142,6 @@
   <HNS_RegistryRestore>Restore</HNS_RegistryRestore>
   <HNS_RegistryLocate>Locate</HNS_RegistryLocate>
   <HNS_RegistryCompare>Compare</HNS_RegistryCompare>
-  <HNS_RegistryPrograms>Breeding Programs</HNS_RegistryPrograms>
   <HNS_RegistryComparison>Variety Comparison</HNS_RegistryComparison>
   <HNS_RegistryChoose>Choose</HNS_RegistryChoose>
   <HNS_RegistryChange>Change</HNS_RegistryChange>
@@ -148,24 +151,11 @@
   <HNS_RegistryOnlyCompared>Only {0}</HNS_RegistryOnlyCompared>
   <HNS_RegistryProduceEffects>Inherited Produce Effects</HNS_RegistryProduceEffects>
   <HNS_RegistryNone>None</HNS_RegistryNone>
-  <HNS_RegistryNewProgram>New Program</HNS_RegistryNewProgram>
-  <HNS_RegistryNoPrograms>No breeding programs have been created.</HNS_RegistryNoPrograms>
-  <HNS_RegistryNoCandidate>No discovered candidates</HNS_RegistryNoCandidate>
-  <HNS_RegistryBestCandidate>Best: {0} ({1}/{2} goals)</HNS_RegistryBestCandidate>
-  <HNS_RegistryView>View</HNS_RegistryView>
-  <HNS_RegistryDeleteProgramConfirm>Delete breeding program '{0}'?</HNS_RegistryDeleteProgramConfirm>
   <HNS_RegistryNoComparison>No other varieties of this plant are available.</HNS_RegistryNoComparison>
   <HNS_RegistryAll>All</HNS_RegistryAll>
   <HNS_RegistryBalanced>Balanced</HNS_RegistryBalanced>
   <HNS_RegistryBeneficial>Beneficial</HNS_RegistryBeneficial>
   <HNS_RegistryDetrimental>Detrimental</HNS_RegistryDetrimental>
-  <HNS_RegistryCreateProgram>Create Breeding Program</HNS_RegistryCreateProgram>
-  <HNS_RegistryProgramName>Program Name</HNS_RegistryProgramName>
-  <HNS_RegistryPlant>Plant</HNS_RegistryPlant>
-  <HNS_RegistryDesiredTraits>Desired Traits</HNS_RegistryDesiredTraits>
-  <HNS_RegistryCreate>Create Program</HNS_RegistryCreate>
-  <HNS_BreedingProgramMatched>{0}: Goal Reached</HNS_BreedingProgramMatched>
-  <HNS_BreedingProgramMatchedDesc>{0} matches the breeding goals for {1}.\n\nTraits: {2}</HNS_BreedingProgramMatchedDesc>
 </LanguageData>
 
 

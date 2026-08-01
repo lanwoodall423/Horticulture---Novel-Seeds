@@ -2,6 +2,46 @@ using UnityEngine;
 
 namespace HorticultureNovelSeeds
 {
+    public static class PlantVisualColorUtility
+    {
+        public static Color Apply(Color source, float tintRed, float tintGreen, float tintBlue,
+            float hueShift, float saturation, float brightness, float contrast, float opacity,
+            float dullness, float strength = 1f)
+        {
+            float originalAlpha = source.a;
+            Color.RGBToHSV(source, out float sourceHue, out float sourceSaturation, out float sourceValue);
+
+            float targetHue = Mathf.Repeat(sourceHue + hueShift, 1f);
+            float targetSaturation = Mathf.Clamp01(sourceSaturation * saturation);
+            float tintMaximum = Mathf.Max(tintRed, Mathf.Max(tintGreen, tintBlue));
+            float tintMinimum = Mathf.Min(tintRed, Mathf.Min(tintGreen, tintBlue));
+            float tintChroma = Mathf.Clamp01(tintMaximum - tintMinimum);
+            if (tintChroma > 0.001f)
+            {
+                Color tint = new Color(Mathf.Clamp01(tintRed), Mathf.Clamp01(tintGreen), Mathf.Clamp01(tintBlue));
+                Color.RGBToHSV(tint, out float tintHue, out float tintSaturation, out _);
+                targetHue = LerpHue(targetHue, tintHue, tintChroma);
+                targetSaturation = Mathf.Lerp(targetSaturation,
+                    Mathf.Max(targetSaturation, tintSaturation), tintChroma);
+            }
+            targetSaturation *= Mathf.Lerp(1f, 0.35f, Mathf.Clamp01(dullness));
+
+            float targetValue = Mathf.Clamp01(((sourceValue - 0.5f) * contrast + 0.5f)
+                * brightness * Mathf.Max(0f, tintMaximum));
+            Color styled = Color.HSVToRGB(targetHue, Mathf.Clamp01(targetSaturation), targetValue, false);
+            float outlineStrength = Mathf.Lerp(0.12f, 1f,
+                Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.06f, 0.34f, sourceValue)));
+            Color result = Color.Lerp(source, styled, Mathf.Clamp01(strength) * outlineStrength);
+            result.a = originalAlpha * Mathf.Clamp01(opacity);
+            return result;
+        }
+
+        private static float LerpHue(float from, float to, float amount)
+        {
+            return Mathf.Repeat(from + Mathf.DeltaAngle(from * 360f, to * 360f) / 360f * amount, 1f);
+        }
+    }
+
     public struct PlantVisualParameters
     {
         public float scale, width, height, density, spread;

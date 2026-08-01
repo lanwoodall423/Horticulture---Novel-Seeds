@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using KnowledgeFramework;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -18,35 +19,26 @@ namespace HorticultureNovelSeeds
         {
             try
             {
-                System.Type registry = HarmonyLib.AccessTools.TypeByName("Herds.WildlifeMenuRegistry");
+                Type registry = HarmonyLib.AccessTools.TypeByName("Herds.WildlifeMenuRegistry");
                 System.Reflection.MethodInfo register = registry?.GetMethod("Register",
                     System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static,
                     null, new[] { typeof(string), typeof(string), typeof(string), typeof(int),
-                        typeof(System.Func<bool>), typeof(System.Action) }, null);
+                        typeof(Func<bool>), typeof(Action) }, null);
                 if (register == null) return;
-                System.Action open = () =>
+                Action open = () =>
                 {
-                    MainButtonDef cultivarRegistry =
-                        DefDatabase<MainButtonDef>.GetNamedSilentFail("HNS_CultivarRegistry");
-                    if (cultivarRegistry != null) Find.MainTabsRoot.SetCurrentTab(cultivarRegistry, true);
+                    MainButtonDef button = DefDatabase<MainButtonDef>.GetNamedSilentFail("HNS_CultivarRegistry");
+                    if (button != null) Find.MainTabsRoot.SetCurrentTab(button, true);
                 };
-                System.Func<bool> visible = () =>
-                {
-                    MainButtonDef cultivarRegistry =
-                        DefDatabase<MainButtonDef>.GetNamedSilentFail("HNS_CultivarRegistry");
-                    return cultivarRegistry?.tabWindowClass == typeof(MainTabWindow_CultivarRegistry);
-                };
+                Func<bool> visible = () => DefDatabase<MainButtonDef>.GetNamedSilentFail("HNS_CultivarRegistry")
+                    ?.tabWindowClass == typeof(MainTabWindow_CultivarRegistry);
                 register.Invoke(null, new object[]
                 {
-                    "horticulture.novel-seeds",
-                    "Horticulture",
-                    "Open the existing Novel Seeds Cultivar Registry.",
-                    10,
-                    visible,
-                    open
+                    "horticulture.novel-seeds", "Horticulture", "Open the existing Novel Seeds Cultivar Registry.",
+                    10, visible, open
                 });
             }
-            catch (System.Exception exception)
+            catch (Exception exception)
             {
                 Log.Warning("[Horticulture - Novel Seeds] Wildlife Cultivar Registry integration was skipped: " + exception.Message);
             }
@@ -55,33 +47,44 @@ namespace HorticultureNovelSeeds
 
     public class MainTabWindow_CultivarRegistry : MainTabWindow
     {
+        private enum RegistryPage { Plants, Cultivars, Knowledge, Compare }
+        private enum DiscoveryFilter { All, Discovered, Undiscovered }
         private enum BalanceFilter { All, Balanced, Beneficial, Detrimental }
-        private enum RightPage { Compare, Programs }
 
-        private const float Gap = 10f;
-        private const float LeftWidth = 330f;
-        private const float DetailWidth = 430f;
+        private RegistryPage page;
+        private DiscoveryFilter discoveryFilter;
+        private BalanceFilter balanceFilter;
+        private readonly KnowledgeMenuState knowledgeState = new KnowledgeMenuState();
+        private readonly HashSet<string> comparisonIds = new HashSet<string>();
+        private readonly Dictionary<string, RegistryAvailability> availability = new Dictionary<string, RegistryAvailability>();
         private string search = string.Empty;
+        private string selectedPlantDefName;
+        private string selectedCultivarId;
         private bool showArchived;
         private bool requireProduceEffect;
-        private int minimumGeneration;
-        private VarietyTraitDef traitFilter;
-        private BalanceFilter balanceFilter;
-        private RightPage rightPage;
-        private VarietyRecord selected;
-        private VarietyRecord comparison;
-        private Vector2 catalogScroll;
-        private Vector2 traitScroll;
-        private Vector2 programScroll;
-        private readonly Dictionary<string, RegistryAvailability> availability = new Dictionary<string, RegistryAvailability>();
+        private Vector2 listScroll;
+        private Vector2 detailScroll;
 
-        public override Vector2 RequestedTabSize => new Vector2(1240f, 720f);
+        public override Vector2 RequestedTabSize => new Vector2(1180f, 720f);
+
+        public static void OpenKnowledge(Pawn pawn)
+        {
+            MainButtonDef button = DefDatabase<MainButtonDef>.GetNamedSilentFail("HNS_CultivarRegistry");
+            if (button == null) return;
+            Find.MainTabsRoot.SetCurrentTab(button, true);
+            if (button.TabWindow is MainTabWindow_CultivarRegistry registry)
+            {
+                registry.page = RegistryPage.Knowledge;
+                registry.knowledgeState.scope = KnowledgeMenuScope.Colonist;
+                registry.knowledgeState.selectedPawn = pawn;
+            }
+        }
 
         public override void PreOpen()
         {
             base.PreOpen();
             RefreshAvailability();
-            EnsureSelection();
+            EnsureSelections();
         }
 
         public override void DoWindowContents(Rect inRect)
@@ -93,285 +96,379 @@ namespace HorticultureNovelSeeds
                 return;
             }
 
-            Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(inRect.x, inRect.y, inRect.width - 180f, 34f), "HNS_RegistryTitle".Translate());
-            Text.Font = GameFont.Small;
-            if (Widgets.ButtonText(new Rect(inRect.xMax - 132f, inRect.y, 132f, 30f), "HNS_RegistryRefresh".Translate()))
-                RefreshAvailability();
+            DrawHeader(new Rect(inRect.x, inRect.y, inRect.width, 70f), component);
+            Rect content = new Rect(inRect.x, inRect.y + 78f, inRect.width, inRect.height - 78f);
+            if (page == RegistryPage.Knowledge)
+            {
+                KnowledgeMenuUI.Draw(content, knowledgeState, KnowledgeModelFor, KnowledgeRankFor);
+                return;
+            }
+            if (page == RegistryPage.Compare)
+            {
+                Widgets.DrawMenuSection(content);
+                DrawComparisonTable(content.ContractedBy(14f), component);
+                return;
+            }
 
-            Rect body = new Rect(inRect.x, inRect.y + 44f, inRect.width, inRect.height - 44f);
-            float rightWidth = body.width - LeftWidth - DetailWidth - Gap * 2f;
-            Rect catalogRect = new Rect(body.x, body.y, LeftWidth, body.height);
-            Rect detailRect = new Rect(catalogRect.xMax + Gap, body.y, DetailWidth, body.height);
-            Rect rightRect = new Rect(detailRect.xMax + Gap, body.y, rightWidth, body.height);
-            DrawCatalog(catalogRect, component);
-            DrawDetails(detailRect, component);
-            DrawRightPanel(rightRect, component);
+            Rect left = new Rect(content.x, content.y, 380f, content.height);
+            Rect right = new Rect(left.xMax + 12f, content.y, content.width - left.width - 12f, content.height);
+            Widgets.DrawMenuSection(left);
+            Widgets.DrawMenuSection(right);
+            if (page == RegistryPage.Plants)
+            {
+                DrawPlantList(left.ContractedBy(10f), component);
+                DrawPlantDetail(right.ContractedBy(14f), component);
+            }
+            else
+            {
+                DrawCultivarList(left.ContractedBy(10f), component);
+                DrawCultivarDetail(right.ContractedBy(14f), component);
+            }
         }
 
-        private void DrawCatalog(Rect rect, GameComponent_NovelSeeds component)
+        private void DrawHeader(Rect rect, GameComponent_NovelSeeds component)
         {
-            Widgets.DrawMenuSection(rect);
-            Rect inner = rect.ContractedBy(10f);
             Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(inner.x, inner.y, inner.width, 30f), "HNS_RegistryCatalog".Translate());
+            Widgets.Label(new Rect(rect.x, rect.y, 320f, 34f), "HNS_RegistryTitle".Translate());
             Text.Font = GameFont.Small;
-            search = Widgets.TextField(new Rect(inner.x, inner.y + 36f, inner.width, 30f), search);
+            int total = PlantDefs().Count;
+            int discovered = PlantDefs().Count(def => IsDiscovered(def, component));
+            Widgets.Label(new Rect(rect.x, rect.y + 36f, 500f, 28f),
+                "Plants " + discovered + " / " + total + "   Cultivars " + component.AllVarieties.Count());
 
-            float half = (inner.width - 6f) * 0.5f;
-            if (Widgets.ButtonText(new Rect(inner.x, inner.y + 72f, half, 28f), "HNS_RegistryBalanceFilter".Translate(BalanceFilterLabel())))
-            {
-                List<FloatMenuOption> options = Enum.GetValues(typeof(BalanceFilter)).Cast<BalanceFilter>()
-                    .Select(value => new FloatMenuOption(BalanceFilterLabel(value), delegate { balanceFilter = value; })).ToList();
-                Find.WindowStack.Add(new FloatMenu(options));
-            }
-            Widgets.CheckboxLabeled(new Rect(inner.x + half + 6f, inner.y + 72f, half, 28f), "HNS_RegistryArchived".Translate(), ref showArchived);
-            if (Widgets.ButtonText(new Rect(inner.x, inner.y + 106f, half, 28f),
-                traitFilter == null ? "HNS_RegistryAnyTrait".Translate() : traitFilter.LabelCap))
-            {
-                List<FloatMenuOption> traitOptions = new List<FloatMenuOption>
-                {
-                    new FloatMenuOption("HNS_RegistryAnyTrait".Translate(), delegate { traitFilter = null; })
-                };
-                traitOptions.AddRange(TraitConfigUtility.TopLevelTraits().Select(trait =>
-                    new FloatMenuOption(trait.LabelCap, delegate { traitFilter = trait; })));
-                Find.WindowStack.Add(new FloatMenu(traitOptions));
-            }
-            if (Widgets.ButtonText(new Rect(inner.x + half + 6f, inner.y + 106f, 76f, 28f), "HNS_RegistryGenerationShort".Translate(minimumGeneration)))
-            {
-                Find.WindowStack.Add(new FloatMenu(Enumerable.Range(0, 5)
-                    .Select(value => new FloatMenuOption("HNS_RegistryGenerationMinimum".Translate(value), delegate { minimumGeneration = value; })).ToList()));
-            }
-            Widgets.CheckboxLabeled(new Rect(inner.x + half + 88f, inner.y + 106f, half - 88f, 28f), "HNS_RegistryProduceShort".Translate(), ref requireProduceEffect);
-            TooltipHandler.TipRegion(new Rect(inner.x + half + 88f, inner.y + 106f, half - 88f, 28f), "HNS_RegistryProduceFilterTip".Translate());
+            const float tabWidth = 132f;
+            const float tabGap = 8f;
+            float start = rect.xMax - tabWidth * 4f - tabGap * 3f;
+            if (Widgets.ButtonText(new Rect(start, rect.y + 12f, tabWidth, 40f), "Discovered Plants",
+                    active: page != RegistryPage.Plants)) ChangePage(RegistryPage.Plants);
+            if (Widgets.ButtonText(new Rect(start + tabWidth + tabGap, rect.y + 12f, tabWidth, 40f), "Cultivars",
+                    active: page != RegistryPage.Cultivars)) ChangePage(RegistryPage.Cultivars);
+            if (Widgets.ButtonText(new Rect(start + (tabWidth + tabGap) * 2f, rect.y + 12f, tabWidth, 40f), "Knowledge",
+                    active: page != RegistryPage.Knowledge)) ChangePage(RegistryPage.Knowledge);
+            bool enabled = CanCompare;
+            GUI.enabled = enabled;
+            if (Widgets.ButtonText(new Rect(start + (tabWidth + tabGap) * 3f, rect.y + 12f, tabWidth, 40f), "Compare",
+                    active: page != RegistryPage.Compare)) ChangePage(RegistryPage.Compare);
+            GUI.enabled = true;
+            TooltipHandler.TipRegion(new Rect(start + (tabWidth + tabGap) * 3f, rect.y + 12f, tabWidth, 40f),
+                enabled ? "Compare the selected cultivars side by side." : "Select at least two discovered cultivars to compare.");
+        }
 
-            List<VarietyRecord> varieties = component.AllVarieties
-                .Where(MatchesCatalogFilter)
-                .OrderByDescending(variety => variety.registryFavorite)
-                .ThenBy(variety => variety.cropDef?.label)
-                .ThenBy(variety => variety.Label).ToList();
-            Rect outRect = new Rect(inner.x, inner.y + 142f, inner.width, inner.height - 142f);
-            float viewWidth = outRect.width - 16f;
-            Rect viewRect = new Rect(0f, 0f, viewWidth, Mathf.Max(outRect.height, varieties.Count * 58f));
-            Widgets.BeginScrollView(outRect, ref catalogScroll, viewRect);
-            if (varieties.Count == 0)
+        private void ChangePage(RegistryPage value)
+        {
+            page = value;
+            listScroll = Vector2.zero;
+            detailScroll = Vector2.zero;
+        }
+
+        private void DrawPlantList(Rect rect, GameComponent_NovelSeeds component)
+        {
+            Text.Font = GameFont.Medium;
+            Widgets.Label(new Rect(rect.x, rect.y, rect.width, 32f), "Discovered Plants");
+            Text.Font = GameFont.Small;
+            DrawSearch(new Rect(rect.x, rect.y + 38f, rect.width, 30f));
+            if (Widgets.ButtonText(new Rect(rect.x, rect.y + 76f, rect.width, 30f), "Show: " + discoveryFilter))
             {
-                Color old = GUI.color;
+                Find.WindowStack.Add(new FloatMenu(Enum.GetValues(typeof(DiscoveryFilter)).Cast<DiscoveryFilter>()
+                    .Select(value => new FloatMenuOption(value.ToString(), () => discoveryFilter = value)).ToList()));
+            }
+            List<ThingDef> plants = PlantDefs().Where(def => MatchesPlantFilter(def, component)).ToList();
+            Rect outer = new Rect(rect.x, rect.y + 114f, rect.width, rect.height - 114f);
+            Rect view = new Rect(0f, 0f, outer.width - 16f, Mathf.Max(outer.height, plants.Count * 58f));
+            Widgets.BeginScrollView(outer, ref listScroll, view);
+            for (int i = 0; i < plants.Count; i++)
+            {
+                ThingDef plant = plants[i];
+                bool discovered = IsDiscovered(plant, component);
+                Rect row = new Rect(0f, i * 58f, view.width, 52f);
+                if (plant.defName == selectedPlantDefName) Widgets.DrawHighlightSelected(row);
+                else Widgets.DrawHighlightIfMouseover(row);
+                if (discovered) Widgets.ThingIcon(new Rect(4f, row.y + 5f, 42f, 42f), plant);
+                Widgets.Label(new Rect(54f, row.y + 5f, row.width - 60f, 24f),
+                    discovered ? plant.LabelCap.ToString() : "Undiscovered plant");
                 GUI.color = Color.gray;
-                Widgets.Label(new Rect(8f, 10f, viewRect.width - 16f, 50f), "HNS_RegistryNoMatches".Translate());
-                GUI.color = old;
+                Widgets.Label(new Rect(54f, row.y + 27f, row.width - 60f, 22f), discovered
+                    ? component.VarietiesFor(plant).Count() + " cultivars   " + ColonyKnowledgeRank(plant)
+                    : "Learn about this species through plant work or seed discovery.");
+                GUI.color = Color.white;
+                if (Widgets.ButtonInvisible(row)) selectedPlantDefName = plant.defName;
             }
+            Widgets.EndScrollView();
+            if (plants.Count == 0) Widgets.Label(outer.ContractedBy(8f), "No plants match the current search and filter.");
+        }
+
+        private void DrawPlantDetail(Rect rect, GameComponent_NovelSeeds component)
+        {
+            ThingDef plant = DefDatabase<ThingDef>.GetNamedSilentFail(selectedPlantDefName);
+            bool discovered = IsDiscovered(plant, component);
+            if (plant == null || !discovered)
+            {
+                Widgets.Label(rect, plant == null ? "Select a plant to inspect it." :
+                    "Undiscovered plant\n\nPerform plant work or discover a cultivar to reveal this species.");
+                return;
+            }
+            KnowledgeRank rank = VisibleKnowledgeRank(plant);
+            Rect view = new Rect(0f, 0f, rect.width - 16f, 620f);
+            Widgets.BeginScrollView(rect, ref detailScroll, view);
+            Widgets.ThingIcon(new Rect(0f, 0f, 72f, 72f), plant);
+            Text.Font = GameFont.Medium;
+            Widgets.Label(new Rect(84f, 5f, view.width - 84f, 34f), plant.LabelCap);
+            Text.Font = GameFont.Small;
+            Widgets.Label(new Rect(84f, 42f, view.width - 84f, 28f), rank + " knowledge");
+            float y = 92f;
+            DrawSection(view, ref y, "Plant Knowledge");
+            DrawRecord(view, ref y, "Colony rank", ColonyKnowledgeRank(plant).ToString());
+            DrawRecord(view, ref y, "Known cultivars", component.VarietiesFor(plant).Count().ToString());
+            if (rank >= KnowledgeRank.Adept)
+            {
+                DrawSection(view, ref y, "Growing");
+                DrawRecord(view, ref y, "Grow time", plant.plant.growDays.ToString("0.##") + " days");
+                DrawRecord(view, ref y, "Sow work", plant.plant.sowWork.ToString("0") + " work");
+                DrawRecord(view, ref y, "Minimum fertility", plant.plant.fertilityMin.ToStringPercent());
+            }
+            if (rank >= KnowledgeRank.Expert)
+            {
+                DrawSection(view, ref y, "Harvest");
+                DrawRecord(view, ref y, "Harvest yield", plant.plant.harvestYield.ToString("0.##"));
+                DrawRecord(view, ref y, "Harvest product", plant.plant.harvestedThingDef?.LabelCap ?? "None");
+                DrawRecord(view, ref y, "Lifespan", plant.plant.LimitedLifespan ? "Limited" : "Persistent");
+            }
+            if (rank >= KnowledgeRank.Master)
+            {
+                DrawSection(view, ref y, "Environment");
+                DrawRecord(view, ref y, "Growth temperature", plant.plant.minGrowthTemperature.ToString("0.#") + " to " +
+                    plant.plant.maxGrowthTemperature.ToString("0.#") + " C");
+                DrawRecord(view, ref y, "Purpose", plant.plant.purpose.ToString());
+            }
+            Widgets.EndScrollView();
+        }
+
+        private void DrawCultivarList(Rect rect, GameComponent_NovelSeeds component)
+        {
+            Text.Font = GameFont.Medium;
+            Widgets.Label(new Rect(rect.x, rect.y, rect.width, 32f), "Cultivars");
+            Text.Font = GameFont.Small;
+            DrawSearch(new Rect(rect.x, rect.y + 38f, rect.width, 30f));
+            float half = (rect.width - 8f) * 0.5f;
+            if (Widgets.ButtonText(new Rect(rect.x, rect.y + 76f, half, 30f), "Balance: " + balanceFilter))
+            {
+                Find.WindowStack.Add(new FloatMenu(Enum.GetValues(typeof(BalanceFilter)).Cast<BalanceFilter>()
+                    .Select(value => new FloatMenuOption(value.ToString(), () => balanceFilter = value)).ToList()));
+            }
+            Widgets.CheckboxLabeled(new Rect(rect.x + half + 8f, rect.y + 76f, half, 30f), "Archived", ref showArchived);
+            Widgets.CheckboxLabeled(new Rect(rect.x, rect.y + 110f, rect.width, 28f), "Inherited produce effects", ref requireProduceEffect);
+            List<VarietyRecord> varieties = component.AllVarieties.Where(MatchesCultivarFilter)
+                .OrderByDescending(value => value.registryFavorite).ThenBy(value => value.cropDef?.label)
+                .ThenBy(value => value.Label).ToList();
+            Rect outer = new Rect(rect.x, rect.y + 144f, rect.width, rect.height - 144f);
+            Rect view = new Rect(0f, 0f, outer.width - 16f, Mathf.Max(outer.height, varieties.Count * 64f));
+            Widgets.BeginScrollView(outer, ref listScroll, view);
             for (int i = 0; i < varieties.Count; i++)
             {
                 VarietyRecord variety = varieties[i];
-                Rect row = new Rect(0f, i * 58f, viewRect.width, 54f);
-                if (selected == variety) Widgets.DrawHighlightSelected(row);
+                Rect row = new Rect(0f, i * 64f, view.width, 58f);
+                if (variety.id == selectedCultivarId) Widgets.DrawHighlightSelected(row);
                 else Widgets.DrawHighlightIfMouseover(row);
-                Widgets.DefIcon(new Rect(row.x + 4f, row.y + 7f, 40f, 40f), variety.cropDef);
-                string favorite = variety.registryFavorite ? "* " : string.Empty;
-                Widgets.Label(new Rect(row.x + 50f, row.y + 5f, row.width - 54f, 24f), favorite + variety.Label);
-                Color old = GUI.color;
+                Widgets.ThingIcon(new Rect(4f, row.y + 8f, 42f, 42f), variety.cropDef);
+                bool chosen = comparisonIds.Contains(variety.id);
+                Widgets.Checkbox(new Vector2(row.xMax - 28f, row.y + 18f), ref chosen);
+                if (chosen) comparisonIds.Add(variety.id); else comparisonIds.Remove(variety.id);
+                Widgets.Label(new Rect(54f, row.y + 5f, row.width - 92f, 24f),
+                    (variety.registryFavorite ? "* " : string.Empty) + variety.Label);
                 GUI.color = Color.gray;
-                string status = variety.cropDef.LabelCap + "  |  " + NovelSeedUtility.TraitBalanceSummary(variety.traits).Replace("Trait Balance: ", "");
-                Widgets.Label(new Rect(row.x + 50f, row.y + 28f, row.width - 54f, 22f), status);
-                GUI.color = old;
-                if (Widgets.ButtonInvisible(row))
-                {
-                    selected = variety;
-                    if (comparison?.cropDef != selected.cropDef || comparison == selected) comparison = null;
-                }
+                Widgets.Label(new Rect(54f, row.y + 29f, row.width - 92f, 22f),
+                    variety.cropDef.LabelCap + "   Generation " + LineageDepth(variety));
+                GUI.color = Color.white;
+                Rect selectRect = new Rect(row.x, row.y, row.width - 38f, row.height);
+                if (Widgets.ButtonInvisible(selectRect)) selectedCultivarId = variety.id;
             }
             Widgets.EndScrollView();
+            if (varieties.Count == 0) Widgets.Label(outer.ContractedBy(8f), "HNS_RegistryNoMatches".Translate());
         }
 
-        private void DrawDetails(Rect rect, GameComponent_NovelSeeds component)
+        private void DrawCultivarDetail(Rect rect, GameComponent_NovelSeeds component)
         {
-            Widgets.DrawMenuSection(rect);
-            Rect inner = rect.ContractedBy(12f);
+            VarietyRecord selected = component.GetVariety(selectedCultivarId);
             if (selected == null)
             {
-                Text.Anchor = TextAnchor.MiddleCenter;
-                Widgets.Label(inner, "HNS_RegistrySelectVariety".Translate());
-                Text.Anchor = TextAnchor.UpperLeft;
+                Widgets.Label(rect, "HNS_RegistrySelectVariety".Translate());
                 return;
             }
-
-            Widgets.DefIcon(new Rect(inner.x, inner.y, 72f, 72f), selected.cropDef);
+            KnowledgeRank rank = VisibleKnowledgeRank(selected.cropDef);
+            Rect view = new Rect(0f, 0f, rect.width - 16f, Mathf.Max(rect.height, 760f));
+            Widgets.BeginScrollView(rect, ref detailScroll, view);
+            Widgets.ThingIcon(new Rect(0f, 0f, 72f, 72f), selected.cropDef);
             Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(inner.x + 82f, inner.y, inner.width - 82f, 32f), selected.Label);
+            Widgets.Label(new Rect(84f, 5f, view.width - 84f, 34f), selected.Label);
             Text.Font = GameFont.Small;
-            Widgets.Label(new Rect(inner.x + 82f, inner.y + 34f, inner.width - 82f, 24f), selected.cropDef.LabelCap);
-            string score = "HNS_RegistryScore".Translate(RegistryScore(selected));
-            Widgets.Label(new Rect(inner.x + 82f, inner.y + 56f, inner.width - 82f, 24f), score);
-            TooltipHandler.TipRegion(new Rect(inner.x + 82f, inner.y + 56f, inner.width - 82f, 24f), "HNS_RegistryScoreTip".Translate());
-
-            float y = inner.y + 84f;
-            DrawDetailLine(inner, ref y, NovelSeedUtility.TraitBalanceSummary(selected.traits));
-            DrawDetailLine(inner, ref y, "HNS_RegistryGeneration".Translate(LineageDepth(selected)));
-            if (!selected.FirstDiscoveredInfo.NullOrEmpty()) DrawDetailLine(inner, ref y, "HNS_FirstDiscoveredHeader".Translate() + ": " + selected.FirstDiscoveredInfo);
+            Widgets.Label(new Rect(84f, 42f, view.width - 84f, 28f), selected.cropDef.LabelCap + "   " + rank);
+            float y = 92f;
             RegistryAvailability stock = AvailabilityFor(selected);
-            DrawDetailLine(inner, ref y, "HNS_RegistryAvailability".Translate(stock.Plants, stock.Produce, stock.SeedPacks));
+            DrawRecord(view, ref y, "Generation", LineageDepth(selected).ToString());
+            DrawRecord(view, ref y, "Availability", stock.Plants + " plants, " + stock.Produce + " produce, " + stock.SeedPacks + " seed packs");
+            if (!selected.FirstDiscoveredInfo.NullOrEmpty()) DrawRecord(view, ref y, "Discovered", selected.FirstDiscoveredInfo);
 
-            float buttonWidth = (inner.width - 12f) / 3f;
-            if (Widgets.ButtonText(new Rect(inner.x, y + 4f, buttonWidth, 28f), "HNS_RenameVariety".Translate()))
+            float buttonWidth = (view.width - 24f) / 4f;
+            if (Widgets.ButtonText(new Rect(0f, y + 4f, buttonWidth, 30f), "HNS_RenameVariety".Translate()))
                 Find.WindowStack.Add(new Dialog_RenameVariety(selected));
-            if (Widgets.ButtonText(new Rect(inner.x + buttonWidth + 6f, y + 4f, buttonWidth, 28f),
-                selected.registryFavorite ? "HNS_RegistryUnfavorite".Translate() : "HNS_RegistryFavorite".Translate()))
+            if (Widgets.ButtonText(new Rect(buttonWidth + 8f, y + 4f, buttonWidth, 30f),
+                    selected.registryFavorite ? "HNS_RegistryUnfavorite".Translate() : "HNS_RegistryFavorite".Translate()))
                 selected.registryFavorite = !selected.registryFavorite;
-            if (Widgets.ButtonText(new Rect(inner.x + (buttonWidth + 6f) * 2f, y + 4f, buttonWidth, 28f),
-                selected.registryArchived ? "HNS_RegistryRestore".Translate() : "HNS_RegistryArchive".Translate()))
+            if (Widgets.ButtonText(new Rect((buttonWidth + 8f) * 2f, y + 4f, buttonWidth, 30f),
+                    selected.registryArchived ? "HNS_RegistryRestore".Translate() : "HNS_RegistryArchive".Translate()))
                 selected.registryArchived = !selected.registryArchived;
-            y += 40f;
-            if (Widgets.ButtonText(new Rect(inner.x, y, buttonWidth, 28f), "HNS_Lineage".Translate()))
-                Find.WindowStack.Add(new Dialog_VarietyLineage(selected.Label, selected.traits, selected.parentVarietyIds));
             GUI.enabled = stock.Target != null;
-            if (Widgets.ButtonText(new Rect(inner.x + buttonWidth + 6f, y, buttonWidth, 28f), "HNS_RegistryLocate".Translate()))
+            if (Widgets.ButtonText(new Rect((buttonWidth + 8f) * 3f, y + 4f, buttonWidth, 30f), "HNS_RegistryLocate".Translate()))
                 CameraJumper.TryJumpAndSelect(stock.Target);
             GUI.enabled = true;
-            if (Widgets.ButtonText(new Rect(inner.x + (buttonWidth + 6f) * 2f, y, buttonWidth, 28f), "HNS_RegistryCompare".Translate()))
-            {
-                rightPage = RightPage.Compare;
-                OpenComparisonMenu(component);
-            }
-            y += 42f;
+            y += 48f;
+            if (Widgets.ButtonText(new Rect(0f, y, 150f, 30f), "HNS_Lineage".Translate()))
+                Find.WindowStack.Add(new Dialog_VarietyLineage(selected.Label, selected.traits, selected.parentVarietyIds));
+            y += 44f;
 
-            Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(inner.x, y, inner.width, 30f), "HNS_Traits".Translate());
-            Text.Font = GameFont.Small;
-            y += 34f;
-            Rect traitOut = new Rect(inner.x, y, inner.width, inner.yMax - y);
-            float viewWidth = traitOut.width - 16f;
-            List<float> heights = selected.traits.Select(trait => Mathf.Max(34f, Text.CalcHeight(trait.LabelCap, viewWidth - 12f) + 12f)).ToList();
-            Rect traitView = new Rect(0f, 0f, viewWidth, Mathf.Max(traitOut.height, heights.Sum()));
-            Widgets.BeginScrollView(traitOut, ref traitScroll, traitView);
-            float traitY = 0f;
-            for (int i = 0; i < selected.traits.Count; i++)
+            DrawSection(view, ref y, "Traits");
+            if (rank < KnowledgeRank.Adept) DrawDetailLine(view, ref y, "Advance plant knowledge to reveal cultivar traits.");
+            else foreach (VarietyTraitDef trait in selected.traits.Where(value => value != null))
             {
-                VarietyTraitDef trait = selected.traits[i];
-                Rect row = new Rect(0f, traitY, traitView.width, heights[i] - 3f);
+                Rect row = new Rect(8f, y, view.width - 16f, Mathf.Max(30f, Text.CalcHeight(TraitColorUI.Label(trait), view.width - 24f) + 8f));
                 Widgets.DrawHighlightIfMouseover(row);
-                Widgets.Label(new Rect(row.x + 6f, row.y + 5f, row.width - 12f, row.height - 6f), trait.LabelCap);
-                TooltipHandler.TipRegion(row, trait.LabelCap + "\n\n" + trait.description);
-                traitY += heights[i];
+                Widgets.Label(row.ContractedBy(4f), TraitColorUI.Label(trait));
+                TooltipHandler.TipRegion(row, TraitColorUI.Tooltip(trait));
+                y += row.height + 4f;
+            }
+            if (rank >= KnowledgeRank.Expert)
+            {
+                DrawSection(view, ref y, "Cultivar Modifiers");
+                DrawRecord(view, ref y, "Yield", NovelSeedUtility.YieldFactor(selected.traits).ToStringPercent());
+                DrawRecord(view, ref y, "Sow time", ExpandedTraitUtility.SowWorkFactor(selected.traits).ToStringPercent() + " of base");
+                DrawRecord(view, ref y, "Harvest time", ExpandedTraitUtility.HarvestWorkFactor(selected.traits).ToStringPercent() + " of base");
+                DrawRecord(view, ref y, "Beauty", NovelSeedUtility.BeautyOffset(selected.traits).ToStringWithSign());
+                DrawRecord(view, ref y, "Nutrition", NovelSeedUtility.ProduceNutritionFactor(selected.traits).ToStringPercent());
             }
             Widgets.EndScrollView();
         }
 
-        private void DrawRightPanel(Rect rect, GameComponent_NovelSeeds component)
-        {
-            Rect body = new Rect(rect.x, rect.y + 30f, rect.width, rect.height - 30f);
-            Widgets.DrawMenuSection(body);
-            TabDrawer.DrawTabs(body, new List<TabRecord>
-            {
-                new TabRecord("HNS_RegistryCompare".Translate(), delegate { rightPage = RightPage.Compare; }, rightPage == RightPage.Compare),
-                new TabRecord("HNS_RegistryPrograms".Translate(), delegate { rightPage = RightPage.Programs; }, rightPage == RightPage.Programs)
-            });
-            Rect inner = body.ContractedBy(12f);
-            if (rightPage == RightPage.Compare) DrawComparison(inner, component);
-            else DrawPrograms(inner, component);
-        }
+        internal static bool CanCompareCount(int count) => count >= 2;
 
-        private void DrawComparison(Rect rect, GameComponent_NovelSeeds component)
+        private bool CanCompare => CanCompareCount(comparisonIds.Count);
+
+        private void DrawComparisonTable(Rect rect, GameComponent_NovelSeeds component)
         {
-            Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(rect.x, rect.y, rect.width - 124f, 30f), "HNS_RegistryComparison".Translate());
-            Text.Font = GameFont.Small;
-            if (Widgets.ButtonText(new Rect(rect.xMax - 120f, rect.y, 120f, 28f), comparison == null ? "HNS_RegistryChoose".Translate() : "HNS_RegistryChange".Translate()))
-                OpenComparisonMenu(component);
-            if (selected == null || comparison == null)
+            List<VarietyRecord> selected = comparisonIds.Select(component.GetVariety).Where(value => value != null)
+                .OrderBy(value => value.cropDef?.label).ThenBy(value => value.Label).ToList();
+            if (selected.Count < 2)
             {
-                Color old = GUI.color;
-                GUI.color = Color.gray;
-                Widgets.Label(new Rect(rect.x, rect.y + 46f, rect.width, 70f), "HNS_RegistryComparisonPrompt".Translate());
-                GUI.color = old;
+                Widgets.Label(rect, "Select at least two discovered cultivars on the Cultivars page.");
                 return;
             }
-            float y = rect.y + 42f;
-            Widgets.DefIcon(new Rect(rect.x, y, 54f, 54f), comparison.cropDef);
-            Widgets.Label(new Rect(rect.x + 64f, y, rect.width - 64f, 26f), comparison.Label);
-            Widgets.Label(new Rect(rect.x + 64f, y + 27f, rect.width - 64f, 24f), NovelSeedUtility.TraitBalanceSummary(comparison.traits));
-            y += 68f;
-            List<VarietyTraitDef> selectedTraits = selected.traits.Where(trait => trait != null).Distinct().ToList();
-            List<VarietyTraitDef> comparisonTraits = comparison.traits.Where(trait => trait != null).Distinct().ToList();
-            DrawComparisonGroup(rect, ref y, "HNS_RegistrySharedTraits".Translate().ToString(), selectedTraits.Intersect(comparisonTraits));
-            DrawComparisonGroup(rect, ref y, "HNS_RegistryOnlySelected".Translate(selected.Label).ToString(), selectedTraits.Except(comparisonTraits));
-            DrawComparisonGroup(rect, ref y, "HNS_RegistryOnlyCompared".Translate(comparison.Label).ToString(), comparisonTraits.Except(selectedTraits));
-            List<string> produceEffects = comparison.traits
-                .Select(trait => ProduceTraitEffectUtility.Summary(TraitConfigUtility.Root(trait), HorticultureNovelSeedsMod.Settings))
-                .Where(line => !line.NullOrEmpty() && line != "No Effect").Distinct().ToList();
-            if (produceEffects.Count > 0)
-            {
-                Text.Font = GameFont.Medium;
-                Widgets.Label(new Rect(rect.x, y, rect.width, 28f), "HNS_RegistryProduceEffects".Translate());
-                Text.Font = GameFont.Small;
-                y += 30f;
-                foreach (string line in produceEffects.Take(5)) DrawDetailLine(rect, ref y, line);
-            }
-        }
-
-        private void DrawPrograms(Rect rect, GameComponent_NovelSeeds component)
-        {
             Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(rect.x, rect.y, rect.width - 126f, 30f), "HNS_RegistryPrograms".Translate());
+            Widgets.Label(new Rect(rect.x, rect.y, rect.width, 34f), "Cultivar Comparison");
             Text.Font = GameFont.Small;
-            if (Widgets.ButtonText(new Rect(rect.xMax - 122f, rect.y, 122f, 28f), "HNS_RegistryNewProgram".Translate()))
-                Find.WindowStack.Add(new Dialog_CreateBreedingProgram());
-            List<BreedingProgramRecord> programs = component.BreedingPrograms.Where(program => program != null).ToList();
-            Rect outRect = new Rect(rect.x, rect.y + 40f, rect.width, rect.height - 40f);
-            float viewWidth = outRect.width - 16f;
-            float viewHeight = Mathf.Max(outRect.height, programs.Count * 154f);
-            Rect viewRect = new Rect(0f, 0f, viewWidth, viewHeight);
-            Widgets.BeginScrollView(outRect, ref programScroll, viewRect);
-            for (int i = 0; i < programs.Count; i++)
+            float labelWidth = 150f;
+            float columnWidth = Mathf.Max(150f, (rect.width - labelWidth - 16f) / selected.Count);
+            Rect outer = new Rect(rect.x, rect.y + 42f, rect.width, rect.height - 42f);
+            Rect view = new Rect(0f, 0f, Mathf.Max(outer.width - 16f, labelWidth + columnWidth * selected.Count), 570f);
+            Widgets.BeginScrollView(outer, ref detailScroll, view);
+            for (int i = 0; i < selected.Count; i++)
             {
-                BreedingProgramRecord program = programs[i];
-                Rect row = new Rect(0f, i * 154f, viewRect.width, 146f);
-                Widgets.DrawBoxSolid(row, new Color(0.16f, 0.17f, 0.18f));
-                Widgets.CheckboxLabeled(new Rect(row.x + 8f, row.y + 7f, row.width - 82f, 24f), program.name, ref program.active);
-                if (Widgets.ButtonText(new Rect(row.xMax - 68f, row.y + 5f, 60f, 26f), "Delete".Translate()))
-                    Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation("HNS_RegistryDeleteProgramConfirm".Translate(program.name),
-                        delegate { component.RemoveBreedingProgram(program); }, true));
-                Widgets.Label(new Rect(row.x + 8f, row.y + 36f, row.width - 16f, 22f), program.cropDef.LabelCap);
-                Color old = GUI.color;
-                GUI.color = Color.gray;
-                Widgets.Label(new Rect(row.x + 8f, row.y + 60f, row.width - 16f, 38f), program.DesiredTraitSummary);
-                GUI.color = old;
-                VarietyRecord best = component.CandidateVarieties(program).FirstOrDefault();
-                string candidate = best == null ? "HNS_RegistryNoCandidate".Translate().ToString()
-                    : "HNS_RegistryBestCandidate".Translate(best.Label, program.MatchCount(best), program.desiredTraitRootDefNames.Count);
-                Widgets.Label(new Rect(row.x + 8f, row.y + 103f, row.width - 96f, 34f), candidate);
-                if (best != null && Widgets.ButtonText(new Rect(row.xMax - 82f, row.y + 105f, 74f, 28f), "HNS_RegistryView".Translate()))
-                {
-                    selected = best;
-                    rightPage = RightPage.Compare;
-                }
+                float x = labelWidth + i * columnWidth;
+                Widgets.ThingIcon(new Rect(x + 8f, 4f, 40f, 40f), selected[i].cropDef);
+                Widgets.Label(new Rect(x + 56f, 4f, columnWidth - 62f, 42f), selected[i].Label);
             }
-            if (programs.Count == 0) Widgets.Label(new Rect(8f, 8f, viewRect.width - 16f, 60f), "HNS_RegistryNoPrograms".Translate());
+            float y = 56f;
+            DrawCompareRow(view, ref y, "Parent plant", selected, value => value.cropDef.LabelCap);
+            DrawCompareRow(view, ref y, "Generation", selected, value => LineageDepth(value).ToString());
+            DrawCompareRow(view, ref y, "Traits", selected, value => VisibleKnowledgeRank(value.cropDef) >= KnowledgeRank.Adept
+                ? TraitColorUI.Summary(value.traits) : "Undiscovered information");
+            DrawCompareRow(view, ref y, "Yield", selected, value => VisibleKnowledgeRank(value.cropDef) >= KnowledgeRank.Expert
+                ? NovelSeedUtility.YieldFactor(value.traits).ToStringPercent() : "Undiscovered information");
+            DrawCompareRow(view, ref y, "Sow time", selected, value => VisibleKnowledgeRank(value.cropDef) >= KnowledgeRank.Expert
+                ? ExpandedTraitUtility.SowWorkFactor(value.traits).ToStringPercent() + " of base" : "Undiscovered information");
+            DrawCompareRow(view, ref y, "Harvest time", selected, value => VisibleKnowledgeRank(value.cropDef) >= KnowledgeRank.Expert
+                ? ExpandedTraitUtility.HarvestWorkFactor(value.traits).ToStringPercent() + " of base" : "Undiscovered information");
+            DrawCompareRow(view, ref y, "Beauty", selected, value => VisibleKnowledgeRank(value.cropDef) >= KnowledgeRank.Expert
+                ? NovelSeedUtility.BeautyOffset(value.traits).ToStringWithSign() : "Undiscovered information");
+            DrawCompareRow(view, ref y, "Nutrition", selected, value => VisibleKnowledgeRank(value.cropDef) >= KnowledgeRank.Expert
+                ? NovelSeedUtility.ProduceNutritionFactor(value.traits).ToStringPercent() : "Undiscovered information");
+            DrawCompareRow(view, ref y, "Lineage", selected, value => VisibleKnowledgeRank(value.cropDef) >= KnowledgeRank.Master
+                ? (value.parentVarietyIds.Count == 0 ? "Founder" : value.parentVarietyIds.Count + " recorded parents")
+                : "Undiscovered information");
+            DrawCompareRow(view, ref y, "Products / byproducts", selected, value => VisibleKnowledgeRank(value.cropDef) >= KnowledgeRank.Master
+                ? ProductSummary(value) : "Undiscovered information");
             Widgets.EndScrollView();
         }
 
-        private void OpenComparisonMenu(GameComponent_NovelSeeds component)
+        private static void DrawCompareRow(Rect view, ref float y, string label, List<VarietyRecord> values,
+            Func<VarietyRecord, string> valueFor)
         {
-            if (selected == null) return;
-            List<FloatMenuOption> options = component.VarietiesFor(selected.cropDef).Where(variety => variety != selected)
-                .OrderBy(variety => variety.Label).Select(variety => new FloatMenuOption(variety.Label, delegate { comparison = variety; })).ToList();
-            if (options.Count == 0) options.Add(new FloatMenuOption("HNS_RegistryNoComparison".Translate(), null));
-            Find.WindowStack.Add(new FloatMenu(options));
+            float labelWidth = 150f;
+            float columnWidth = (view.width - labelWidth) / values.Count;
+            float height = values.Select(value => Text.CalcHeight(valueFor(value), columnWidth - 16f)).DefaultIfEmpty(28f).Max();
+            height = Mathf.Max(36f, height + 12f);
+            Widgets.DrawHighlightIfMouseover(new Rect(0f, y, view.width, height));
+            Widgets.Label(new Rect(8f, y + 8f, labelWidth - 16f, height - 8f), label);
+            for (int i = 0; i < values.Count; i++)
+            {
+                float x = labelWidth + i * columnWidth;
+                Widgets.DrawLineVertical(x, y, height);
+                Widgets.Label(new Rect(x + 8f, y + 8f, columnWidth - 16f, height - 8f), valueFor(values[i]));
+            }
+            Widgets.DrawLineHorizontal(0f, y + height, view.width);
+            y += height;
         }
 
-        private bool MatchesCatalogFilter(VarietyRecord variety)
+        private KnowledgeMenuModel KnowledgeModelFor(Pawn pawn, bool colony)
         {
-            if (variety == null || variety.cropDef == null || (!showArchived && variety.registryArchived)) return false;
-            if (!search.NullOrEmpty())
-            {
-                string text = variety.Label + " " + variety.cropDef.label + " " + NovelSeedUtility.TraitSummary(variety.traits) + " " + variety.FirstDiscoveredInfo;
-                if (text.IndexOf(search, StringComparison.OrdinalIgnoreCase) < 0) return false;
-            }
-            if (traitFilter != null && !(variety.traits ?? new List<VarietyTraitDef>())
-                .Any(trait => TraitConfigUtility.Root(trait) == traitFilter)) return false;
-            if (LineageDepth(variety) < minimumGeneration) return false;
-            if (requireProduceEffect && !(variety.traits ?? new List<VarietyTraitDef>())
-                .Any(trait => ProduceTraitEffectUtility.Summary(TraitConfigUtility.Root(trait), HorticultureNovelSeedsMod.Settings) != "No Effect")) return false;
+            return HorticultureSharedKnowledgeIntegration.Menu(pawn, colony);
+        }
+
+        private static KnowledgeRank KnowledgeRankFor(Pawn pawn)
+        {
+            return KnowledgeService.GetPawnExpertiseRank(PlantKnowledgeUtility.DomainId, pawn);
+        }
+
+        private KnowledgeRank VisibleKnowledgeRank(ThingDef plant)
+        {
+            if (plant == null) return KnowledgeRank.Novice;
+            if (knowledgeState.scope == KnowledgeMenuScope.Colony) return ColonyKnowledgeRank(plant);
+            return KnowledgeService.GetPawnKnowledgeRank(PlantKnowledgeUtility.DomainId, plant.defName, knowledgeState.selectedPawn);
+        }
+
+        private static KnowledgeRank ColonyKnowledgeRank(ThingDef plant)
+        {
+            return KnowledgeService.GetColonyKnowledgeRank(PlantKnowledgeUtility.DomainId, plant.defName);
+        }
+
+        private void DrawSearch(Rect rect)
+        {
+            Widgets.Label(new Rect(rect.x, rect.y + 3f, 52f, 24f), "Search");
+            search = Widgets.TextField(new Rect(rect.x + 56f, rect.y, rect.width - 92f, 30f), search ?? string.Empty);
+            if (!search.NullOrEmpty() && Widgets.ButtonText(new Rect(rect.xMax - 30f, rect.y, 30f, 30f), "X")) search = string.Empty;
+        }
+
+        private List<ThingDef> PlantDefs() => DefDatabase<ThingDef>.AllDefsListForReading.Where(NovelSeedUtility.IsGrowableCrop)
+            .OrderBy(def => def.label).ToList();
+
+        private static bool IsDiscovered(ThingDef plant, GameComponent_NovelSeeds component) => plant != null &&
+            (component.VarietiesFor(plant).Any() || KnowledgeService.GetColonyKnowledgeExperience(
+                PlantKnowledgeUtility.DomainId, plant.defName) > 0f);
+
+        private bool MatchesPlantFilter(ThingDef plant, GameComponent_NovelSeeds component)
+        {
+            bool discovered = IsDiscovered(plant, component);
+            if (discoveryFilter == DiscoveryFilter.Discovered && !discovered) return false;
+            if (discoveryFilter == DiscoveryFilter.Undiscovered && discovered) return false;
+            return search.NullOrEmpty() || (discovered ? plant.LabelCap.ToString() : "Undiscovered plant")
+                .IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        private bool MatchesCultivarFilter(VarietyRecord variety)
+        {
+            if (variety?.cropDef == null || (!showArchived && variety.registryArchived)) return false;
+            if (!search.NullOrEmpty() && (variety.Label + " " + variety.cropDef.label + " " + NovelSeedUtility.TraitSummary(variety.traits))
+                .IndexOf(search, StringComparison.OrdinalIgnoreCase) < 0) return false;
+            if (requireProduceEffect && !variety.traits.Any(trait =>
+                    ProduceTraitEffectUtility.Summary(TraitConfigUtility.Root(trait), HorticultureNovelSeedsMod.Settings) != "No Effect")) return false;
             float balance = NovelSeedUtility.TraitBalanceScore(variety.traits);
             switch (balanceFilter)
             {
@@ -382,10 +479,19 @@ namespace HorticultureNovelSeeds
             }
         }
 
-        private void EnsureSelection()
+        private void EnsureSelections()
         {
-            if (selected == null || !GameComponent_NovelSeeds.Instance.AllVarieties.Contains(selected))
-                selected = GameComponent_NovelSeeds.Instance.AllVarieties.OrderBy(variety => variety.cropDef?.label).ThenBy(variety => variety.Label).FirstOrDefault();
+            GameComponent_NovelSeeds component = GameComponent_NovelSeeds.Instance;
+            if (component == null) return;
+            List<Pawn> colonists = Find.Maps.SelectMany(map => map.mapPawns.FreeColonists)
+                .Where(pawn => pawn?.Faction?.def?.isPlayer == true && !pawn.Dead).Distinct().OrderBy(pawn => pawn.LabelShort).ToList();
+            if (knowledgeState.selectedPawn == null || !colonists.Contains(knowledgeState.selectedPawn))
+                knowledgeState.selectedPawn = colonists.FirstOrDefault();
+            if (selectedPlantDefName.NullOrEmpty() || DefDatabase<ThingDef>.GetNamedSilentFail(selectedPlantDefName) == null)
+                selectedPlantDefName = PlantDefs().FirstOrDefault(def => IsDiscovered(def, component))?.defName ?? PlantDefs().FirstOrDefault()?.defName;
+            if (component.GetVariety(selectedCultivarId) == null)
+                selectedCultivarId = component.AllVarieties.OrderBy(value => value.cropDef?.label).ThenBy(value => value.Label).FirstOrDefault()?.id;
+            comparisonIds.RemoveWhere(id => component.GetVariety(id) == null);
         }
 
         private void RefreshAvailability()
@@ -404,80 +510,71 @@ namespace HorticultureNovelSeeds
                 }
                 CompNovelProduceAppearance produce = thing.TryGetComp<CompNovelProduceAppearance>();
                 if (produce != null)
+                foreach (string id in produce.SourceVarietyIds.Where(id => !id.NullOrEmpty()).Distinct())
                 {
-                    foreach (string id in produce.SourceVarietyIds.Where(id => !id.NullOrEmpty()).Distinct())
-                    {
-                        if (!availability.TryGetValue(id, out RegistryAvailability produceStock)) continue;
-                        produceStock.Produce += thing.stackCount;
-                        if (produceStock.Target == null) produceStock.Target = thing;
-                    }
+                    if (!availability.TryGetValue(id, out RegistryAvailability stock)) continue;
+                    stock.Produce += thing.stackCount;
+                    if (stock.Target == null) stock.Target = thing;
                 }
                 CompNovelSeedPack pack = thing.TryGetComp<CompNovelSeedPack>();
                 if (pack?.Valid == true)
                 {
                     VarietyRecord match = GameComponent_NovelSeeds.Instance.FindMatchingVariety(pack.CropDef, pack.Traits);
-                    if (match != null && availability.TryGetValue(match.id, out RegistryAvailability seedStock))
+                    if (match != null && availability.TryGetValue(match.id, out RegistryAvailability stock))
                     {
-                        seedStock.SeedPacks += thing.stackCount;
-                        if (seedStock.Target == null) seedStock.Target = thing;
+                        stock.SeedPacks += thing.stackCount;
+                        if (stock.Target == null) stock.Target = thing;
                     }
                 }
             }
         }
 
-        private RegistryAvailability AvailabilityFor(VarietyRecord variety)
+        private RegistryAvailability AvailabilityFor(VarietyRecord variety) => variety != null &&
+            availability.TryGetValue(variety.id, out RegistryAvailability value) ? value : new RegistryAvailability();
+
+        private static string ProductSummary(VarietyRecord variety)
         {
-            return variety != null && availability.TryGetValue(variety.id, out RegistryAvailability result) ? result : new RegistryAvailability();
+            List<string> values = new List<string>();
+            if (variety.cropDef?.plant?.harvestedThingDef != null) values.Add(variety.cropDef.plant.harvestedThingDef.LabelCap);
+            values.AddRange(variety.traits.Where(trait => trait?.byproductDef != null).Select(trait => trait.byproductDef.LabelCap.ToString()));
+            return values.Count == 0 ? "None" : string.Join(", ", values.Distinct());
+        }
+
+        private static void DrawSection(Rect rect, ref float y, string text)
+        {
+            y += 8f;
+            Widgets.DrawLineHorizontal(rect.x, y, rect.width);
+            y += 12f;
+            Text.Font = GameFont.Medium;
+            Widgets.Label(new Rect(rect.x, y, rect.width, 30f), text);
+            Text.Font = GameFont.Small;
+            y += 36f;
+        }
+
+        private static void DrawRecord(Rect rect, ref float y, string label, string value)
+        {
+            Widgets.Label(new Rect(rect.x + 8f, y, rect.width * 0.45f, 28f), label);
+            Text.Anchor = TextAnchor.UpperRight;
+            Widgets.Label(new Rect(rect.x + rect.width * 0.45f, y, rect.width * 0.53f - 8f, 28f), value);
+            Text.Anchor = TextAnchor.UpperLeft;
+            y += 30f;
         }
 
         private static void DrawDetailLine(Rect rect, ref float y, string text)
         {
             float height = Mathf.Max(24f, Text.CalcHeight(text, rect.width));
             Widgets.Label(new Rect(rect.x, y, rect.width, height), text);
-            y += height + 3f;
+            y += height + 4f;
         }
 
-        private static void DrawComparisonGroup(Rect rect, ref float y, string heading, IEnumerable<VarietyTraitDef> traits)
-        {
-            Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(rect.x, y, rect.width, 28f), heading);
-            Text.Font = GameFont.Small;
-            y += 29f;
-            string value = string.Join(", ", traits.Select(trait => trait.LabelCap.ToString()).ToArray());
-            DrawDetailLine(rect, ref y, value.NullOrEmpty() ? "HNS_RegistryNone".Translate().ToString() : value);
-            y += 5f;
-        }
-
-        private string BalanceFilterLabel() => BalanceFilterLabel(balanceFilter);
-        private static string BalanceFilterLabel(BalanceFilter filter)
-        {
-            switch (filter)
-            {
-                case BalanceFilter.Balanced: return "HNS_RegistryBalanced".Translate();
-                case BalanceFilter.Beneficial: return "HNS_RegistryBeneficial".Translate();
-                case BalanceFilter.Detrimental: return "HNS_RegistryDetrimental".Translate();
-                default: return "HNS_RegistryAll".Translate();
-            }
-        }
-
-        private static int RegistryScore(VarietyRecord variety)
-        {
-            int traitValue = Mathf.Min(25, (variety.traits?.Count ?? 0) * 5);
-            int lineageValue = Mathf.Min(15, LineageDepth(variety) * 3);
-            int balancePenalty = Mathf.Min(20, Mathf.RoundToInt(Mathf.Abs(NovelSeedUtility.TraitBalanceScore(variety.traits)) * 5f));
-            float rarity = variety.traits?.Where(trait => trait != null).Sum(trait => Mathf.Max(0f, 1f - Mathf.Min(1f, trait.commonality))) ?? 0f;
-            return Mathf.Clamp(50 + traitValue + lineageValue + Mathf.RoundToInt(Mathf.Min(10f, rarity * 2f)) - balancePenalty, 0, 100);
-        }
-
-        private static int LineageDepth(VarietyRecord variety)
-        {
-            return LineageDepth(variety, new HashSet<string>());
-        }
+        private static int LineageDepth(VarietyRecord variety) => LineageDepth(variety, new HashSet<string>());
 
         private static int LineageDepth(VarietyRecord variety, HashSet<string> path)
         {
-            if (variety?.parentVarietyIds == null || variety.parentVarietyIds.Count == 0 || !path.Add(variety.id)) return 0;
-            int depth = 1 + variety.parentVarietyIds.Select(id => LineageDepth(GameComponent_NovelSeeds.Instance?.GetVariety(id), path)).DefaultIfEmpty(0).Max();
+            if (variety == null || variety.parentVarietyIds == null || variety.parentVarietyIds.Count == 0 ||
+                !path.Add(variety.id)) return 0;
+            int depth = 1 + variety.parentVarietyIds.Select(id =>
+                LineageDepth(GameComponent_NovelSeeds.Instance?.GetVariety(id), path)).DefaultIfEmpty(0).Max();
             path.Remove(variety.id);
             return depth;
         }
@@ -488,85 +585,6 @@ namespace HorticultureNovelSeeds
             public int Produce;
             public int SeedPacks;
             public Thing Target;
-        }
-    }
-
-    public class Dialog_CreateBreedingProgram : Window
-    {
-        private ThingDef cropDef;
-        private string programName = string.Empty;
-        private string traitSearch = string.Empty;
-        private readonly HashSet<VarietyTraitDef> selectedTraits = new HashSet<VarietyTraitDef>();
-        private Vector2 scroll;
-
-        public override Vector2 InitialSize => new Vector2(760f, 680f);
-
-        public Dialog_CreateBreedingProgram()
-        {
-            doCloseX = true;
-            forcePause = true;
-            absorbInputAroundWindow = true;
-            closeOnAccept = false;
-            cropDef = GameComponent_NovelSeeds.Instance?.AllVarieties.Select(variety => variety.cropDef).FirstOrDefault(def => def != null)
-                ?? DefDatabase<ThingDef>.AllDefsListForReading.FirstOrDefault(NovelSeedUtility.IsGrowableCrop);
-        }
-
-        public override void DoWindowContents(Rect inRect)
-        {
-            Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(inRect.x, inRect.y, inRect.width, 32f), "HNS_RegistryCreateProgram".Translate());
-            Text.Font = GameFont.Small;
-            Widgets.Label(new Rect(inRect.x, inRect.y + 42f, 150f, 28f), "HNS_RegistryProgramName".Translate());
-            programName = Widgets.TextField(new Rect(inRect.x + 156f, inRect.y + 40f, inRect.width - 156f, 30f), programName);
-            Widgets.Label(new Rect(inRect.x, inRect.y + 80f, 150f, 28f), "HNS_RegistryPlant".Translate());
-            if (Widgets.ButtonText(new Rect(inRect.x + 156f, inRect.y + 78f, 280f, 30f), cropDef?.LabelCap ?? "HNS_RegistryChoose".Translate()))
-            {
-                List<FloatMenuOption> options = DefDatabase<ThingDef>.AllDefsListForReading.Where(NovelSeedUtility.IsGrowableCrop)
-                    .OrderBy(def => def.label).Select(def => new FloatMenuOption(def.LabelCap, delegate
-                    {
-                        cropDef = def;
-                        selectedTraits.RemoveWhere(trait => HorticultureNovelSeedsMod.Settings?.IsTraitAllowed(cropDef, trait) == false);
-                    })).ToList();
-                Find.WindowStack.Add(new FloatMenu(options));
-            }
-            Widgets.Label(new Rect(inRect.x, inRect.y + 122f, 150f, 28f), "HNS_RegistryDesiredTraits".Translate());
-            traitSearch = Widgets.TextField(new Rect(inRect.x + 156f, inRect.y + 120f, inRect.width - 156f, 30f), traitSearch);
-            List<VarietyTraitDef> traits = TraitConfigUtility.TopLevelTraits()
-                .Where(trait => cropDef == null || HorticultureNovelSeedsMod.Settings?.IsTraitAllowed(cropDef, trait) != false)
-                .Where(trait => traitSearch.NullOrEmpty() || trait.LabelCap.ToString().IndexOf(traitSearch, StringComparison.OrdinalIgnoreCase) >= 0)
-                .ToList();
-            Rect outRect = new Rect(inRect.x, inRect.y + 160f, inRect.width, inRect.height - 214f);
-            Widgets.DrawMenuSection(outRect);
-            Rect scrollOut = outRect.ContractedBy(8f);
-            float viewWidth = scrollOut.width - 16f;
-            Rect viewRect = new Rect(0f, 0f, viewWidth, Mathf.Max(scrollOut.height, traits.Count * 34f));
-            Widgets.BeginScrollView(scrollOut, ref scroll, viewRect);
-            for (int i = 0; i < traits.Count; i++)
-            {
-                VarietyTraitDef trait = traits[i];
-                bool chosen = selectedTraits.Contains(trait);
-                Rect row = new Rect(0f, i * 34f, viewRect.width, 30f);
-                Widgets.CheckboxLabeled(row, trait.LabelCap, ref chosen);
-                if (chosen) selectedTraits.Add(trait); else selectedTraits.Remove(trait);
-                TooltipHandler.TipRegion(row, trait.description);
-            }
-            Widgets.EndScrollView();
-            GUI.enabled = cropDef != null && selectedTraits.Count > 0;
-            if (Widgets.ButtonText(new Rect(inRect.xMax - 130f, inRect.yMax - 38f, 130f, 32f), "HNS_RegistryCreate".Translate()))
-            {
-                GameComponent_NovelSeeds.Instance?.AddBreedingProgram(programName, cropDef, selectedTraits);
-                Close();
-            }
-            GUI.enabled = true;
-        }
-
-        public override void OnAcceptKeyPressed()
-        {
-            if (cropDef != null && selectedTraits.Count > 0)
-            {
-                GameComponent_NovelSeeds.Instance?.AddBreedingProgram(programName, cropDef, selectedTraits);
-                Close();
-            }
         }
     }
 }

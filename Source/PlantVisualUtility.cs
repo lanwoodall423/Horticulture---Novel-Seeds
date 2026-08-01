@@ -102,8 +102,7 @@ namespace HorticultureNovelSeeds
 
         private static bool TryPrintIndependentMaskLayers(Plant plant, SectionLayer layer, PlantVisualParameters wholeVisual)
         {
-            PlantSettingsRecord maskSettings = HorticultureNovelSeedsMod.Settings?.GetPlantSettings(plant.def, false);
-            if (maskSettings?.HasActivePlantMasks != true) return false;
+            if (!PlantMaskUtility.HasActiveMasks(plant.def)) return false;
             CompPlantVariety comp = plant.TryGetComp<CompPlantVariety>();
             if (comp == null) return false;
 
@@ -115,13 +114,13 @@ namespace HorticultureNovelSeeds
             };
             bool needsLayers = false;
             for (int i = 1; i < maskVisuals.Length; i++)
-                if (maskSettings.AnyPlantMaskLayerHasPixels(i) && !SameGeometry(maskVisuals[0], maskVisuals[i])) { needsLayers = true; break; }
+                if (PlantMaskUtility.AnyResolvedLayerHasPixels(plant.def, i) && !SameGeometry(maskVisuals[0], maskVisuals[i])) { needsLayers = true; break; }
             if (!needsLayers) return false;
 
             PlantVisualParameters baseVisual = maskVisuals[0];
             PrintIsolatedPlantLayer(plant, layer, baseVisual, -1, true, true);
             for (int i = 0; i < maskVisuals.Length; i++)
-                if (maskSettings.AnyPlantMaskLayerHasPixels(i)) PrintIsolatedPlantLayer(plant, layer, maskVisuals[i], i, false, false);
+                if (PlantMaskUtility.AnyResolvedLayerHasPixels(plant.def, i)) PrintIsolatedPlantLayer(plant, layer, maskVisuals[i], i, false, false);
             PrintExternalEffects(plant, layer, wholeVisual);
             return true;
         }
@@ -352,8 +351,7 @@ namespace HorticultureNovelSeeds
                 result.ReadPixels(new Rect(0f, 0f, width, height), 0, 0, false);
                 Color[] pixels = result.GetPixels();
                 CompPlantVariety varietyComp = plant.TryGetComp<CompPlantVariety>();
-                PlantSettingsRecord maskSettings = HorticultureNovelSeedsMod.Settings?.GetPlantSettings(plant.def, false);
-                List<VisualMaskLayerRecord> maskLayers = maskSettings?.HasActivePlantMasks == true ? maskSettings.PlantMaskLayersForVariation(variationIndex, false) : null;
+                List<VisualMaskLayerRecord> maskLayers = PlantMaskUtility.LayersForVariation(plant.def, variationIndex, false);
                 PlantVisualParameters[] maskVisuals = maskLayers == null ? null : new[]
                 {
                     NovelSeedUtility.ResolvePlantTextureParameters(varietyComp, 0),
@@ -384,17 +382,9 @@ namespace HorticultureNovelSeeds
                         pixelVisual = maskLayer >= 0 ? maskVisuals[maskLayer] : visual;
                     }
                     if (!NeedsStyledMaterial(pixelVisual)) continue;
-                    float dull = 1f - pixelVisual.dullness;
-                    Color.RGBToHSV(c, out float h, out float s, out float v);
-                    h = Mathf.Repeat(h + pixelVisual.hueShift, 1f);
-                    s = Mathf.Clamp01(s * pixelVisual.saturation);
-                    v = Mathf.Clamp01(v * pixelVisual.brightness);
-                    c = Color.HSVToRGB(h, s, v, false);
-                    c.r = Mathf.Clamp01(((c.r - 0.5f) * pixelVisual.contrast + 0.5f) * pixelVisual.tintRed * dull);
-                    c.g = Mathf.Clamp01(((c.g - 0.5f) * pixelVisual.contrast + 0.5f) * pixelVisual.tintGreen * dull);
-                    c.b = Mathf.Clamp01(((c.b - 0.5f) * pixelVisual.contrast + 0.5f) * pixelVisual.tintBlue * dull);
-                    c.a = pixels[i].a * pixelVisual.opacity;
-                    pixels[i] = c;
+                    pixels[i] = PlantVisualColorUtility.Apply(c, pixelVisual.tintRed, pixelVisual.tintGreen,
+                        pixelVisual.tintBlue, pixelVisual.hueShift, pixelVisual.saturation, pixelVisual.brightness,
+                        pixelVisual.contrast, pixelVisual.opacity, pixelVisual.dullness);
                 }
                 result.SetPixels(pixels);
                 result.Apply(true, true);

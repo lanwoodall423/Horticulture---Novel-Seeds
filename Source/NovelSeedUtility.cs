@@ -38,18 +38,8 @@ namespace HorticultureNovelSeeds
 
         public Color Apply(Color source)
         {
-            float originalAlpha = source.a;
-            Color.RGBToHSV(source, out float hue, out float sourceSaturation, out float value);
-            hue = Mathf.Repeat(hue + hueShift, 1f);
-            sourceSaturation = Mathf.Clamp01(sourceSaturation * saturation);
-            value = Mathf.Clamp01(value * brightness);
-            Color result = Color.HSVToRGB(hue, sourceSaturation, value, false);
-            float dull = 1f - Mathf.Clamp01(dullness);
-            result.r = Mathf.Clamp01(((result.r - 0.5f) * contrast + 0.5f) * tintRed * dull);
-            result.g = Mathf.Clamp01(((result.g - 0.5f) * contrast + 0.5f) * tintGreen * dull);
-            result.b = Mathf.Clamp01(((result.b - 0.5f) * contrast + 0.5f) * tintBlue * dull);
-            result.a = originalAlpha * Mathf.Clamp(opacity, 0.1f, 1f);
-            return result;
+            return PlantVisualColorUtility.Apply(source, tintRed, tintGreen, tintBlue, hueShift,
+                saturation, brightness, contrast, opacity, dullness);
         }
 
         public int ContentHash
@@ -110,7 +100,7 @@ namespace HorticultureNovelSeeds
         public static bool VanillaFlowersExpandedActive => vanillaFlowersExpandedActive ??
             (vanillaFlowersExpandedActive = ModsConfig.IsActive(VanillaFlowersExpandedPackageId)
                 || ModsConfig.IsActive(VanillaFlowersExpandedPackageId.ToLowerInvariant())).Value;
-        public static void AssignMutationOnSow(Plant plant)
+        public static void AssignMutationOnSow(Plant plant, Pawn sower = null)
         {
             if (plant == null || !IsGrowableCrop(plant.def))
             {
@@ -221,6 +211,7 @@ namespace HorticultureNovelSeeds
                     List<VarietyTraitDef> replacements = new List<VarietyTraitDef>();
                     VarietyTraitDef nutritious = PercentageTraitFactory.Cross(selected.traits, donor.traits);
                     if (nutritious != null) replacements.Add(nutritious);
+                    replacements.AddRange(ColorTraitFactory.Cross(selected.traits, donor.traits, plant.def));
                     int remaining = Mathf.Max(0, Mathf.Clamp(maxDonorTraits, 1, 10) - replacements.Count);
                     List<VarietyTraitDef> additions = replacements.ToList();
                     List<VarietyTraitDef> inheritedForBalance = selected.traits
@@ -453,7 +444,7 @@ namespace HorticultureNovelSeeds
             {
                 return string.Empty;
             }
-            return string.Join(", ", traits.Where(t => t != null).Select(t => t.label.CapitalizeFirst()).ToArray());
+            return TraitColorUI.Summary(traits);
         }
 
         public static bool DefaultTraitAppliesToProduce(VarietyTraitDef trait)
@@ -643,6 +634,25 @@ namespace HorticultureNovelSeeds
             }
             ClampVisual(ref result);
             return result;
+        }
+
+        public static bool HasPlantMaskVisual(CompPlantVariety comp)
+        {
+            if (comp?.ActiveTraits == null) return false;
+            ThingDef cropDef = comp.parent?.def;
+            foreach (VarietyTraitDef trait in comp.ActiveTraits.Where(item => item != null))
+                foreach (VisualSettingsRecord visual in VisualInstances(cropDef, trait))
+                    if (visual?.HasAnyPlantTarget == true && HasColorChange(visual)) return true;
+            return false;
+        }
+
+        private static bool HasColorChange(VisualSettingsRecord visual)
+        {
+            return !Mathf.Approximately(visual.tintRed, 1f) || !Mathf.Approximately(visual.tintGreen, 1f)
+                || !Mathf.Approximately(visual.tintBlue, 1f) || !Mathf.Approximately(visual.hueShift, 0f)
+                || !Mathf.Approximately(visual.saturation, 1f) || !Mathf.Approximately(visual.brightness, 1f)
+                || !Mathf.Approximately(visual.contrast, 1f) || !Mathf.Approximately(visual.opacity, 1f)
+                || !Mathf.Approximately(visual.dullness, 0f);
         }
 
         public static int PlantTextureVisualHash(CompPlantVariety comp)
@@ -1236,8 +1246,8 @@ namespace HorticultureNovelSeeds
             if (hasTint)
             {
                 string tintLabel = VisualOverride(cropDef, trait) == null && !trait.visualTintLabel.NullOrEmpty()
-                    ? trait.visualTintLabel
-                    : "RGB " + tintRed.ToString("0.00") + ", " + tintGreen.ToString("0.00") + ", " + tintBlue.ToString("0.00");
+                    ? trait.visualTintLabel + " " + TraitColorUI.Swatch(new Color(tintRed, tintGreen, tintBlue))
+                    : TraitColorUI.Swatch(new Color(tintRed, tintGreen, tintBlue));
                 AddTraitEffectLine(lines, trait, "HNS_StatVisualTint".Translate(tintLabel).ToString());
             }
             if (visualRadiance > 0f) AddTraitEffectLine(lines, trait, "HNS_StatVisualSetting".Translate("Visual radiance", visualRadiance.ToStringPercent()).ToString());

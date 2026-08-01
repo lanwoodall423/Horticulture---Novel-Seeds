@@ -16,7 +16,6 @@ namespace HorticultureNovelSeeds
         private const string PackageId = "Andromeda.NicePlantsMenu";
         private static readonly Color NicePlantsGray = new Color(0.72f, 0.72f, 0.72f);
         private static readonly ConditionalWeakTable<object, VarietyHolder> selectedVarietiesByRecord = new ConditionalWeakTable<object, VarietyHolder>();
-        private static readonly FieldInfo DefCachedLabelCapField = AccessTools.Field(typeof(Def), "cachedLabelCap");
         private static bool patchApplied;
         private static bool warnedMissingBrowser;
         private static bool warnedPatchFailure;
@@ -25,7 +24,6 @@ namespace HorticultureNovelSeeds
         private static Type dialogType;
         private static Type plantRecordType;
         private static MethodInfo selectMethod;
-        private static MethodInfo drawInfoMethod;
         private static MethodInfo drawRelatedRecipesMethod;
         private static MethodInfo doFilterMethod;
         private static MethodInfo sewAvailableMethod;
@@ -72,9 +70,8 @@ namespace HorticultureNovelSeeds
             if (!IsHandlingPlantMenu() || !EnsureMembers() || growers.NullOrEmpty()) return false;
             try
             {
-                Window dialog = Activator.CreateInstance(dialogType) as Window;
+                Window dialog = CreateDialogForGrowers(growers);
                 if (dialog == null) return false;
-                plantZonesField.SetValue(dialog, growers.Where(grower => grower != null).Distinct().ToList());
                 Find.WindowStack.Add(dialog);
                 return true;
             }
@@ -82,6 +79,29 @@ namespace HorticultureNovelSeeds
             {
                 Log.WarningOnce("[Horticulture - Novel Seeds] Could not open Nice Plants Menu for a custom growing zone. " + exception, 804214419);
                 return false;
+            }
+        }
+
+        public static Window CreateDialogForGrowers(IEnumerable<IPlantToGrowSettable> growers)
+        {
+            if (!EnsureMembers()) return null;
+            List<object> requested = growers?.Where(grower => grower != null).Distinct().Cast<object>().ToList()
+                ?? new List<object>();
+            if (requested.Count == 0) return null;
+
+            List<object> selected = Find.Selector?.SelectedObjects;
+            if (selected == null) return null;
+            List<object> previous = selected.ToList();
+            try
+            {
+                selected.Clear();
+                selected.AddRange(requested);
+                return Activator.CreateInstance(dialogType) as Window;
+            }
+            finally
+            {
+                selected.Clear();
+                selected.AddRange(previous);
             }
         }
 
@@ -104,7 +124,6 @@ namespace HorticultureNovelSeeds
             try
             {
                 harmony.Patch(selectMethod, prefix: new HarmonyMethod(AccessTools.Method(typeof(NicePlantsMenuCompat), nameof(SelectPrefix))));
-                harmony.Patch(drawInfoMethod, prefix: new HarmonyMethod(AccessTools.Method(typeof(NicePlantsMenuCompat), nameof(DrawInfoPrefix))), finalizer: new HarmonyMethod(AccessTools.Method(typeof(NicePlantsMenuCompat), nameof(DrawInfoFinalizer))));
                 harmony.Patch(drawRelatedRecipesMethod, postfix: new HarmonyMethod(AccessTools.Method(typeof(NicePlantsMenuCompat), nameof(DrawRelatedRecipesPostfix))));
                 harmony.Patch(sewAvailableMethod, postfix: new HarmonyMethod(AccessTools.Method(typeof(NicePlantsMenuCompat), nameof(SewAvailablePostfix))));
                 if (doFilterMethod != null) harmony.Patch(doFilterMethod, postfix: new HarmonyMethod(AccessTools.Method(typeof(NicePlantsMenuCompat), nameof(DoFilterPostfix))));
@@ -164,36 +183,6 @@ namespace HorticultureNovelSeeds
                 }
                 return true;
             }
-        }
-
-        public static void DrawInfoPrefix(object __instance, out NicePlantsInfoOverrideState __state)
-        {
-            __state = null;
-            if (!EnsureMembers())
-            {
-                return;
-            }
-
-            object plantRecord = drawInfoForField?.GetValue(__instance);
-            VarietyRecord variety = VarietyForRecord(__instance, plantRecord);
-            if (variety == null)
-            {
-                return;
-            }
-
-            ThingDef plantDef = plantRecordPlantField.GetValue(plantRecord) as ThingDef;
-            if (plantDef?.plant == null || variety.cropDef != plantDef)
-            {
-                return;
-            }
-
-            __state = NicePlantsInfoOverrideState.Apply(plantDef, variety);
-        }
-
-        public static Exception DrawInfoFinalizer(NicePlantsInfoOverrideState __state, Exception __exception)
-        {
-            __state?.Restore();
-            return __exception;
         }
 
         public static void DrawRelatedRecipesPostfix(object __instance, [HarmonyArgument("y")] ref float y, [HarmonyArgument("innerRect")] Rect innerRect)
@@ -325,14 +314,14 @@ namespace HorticultureNovelSeeds
 
         private static void DrawNicePlantsTraitRow(ref float y, Rect innerRect, VarietyTraitDef trait)
         {
-            string label = "HNS_NicePlantsMenuBullet".Translate(trait.LabelCap).ToString();
+            string label = "HNS_NicePlantsMenuBullet".Translate(TraitColorUI.Label(trait)).ToString();
             float height = Mathf.Max(24f, Text.CalcHeight(label, innerRect.width - 8f));
             Rect rowRect = new Rect(innerRect.x + 8f, y, innerRect.width - 8f, height);
             Widgets.DrawHighlightIfMouseover(rowRect);
             Widgets.Label(rowRect, label);
             if (!trait.description.NullOrEmpty())
             {
-                TooltipHandler.TipRegion(rowRect, trait.LabelCap + "\n\n" + trait.description);
+                TooltipHandler.TipRegion(rowRect, TraitColorUI.Tooltip(trait));
             }
             y += height + 2f;
         }
@@ -352,7 +341,7 @@ namespace HorticultureNovelSeeds
 
         private static bool EnsureMembers()
         {
-            if (dialogType != null && plantRecordType != null && selectMethod != null && drawInfoMethod != null && drawRelatedRecipesMethod != null && sewAvailableMethod != null && plantZonesField != null && plantRecordPlantField != null && drawInfoForField != null)
+            if (dialogType != null && plantRecordType != null && selectMethod != null && drawRelatedRecipesMethod != null && sewAvailableMethod != null && plantZonesField != null && plantRecordPlantField != null && drawInfoForField != null)
             {
                 return true;
             }
@@ -365,7 +354,6 @@ namespace HorticultureNovelSeeds
             }
 
             selectMethod = AccessTools.Method(dialogType, "Select", new[] { plantRecordType });
-            drawInfoMethod = AccessTools.Method(dialogType, "DrawInfo");
             drawRelatedRecipesMethod = AccessTools.Method(dialogType, "DrawRelatedRecipes");
             doFilterMethod = AccessTools.Method(dialogType, "DoFilter", new[] { plantRecordType });
             sewAvailableMethod = AccessTools.Method(dialogType, "SewAvailable");
@@ -381,7 +369,7 @@ namespace HorticultureNovelSeeds
             shouldRecheckCurrentPlantsField = AccessTools.Field(dialogType, "shouldRecheckCurrentPlants");
             plantRecordPlantField = AccessTools.Field(plantRecordType, "plant");
 
-            return selectMethod != null && drawInfoMethod != null && drawRelatedRecipesMethod != null && sewAvailableMethod != null && plantZonesField != null && plantRecordPlantField != null && drawInfoForField != null;
+            return selectMethod != null && drawRelatedRecipesMethod != null && sewAvailableMethod != null && plantZonesField != null && plantRecordPlantField != null && drawInfoForField != null;
         }
 
         private static void ApplyPlantDefThroughNicePlantsMenu(List<IPlantToGrowSettable> settables, ThingDef plantDef)
@@ -562,29 +550,6 @@ namespace HorticultureNovelSeeds
             return sawMatchingGrower ? selected : null;
         }
 
-        private static string VarietyLabel(ThingDef plantDef, VarietyRecord variety)
-        {
-            return variety.Label + " " + plantDef.LabelCap;
-        }
-
-        private static TaggedString GetCachedLabelCap(ThingDef def)
-        {
-            if (DefCachedLabelCapField == null)
-            {
-                return (TaggedString)null;
-            }
-            return (TaggedString)DefCachedLabelCapField.GetValue(def);
-        }
-
-        private static void ClearCachedLabelCap(ThingDef def)
-        {
-            SetCachedLabelCap(def, (TaggedString)null);
-        }
-
-        private static void SetCachedLabelCap(ThingDef def, TaggedString value)
-        {
-            DefCachedLabelCapField?.SetValue(def, value);
-        }
         private class VarietyHolder
         {
             public readonly VarietyRecord variety;
@@ -602,121 +567,6 @@ namespace HorticultureNovelSeeds
             }
         }
 
-        public class NicePlantsInfoOverrideState
-        {
-            private readonly ThingDef plantDef;
-            private readonly PlantProperties plantProperties;
-            private readonly string originalLabel;
-            private readonly string originalDescription;
-            private readonly TaggedString originalCachedLabelCap;
-            private readonly float originalHarvestYield;
-            private readonly float originalHarvestWork;
-            private readonly float originalSowWork;
-            private readonly float originalHarvestAfterGrowth;
-            private readonly float originalMinGrowthTemperature;
-            private readonly float originalMinOptimalGrowthTemperature;
-            private readonly float originalMaxOptimalGrowthTemperature;
-            private readonly float originalMaxGrowthTemperature;
-            private readonly List<StatModifier> originalStatBases;
-
-            private NicePlantsInfoOverrideState(ThingDef plantDef)
-            {
-                this.plantDef = plantDef;
-                plantProperties = plantDef.plant;
-                originalLabel = plantDef.label;
-                originalDescription = plantDef.description;
-                originalCachedLabelCap = GetCachedLabelCap(plantDef);
-                originalHarvestYield = plantProperties.harvestYield;
-                originalHarvestWork = plantProperties.harvestWork;
-                originalSowWork = plantProperties.sowWork;
-                originalHarvestAfterGrowth = plantProperties.harvestAfterGrowth;
-                originalMinGrowthTemperature = plantProperties.minGrowthTemperature;
-                originalMinOptimalGrowthTemperature = plantProperties.minOptimalGrowthTemperature;
-                originalMaxOptimalGrowthTemperature = plantProperties.maxOptimalGrowthTemperature;
-                originalMaxGrowthTemperature = plantProperties.maxGrowthTemperature;
-                originalStatBases = CopyStatBases(plantDef.statBases);
-            }
-
-            public static NicePlantsInfoOverrideState Apply(ThingDef plantDef, VarietyRecord variety)
-            {
-                NicePlantsInfoOverrideState state = new NicePlantsInfoOverrideState(plantDef);
-                float yieldFactor = NovelSeedUtility.YieldFactor(variety.traits);
-                float harvestWorkFactor = ExpandedTraitUtility.HarvestWorkFactor(variety.traits);
-                float sowWorkFactor = ExpandedTraitUtility.SowWorkFactor(variety.traits);
-                float perennialResetGrowth = NovelSeedUtility.PerennialHarvestAfterGrowth(variety.traits);
-                float beautyOffset = NovelSeedUtility.BeautyOffset(variety.traits);
-                NovelSeedUtility.TemperatureOffsets(variety.traits, out float coldOffset, out float heatOffset);
-
-                plantDef.label = VarietyLabel(plantDef, variety);
-                ClearCachedLabelCap(plantDef);
-                state.plantProperties.harvestYield *= yieldFactor;
-                state.plantProperties.harvestWork = UnityEngine.Mathf.Max(1f, state.plantProperties.harvestWork * harvestWorkFactor);
-                state.plantProperties.sowWork = UnityEngine.Mathf.Max(1f, state.plantProperties.sowWork * sowWorkFactor);
-                if (perennialResetGrowth > 0f)
-                {
-                    state.plantProperties.harvestAfterGrowth = UnityEngine.Mathf.Max(state.plantProperties.harvestAfterGrowth, perennialResetGrowth);
-                }
-                state.plantProperties.minGrowthTemperature += coldOffset;
-                state.plantProperties.minOptimalGrowthTemperature += coldOffset;
-                state.plantProperties.maxOptimalGrowthTemperature += heatOffset;
-                state.plantProperties.maxGrowthTemperature += heatOffset;
-                state.ApplyBeautyOffset(beautyOffset);
-                return state;
-            }
-
-            public void Restore()
-            {
-                plantDef.label = originalLabel;
-                plantDef.description = originalDescription;
-                SetCachedLabelCap(plantDef, originalCachedLabelCap);
-                plantProperties.harvestYield = originalHarvestYield;
-                plantProperties.harvestWork = originalHarvestWork;
-                plantProperties.sowWork = originalSowWork;
-                plantProperties.harvestAfterGrowth = originalHarvestAfterGrowth;
-                plantProperties.minGrowthTemperature = originalMinGrowthTemperature;
-                plantProperties.minOptimalGrowthTemperature = originalMinOptimalGrowthTemperature;
-                plantProperties.maxOptimalGrowthTemperature = originalMaxOptimalGrowthTemperature;
-                plantProperties.maxGrowthTemperature = originalMaxGrowthTemperature;
-                plantDef.statBases = CopyStatBases(originalStatBases);
-            }
-
-            private void ApplyBeautyOffset(float beautyOffset)
-            {
-                if (UnityEngine.Mathf.Approximately(beautyOffset, 0f))
-                {
-                    return;
-                }
-                ApplyStatBaseOffset("Beauty", beautyOffset);
-                ApplyStatBaseOffset("BeautyOutdoors", beautyOffset);
-            }
-
-            private void ApplyStatBaseOffset(string statDefName, float offset)
-            {
-                StatDef stat = DefDatabase<StatDef>.GetNamedSilentFail(statDefName);
-                if (stat == null)
-                {
-                    return;
-                }
-                if (plantDef.statBases == null)
-                {
-                    plantDef.statBases = new List<StatModifier>();
-                }
-                StatModifier modifier = plantDef.statBases.FirstOrDefault(statBase => statBase.stat == stat);
-                if (modifier != null)
-                {
-                    modifier.value += offset;
-                }
-                else
-                {
-                    plantDef.statBases.Add(new StatModifier { stat = stat, value = offset });
-                }
-            }
-
-            private static List<StatModifier> CopyStatBases(List<StatModifier> statBases)
-            {
-                return statBases?.Select(statBase => new StatModifier { stat = statBase.stat, value = statBase.value }).ToList();
-            }
-        }
     }
 }
 

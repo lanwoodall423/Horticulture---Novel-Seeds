@@ -100,7 +100,7 @@ namespace HorticultureNovelSeeds
         private static float RowHeight(CompNovelProduceAppearance comp, VarietyTraitDef trait, float width, ThingDef productDef)
         {
             string effect = ProduceEffectLine(comp, trait, productDef);
-            float labelHeight = Mathf.Max(22f, Text.CalcHeight(trait.LabelCap, width - 12f));
+            float labelHeight = Mathf.Max(22f, Text.CalcHeight(TraitColorUI.Label(trait), width - 12f));
             float effectHeight = effect.NullOrEmpty() ? 0f : Text.CalcHeight(effect, width - 12f);
             return Mathf.Max(42f, 8f + labelHeight + effectHeight + (effectHeight > 0f ? 4f : 0f));
         }
@@ -109,8 +109,9 @@ namespace HorticultureNovelSeeds
         {
             Widgets.DrawHighlightIfMouseover(rect);
             float width = rect.width - 12f;
-            float labelHeight = Mathf.Max(22f, Text.CalcHeight(trait.LabelCap, width));
-            Widgets.Label(new Rect(rect.x + 6f, rect.y + 3f, width, labelHeight), trait.LabelCap);
+            string label = TraitColorUI.Label(trait);
+            float labelHeight = Mathf.Max(22f, Text.CalcHeight(label, width));
+            Widgets.Label(new Rect(rect.x + 6f, rect.y + 3f, width, labelHeight), label);
             string effect = ProduceEffectLine(comp, trait, productDef);
             if (!effect.NullOrEmpty())
             {
@@ -119,7 +120,7 @@ namespace HorticultureNovelSeeds
                 Widgets.Label(new Rect(rect.x + 6f, rect.y + 3f + labelHeight, width, rect.height - labelHeight - 5f), effect);
                 GUI.color = previous;
             }
-            if (!trait.description.NullOrEmpty()) TooltipHandler.TipRegion(rect, trait.description);
+            if (!trait.description.NullOrEmpty()) TooltipHandler.TipRegion(rect, TraitColorUI.Tooltip(trait));
         }
     }
 }

@@ -68,6 +68,7 @@ namespace HorticultureNovelSeeds
                 int consumed = System.Math.Min(carried.stackCount, trait.requiredResourceCount);
                 carried.SplitOff(consumed).Destroy();
                 if (consumed >= trait.requiredResourceCount) comp.SatisfyResource();
+                if (consumed >= trait.requiredResourceCount) PlantKnowledgeUtility.RecordFertilizing(pawn, plant.def);
             };
             apply.defaultCompleteMode = ToilCompleteMode.Instant;
             yield return apply;

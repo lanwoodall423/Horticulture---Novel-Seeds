@@ -99,6 +99,7 @@ namespace HorticultureNovelSeeds
             saveSeedsRequested = false;
             crossPollinationParentVarietyId = null;
             InvalidateTraitCache();
+            ExpandedTraitUtility.RegisterSelfSeedingPlant(this);
         }
 
         public void SetPendingTraits(List<VarietyTraitDef> traits)
@@ -115,6 +116,7 @@ namespace HorticultureNovelSeeds
             saveSeedsRequested = false;
             crossPollinationParentVarietyId = null;
             InvalidateTraitCache();
+            ExpandedTraitUtility.RegisterSelfSeedingPlant(this);
         }
 
         public void SetCrossPollinatedTraits(List<VarietyTraitDef> traits, VarietyRecord donor)
@@ -187,7 +189,11 @@ namespace HorticultureNovelSeeds
             {
                 transientTraits = new List<VarietyTraitDef>();
             }
-            if (Scribe.mode == LoadSaveMode.PostLoadInit) InvalidateTraitCache();
+            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            {
+                InvalidateTraitCache();
+                ExpandedTraitUtility.RegisterSelfSeedingPlant(this);
+            }
         }
 
         private void InvalidateTraitCache()
@@ -403,6 +409,7 @@ namespace HorticultureNovelSeeds
                 return;
             }
             VarietyRecord variety = GameComponent_NovelSeeds.Instance.UnlockVariety(cropDef, traits, varietyName.Trim(), parentVarietyIds, false, discoverer);
+            PlantKnowledgeUtility.RecordSeedDiscovery(discoverer, cropDef);
             Find.LetterStack.ReceiveLetter("HNS_VarietyUnlocked".Translate(variety.Label), "HNS_VarietyUnlockedDesc".Translate(variety.Label, cropDef.label), LetterDefOf.PositiveEvent);
             parent.Destroy();
         }

@@ -178,7 +178,7 @@ namespace HorticultureNovelSeeds
         public override void DoWindowContents(Rect inRect)
         {
             Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(inRect.x, inRect.y, inRect.width, 32f), trait.LabelCap + " - Valid Plant Tags");
+            Widgets.Label(new Rect(inRect.x, inRect.y, inRect.width, 32f), TraitColorUI.Label(trait) + " - Valid Plant Tags");
             Text.Font = GameFont.Small;
             Widgets.Label(new Rect(inRect.x, inRect.y + 38f, inRect.width, 42f), "This trait is valid when a plant has at least one selected tag. Built-in trait requirements still apply.");
             search = Widgets.TextField(new Rect(inRect.x, inRect.y + 84f, inRect.width, 30f), search ?? string.Empty);

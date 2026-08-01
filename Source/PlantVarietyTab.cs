@@ -133,8 +133,10 @@ namespace HorticultureNovelSeeds
         private static float TraitHeight(VarietyTraitDef trait, float width)
         {
             float textWidth = Mathf.Max(80f, width - 12f);
-            float labelHeight = Mathf.Max(22f, Text.CalcHeight(trait.LabelCap, textWidth));
-            float descriptionHeight = trait.description.NullOrEmpty() ? 0f : Text.CalcHeight(trait.description, textWidth);
+            string label = TraitColorUI.Label(trait);
+            string description = TraitColorUI.Description(trait);
+            float labelHeight = Mathf.Max(22f, Text.CalcHeight(label, textWidth));
+            float descriptionHeight = description.NullOrEmpty() ? 0f : Text.CalcHeight(description, textWidth);
             return Mathf.Max(42f, 7f + labelHeight + descriptionHeight + (descriptionHeight > 0f ? 5f : 0f));
         }
 
@@ -147,17 +149,19 @@ namespace HorticultureNovelSeeds
         {
             Widgets.DrawHighlightIfMouseover(rect);
             float textWidth = rect.width - 12f;
-            float labelHeight = Mathf.Max(22f, Text.CalcHeight(trait.LabelCap, textWidth));
-            Widgets.Label(new Rect(rect.x + 6f, rect.y + 3f, textWidth, labelHeight), trait.LabelCap);
-            if (!trait.description.NullOrEmpty())
+            string label = TraitColorUI.Label(trait);
+            string description = TraitColorUI.Description(trait);
+            float labelHeight = Mathf.Max(22f, Text.CalcHeight(label, textWidth));
+            Widgets.Label(new Rect(rect.x + 6f, rect.y + 3f, textWidth, labelHeight), label);
+            if (!description.NullOrEmpty())
             {
                 float descriptionY = rect.y + 3f + labelHeight;
-                float descriptionHeight = Mathf.Max(18f, Text.CalcHeight(trait.description, textWidth));
+                float descriptionHeight = Mathf.Max(18f, Text.CalcHeight(description, textWidth));
                 Color previous = GUI.color;
                 GUI.color = new Color(0.72f, 0.72f, 0.72f);
-                Widgets.Label(new Rect(rect.x + 6f, descriptionY, textWidth, descriptionHeight), trait.description);
+                Widgets.Label(new Rect(rect.x + 6f, descriptionY, textWidth, descriptionHeight), description);
                 GUI.color = previous;
-                TooltipHandler.TipRegion(rect, trait.description);
+                TooltipHandler.TipRegion(rect, TraitColorUI.Tooltip(trait));
             }
         }
 

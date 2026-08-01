@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 using HarmonyLib;
 using RimWorld;
 using UnityEngine;
@@ -10,6 +11,28 @@ using Verse.AI;
 
 namespace HorticultureNovelSeeds
 {
+    [HarmonyPatch(typeof(Plant), nameof(Plant.GetGizmos))]
+    public static class Plant_GetGizmos_MaskEditor_Patch
+    {
+        public static IEnumerable<Gizmo> Postfix(IEnumerable<Gizmo> values, Plant __instance)
+        {
+            foreach (Gizmo gizmo in values ?? Enumerable.Empty<Gizmo>()) yield return gizmo;
+            if (!Prefs.DevMode || __instance?.Spawned != true || Find.Selector.SingleSelectedThing != __instance) yield break;
+            yield return new Command_Action
+            {
+                defaultLabel = "DEV: Edit Plant Mask",
+                defaultDesc = "Open the mask editor for this plant and its currently displayed texture variation.",
+                icon = __instance.def.uiIcon,
+                action = delegate
+                {
+                    Material material = __instance.Graphic?.MatSingleFor(__instance);
+                    int variation = PlantMaskUtility.VariationIndexForTexture(__instance.def, material?.mainTexture, 0);
+                    Find.WindowStack.Add(new Dialog_PlantMasks(__instance.def, false, variation));
+                }
+            };
+        }
+    }
+
     [HarmonyPatch(typeof(DefGenerator), nameof(DefGenerator.GenerateImpliedDefs_PreResolve))]
     public static class DefGenerator_AddPlantMutationComps_Patch
     {
@@ -87,20 +110,51 @@ namespace HorticultureNovelSeeds
     [HarmonyPatch]
     public static class JobDriverPlantSow_AssignMutation_Patch
     {
-        public static MethodBase TargetMethod()
+        public sealed class CompletionState
         {
-            Type displayClass = AccessTools.TypeByName("RimWorld.JobDriver_PlantSow+<>c__DisplayClass5_0");
-            return AccessTools.Method(displayClass, "<MakeNewToils>b__3");
+            public JobDriver_PlantSow driver;
+            public Plant plant;
+            public float priorWork;
+            public float requiredWork;
         }
 
-        public static void Postfix(object __instance)
+        public static MethodBase TargetMethod()
         {
-            JobDriver_PlantSow driver = AccessTools.Field(__instance.GetType(), "<>4__this")?.GetValue(__instance) as JobDriver_PlantSow;
+            return JobDriverPlantSow_MutationWorkUtility.CompletionMethod();
+        }
+
+        public static void Prefix(object __instance, out CompletionState __state)
+        {
+            __state = null;
+            JobDriver_PlantSow driver = JobDriverPlantSow_MutationWorkUtility.DriverFromDisplayClass(__instance);
             Plant plant = driver?.job?.GetTarget(TargetIndex.A).Thing as Plant;
-            NovelSeedUtility.AssignMutationOnSow(plant);
-            CompPlantVariety comp = plant?.TryGetComp<CompPlantVariety>();
-            NovelSeedUtility.ApplyJoyResinThought(driver?.pawn, comp?.ActiveTraits);
-            ExpandedTraitUtility.ApplyResinEffects(driver?.pawn, plant, comp?.ActiveTraits);
+            if (plant?.def?.plant == null) return;
+            float requiredWork = JobDriverPlantSow_MutationWorkUtility.AdjustedSowWork(plant.def.plant.sowWork, driver);
+            float priorWork = JobDriverPlantSow_MutationWorkUtility.SowWorkDone(driver);
+            if (priorWork >= requiredWork) return;
+            __state = new CompletionState
+            {
+                driver = driver,
+                plant = plant,
+                priorWork = priorWork,
+                requiredWork = requiredWork
+            };
+        }
+
+        public static void Postfix(CompletionState __state)
+        {
+            if (__state?.plant?.Destroyed != false
+                || __state.priorWork >= __state.requiredWork
+                || JobDriverPlantSow_MutationWorkUtility.SowWorkDone(__state.driver) < __state.requiredWork)
+            {
+                return;
+            }
+
+            NovelSeedUtility.AssignMutationOnSow(__state.plant, __state.driver?.pawn);
+            PlantKnowledgeUtility.RecordSowing(__state.driver?.pawn, __state.plant.def);
+            CompPlantVariety comp = __state.plant.TryGetComp<CompPlantVariety>();
+            NovelSeedUtility.ApplyJoyResinThought(__state.driver?.pawn, comp?.ActiveTraits);
+            ExpandedTraitUtility.ApplyResinEffects(__state.driver?.pawn, __state.plant, comp?.ActiveTraits);
         }
     }
 
@@ -131,20 +185,10 @@ namespace HorticultureNovelSeeds
         public Map map;
         public Pawn harvester;
         public Plant plant;
-        public PlantProperties plantProperties;
-        public float originalHarvestAfterGrowth;
+        public float perennialResetGrowth;
         public bool pendingDiscoveryHarvest;
         public bool shouldSaveSeeds;
         public bool shouldApplyHarvestEffects;
-        public bool restoreHarvestAfterGrowth;
-
-        public void RestoreHarvestAfterGrowth()
-        {
-            if (restoreHarvestAfterGrowth && plantProperties != null)
-            {
-                plantProperties.harvestAfterGrowth = originalHarvestAfterGrowth;
-            }
-        }
     }
 
     [HarmonyPatch(typeof(Plant), nameof(Plant.PlantCollected))]
@@ -152,6 +196,28 @@ namespace HorticultureNovelSeeds
     {
         private const PlantDestructionMode HarvestMode = (PlantDestructionMode)2;
         private const PlantDestructionMode CutMode = (PlantDestructionMode)3;
+        private static readonly MethodInfo HarvestDestroysGetter = AccessTools.PropertyGetter(typeof(PlantProperties), nameof(PlantProperties.HarvestDestroys));
+        private static readonly MethodInfo EffectiveHarvestDestroysMethod = AccessTools.Method(typeof(PlantCollected_DropMutationSeed_Patch), nameof(EffectiveHarvestDestroys));
+
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            foreach (CodeInstruction instruction in instructions)
+            {
+                yield return instruction;
+                if (instruction.Calls(HarvestDestroysGetter))
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return new CodeInstruction(OpCodes.Ldarg_2);
+                    yield return new CodeInstruction(OpCodes.Call, EffectiveHarvestDestroysMethod);
+                }
+            }
+        }
+
+        public static bool EffectiveHarvestDestroys(bool baseValue, Plant plant, PlantDestructionMode mode)
+        {
+            return baseValue && (mode != HarvestMode
+                || NovelSeedUtility.PerennialHarvestAfterGrowth(plant?.TryGetComp<CompPlantVariety>()) <= 0f);
+        }
 
         public static void Prefix(Plant __instance, Pawn by, PlantDestructionMode plantDestructionMode, out HarvestState __state)
         {
@@ -178,24 +244,16 @@ namespace HorticultureNovelSeeds
                 map = __instance.Map,
                 harvester = by,
                 plant = __instance,
+                perennialResetGrowth = harvestable ? NovelSeedUtility.PerennialHarvestAfterGrowth(activeTraits) : 0f,
                 pendingDiscoveryHarvest = matureDiscovery,
                 shouldSaveSeeds = comp.SaveSeedsRequested && matureDiscovery,
                 shouldApplyHarvestEffects = harvestable
             };
-
-            float resetGrowth = NovelSeedUtility.PerennialHarvestAfterGrowth(activeTraits);
-            if (harvestable && resetGrowth > 0f && __instance.def?.plant != null)
-            {
-                PlantProperties plantProperties = __instance.def.plant;
-                __state.plantProperties = plantProperties;
-                __state.originalHarvestAfterGrowth = plantProperties.harvestAfterGrowth;
-                __state.restoreHarvestAfterGrowth = true;
-                plantProperties.harvestAfterGrowth = Mathf.Max(plantProperties.harvestAfterGrowth, resetGrowth);
-            }
         }
 
-        public static void Postfix(HarvestState __state)
+        public static void Postfix(Plant __instance, Pawn by, PlantDestructionMode plantDestructionMode, HarvestState __state)
         {
+            PlantKnowledgeUtility.RecordPlantWork(by, __state?.cropDef ?? __instance?.def, plantDestructionMode);
             if (__state?.shouldSaveSeeds == true)
             {
                 NovelSeedUtility.DropDiscoverySeed(__state.cropDef, __state.traits, __state.position, __state.map, __state.lineageParentIds);
@@ -203,6 +261,10 @@ namespace HorticultureNovelSeeds
             if (__state?.pendingDiscoveryHarvest == true)
             {
                 __state.comp?.ClearPendingDiscovery();
+            }
+            if (__state?.perennialResetGrowth > 0f && __instance?.Destroyed == false)
+            {
+                __instance.Growth = Mathf.Max(__instance.Growth, __state.perennialResetGrowth);
             }
 
             if (__state?.shouldApplyHarvestEffects == true && __state.harvester != null)
@@ -217,11 +279,6 @@ namespace HorticultureNovelSeeds
             }
         }
 
-        public static Exception Finalizer(HarvestState __state, Exception __exception)
-        {
-            __state?.RestoreHarvestAfterGrowth();
-            return __exception;
-        }
     }
     [HarmonyPatch(typeof(Plant), nameof(Plant.CropBlighted))]
     public static class PlantCropBlighted_Mutation_Patch
@@ -304,7 +361,7 @@ namespace HorticultureNovelSeeds
                 return true;
             }
             PlantVisualParameters visual = NovelSeedUtility.ResolveVisualParameters(comp);
-            if (visual.IsDefault && !PlantMaskUtility.HasActiveMasks(__instance.def))
+            if (visual.IsDefault && (!NovelSeedUtility.HasPlantMaskVisual(comp) || !PlantMaskUtility.HasActiveMasks(__instance.def)))
             {
                 return true;
             }
@@ -371,8 +428,9 @@ namespace HorticultureNovelSeeds
     [HarmonyPatch(typeof(JobDriver_PlantWork), nameof(JobDriver_PlantWork.WorkDonePerTick))]
     public static class JobDriverPlantWork_WorkDonePerTick_Mutation_Patch
     {
-        public static void Postfix(Plant plant, ref float __result)
+        public static void Postfix(Pawn actor, Plant plant, ref float __result)
         {
+            if (plant != null) __result *= PlantKnowledgeUtility.PlantWorkSpeedFactor(actor, plant.def);
             CompPlantVariety comp = plant?.TryGetComp<CompPlantVariety>();
             if (comp == null || !comp.HasAnyTraits)
             {
@@ -389,100 +447,130 @@ namespace HorticultureNovelSeeds
 
     public static class JobDriverPlantSow_MutationWorkUtility
     {
-        private static readonly Type DisplayClassType = AccessTools.TypeByName("RimWorld.JobDriver_PlantSow+<>c__DisplayClass5_0");
-        private static readonly FieldInfo DriverField = DisplayClassType == null ? null : AccessTools.Field(DisplayClassType, "<>4__this");
+        private static readonly FieldInfo SowWorkField = AccessTools.Field(typeof(PlantProperties), nameof(PlantProperties.sowWork));
+        private static readonly FieldInfo SowWorkDoneField = AccessTools.Field(typeof(JobDriver_PlantSow), "sowWorkDone");
+        private static readonly Dictionary<Type, FieldInfo> DriverFields = new Dictionary<Type, FieldInfo>();
+        private static List<MethodBase> sowWorkMethods;
+        private static MethodBase completionMethod;
 
-        public static MethodBase TickMethod()
+        public static IEnumerable<MethodBase> SowWorkMethods()
         {
-            return AccessTools.Method(DisplayClassType, "<MakeNewToils>b__4", new[] { typeof(int) });
+            EnsureMethods();
+            return sowWorkMethods;
         }
 
-        public static MethodBase ProgressMethod()
+        public static MethodBase CompletionMethod()
         {
-            return AccessTools.Method(DisplayClassType, "<MakeNewToils>b__5");
+            EnsureMethods();
+            return completionMethod;
         }
 
         public static JobDriver_PlantSow DriverFromDisplayClass(object displayClass)
         {
-            return DriverField?.GetValue(displayClass) as JobDriver_PlantSow;
+            if (displayClass == null) return null;
+            Type type = displayClass.GetType();
+            if (!DriverFields.TryGetValue(type, out FieldInfo field))
+            {
+                field = DriverField(type);
+                DriverFields[type] = field;
+            }
+            return field?.GetValue(displayClass) as JobDriver_PlantSow;
         }
 
-        public static float SowingWorkFactor(JobDriver_PlantSow driver)
+        public static float AdjustedSowWork(float baseWork, object displayClass)
+        {
+            return AdjustedSowWork(baseWork, DriverFromDisplayClass(displayClass));
+        }
+
+        public static float AdjustedSowWork(float baseWork, JobDriver_PlantSow driver)
         {
             ThingDef plantDef = driver?.job?.plantDefToSow;
-            if (plantDef == null)
-            {
-                return 1f;
-            }
+            if (plantDef == null) return Mathf.Max(1f, baseWork);
             IntVec3 cell = driver.job.GetTarget(TargetIndex.A).Cell;
             Map map = driver.pawn?.Map;
-            return NovelSeedUtility.SowingWorkFactor(plantDef, cell, map);
+            float traitWork = NovelSeedUtility.SowingWorkFactor(plantDef, cell, map);
+            float factor = traitWork / PlantKnowledgeUtility.PlantWorkSpeedFactor(driver.pawn, plantDef);
+            return Mathf.Max(1f, baseWork * factor);
+        }
+
+        public static float SowWorkDone(JobDriver_PlantSow driver)
+        {
+            return driver == null || SowWorkDoneField == null ? 0f : (float)SowWorkDoneField.GetValue(driver);
+        }
+
+        private static void EnsureMethods()
+        {
+            if (sowWorkMethods != null) return;
+            List<MethodBase> readers = new List<MethodBase>();
+            BindingFlags nestedFlags = BindingFlags.Public | BindingFlags.NonPublic;
+            BindingFlags memberFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+            foreach (Type nestedType in typeof(JobDriver_PlantSow).GetNestedTypes(nestedFlags))
+            {
+                FieldInfo driverField = DriverField(nestedType);
+                if (driverField == null) continue;
+                DriverFields[nestedType] = driverField;
+                readers.AddRange(nestedType.GetMethods(memberFlags).Where(method => ReadsField(method, SowWorkField)));
+            }
+
+            sowWorkMethods = readers.Distinct().OrderBy(method => method.MetadataToken).ToList();
+            completionMethod = sowWorkMethods.SingleOrDefault(method =>
+                method is MethodInfo methodInfo
+                && methodInfo.ReturnType == typeof(void)
+                && method.GetParameters().Length == 1
+                && method.GetParameters()[0].ParameterType == typeof(int));
+            if (sowWorkMethods.Count == 0 || completionMethod == null)
+            {
+                throw new MissingMethodException("Could not structurally identify RimWorld's sow-work closures.");
+            }
+        }
+
+        private static FieldInfo DriverField(Type type)
+        {
+            return type?.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                .FirstOrDefault(field => typeof(JobDriver_PlantSow).IsAssignableFrom(field.FieldType));
+        }
+
+        private static bool ReadsField(MethodBase method, FieldInfo field)
+        {
+            byte[] body = method?.GetMethodBody()?.GetILAsByteArray();
+            if (body == null || field == null) return false;
+            byte[] token = BitConverter.GetBytes(field.MetadataToken);
+            for (int index = 0; index <= body.Length - token.Length; index++)
+            {
+                bool match = true;
+                for (int offset = 0; offset < token.Length; offset++)
+                {
+                    if (body[index + offset] == token[offset]) continue;
+                    match = false;
+                    break;
+                }
+                if (match) return true;
+            }
+            return false;
         }
     }
 
     [HarmonyPatch]
     public static class JobDriverPlantSow_LaborFactor_Patch
     {
-        public class SowingWorkState
+        private static readonly FieldInfo SowWorkField = AccessTools.Field(typeof(PlantProperties), nameof(PlantProperties.sowWork));
+        private static readonly MethodInfo AdjustedSowWorkMethod = AccessTools.Method(typeof(JobDriverPlantSow_MutationWorkUtility), nameof(JobDriverPlantSow_MutationWorkUtility.AdjustedSowWork), new[] { typeof(float), typeof(object) });
+
+        public static IEnumerable<MethodBase> TargetMethods()
         {
-            public PlantProperties plantProperties;
-            public float originalSowWork;
+            return JobDriverPlantSow_MutationWorkUtility.SowWorkMethods();
         }
 
-        public static MethodBase TargetMethod()
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            return JobDriverPlantSow_MutationWorkUtility.TickMethod();
-        }
-
-        public static void Prefix(object __instance, out SowingWorkState __state)
-        {
-            __state = null;
-            JobDriver_PlantSow driver = JobDriverPlantSow_MutationWorkUtility.DriverFromDisplayClass(__instance);
-            ThingDef plantDef = driver?.job?.plantDefToSow;
-            if (plantDef?.plant == null)
+            foreach (CodeInstruction instruction in instructions)
             {
-                return;
-            }
-
-            float factor = JobDriverPlantSow_MutationWorkUtility.SowingWorkFactor(driver);
-            if (Mathf.Approximately(factor, 1f))
-            {
-                return;
-            }
-
-            __state = new SowingWorkState
-            {
-                plantProperties = plantDef.plant,
-                originalSowWork = plantDef.plant.sowWork
-            };
-            plantDef.plant.sowWork = Mathf.Max(1f, plantDef.plant.sowWork * factor);
-        }
-
-        public static Exception Finalizer(SowingWorkState __state, Exception __exception)
-        {
-            if (__state?.plantProperties != null)
-            {
-                __state.plantProperties.sowWork = __state.originalSowWork;
-            }
-            return __exception;
-        }
-    }
-
-    [HarmonyPatch]
-    public static class JobDriverPlantSow_ProgressFactor_Patch
-    {
-        public static MethodBase TargetMethod()
-        {
-            return JobDriverPlantSow_MutationWorkUtility.ProgressMethod();
-        }
-
-        public static void Postfix(object __instance, ref float __result)
-        {
-            JobDriver_PlantSow driver = JobDriverPlantSow_MutationWorkUtility.DriverFromDisplayClass(__instance);
-            float factor = JobDriverPlantSow_MutationWorkUtility.SowingWorkFactor(driver);
-            if (!Mathf.Approximately(factor, 1f))
-            {
-                __result = Mathf.Clamp01(__result / factor);
+                yield return instruction;
+                if (instruction.opcode == OpCodes.Ldfld && Equals(instruction.operand, SowWorkField))
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return new CodeInstruction(OpCodes.Call, AdjustedSowWorkMethod);
+                }
             }
         }
     }

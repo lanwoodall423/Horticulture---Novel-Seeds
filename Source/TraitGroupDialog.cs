@@ -53,7 +53,7 @@ namespace HorticultureNovelSeeds
                 string currentGroup = settings.TraitGroup(trait);
                 bool assigned = currentGroup.Equals(groupName, StringComparison.OrdinalIgnoreCase);
                 bool previous = assigned;
-                Widgets.CheckboxLabeled(new Rect(8f, y + 6f, view.width - 250f, 28f), trait.LabelCap, ref assigned);
+                Widgets.CheckboxLabeled(new Rect(8f, y + 6f, view.width - 250f, 28f), TraitColorUI.Label(trait), ref assigned);
 
                 Color oldColor = GUI.color;
                 TextAnchor oldAnchor = Text.Anchor;
@@ -63,7 +63,7 @@ namespace HorticultureNovelSeeds
                 Text.Anchor = oldAnchor;
                 GUI.color = oldColor;
 
-                if (!trait.description.NullOrEmpty()) TooltipHandler.TipRegion(row, trait.description);
+                if (!trait.description.NullOrEmpty()) TooltipHandler.TipRegion(row, TraitColorUI.Tooltip(trait));
                 if (assigned != previous)
                 {
                     if (assigned) settings.SetTraitGroup(trait, groupName);

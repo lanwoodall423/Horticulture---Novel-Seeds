@@ -48,7 +48,7 @@ namespace HorticultureNovelSeeds
             {
                 Rect row = new Rect(rect.x + 6f, y, rect.width - 12f, 38f);
                 if (trait == selectedTrait) Widgets.DrawHighlightSelected(row); else Widgets.DrawHighlightIfMouseover(row);
-                Widgets.Label(new Rect(row.x + 8f, row.y + 9f, row.width - 16f, 24f), trait.LabelCap);
+                Widgets.Label(new Rect(row.x + 8f, row.y + 9f, row.width - 16f, 24f), TraitColorUI.Label(trait));
                 if (Widgets.ButtonInvisible(row))
                 {
                     selectedTrait = trait;
@@ -63,7 +63,7 @@ namespace HorticultureNovelSeeds
         {
             if (selectedTrait == null) return;
             Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(rect.x, rect.y, rect.width, 30f), selectedTrait.LabelCap);
+            Widgets.Label(new Rect(rect.x, rect.y, rect.width, 30f), TraitColorUI.Label(selectedTrait));
             Text.Font = GameFont.Small;
             string source = settings.TraitTagsCustomized(selectedTrait) ? "Customized" : "Using XML defaults";
             Color oldColor = GUI.color;

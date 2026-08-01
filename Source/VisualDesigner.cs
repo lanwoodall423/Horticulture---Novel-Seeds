@@ -459,14 +459,14 @@ namespace HorticultureNovelSeeds
                 .Where(def =>
                 {
                     PlantSettingsRecord record = HorticultureNovelSeedsMod.Settings?.GetPlantSettings(def, false);
-                    return record?.HasActivePlantMasks == true || record?.HasActiveProduceMasks == true;
+                    return PlantMaskUtility.HasActiveMasks(def) || record?.HasActiveProduceMasks == true;
                 })
                 .OrderBy(def => def.label)
                 .ToList();
             ThingDef fullyMasked = maskedPlants.FirstOrDefault(def =>
             {
                 PlantSettingsRecord record = HorticultureNovelSeedsMod.Settings?.GetPlantSettings(def, false);
-                return record?.HasActivePlantMasks == true && record.HasActiveProduceMasks;
+                return PlantMaskUtility.HasActiveMasks(def) && record?.HasActiveProduceMasks == true;
             });
             if (fullyMasked != null) return fullyMasked;
             if (maskedPlants.Count > 0) return maskedPlants[0];
@@ -477,7 +477,7 @@ namespace HorticultureNovelSeeds
         {
             bool showPreviewPlant = plantRecord == null;
             Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(inRect.x, inRect.y, inRect.width - (showPreviewPlant ? 340f : 140f), 32f), "Visual Designer - " + trait.LabelCap);
+            Widgets.Label(new Rect(inRect.x, inRect.y, inRect.width - (showPreviewPlant ? 340f : 140f), 32f), "Visual Designer - " + TraitColorUI.Label(trait));
             Text.Font = GameFont.Small;
             if (showPreviewPlant && Widgets.ButtonText(new Rect(inRect.xMax - 326f, inRect.y, 190f, 30f), "Preview: " + previewPlant.LabelCap))
                 OpenPreviewPlantMenu();
@@ -503,7 +503,7 @@ namespace HorticultureNovelSeeds
             float top = inRect.y + 38f;
             if (subtypeRecord != null)
             {
-                Widgets.Label(new Rect(inRect.x, top, inRect.width, 28f), "Subtype-specific visual for " + trait.LabelCap);
+                Widgets.Label(new Rect(inRect.x, top, inRect.width, 28f), "Subtype-specific visual for " + TraitColorUI.Label(trait));
             }
             else if (plantRecord != null)
             {
@@ -625,7 +625,7 @@ namespace HorticultureNovelSeeds
                     Def = def,
                     HasMask = editingProduce
                         ? HorticultureNovelSeedsMod.Settings?.GetPlantSettings(def, false)?.HasActiveProduceMasks == true
-                        : HorticultureNovelSeedsMod.Settings?.GetPlantSettings(def, false)?.HasActivePlantMasks == true
+                        : PlantMaskUtility.HasActiveMasks(def)
                 })
                 .OrderByDescending(item => item.HasMask)
                 .ThenBy(item => item.Def.label)
@@ -962,8 +962,7 @@ namespace HorticultureNovelSeeds
         private bool TryDrawPerMaskPlantPreview(Rect stage, out bool maskShown)
         {
             maskShown = false;
-            PlantSettingsRecord settings = HorticultureNovelSeedsMod.Settings?.GetPlantSettings(previewPlant, false);
-            if (!CurrentUsesPerMaskVisuals || settings?.HasActivePlantMasks != true) return false;
+            if (!CurrentUsesPerMaskVisuals || !PlantMaskUtility.HasActiveMasks(previewPlant)) return false;
 
             int focusedLayer = Mathf.Clamp(selectedMask, 0, 2);
             VisualSettingsRecord[] visuals = { VisualForMaskIndex(0), VisualForMaskIndex(1), VisualForMaskIndex(2) };
@@ -979,24 +978,24 @@ namespace HorticultureNovelSeeds
             DrawPlantPreviewMeshes(stage, WholeVisual, delegate(int index)
             {
                 Texture source = PlantGraphicTexture(index);
-                List<VisualMaskLayerRecord> masks = settings.PlantMaskLayersForVariation(PlantGraphicVariationIndex(index), false);
+                List<VisualMaskLayerRecord> masks = PlantMaskUtility.LayersForVariation(previewPlant, PlantGraphicVariationIndex(index), false);
                 return GetCompositePreviewTexture(source, neutralVisuals, masks, -1);
             }, true);
 
             for (int layer = 0; layer < 3; layer++)
             {
-                if (!settings.AnyPlantMaskLayerHasPixels(layer)) continue;
+                if (!PlantMaskUtility.AnyResolvedLayerHasPixels(previewPlant, layer)) continue;
                 int capturedLayer = layer;
                 IReadOnlyList<VisualSettingsRecord> layerStyles = layer == focusedLayer ? visuals : neutralVisuals;
                 DrawPlantPreviewMeshes(stage, WholeVisual, delegate(int index)
                 {
                     Texture source = PlantGraphicTexture(index);
-                    List<VisualMaskLayerRecord> masks = settings.PlantMaskLayersForVariation(PlantGraphicVariationIndex(index), false);
+                    List<VisualMaskLayerRecord> masks = PlantMaskUtility.LayersForVariation(previewPlant, PlantGraphicVariationIndex(index), false);
                     return GetCompositePreviewTexture(source, layerStyles, masks, capturedLayer);
                 }, true);
             }
 
-            maskShown = settings.AllPlantMaskVariations().Any(masks => masks[focusedLayer].HasPixels);
+            maskShown = PlantMaskUtility.AnyResolvedLayerHasPixels(previewPlant, focusedLayer);
             return true;
         }
         private bool DrawPlantPreviewMeshes(Rect stage, VisualSettingsRecord visual, Func<int, Texture> textureProvider, bool textureAlreadyStyled)
@@ -1258,18 +1257,8 @@ namespace HorticultureNovelSeeds
 
         private static Color ApplyPreviewStyle(Color source, VisualSettingsRecord visual)
         {
-            float originalAlpha = source.a;
-            float dull = 1f - visual.dullness;
-            Color.RGBToHSV(source, out float hue, out float saturation, out float value);
-            hue = Mathf.Repeat(hue + visual.hueShift, 1f);
-            saturation = Mathf.Clamp01(saturation * visual.saturation);
-            value = Mathf.Clamp01(value * visual.brightness);
-            Color result = Color.HSVToRGB(hue, saturation, value, false);
-            result.r = Mathf.Clamp01(((result.r - 0.5f) * visual.contrast + 0.5f) * visual.tintRed * dull);
-            result.g = Mathf.Clamp01(((result.g - 0.5f) * visual.contrast + 0.5f) * visual.tintGreen * dull);
-            result.b = Mathf.Clamp01(((result.b - 0.5f) * visual.contrast + 0.5f) * visual.tintBlue * dull);
-            result.a = originalAlpha * visual.opacity;
-            return result;
+            return PlantVisualColorUtility.Apply(source, visual.tintRed, visual.tintGreen, visual.tintBlue,
+                visual.hueShift, visual.saturation, visual.brightness, visual.contrast, visual.opacity, visual.dullness);
         }
         private bool DrawStyledPreviewTexture(Rect draw, Texture source, VisualSettingsRecord visual)
         {
@@ -1309,7 +1298,6 @@ namespace HorticultureNovelSeeds
                 };
                 result.ReadPixels(new Rect(0f, 0f, width, height), 0, 0, false);
                 Color[] pixels = result.GetPixels();
-                float dull = 1f - visual.dullness;
                 for (int i = 0; i < pixels.Length; i++)
                 {
                     Color c = pixels[i];
@@ -1327,16 +1315,8 @@ namespace HorticultureNovelSeeds
                             continue;
                         }
                     }
-                    Color.RGBToHSV(c, out float h, out float saturation, out float value);
-                    h = Mathf.Repeat(h + visual.hueShift, 1f);
-                    saturation = Mathf.Clamp01(saturation * visual.saturation);
-                    value = Mathf.Clamp01(value * visual.brightness);
-                    c = Color.HSVToRGB(h, saturation, value, false);
-                    c.r = Mathf.Clamp01(((c.r - 0.5f) * visual.contrast + 0.5f) * visual.tintRed * dull);
-                    c.g = Mathf.Clamp01(((c.g - 0.5f) * visual.contrast + 0.5f) * visual.tintGreen * dull);
-                    c.b = Mathf.Clamp01(((c.b - 0.5f) * visual.contrast + 0.5f) * visual.tintBlue * dull);
-                    c.a = pixels[i].a * visual.opacity;
-                    pixels[i] = c;
+                    pixels[i] = PlantVisualColorUtility.Apply(c, visual.tintRed, visual.tintGreen, visual.tintBlue,
+                        visual.hueShift, visual.saturation, visual.brightness, visual.contrast, visual.opacity, visual.dullness);
                 }
                 result.SetPixels(pixels);
                 result.Apply(true, true);

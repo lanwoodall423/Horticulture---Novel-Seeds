@@ -3,7 +3,7 @@
   <MainButtonDef>
     <defName>HNS_CultivarRegistry</defName>
     <label>cultivars</label>
-    <description>Review discovered plant varieties, compare their traits, and manage breeding programs.</description>
+    <description>Review discovered plants, inspect cultivar knowledge, and compare selected cultivars.</description>
     <tabWindowClass>HorticultureNovelSeeds.MainTabWindow_CultivarRegistry</tabWindowClass>
     <order>85</order>
     <buttonVisible>false</buttonVisible>

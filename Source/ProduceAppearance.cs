@@ -467,17 +467,15 @@ namespace HorticultureNovelSeeds
                 .Where(thing => thing?.def != null && thing.TryGetComp<CompNovelProduceAppearance>()?.HasStoredAppearance == true)
                 .GroupBy(thing => thing.def))
             {
-                float total = 0f;
-                Color weighted = Color.clear;
+                List<KeyValuePair<Color, float>> colors = new List<KeyValuePair<Color, float>>();
                 foreach (Thing ingredient in materialGroup)
                 {
                     CompNovelProduceAppearance comp = ingredient.TryGetComp<CompNovelProduceAppearance>();
                     if (comp == null || !comp.TryGetStoredColor(out Color color)) continue;
                     float weight = Mathf.Max(1, ingredient.stackCount);
-                    weighted += color * weight;
-                    total += weight;
+                    colors.Add(new KeyValuePair<Color, float>(color, weight));
                 }
-                if (total > 0f) data.materialColors[materialGroup.Key.defName] = weighted / total;
+                if (colors.Count > 0) data.materialColors[materialGroup.Key.defName] = PigmentColorUtility.Blend(colors);
             }
 
             float totalWeight = 0f;
@@ -505,7 +503,12 @@ namespace HorticultureNovelSeeds
                     Color? materialColor = null;
                     if (product.Stuff != null && data.materialColors.TryGetValue(product.Stuff.defName, out Color color))
                         materialColor = color;
-                    product.TryGetComp<CompNovelProduceAppearance>()?.InitializeInherited(data, materialColor);
+                    else if (product.TryGetComp<CompColorable>() != null && data.materialColors.Count > 0)
+                        materialColor = PigmentColorUtility.Blend(data.materialColors.Values
+                            .Select(value => new KeyValuePair<Color, float>(value, 1f)));
+                    CompNovelProduceAppearance appearance = product.TryGetComp<CompNovelProduceAppearance>();
+                    if (appearance != null) appearance.InitializeInherited(data, materialColor);
+                    else if (materialColor.HasValue) product.TryGetComp<CompColorable>()?.SetColor(materialColor.Value);
                 }
                 yield return product;
             }
@@ -588,10 +591,11 @@ namespace HorticultureNovelSeeds
     [HarmonyPatch(typeof(GenRecipe), nameof(GenRecipe.MakeRecipeProducts))]
     public static class GenRecipe_MakeRecipeProducts_NovelProduce_Patch
     {
-        public static void Postfix(List<Thing> ingredients, ref IEnumerable<Thing> __result)
+        public static void Postfix(Pawn worker, List<Thing> ingredients, ref IEnumerable<Thing> __result)
         {
             ProduceInheritanceData data = ProduceInheritanceUtility.FromIngredients(ingredients);
             if (data != null) __result = ProduceInheritanceUtility.ApplyToRecipeProducts(__result, data);
+            PlantKnowledgeUtility.RecordProduceRecipe(worker, ingredients);
         }
     }
 }
