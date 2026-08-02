@@ -80,6 +80,18 @@ namespace HorticultureNovelSeeds
             }
         }
 
+        public static void OpenPlant(ThingDef plant)
+        {
+            MainButtonDef button = DefDatabase<MainButtonDef>.GetNamedSilentFail("HNS_CultivarRegistry");
+            if (button == null || plant == null) return;
+            Find.MainTabsRoot.SetCurrentTab(button, true);
+            if (button.TabWindow is MainTabWindow_CultivarRegistry registry)
+            {
+                registry.page = RegistryPage.Plants;
+                registry.selectedPlantDefName = plant.defName;
+            }
+        }
+
         public override void PreOpen()
         {
             base.PreOpen();
@@ -294,7 +306,7 @@ namespace HorticultureNovelSeeds
                 Widgets.Label(rect, "HNS_RegistrySelectVariety".Translate());
                 return;
             }
-            KnowledgeRank rank = VisibleKnowledgeRank(selected.cropDef);
+            KnowledgeRank rank = VisibleCultivarRank(selected);
             Rect view = new Rect(0f, 0f, rect.width - 16f, Mathf.Max(rect.height, 760f));
             Widgets.BeginScrollView(rect, ref detailScroll, view);
             Widgets.ThingIcon(new Rect(0f, 0f, 72f, 72f), selected.cropDef);
@@ -304,7 +316,8 @@ namespace HorticultureNovelSeeds
             Widgets.Label(new Rect(84f, 42f, view.width - 84f, 28f), selected.cropDef.LabelCap + "   " + rank);
             float y = 92f;
             RegistryAvailability stock = AvailabilityFor(selected);
-            DrawRecord(view, ref y, "Generation", LineageDepth(selected).ToString());
+            DrawRecord(view, ref y, "Origin", selected.originKind.NullOrEmpty() ? "mutation" : selected.originKind);
+            DrawRecord(view, ref y, "Generation", (selected.generation > 0 ? selected.generation : LineageDepth(selected)).ToString());
             DrawRecord(view, ref y, "Availability", stock.Plants + " plants, " + stock.Produce + " produce, " + stock.SeedPacks + " seed packs");
             if (!selected.FirstDiscoveredInfo.NullOrEmpty()) DrawRecord(view, ref y, "Discovered", selected.FirstDiscoveredInfo);
 
@@ -376,8 +389,14 @@ namespace HorticultureNovelSeeds
                 Widgets.Label(new Rect(x + 56f, 4f, columnWidth - 62f, 42f), selected[i].Label);
             }
             float y = 56f;
+            KnowledgeStructuredComparisonSnapshot frameworkComparison = HorticultureKnowledgeAdapter.CompareCultivars(selected,
+                knowledgeState.scope == KnowledgeMenuScope.Colony ? null : knowledgeState.selectedPawn,
+                knowledgeState.scope == KnowledgeMenuScope.Colony);
             DrawCompareRow(view, ref y, "Parent plant", selected, value => value.cropDef.LabelCap);
-            DrawCompareRow(view, ref y, "Generation", selected, value => LineageDepth(value).ToString());
+            DrawCompareRow(view, ref y, "Generation", selected,
+                value => (value.generation > 0 ? value.generation : LineageDepth(value)).ToString());
+            DrawCompareRow(view, ref y, "Framework confidence", selected,
+                value => FrameworkConfidence(frameworkComparison, selected, value));
             DrawCompareRow(view, ref y, "Traits", selected, value => VisibleKnowledgeRank(value.cropDef) >= KnowledgeRank.Adept
                 ? TraitColorUI.Summary(value.traits) : "Undiscovered information");
             DrawCompareRow(view, ref y, "Yield", selected, value => VisibleKnowledgeRank(value.cropDef) >= KnowledgeRank.Expert
@@ -417,26 +436,46 @@ namespace HorticultureNovelSeeds
             y += height;
         }
 
+        private static string FrameworkConfidence(KnowledgeStructuredComparisonSnapshot snapshot,
+            List<VarietyRecord> selected, VarietyRecord variety)
+        {
+            int index = selected.IndexOf(variety);
+            if (snapshot?.rows == null || index < 0) return "No evidence";
+            List<float> confidence = snapshot.rows.Where(row => row?.confidences != null && index < row.confidences.Count &&
+                row.knownValues != null && index < row.knownValues.Count && row.knownValues[index])
+                .Select(row => row.confidences[index]).ToList();
+            return confidence.Count == 0 ? "No evidence" : confidence.Average().ToStringPercent();
+        }
+
         private KnowledgeMenuModel KnowledgeModelFor(Pawn pawn, bool colony)
         {
-            return HorticultureSharedKnowledgeIntegration.Menu(pawn, colony);
+            return HorticultureKnowledgeAdapter.Menu(pawn, colony);
         }
 
         private static KnowledgeRank KnowledgeRankFor(Pawn pawn)
         {
-            return KnowledgeService.GetPawnExpertiseRank(PlantKnowledgeUtility.DomainId, pawn);
+            return HorticultureKnowledgeAdapter.ExpertiseRank(pawn);
         }
 
         private KnowledgeRank VisibleKnowledgeRank(ThingDef plant)
         {
             if (plant == null) return KnowledgeRank.Novice;
             if (knowledgeState.scope == KnowledgeMenuScope.Colony) return ColonyKnowledgeRank(plant);
-            return KnowledgeService.GetPawnKnowledgeRank(PlantKnowledgeUtility.DomainId, plant.defName, knowledgeState.selectedPawn);
+            return HorticultureKnowledgeAdapter.TierFor(plant, knowledgeState.selectedPawn, false);
+        }
+
+        private KnowledgeRank VisibleCultivarRank(VarietyRecord variety)
+        {
+            if (variety == null) return KnowledgeRank.Novice;
+            KnowledgeRank cultivar = HorticultureKnowledgeAdapter.CultivarTierFor(variety,
+                knowledgeState.scope == KnowledgeMenuScope.Colony ? null : knowledgeState.selectedPawn,
+                knowledgeState.scope == KnowledgeMenuScope.Colony);
+            return (KnowledgeRank)Math.Max((int)VisibleKnowledgeRank(variety.cropDef), (int)cultivar);
         }
 
         private static KnowledgeRank ColonyKnowledgeRank(ThingDef plant)
         {
-            return KnowledgeService.GetColonyKnowledgeRank(PlantKnowledgeUtility.DomainId, plant.defName);
+            return HorticultureKnowledgeAdapter.TierFor(plant, null, true);
         }
 
         private void DrawSearch(Rect rect)
@@ -450,8 +489,8 @@ namespace HorticultureNovelSeeds
             .OrderBy(def => def.label).ToList();
 
         private static bool IsDiscovered(ThingDef plant, GameComponent_NovelSeeds component) => plant != null &&
-            (component.VarietiesFor(plant).Any() || KnowledgeService.GetColonyKnowledgeExperience(
-                PlantKnowledgeUtility.DomainId, plant.defName) > 0f);
+            (component.VarietiesFor(plant).Any() || HorticultureKnowledgeAdapter.ColonyKnowledge(plant) > 0f ||
+                HorticultureKnowledgeAdapter.StageOrder(HorticultureKnowledgeAdapter.StageFor(plant, null, true)) > 0);
 
         private bool MatchesPlantFilter(ThingDef plant, GameComponent_NovelSeeds component)
         {

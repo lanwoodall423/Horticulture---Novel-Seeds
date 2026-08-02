@@ -2,12 +2,14 @@
 
 ## Coordinated knowledge boundary
 
-Knowledge Framework owns Plants domain registration, stable subject resolution, colony knowledge,
-personal knowledge, overall pawn expertise, reveal thresholds, immutable queries, gain events, and
-save persistence. Horticulture owns plant event meanings, XP amounts, bounded work/reveal effects,
-and registry presentation. The former `horticultureKnowledge` save list is load-only migration input:
-personal records import by pawn and crop, colony values import as per-crop sums, and expertise imports
-as each pawn's highest old crop XP. Import is idempotent and does not emit rank notifications.
+`HorticultureKnowledgeAdapter` is the only production boundary for the Knowledge Framework Plants
+domain. It declares typed facets, claims, stages, contexts, observations, milestones, relations,
+comparisons, expertise, and dynamic species/cultivar/field subjects. The Framework owns storage,
+uncertainty, aggregation, progression, persistence, and query snapshots; Horticulture owns event
+meaning, evidence quality, bounded work effects, mutation mechanics, and registry presentation.
+The former `horticultureKnowledge` save list is load-only migration input: personal records import
+by pawn and crop, colony values import as per-crop sums, and expertise imports from old crop XP.
+Import is idempotent and does not emit rank notifications.
 
 The retired Breeding Program records are also load-only compatibility data. New saves do not write
 them, new varieties do not run program matching or notifications, and the controlled cultivar-mix
@@ -64,29 +66,26 @@ The production assembly must also compile against RimWorld 1.6.
 
 ## Shared horticulture knowledge
 
-- `GameComponent_NovelSeeds` owns additive `horticultureKnowledge` records keyed by pawn and
-  crop def name. Existing variety, palette, grower-selection, and legacy component keys remain
-  unchanged.
-- Sowing, harvesting, cutting, fertilizing, seed discovery, and recipes using inherited produce
-  all feed the same ledger. Novice, Adept, Expert, and Master are supplied by
-  `KnowledgeFramework.dll`.
-- Rank improves only work performed by that colonist on the known plant species, including sowing,
-  harvesting, cutting, fertilizing, and supported produce recipes. Knowledge and expertise never
-  modify mutation or cross-pollination probability.
-- The pawn Bio row opens the Knowledge page inside the existing Cultivar Registry.
-- Knowledge gain identifies player pawns from their own faction definition. It never queries the
-  global player faction, because that lookup logs an error during startup and game transitions when
-  no player faction exists yet.
-- The Cultivar Registry follows the Aquaculture Field Journal's header, page navigation, two-pane
-  list/detail structure, sorting, filtering, search, selection, and knowledge presentation. Its
-  pages are Discovered Plants, Cultivars, Knowledge, and Compare. The old Breeding Program screen
-  is absent, while the underlying breeding records, notifications, mutation, and inheritance
-  mechanics remain save-compatible and operational through gameplay.
-- Colony mode aggregates per-crop knowledge from existing `horticultureKnowledge` records without
-  persisting aggregate state. It does not derive, store, label, rank, or display expertise.
-  Colonist mode retains species knowledge, expertise rank/progress, and personal work effects.
+- `HorticultureEventRouter` submits completed sowing, growth, harvest, fertilization, environmental,
+  discovery, produce-processing, and documentation events through the adapter.
+- Knowledge is represented by typed facets and claims such as observed yield ranges, temperature
+  ranges, produce identity, trait expression, harvest cycles, and environmental response. Claims
+  retain context, confidence, witnesses, and provenance.
+- Only player colonists receive personal Horticulture Expertise. Colony observations add colony
+  knowledge and never add expertise.
+- Work effects read Framework expertise and bounded plant knowledge snapshots. They never modify
+  mutation chance, inheritance, cross-pollination, trait expression, or yield probabilities.
+- Species and cultivar subjects preserve the stable `plants` domain ID. Cultivars also persist
+  origin kind and generation, with parent, origin, and cross-pollination relations in Framework V3.
+- The revision-based `HorticultureKnowledgeSnapshots` cache bounds repeated registry queries. No
+  per-plant tick or repeated map scan is used for knowledge collection.
+- The pawn Bio row opens the Knowledge page inside the existing Cultivar Registry. The registry's
+  Plants, Cultivars, Knowledge, and Compare pages use the adapter, including structured comparisons.
+- Colony mode exposes knowledge only. Colonist mode exposes personal species/cultivar knowledge,
+  expertise rank/progress, and personal work effects.
 - Compare selection is transient window state. At least two discovered cultivars are required;
-  comparison fields remain gated by the selected scope's plant knowledge.
+  comparison fields remain gated by the selected scope's knowledge.
+
 
 ## Knowledge and registry validation
 

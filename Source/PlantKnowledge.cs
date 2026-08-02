@@ -57,18 +57,11 @@ namespace HorticultureNovelSeeds
             KnowledgeRanks.Progress(experience, AdeptThreshold, ExpertThreshold, MasterThreshold);
 
         public static float PlantWorkSpeedFactor(Pawn pawn, ThingDef cropDef) =>
-            KnowledgeService.ApplyEffects(DomainId, cropDef?.defName, PlantKnowledgeEffectProvider.PlantWorkSpeed, pawn, 1f);
+            HorticultureKnowledgeAdapter.PlantWorkSpeedFactor(pawn, cropDef);
 
         public static float CraftingSpeedFactor(Pawn pawn, IEnumerable<Thing> ingredients)
         {
-            if (pawn == null || ingredients == null) return 1f;
-            List<ThingDef> crops = SourceCrops(ingredients);
-            if (crops.Count == 0) return 1f;
-            float best = 1f;
-            for (int i = 0; i < crops.Count; i++)
-                best = Mathf.Max(best, KnowledgeService.ApplyEffects(DomainId, crops[i].defName,
-                    PlantKnowledgeEffectProvider.ProductWorkSpeed, pawn, 1f));
-            return best;
+            return HorticultureKnowledgeAdapter.ProduceWorkSpeedFactor(pawn, ingredients);
         }
 
         public static void RecordSowing(Pawn pawn, ThingDef cropDef)
@@ -102,7 +95,7 @@ namespace HorticultureNovelSeeds
         }
 
         public static float ExperienceFor(Pawn pawn, ThingDef cropDef) =>
-            KnowledgeService.GetPawnKnowledgeExperience(DomainId, cropDef?.defName, pawn);
+            HorticultureKnowledgeAdapter.PersonalKnowledge(pawn, cropDef);
 
         private static List<ThingDef> SourceCrops(IEnumerable<Thing> ingredients) => ingredients
             .Select(ingredient => ingredient?.TryGetComp<CompNovelProduceAppearance>()?.SourcePlantDef)

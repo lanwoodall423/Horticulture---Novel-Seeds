@@ -35,6 +35,7 @@ namespace HorticultureNovelSeeds
             HarmonyInstance = new Harmony("lan.horticulture.novelseeds");
             HarmonyInstance.PatchAll(typeof(HorticultureNovelSeedsMod).Assembly);
             HorticultureSharedKnowledgeIntegration.Register();
+            HorticultureKnowledgeAdapter.Register();
             WildlifeRegistryIntegration.Apply(HarmonyInstance);
             NicePlantsMenuCompat.Apply(HarmonyInstance);
             LongEventHandler.ExecuteWhenFinished(() =>
@@ -180,6 +181,8 @@ namespace HorticultureNovelSeeds
         public string firstDiscoveredBy;
         public long firstDiscoveredTick = -1;
         public int firstDiscoveredTile = -1;
+        public string originKind = "mutation";
+        public int generation;
 
         public string Label => customName.NullOrEmpty() ? "HNS_PendingVariety".Translate().ToString() : customName;
         public string TraitKey => NovelSeedUtility.TraitKey(traits);
@@ -209,6 +212,8 @@ namespace HorticultureNovelSeeds
             Scribe_Values.Look(ref firstDiscoveredBy, "firstDiscoveredBy");
             Scribe_Values.Look(ref firstDiscoveredTick, "firstDiscoveredTick", -1L);
             Scribe_Values.Look(ref firstDiscoveredTile, "firstDiscoveredTile", -1);
+            Scribe_Values.Look(ref originKind, "originKind", "mutation");
+            Scribe_Values.Look(ref generation, "generation", 0);
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
                 if (traits == null) traits = new List<VarietyTraitDef>();
@@ -340,6 +345,11 @@ namespace HorticultureNovelSeeds
         public override void FinalizeInit()
         {
             base.FinalizeInit();
+            HorticultureKnowledgeSnapshots.Clear();
+            HorticultureKnowledgeAdapter.Register();
+            HorticultureKnowledgeAdapter.TryMigrateLegacy(legacyHorticultureKnowledge);
+            foreach (VarietyRecord variety in AllVarieties.ToList())
+                HorticultureKnowledgeAdapter.RegisterCultivar(variety);
             if (ImportLegacyKnowledge()) legacyHorticultureKnowledge.Clear();
             EnsureSpeciesColorPalettes();
         }
@@ -432,7 +442,8 @@ namespace HorticultureNovelSeeds
             return variety;
         }
 
-        public VarietyRecord UnlockVariety(ThingDef cropDef, List<VarietyTraitDef> traits, string customName, IEnumerable<string> parentVarietyIds = null, bool hiddenFromMenus = false, Pawn discoverer = null)
+        public VarietyRecord UnlockVariety(ThingDef cropDef, List<VarietyTraitDef> traits, string customName, IEnumerable<string> parentVarietyIds = null,
+            bool hiddenFromMenus = false, Pawn discoverer = null, string originKind = null)
         {
             GameComponent_UnlockedCrops cropRegistry = GameComponent_UnlockedCrops.Instance;
             if (cropDef != null && cropRegistry != null && !cropRegistry.IsCropUnlocked(cropDef))
@@ -446,22 +457,29 @@ namespace HorticultureNovelSeeds
                 return existing;
             }
 
+            List<string> parentIds = parentVarietyIds?.Where(id => !id.NullOrEmpty()).Distinct().ToList() ?? new List<string>();
+            int generation = parentIds.Count == 0 ? 0 : parentIds.Select(GetVariety).Where(value => value != null)
+                .Select(value => value.generation).DefaultIfEmpty(0).Max() + 1;
+
             VarietyRecord variety = new VarietyRecord
             {
                 id = "HNS_" + cropDef.defName + "_" + nextVarietyId++,
                 cropDef = cropDef,
                 customName = customName,
                 traits = traits?.Where(t => t != null).Distinct().ToList() ?? new List<VarietyTraitDef>(),
-                parentVarietyIds = parentVarietyIds?.Where(id => !id.NullOrEmpty()).Distinct().ToList() ?? new List<string>(),
+                parentVarietyIds = parentIds,
                 hiddenFromMenus = hiddenFromMenus,
                 firstDiscoveredBy = discoverer?.LabelShortCap ?? "HNS_UnknownDiscoverer".Translate().ToString(),
                 firstDiscoveredTick = Find.TickManager?.TicksAbs ?? -1,
-                firstDiscoveredTile = discoverer?.Map != null ? discoverer.Map.Tile : -1
+                firstDiscoveredTile = discoverer?.Map != null ? discoverer.Map.Tile : -1,
+                originKind = originKind.NullOrEmpty() ? (parentIds.Count == 0 ? "mutation" : "cross-pollination") : originKind,
+                generation = generation
             };
             DeriveHybridPalette(cropDef, variety.parentVarietyIds);
             unlockedVarieties.Add(variety);
             varietiesById[variety.id] = variety;
             if (!variety.hiddenFromMenus) IndexVisibleVariety(variety);
+            HorticultureKnowledgeAdapter.RegisterCultivar(variety);
             return variety;
         }
 

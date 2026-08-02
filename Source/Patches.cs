@@ -151,7 +151,7 @@ namespace HorticultureNovelSeeds
             }
 
             NovelSeedUtility.AssignMutationOnSow(__state.plant, __state.driver?.pawn);
-            PlantKnowledgeUtility.RecordSowing(__state.driver?.pawn, __state.plant.def);
+            HorticultureEventRouter.SowingCompleted(__state.driver?.pawn, __state.plant);
             CompPlantVariety comp = __state.plant.TryGetComp<CompPlantVariety>();
             NovelSeedUtility.ApplyJoyResinThought(__state.driver?.pawn, comp?.ActiveTraits);
             ExpandedTraitUtility.ApplyResinEffects(__state.driver?.pawn, __state.plant, comp?.ActiveTraits);
@@ -185,6 +185,9 @@ namespace HorticultureNovelSeeds
         public Map map;
         public Pawn harvester;
         public Plant plant;
+        public int yield;
+        public bool regularHarvest;
+        public bool harvestable;
         public float perennialResetGrowth;
         public bool pendingDiscoveryHarvest;
         public bool shouldSaveSeeds;
@@ -225,41 +228,56 @@ namespace HorticultureNovelSeeds
             CompPlantVariety comp = __instance.TryGetComp<CompPlantVariety>();
             bool regularHarvest = plantDestructionMode == HarvestMode;
             bool seedCut = plantDestructionMode == CutMode && comp?.PendingDiscovery == true;
-            if (comp == null || !comp.HasAnyTraits || (!regularHarvest && !seedCut))
+            if (!regularHarvest && !seedCut)
             {
                 return;
             }
 
-            List<VarietyTraitDef> activeTraits = comp.ActiveTraits.ToList();
-            bool matureDiscovery = comp.PendingDiscovery && __instance.Growth >= 0.999f && !__instance.Blighted;
+            List<VarietyTraitDef> activeTraits = comp?.ActiveTraits?.ToList() ?? new List<VarietyTraitDef>();
+            bool matureDiscovery = comp?.PendingDiscovery == true && __instance.Growth >= 0.999f && !__instance.Blighted;
             bool harvestable = regularHarvest && __instance.HarvestableNow && !__instance.Blighted;
             __state = new HarvestState
             {
                 cropDef = __instance.def,
-                traits = comp.DiscoveryTraits?.ToList(),
+                traits = comp?.DiscoveryTraits?.ToList(),
                 activeTraits = activeTraits,
-                lineageParentIds = comp.CrossPollinationParentIds,
+                lineageParentIds = comp?.CrossPollinationParentIds ?? new List<string>(),
                 comp = comp,
                 position = __instance.Position,
                 map = __instance.Map,
                 harvester = by,
                 plant = __instance,
+                yield = harvestable ? __instance.YieldNow() : 0,
+                regularHarvest = regularHarvest,
+                harvestable = harvestable,
                 perennialResetGrowth = harvestable ? NovelSeedUtility.PerennialHarvestAfterGrowth(activeTraits) : 0f,
                 pendingDiscoveryHarvest = matureDiscovery,
-                shouldSaveSeeds = comp.SaveSeedsRequested && matureDiscovery,
+                shouldSaveSeeds = comp?.SaveSeedsRequested == true && matureDiscovery,
                 shouldApplyHarvestEffects = harvestable
             };
         }
 
         public static void Postfix(Plant __instance, Pawn by, PlantDestructionMode plantDestructionMode, HarvestState __state)
         {
-            PlantKnowledgeUtility.RecordPlantWork(by, __state?.cropDef ?? __instance?.def, plantDestructionMode);
+            if (__state?.regularHarvest == true)
+            {
+                if (__state.harvestable) HorticultureEventRouter.GrowthObserved(by, __state.plant);
+                HorticultureEventRouter.HarvestCompleted(by, __state.plant, __state.yield, __state.harvestable,
+                    __state.perennialResetGrowth > 0f, __state.perennialResetGrowth > 0f);
+            }
             if (__state?.shouldSaveSeeds == true)
             {
-                NovelSeedUtility.DropDiscoverySeed(__state.cropDef, __state.traits, __state.position, __state.map, __state.lineageParentIds);
+                string origin = __state.plant?.sown == false ? "wild" :
+                    __state.lineageParentIds?.Count > 0 ? "cross-pollination" : "mutation";
+                NovelSeedUtility.DropDiscoverySeed(__state.cropDef, __state.traits, __state.position, __state.map,
+                    __state.lineageParentIds, origin);
             }
             if (__state?.pendingDiscoveryHarvest == true)
             {
+                string origin = __state.plant?.sown == false ? "wild" :
+                    __state.lineageParentIds?.Count > 0 ? "cross-pollination" : "mutation";
+                HorticultureEventRouter.NovelSeedDiscovered(by, __state.cropDef, __state.traits, origin,
+                    __state.map, __state.lineageParentIds);
                 __state.comp?.ClearPendingDiscovery();
             }
             if (__state?.perennialResetGrowth > 0f && __instance?.Destroyed == false)
@@ -299,16 +317,19 @@ namespace HorticultureNovelSeeds
         public static void Postfix(Plant __instance)
         {
             CompPlantVariety comp = __instance.TryGetComp<CompPlantVariety>();
-            if (comp == null || !comp.HasAnyTraits || !__instance.Blighted)
+            if (!__instance.Blighted) return;
+            if (comp?.HasAnyTraits == true)
             {
-                return;
+                float extraDamageFactor = NovelSeedUtility.BlightDamageFactor(comp);
+                if (extraDamageFactor > 1f)
+                {
+                    float amount = Mathf.Max(1f, __instance.MaxHitPoints * 0.05f * (extraDamageFactor - 1f));
+                    __instance.TakeDamage(new DamageInfo(DamageDefOf.Rotting, amount));
+                }
             }
-            float extraDamageFactor = NovelSeedUtility.BlightDamageFactor(comp);
-            if (extraDamageFactor > 1f)
-            {
-                float amount = Mathf.Max(1f, __instance.MaxHitPoints * 0.05f * (extraDamageFactor - 1f));
-                __instance.TakeDamage(new DamageInfo(DamageDefOf.Rotting, amount));
-            }
+            if (GenTemperature.TryGetTemperatureForCell(__instance.Position, __instance.Map, out float temperature))
+                HorticultureEventRouter.EnvironmentalStressObserved(null, __instance, temperature,
+                    temperature < __instance.def.plant.minOptimalGrowthTemperature, false);
         }
     }
 

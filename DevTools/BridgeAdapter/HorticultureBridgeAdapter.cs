@@ -779,9 +779,10 @@ namespace HorticultureNovelSeeds
             {
                 "registry=varieties:" + varieties.Count + " favorites:" + varieties.Count(variety => variety.registryFavorite)
                     + " archived:" + varieties.Count(variety => variety.registryArchived),
-                "plantKnowledge=colony:" + KnowledgeService.ColonyKnowledge(PlantKnowledgeUtility.DomainId).Count,
+                "plantKnowledge=colony:" + KnowledgeQuery.ColonyFacets(HorticultureKnowledgeAdapter.DomainId)
+                    .Select(record => record.subjectId).Distinct().Count(),
                 "apiVersion=" + KnowledgeFrameworkApi.ApiVersion,
-                "domainRegistered=" + (KnowledgeDomainRegistry.Domain(PlantKnowledgeUtility.DomainId) != null)
+                "domainRegistered=" + (KnowledgeRegistry.Schema(HorticultureKnowledgeAdapter.DomainId) != null)
             };
         }
 
@@ -1338,27 +1339,29 @@ namespace HorticultureNovelSeeds
             if (pawn == null) return new List<string> { "error=no free colonist" };
             ThingDef crop = ResolveKnowledgeCrop(cropName);
             if (crop == null) return new List<string> { "error=no growable crop" };
-            KnowledgeSnapshot personal = KnowledgeService.GetPawnKnowledge(PlantKnowledgeUtility.DomainId, crop.defName, pawn);
-            KnowledgeSnapshot colony = KnowledgeService.GetColonyKnowledge(PlantKnowledgeUtility.DomainId, crop.defName);
-            ExpertiseSnapshot expertise = KnowledgeService.GetPawnExpertise(PlantKnowledgeUtility.DomainId, pawn);
-            IReadOnlyList<KnowledgeSnapshot> personalRecords = KnowledgeService.PawnKnowledge(PlantKnowledgeUtility.DomainId, pawn);
-            IReadOnlyList<KnowledgeSnapshot> colonyRecords = KnowledgeService.ColonyKnowledge(PlantKnowledgeUtility.DomainId);
-            IReadOnlyList<string> issues = KnowledgeService.Validate();
+            KnowledgeFacetSnapshotV2 personal = HorticultureKnowledgeAdapter.Facet(pawn, crop);
+            KnowledgeFacetSnapshotV2 colony = HorticultureKnowledgeAdapter.Facet(null, crop, HorticultureKnowledgeAdapter.FacetIdentity,
+                null, true);
+            KnowledgeExpertiseSnapshotV2 expertise = KnowledgeQuery.Expertise(HorticultureKnowledgeAdapter.DomainId, pawn,
+                HorticultureKnowledgeAdapter.ExpertiseTrack);
+            IReadOnlyList<KnowledgeFacetSnapshotV2> personalRecords = KnowledgeQuery.PersonalFacets(HorticultureKnowledgeAdapter.DomainId, pawn);
+            IReadOnlyList<KnowledgeFacetSnapshotV2> colonyRecords = KnowledgeQuery.ColonyFacets(HorticultureKnowledgeAdapter.DomainId);
+            IReadOnlyList<KnowledgeValidationIssue> issues = KnowledgeRegistry.ValidationIssues;
             return new List<string>
             {
                 "apiVersion=" + KnowledgeFrameworkApi.ApiVersion,
                 "supportsDomains=" + KnowledgeFrameworkApi.Supports(1, KnowledgeFrameworkApi.DomainsCapability),
-                "domain=" + PlantKnowledgeUtility.DomainId,
-                "subjects=" + KnowledgeDomainRegistry.Subjects(PlantKnowledgeUtility.DomainId).Count(),
+                "domain=" + HorticultureKnowledgeAdapter.DomainId,
+                "subjects=" + KnowledgeRegistry.Subjects(HorticultureKnowledgeAdapter.DomainId).Count,
                 "pawn=" + pawn.thingIDNumber + ":" + Clean(pawn.LabelShortCap),
                 "crop=" + crop.defName,
-                "personal=" + personal.experience.ToString("0.0") + " rank:" + personal.rank + " sowing:" + personal.EventCount("sowing"),
-                "colony=" + colony.experience.ToString("0.0") + " rank:" + colony.rank + " sowing:" + colony.EventCount("sowing") + " pawnReference:" + (colony.pawn != null),
-                "expertise=" + expertise.experience.ToString("0.0") + " rank:" + expertise.rank,
-                "personalRecords=" + personalRecords.Count + " totalXp:" + personalRecords.Sum(record => record.experience).ToString("0.0"),
-                "colonyRecords=" + colonyRecords.Count + " totalXp:" + colonyRecords.Sum(record => record.experience).ToString("0.0"),
+                "personal=" + personal.amount.ToString("0.0") + " rank:" + HorticultureKnowledgeAdapter.TierFor(crop, pawn, false) + " sowing:" + personal.EventCount("sowing"),
+                "colony=" + colony.amount.ToString("0.0") + " rank:" + HorticultureKnowledgeAdapter.TierFor(crop, null, true) + " sowing:" + colony.EventCount("sowing") + " pawnReference:" + (colony.pawn != null),
+                "expertise=" + expertise.amount.ToString("0.0") + " rank:" + expertise.rank,
+                "personalRecords=" + personalRecords.Count + " totalXp:" + personalRecords.Sum(record => record.amount).ToString("0.0"),
+                "colonyRecords=" + colonyRecords.Count + " totalXp:" + colonyRecords.Sum(record => record.amount).ToString("0.0"),
                 "validationIssues=" + issues.Count
-            }.Concat(issues.Take(20).Select(issue => "issue=" + Clean(issue))).ToList();
+            }.Concat(issues.Take(20).Select(issue => "issue=" + Clean(issue.ToString()))).ToList();
         }
 
         private static List<string> AwardPlantKnowledge(Map map, string argument)
@@ -1368,18 +1371,21 @@ namespace HorticultureNovelSeeds
             Pawn pawn = ResolveKnowledgePawn(map, pawnId);
             ThingDef crop = ResolveKnowledgeCrop(cropName);
             if (pawn == null || crop == null) return new List<string> { "error=colonist or crop unavailable" };
-            float personalBefore = KnowledgeService.GetPawnKnowledgeExperience(PlantKnowledgeUtility.DomainId, crop.defName, pawn);
-            float colonyBefore = KnowledgeService.GetColonyKnowledgeExperience(PlantKnowledgeUtility.DomainId, crop.defName);
-            float expertiseBefore = KnowledgeService.GetPawnExpertiseExperience(PlantKnowledgeUtility.DomainId, pawn);
-            PlantKnowledgeUtility.RecordSowing(pawn, crop);
+            float personalBefore = HorticultureKnowledgeAdapter.PersonalKnowledge(pawn, crop);
+            float colonyBefore = HorticultureKnowledgeAdapter.ColonyKnowledge(crop);
+            float expertiseBefore = KnowledgeQuery.Expertise(HorticultureKnowledgeAdapter.DomainId, pawn,
+                HorticultureKnowledgeAdapter.ExpertiseTrack).amount;
+            HorticultureKnowledgeAdapter.Observe(pawn, crop, HorticultureKnowledgeEvent.Sowing, map,
+                sourceInstanceId: "bridge-sowing:" + pawn.thingIDNumber + ":" + crop.defName + ":" + (Find.TickManager?.TicksGame ?? 0));
             return new List<string>
             {
                 "pawn=" + pawn.thingIDNumber + ":" + Clean(pawn.LabelShortCap),
                 "crop=" + crop.defName,
-                "personal=" + personalBefore.ToString("0.0") + "->" + KnowledgeService.GetPawnKnowledgeExperience(PlantKnowledgeUtility.DomainId, crop.defName, pawn).ToString("0.0"),
-                "colony=" + colonyBefore.ToString("0.0") + "->" + KnowledgeService.GetColonyKnowledgeExperience(PlantKnowledgeUtility.DomainId, crop.defName).ToString("0.0"),
-                "expertise=" + expertiseBefore.ToString("0.0") + "->" + KnowledgeService.GetPawnExpertiseExperience(PlantKnowledgeUtility.DomainId, pawn).ToString("0.0"),
-                "sowingEvents=" + KnowledgeService.GetEventCount(PlantKnowledgeUtility.DomainId, crop.defName, "sowing", pawn)
+                "personal=" + personalBefore.ToString("0.0") + "->" + HorticultureKnowledgeAdapter.PersonalKnowledge(pawn, crop).ToString("0.0"),
+                "colony=" + colonyBefore.ToString("0.0") + "->" + HorticultureKnowledgeAdapter.ColonyKnowledge(crop).ToString("0.0"),
+                "expertise=" + expertiseBefore.ToString("0.0") + "->" + KnowledgeQuery.Expertise(HorticultureKnowledgeAdapter.DomainId, pawn,
+                    HorticultureKnowledgeAdapter.ExpertiseTrack).amount.ToString("0.0"),
+                "sowingEvents=" + HorticultureKnowledgeAdapter.Facet(pawn, crop, HorticultureKnowledgeAdapter.FacetSowing).EventCount("sowing")
             };
         }
 
@@ -1402,9 +1408,10 @@ namespace HorticultureNovelSeeds
             string defName = (argument ?? string.Empty).Trim();
             ThingDef requested = defName.NullOrEmpty() ? null : DefDatabase<ThingDef>.GetNamedSilentFail(defName);
             if (requested != null && NovelSeedUtility.IsGrowableCrop(requested)) return requested;
-            KnowledgeSnapshot known = KnowledgeService.ColonyKnowledge(PlantKnowledgeUtility.DomainId)
-                .OrderByDescending(record => record.experience).FirstOrDefault();
-            return DefDatabase<ThingDef>.GetNamedSilentFail(known?.subjectId)
+            string knownSubject = KnowledgeQuery.ColonyFacets(HorticultureKnowledgeAdapter.DomainId)
+                .Where(record => record.amount > 0f).OrderByDescending(record => record.amount)
+                .Select(record => record.subjectId).FirstOrDefault();
+            return DefDatabase<ThingDef>.GetNamedSilentFail(knownSubject)
                 ?? DefDatabase<ThingDef>.GetNamedSilentFail("Plant_Rice")
                 ?? DefDatabase<ThingDef>.AllDefsListForReading.FirstOrDefault(NovelSeedUtility.IsGrowableCrop);
         }

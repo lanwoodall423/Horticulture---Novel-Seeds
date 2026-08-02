@@ -323,16 +323,20 @@ namespace HorticultureNovelSeeds
         private ThingDef cropDef;
         private List<VarietyTraitDef> traits;
         private List<string> parentVarietyIds;
+        private string originKind = "mutation";
 
         public ThingDef CropDef => cropDef;
         public List<VarietyTraitDef> Traits => traits;
+        public string OriginKind => originKind.NullOrEmpty() ? "mutation" : originKind;
         public bool Valid => cropDef != null && traits != null && traits.Count > 0;
 
-        public void Initialize(ThingDef crop, List<VarietyTraitDef> varietyTraits, IEnumerable<string> lineageParentIds = null)
+        public void Initialize(ThingDef crop, List<VarietyTraitDef> varietyTraits, IEnumerable<string> lineageParentIds = null,
+            string discoveryOrigin = null)
         {
             cropDef = crop;
             traits = varietyTraits?.Where(t => t != null).Distinct().ToList() ?? new List<VarietyTraitDef>();
             parentVarietyIds = lineageParentIds?.Where(id => !id.NullOrEmpty()).Distinct().ToList() ?? new List<string>();
+            originKind = discoveryOrigin.NullOrEmpty() ? (parentVarietyIds.Count > 0 ? "cross-pollination" : "mutation") : discoveryOrigin;
         }
 
         public override void PostExposeData()
@@ -341,10 +345,12 @@ namespace HorticultureNovelSeeds
             Scribe_Defs.Look(ref cropDef, "cropDef");
             Scribe_Collections.Look(ref traits, "traits", LookMode.Def);
             Scribe_Collections.Look(ref parentVarietyIds, "parentVarietyIds", LookMode.Value);
+            Scribe_Values.Look(ref originKind, "originKind", "mutation");
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
                 if (traits == null) traits = new List<VarietyTraitDef>();
                 if (parentVarietyIds == null) parentVarietyIds = new List<string>();
+                if (originKind.NullOrEmpty()) originKind = parentVarietyIds.Count > 0 ? "cross-pollination" : "mutation";
             }
         }
 
@@ -408,8 +414,9 @@ namespace HorticultureNovelSeeds
             {
                 return;
             }
-            VarietyRecord variety = GameComponent_NovelSeeds.Instance.UnlockVariety(cropDef, traits, varietyName.Trim(), parentVarietyIds, false, discoverer);
-            PlantKnowledgeUtility.RecordSeedDiscovery(discoverer, cropDef);
+            VarietyRecord variety = GameComponent_NovelSeeds.Instance.UnlockVariety(cropDef, traits, varietyName.Trim(), parentVarietyIds, false,
+                discoverer, OriginKind);
+            HorticultureEventRouter.CultivarDocumented(discoverer, variety);
             Find.LetterStack.ReceiveLetter("HNS_VarietyUnlocked".Translate(variety.Label), "HNS_VarietyUnlockedDesc".Translate(variety.Label, cropDef.label), LetterDefOf.PositiveEvent);
             parent.Destroy();
         }

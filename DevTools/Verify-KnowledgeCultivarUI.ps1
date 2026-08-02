@@ -12,6 +12,8 @@ $aquaculture = Read-ModFile 'AquacultureFishing\Source\AquacultureJournal.cs'
 $wildlife = Read-ModFile 'Wildlife\Source\Herds\HuntingKnowledge.cs'
 $registry = Read-ModFile 'Horticulture - Novel Seeds\Source\CultivarRegistry.cs'
 $knowledge = Read-ModFile 'Horticulture - Novel Seeds\Source\PlantKnowledge.cs'
+$adapter = Read-ModFile 'Horticulture - Novel Seeds\Source\HorticultureKnowledgeAdapter.cs'
+$router = Read-ModFile 'Horticulture - Novel Seeds\Source\HorticultureEventRouter.cs'
 $mutation = Read-ModFile 'Horticulture - Novel Seeds\Source\NovelSeedUtility.cs'
 $core = Read-ModFile 'Horticulture - Novel Seeds\Source\ModCore.cs'
 
@@ -20,7 +22,7 @@ $requirements = [ordered]@{
     'colony navigation describes knowledge only' = $menu -match 'Shared subject knowledge across the colony\.'
     'aquaculture branches before expertise aggregation' = $aquaculture -match 'return FishingKnowledgeModel\(colonyRecords, null, true\)' -and $aquaculture -match 'if \(colony\)[\s\S]*?title = "Colony Fishing Knowledge"'
     'wildlife branches before expertise aggregation' = $wildlife -match 'if \(colony\)[\s\S]*?Colony Wildlife Knowledge'
-    'horticulture delegates to a colony-safe framework provider' = $registry -match 'HorticultureSharedKnowledgeIntegration\.Menu\(pawn, colony\)' -and $knowledge -match 'if \(colony\) return new KnowledgeMenuModel[\s\S]*?Colony Horticulture Knowledge'
+    'horticulture delegates to a colony-safe framework provider' = $registry -match 'HorticultureKnowledgeAdapter\.Menu\(pawn, colony\)' -and $adapter -match 'colony \? "Colony Horticulture Knowledge"'
     'no knowledge mutation factor API' = $knowledge -notmatch 'MutationChanceFactor'
     'mutation does not query plant knowledge' = $mutation -notmatch 'PlantKnowledgeUtility\.(Mutation|Experience|Rank)'
     'personal plant work factor retained' = $knowledge -match 'PlantWorkSpeedFactor\(Pawn pawn, ThingDef cropDef\)'
@@ -33,8 +35,9 @@ $requirements = [ordered]@{
     'variety save keys retained' = $core -match 'parentVarietyIds' -and $core -match 'firstDiscoveredTick'
     'breeding programs are load-only legacy data' = $core -match 'class BreedingProgramRecord' -and $core -match 'Scribe\.mode != LoadSaveMode\.Saving[\s\S]*?"breedingPrograms"' -and $core -notmatch 'NotifyMatchingBreedingPrograms'
     'knowledge migrates from the legacy key without new writes' = $core -match 'Scribe\.mode != LoadSaveMode\.Saving[\s\S]*?"horticultureKnowledge"' -and $core -match 'KnowledgeService\.ImportMinimum'
-    'plants use the framework domain service' = $knowledge -match 'KnowledgeDomainRegistry\.RegisterDomain' -and $knowledge -match 'KnowledgeService\.Award' -and $registry -match 'KnowledgeService\.GetColonyKnowledgeRank'
-    'colony and expertise remain isolated' = $knowledge -match 'colonyKnowledge = amount' -and $knowledge -match 'expertise = amount' -and $registry -match 'GetPawnExpertiseRank'
+    'plants use the framework domain service' = $adapter -match 'KnowledgeRegistry\.RegisterDomain' -and $adapter -match 'KnowledgeEngine\.Submit' -and $registry -match 'HorticultureKnowledgeAdapter\.ColonyKnowledge'
+    'colony and expertise remain isolated' = $adapter -match 'targetColony = true' -and $adapter -match 'directExpertise = expert' -and $registry -match 'HorticultureKnowledgeAdapter\.ExpertiseRank'
+    'completed gameplay events use one observation router' = $router -match 'SowingCompleted' -and $router -match 'NovelSeedDiscovered' -and $router -match 'CultivarDocumented'
 }
 
 $failed = @($requirements.GetEnumerator() | Where-Object { -not $_.Value })

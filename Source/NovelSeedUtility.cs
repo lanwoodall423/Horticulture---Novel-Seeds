@@ -1371,7 +1371,8 @@ namespace HorticultureNovelSeeds
             List<VarietyTraitDef> traits = SelectedVarietyForPlanting(plantDef, cell, map)?.traits;
             return ExpandedTraitUtility.SowWorkFactor(traits) / ExpandedTraitUtility.SynergyFactorAt(cell, map, traits, "SowSpeed");
         }
-        public static void DropDiscoverySeed(ThingDef cropDef, List<VarietyTraitDef> traits, IntVec3 position, Map map, IEnumerable<string> lineageParentIds = null)
+        public static void DropDiscoverySeed(ThingDef cropDef, List<VarietyTraitDef> traits, IntVec3 position, Map map,
+            IEnumerable<string> lineageParentIds = null, string originKind = null)
         {
             if (cropDef == null || traits == null || traits.Count == 0 || map == null)
             {
@@ -1379,7 +1380,7 @@ namespace HorticultureNovelSeeds
             }
 
             Thing seedPack = ThingMaker.MakeThing(HNS_DefOf.HNS_NovelSeedPack);
-            seedPack.TryGetComp<CompNovelSeedPack>()?.Initialize(cropDef, traits, lineageParentIds);
+            seedPack.TryGetComp<CompNovelSeedPack>()?.Initialize(cropDef, traits, lineageParentIds, originKind);
             GenPlace.TryPlaceThing(seedPack, position, map, ThingPlaceMode.Near);
             Find.LetterStack.ReceiveLetter("HNS_SeedDiscovered".Translate(cropDef.LabelCap), "HNS_SeedDiscoveredDesc".Translate(cropDef.label, TraitSummary(traits)), LetterDefOf.PositiveEvent, seedPack);
         }
