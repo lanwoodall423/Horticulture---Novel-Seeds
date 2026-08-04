@@ -5,6 +5,24 @@ using Verse.AI;
 
 namespace HorticultureNovelSeeds
 {
+    internal static class ResourcePaymentUtility
+    {
+        internal static bool CanSatisfyStack(int stackCount, int requiredCount)
+        {
+            return requiredCount > 0 && stackCount >= requiredCount;
+        }
+
+        internal static bool CanReserveStack(int stackCount, int requiredCount, bool reservable)
+        {
+            return reservable && CanSatisfyStack(stackCount, requiredCount);
+        }
+
+        internal static int ConsumedUnits(int carriedStackCount, int requiredCount)
+        {
+            return System.Math.Min(System.Math.Max(0, carriedStackCount), System.Math.Max(0, requiredCount));
+        }
+    }
+
     public class WorkGiver_FertilizeNovelPlant : WorkGiver_Scanner
     {
         public override PathEndMode PathEndMode => PathEndMode.Touch;
@@ -34,7 +52,8 @@ namespace HorticultureNovelSeeds
         private static Thing FindResource(Pawn pawn, ThingDef def, int count)
         {
             return GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, ThingRequest.ForDef(def), PathEndMode.ClosestTouch,
-                TraverseParms.For(pawn), 9999f, thing => thing.stackCount >= count && !thing.IsForbidden(pawn) && pawn.CanReserve(thing));
+                TraverseParms.For(pawn), 9999f, thing => ResourcePaymentUtility.CanSatisfyStack(thing.stackCount, count)
+                    && !thing.IsForbidden(pawn) && pawn.CanReserve(thing));
         }
     }
 
@@ -65,7 +84,7 @@ namespace HorticultureNovelSeeds
                 VarietyTraitDef trait = comp?.RequiredResourceTrait;
                 Thing carried = pawn.carryTracker.CarriedThing;
                 if (comp?.NeedsResource != true || trait == null || carried == null || carried.def != trait.requiredResourceDef) return;
-                int consumed = System.Math.Min(carried.stackCount, trait.requiredResourceCount);
+                int consumed = ResourcePaymentUtility.ConsumedUnits(carried.stackCount, trait.requiredResourceCount);
                 carried.SplitOff(consumed).Destroy();
                 if (consumed >= trait.requiredResourceCount) comp.SatisfyResource();
                 if (consumed >= trait.requiredResourceCount) HorticultureEventRouter.FertilizationCompleted(pawn, plant);

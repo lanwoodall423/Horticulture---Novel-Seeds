@@ -219,3 +219,20 @@ Plant definitions from both vanilla RimWorld and supported mods are automaticall
 Progression: Agriculture's seed unlock system is used and is required. 
 It should be compatible with all plant mods. Existing manual masks always take priority; missing
 growth-stage, collection, and directional masks use the persistent automatic fallback.
+
+Deferred Reality dependency provenance
+---------------------------------------
+The optional Deferred Reality Horticulture adapter is built from the external
+`DeferredRealityFramework/Source/Adapters/Horticulture/DeferredRealityHorticultureAdapter.cs`
+and `DeferredReality.Horticulture.csproj` sources. The adapter targets .NET Framework 4.8,
+RimWorld 1.6, and the Deferred Reality Framework API; it is included to provide the
+regional wild-flora provider and does not own Horticulture cultivar state.
+
+The currently vendored `1.6/Assemblies/DeferredReality.Horticulture.dll` is expected to have
+SHA-256 `72404BD24D154C0760E59AAA35E43F326334541FB2F020AE331126331EBA736F`.
+Its assembly metadata version is `0.0.0.0`.
+The external source repository was observed at commit `1c8acdf2197bb440e053477457505fd50c0e7382`,
+but its worktree was dirty and the exact binary build provenance could not be independently
+reproduced. This remains a release blocker until the external source revision and build are
+pinned to the vendored hash. The main Horticulture project does not directly reference this
+adapter binary; the external adapter references HorticultureNovelSeeds and DeferredRealityFramework.

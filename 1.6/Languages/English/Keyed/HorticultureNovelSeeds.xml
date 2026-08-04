@@ -48,8 +48,8 @@
   <HNS_StatCompanion>Growth near a different crop: {0} of base</HNS_StatCompanion>
   <HNS_StatByproduct>Byproduct: {0} ({1} chance)</HNS_StatByproduct>
   <HNS_StatResin>Resin contact effect on sowing or harvesting; fully covered hands prevent harvesting exposure</HNS_StatResin>
-  <HNS_NeedsResource>Needs fertilizer: {0} x {1}</HNS_NeedsResource>
-  <HNS_StatResourceNeed>Required fertilizer: {0} x {1}</HNS_StatResourceNeed>
+  <HNS_NeedsResource>Needs one unit of {1} before growth (cost: {0})</HNS_NeedsResource>
+  <HNS_StatResourceNeed>Resource cost before growth: {0} x {1}; fulfilled growth is 15% faster</HNS_StatResourceNeed>
   <HNS_RequiresZone>requires {0} growing zone</HNS_RequiresZone>
   <HNS_StatSynergyTyped>Synergy near {0}: {1} at {2} of base without the companion and {3} with it</HNS_StatSynergyTyped>
   <HNS_StatPerennial>Reharvestable: resets to {0} growth after each harvest</HNS_StatPerennial>

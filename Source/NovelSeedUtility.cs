@@ -234,6 +234,19 @@ namespace HorticultureNovelSeeds
             return Mathf.Max(0f, growth) / (1f + Mathf.Max(0f, distanceSquared));
         }
 
+        internal static CrossPollinationDonorCandidate MakeCrossPollinationDonor(VarietyRecord variety,
+            CrossPollinationDonorState state, float distanceSquared, float minimumGrowth = DefaultMinimumDonorGrowth,
+            Plant plant = null)
+        {
+            if (variety == null || !IsEligibleCrossPollinationDonor(state, minimumGrowth)) return null;
+            return new CrossPollinationDonorCandidate
+            {
+                plant = plant,
+                variety = variety,
+                weight = CrossPollinationDonorWeight(distanceSquared, state.growth)
+            };
+        }
+
         internal static float CrossPollinationSlotChance(int slotIndex, float secondSlotChance, float laterSlotChance)
         {
             if (slotIndex <= 0) return 1f;
@@ -276,7 +289,7 @@ namespace HorticultureNovelSeeds
             if (cultivars.Count == 0) return false;
             float chance = settings?.CrossPollinationChanceFor(plant.def) ?? DefaultCrossPollinationChance;
             if (!Rand.Chance(Mathf.Clamp01(chance))) return false;
-            CrossPollinationCultivarCandidate donorCandidate = SelectWeightedCrossPollinationDonor(cultivars);
+            CrossPollinationCultivarCandidate donorCandidate = SelectWeightedCrossPollinationDonor(cultivars, Rand.Value);
             if (donorCandidate?.variety == null) return false;
 
             int maximumSlots = settings?.MaxCrossPollinationTraits ?? 3;
@@ -337,12 +350,9 @@ namespace HorticultureNovelSeeds
                 if (donor == null || !IsEligibleCrossPollinationDonor(state, minimumGrowth)) continue;
                 int dx = donorPlant.Position.x - recipient.Position.x;
                 int dz = donorPlant.Position.z - recipient.Position.z;
-                result.Add(new CrossPollinationDonorCandidate
-                {
-                    plant = donorPlant,
-                    variety = donor,
-                    weight = CrossPollinationDonorWeight(dx * dx + dz * dz, donorPlant.Growth)
-                });
+                CrossPollinationDonorCandidate candidate = MakeCrossPollinationDonor(donor, state,
+                    dx * dx + dz * dz, minimumGrowth, donorPlant);
+                if (candidate != null) result.Add(candidate);
             }
             return result;
         }
@@ -371,13 +381,13 @@ namespace HorticultureNovelSeeds
             return result;
         }
 
-        private static CrossPollinationCultivarCandidate SelectWeightedCrossPollinationDonor(
-            List<CrossPollinationCultivarCandidate> cultivars)
+        internal static CrossPollinationCultivarCandidate SelectWeightedCrossPollinationDonor(
+            List<CrossPollinationCultivarCandidate> cultivars, float roll)
         {
             float total = 0f;
             foreach (CrossPollinationCultivarCandidate candidate in cultivars) total += Mathf.Max(0f, candidate.weight);
             if (total <= 0f) return null;
-            float pick = Rand.Value * total;
+            float pick = Mathf.Clamp01(roll) * total;
             foreach (CrossPollinationCultivarCandidate candidate in cultivars)
             {
                 pick -= Mathf.Max(0f, candidate.weight);
@@ -698,6 +708,11 @@ namespace HorticultureNovelSeeds
             foreach (VarietyTraitDef trait in traits.Where(t => t != null))
                 factor *= trait.growthRateFactor <= 0f ? 1f : trait.growthRateFactor;
             return Mathf.Max(0.05f, factor);
+        }
+
+        internal static float ApplyResourceGrowthGate(float baseGrowthRate, bool needsResource)
+        {
+            return needsResource ? 0f : baseGrowthRate;
         }
 
         private static VisualSettingsRecord VisualOverride(ThingDef cropDef, VarietyTraitDef trait)

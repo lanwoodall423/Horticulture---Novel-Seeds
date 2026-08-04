@@ -295,7 +295,7 @@ namespace HorticultureNovelSeeds
         {
             CompPlantVariety comp = __instance.TryGetComp<CompPlantVariety>();
             if (comp == null || !comp.HasAnyTraits) return;
-            if (comp.NeedsResource) { __result = 0f; return; }
+            if (comp.NeedsResource) { __result = NovelSeedUtility.ApplyResourceGrowthGate(__result, true); return; }
             if (__result <= 0f && comp.HasPerennialDormancy && GenTemperature.TryGetTemperatureForCell(__instance.Position, __instance.Map, out float temperature) && temperature < __instance.def.plant.minOptimalGrowthTemperature)
             {
                 __result = Mathf.Max(__result, comp.DormantGrowthFactor);

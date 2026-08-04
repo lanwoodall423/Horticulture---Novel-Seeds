@@ -32,6 +32,7 @@ function Check([bool]$condition, [string]$name) {
 
 $defs = @($xml.Defs.ChildNodes | Where-Object { $_.defName })
 $mechanical = @($defs | Where-Object { $_.configFamily -notmatch 'Color' -and $_.defName -notmatch 'Color' })
+$resourceDefs = @($defs | Where-Object { $_.requiredResourceDef })
 Check ($defs.Count -eq 49) 'named XML trait count changed'
 Check ((@($mechanical | Where-Object { $_.balanceValueExplicit -ne 'true' })).Count -eq 0) 'mechanical XML traits lack explicit balance values'
 Check ($modCore -match 'public float growthRateFactor = 1f' -and $modCore -match 'public float synergyAbsentFactor = 1f') 'neutral factor fields/defaults missing'
@@ -41,6 +42,7 @@ Check ($utility -match 'GrowthRateFactor\(IEnumerable') 'growth factor helper mi
 Check ($expanded -match 'SynergyFactorValue' -and $expanded -match 'ApplyDiseaseResistanceFactor') 'synergy absent/disease helper missing'
 Check ($families -match 'synergyAbsentFactor' -and $families -match 'harvestWorkFactor = 1f \+ percent / 100f') 'generated tradeoff inheritance missing'
 Check ($validation -match 'no mechanical benefit' -and $validation -match 'no mechanical cost' -and $validation -match 'does not inherit') 'catalog validation coverage missing'
+Check ($validation -match 'requiredResourceCount != 1' -and (@($resourceDefs | Where-Object { [int]$_.requiredResourceCount -ne 1 })).Count -eq 0) 'resource traits are not validated as one-unit payments'
 Check ($regression -match 'GrowthYieldWorkRegression' -and $regression -match 'PerennialRegression' -and $regression -match 'SynergyRegression') 'focused regression coverage missing'
 Check ($patches -match 'TraitCatalogValidation\.Run\(\)' -and $patches -match 'EffectiveHarvestDestroys\(bool baseValue, bool regularHarvest') 'runtime validation/perennial helper missing'
 Check ($debug -match 'TraitCatalogRegression' -and $bridge -match 'HNS_TRAIT_CATALOG_REGRESSIONS') 'runtime regression bridge missing'

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -536,13 +537,7 @@ namespace HorticultureNovelSeeds
             {
                 return new List<VarietyRecord>();
             }
-            return ids.Split(',')
-                .Select(GetVariety)
-                .Where(variety => variety != null)
-                .GroupBy(variety => variety.id)
-                .Select(group => group.First())
-                .OrderBy(variety => variety.id)
-                .ToList();
+            return OrderBreedingMixVarieties(ids.Split(',').Select(GetVariety));
         }
 
         public VarietyRecord VarietyForSowing(IPlantToGrowSettable settable, IntVec3 cell)
@@ -550,12 +545,34 @@ namespace HorticultureNovelSeeds
             VarietyRecord selected = SelectedVarietyFor(settable);
             if (selected != null) return selected;
             IReadOnlyList<VarietyRecord> breeding = BreedingVarietiesFor(settable);
-            if (breeding.Count == 0) return null;
+            return SelectBreedingMixVariety(breeding, cell);
+        }
+
+        internal static int BreedingMixIndex(IntVec3 cell, int count)
+        {
+            if (count <= 0) return -1;
             unchecked
             {
                 int hash = (cell.x * 397) ^ (cell.z * 7919);
-                return breeding[(hash & int.MaxValue) % breeding.Count];
+                return (hash & int.MaxValue) % count;
             }
+        }
+
+        internal static List<VarietyRecord> OrderBreedingMixVarieties(IEnumerable<VarietyRecord> varieties)
+        {
+            return (varieties ?? Enumerable.Empty<VarietyRecord>())
+                .Where(variety => variety != null && !variety.id.NullOrEmpty())
+                .GroupBy(variety => variety.id)
+                .Select(group => group.First())
+                .OrderBy(variety => variety.id, StringComparer.Ordinal)
+                .ToList();
+        }
+
+        internal static VarietyRecord SelectBreedingMixVariety(IReadOnlyList<VarietyRecord> breeding, IntVec3 cell)
+        {
+            if (breeding == null || breeding.Count == 0) return null;
+            int index = BreedingMixIndex(cell, breeding.Count);
+            return index < 0 ? null : breeding[index];
         }
 
         public void SetSelectedVariety(IPlantToGrowSettable settable, VarietyRecord variety)

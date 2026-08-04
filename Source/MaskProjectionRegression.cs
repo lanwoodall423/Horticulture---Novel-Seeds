@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Verse;
 
 namespace HorticultureNovelSeeds
 {
@@ -100,8 +101,88 @@ namespace HorticultureNovelSeeds
             manualRecord.SetManualPlantMask(2, manualLayers);
             bool manualLoading = manualRecord.HasManualPlantMask(2)
                 && manualRecord.ManualPlantMaskLayersForVariation(2)[2].IsPainted(7, 9);
+            bool confidence = ConfidenceRegression(sourceLayers, sourcePixels, targetPixels, projection, conflictPixels,
+                conflictSource);
+            bool editorHistory = EditorHistoryRegression(projection);
             return translatedAndScaled && correctAssignment && transparentBoundary && conflictDetected && rejected && cancelWithoutMutation
-                && changed && undoRedo && sameIdentity && conflictingManual && legacyCache && manualLoading;
+                && changed && undoRedo && sameIdentity && conflictingManual && legacyCache && manualLoading
+                && confidence && editorHistory;
+        }
+
+        private static bool ConfidenceRegression(List<VisualMaskLayerRecord> sourceLayers, Color32[] sourcePixels,
+            Color32[] targetPixels, MaskProjectionResult correct, Color32[] conflictPixels,
+            List<VisualMaskLayerRecord> conflictSource)
+        {
+            MaskProjectionResult incorrect = SemanticMaskProjection.Build(sourceLayers, sourcePixels, EmptyLayers(),
+                IncorrectTargetPixels());
+            MaskProjectionResult conflict = SemanticMaskProjection.Build(conflictSource, sourcePixels, EmptyLayers(), conflictPixels);
+            float correctConfidence = AverageConfidence(correct);
+            float incorrectConfidence = AverageConfidence(incorrect);
+            float conflictConfidence = AverageConfidence(conflict);
+            bool bounded = correct.Channels.Concat(incorrect.Channels).Concat(conflict.Channels).All(channel =>
+                channel != null && !float.IsNaN(channel.Confidence) && !float.IsInfinity(channel.Confidence)
+                && channel.Confidence >= 0f && channel.Confidence <= 1f);
+            bool ambiguousCannotImprove = conflictConfidence <= correctConfidence + 0.0001f;
+            bool conflictPenalty = conflict.Channels.Sum(channel => channel.Conflicts) > 0
+                && conflictConfidence < AverageConfidence(SemanticMaskProjection.Build(conflictSource, sourcePixels,
+                    EmptyLayers(), targetPixels));
+            bool missingCoveragePenalty = incorrect.Channels.Sum(channel => channel.RemainingUnmaskedVisiblePixels)
+                >= correct.Channels.Sum(channel => channel.RemainingUnmaskedVisiblePixels)
+                && incorrectConfidence <= correctConfidence + 0.0001f;
+            return bounded && correctConfidence > incorrectConfidence && ambiguousCannotImprove
+                && conflictPenalty && missingCoveragePenalty;
+        }
+
+        private static float AverageConfidence(MaskProjectionResult result)
+        {
+            return result?.Channels == null || result.Channels.Length == 0
+                ? 0f : result.Channels.Where(channel => channel != null).Select(channel => channel.Confidence).DefaultIfEmpty(0f).Average();
+        }
+
+        private static Color32[] IncorrectTargetPixels()
+        {
+            Color32[] pixels = new Color32[Size * Size];
+            SetTopRect(pixels, 8, 8, 170, 18, new Color32(30, 210, 230, 255));
+            SetTopRect(pixels, 160, 190, 12, 12, new Color32(220, 40, 220, 255));
+            return pixels;
+        }
+
+        private static bool EditorHistoryRegression(MaskProjectionResult projection)
+        {
+            ThingDef plant = DefDatabase<ThingDef>.AllDefsListForReading.FirstOrDefault(def => def.plant != null
+                && PlantMaskUtility.TextureForVariation(def, 0) != null);
+            if (plant == null || HorticultureNovelSeedsMod.Settings == null) return false;
+            PlantSettingsRecord record = HorticultureNovelSeedsMod.Settings.GetPlantSettings(plant);
+            List<VisualMaskLayerRecord> savedBase = record.PlantMaskLayers.Select(layer => layer.Clone()).ToList();
+            List<PlantMaskVariationRecord> savedVariations = record.PlantMaskVariationRecords
+                .Select(item => new PlantMaskVariationRecord(item.VariationIndex, item.Layers)).ToList();
+            List<VisualMaskLayerRecord> savedProduce = record.ProduceMaskLayers.Select(layer => layer.Clone()).ToList();
+            bool savedUsePlant = record.usePlantMasks;
+            bool savedDisableAuto = record.disableAutoPlantMasks;
+            bool savedUseProduce = record.useProduceMasks;
+            List<VisualMaskLayerRecord> established = EmptyLayers();
+            established[0].PaintPixel(3, 3, true);
+            record.SetManualPlantMask(0, established);
+            try
+            {
+                Dialog_PlantMasks dialog = new Dialog_PlantMasks(plant, false, 0);
+                int[] before = dialog.CurrentLayerHashesForRegression;
+                dialog.BeginProjectionPreviewForRegression(projection, dialog.CurrentLayersForRegression(), 0,
+                    new[] { true, true, true });
+                dialog.ApplyProjectionPreviewForRegression();
+                int[] projected = dialog.CurrentLayerHashesForRegression;
+                bool oneEntry = dialog.UndoHistoryCountForRegression == 1;
+                dialog.UndoForRegression();
+                bool exactUndo = before.SequenceEqual(dialog.CurrentLayerHashesForRegression);
+                dialog.RedoForRegression();
+                bool exactRedo = projected.SequenceEqual(dialog.CurrentLayerHashesForRegression);
+                return oneEntry && exactUndo && exactRedo;
+            }
+            finally
+            {
+                record.ReplaceMasks(savedUsePlant, savedBase, savedVariations, savedUseProduce, savedProduce);
+                record.disableAutoPlantMasks = savedDisableAuto;
+            }
         }
 
         private static List<VisualMaskLayerRecord> EmptyLayers()

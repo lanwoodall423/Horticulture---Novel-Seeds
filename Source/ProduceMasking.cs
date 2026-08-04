@@ -953,6 +953,27 @@ namespace HorticultureNovelSeeds
             absorbInputAroundWindow = true;
         }
 
+        internal void BeginProjectionPreviewForRegression(MaskProjectionResult projection,
+            IReadOnlyList<VisualMaskLayerRecord> targetLayers, int targetVariation, bool[] accepted)
+        {
+            projectionPreview = projection;
+            projectionTargetLayers = targetLayers?.Select(layer => layer?.Clone() ?? new VisualMaskLayerRecord()).ToList()
+                ?? NewEmptyLayers();
+            projectionAccepted = accepted?.ToArray() ?? new[] { true, true, true };
+            projectionSourceVariation = selectedVariation;
+            projectionTargetVariation = Mathf.Clamp(targetVariation, 0, Mathf.Max(0, variationCount - 1));
+            selectedVariation = projectionTargetVariation;
+            RefreshProjectionDisplayLayers();
+        }
+
+        internal void ApplyProjectionPreviewForRegression() => ApplyProjectionPreview();
+        internal void UndoForRegression() => Undo();
+        internal void RedoForRegression() => Redo();
+        internal int UndoHistoryCountForRegression => undoHistory.Count;
+        internal List<VisualMaskLayerRecord> CurrentLayersForRegression() => CurrentLayers
+            .Select(layer => layer?.Clone() ?? new VisualMaskLayerRecord()).ToList();
+        internal int[] CurrentLayerHashesForRegression => CurrentLayers.Select(layer => layer.ContentHash).ToArray();
+
         public override void DoWindowContents(Rect inRect)
         {
             HandleEditorShortcuts();
@@ -1412,7 +1433,8 @@ namespace HorticultureNovelSeeds
                 GUI.enabled = oldEnabled;
                 Widgets.Label(new Rect(rect.x + 22f, y + 25f, rect.width - 22f, 38f),
                     "+" + result.AddedPixels + " / -" + result.RemovedPixels
-                    + "  conflicts " + result.Conflicts + "  unmasked " + result.RemainingUnmaskedVisiblePixels);
+                    + "  conflicts " + result.Conflicts + "  ambiguous " + result.AmbiguousAssignments
+                    + "  unmasked " + result.RemainingUnmaskedVisiblePixels);
                 y += 68f;
             }
             y += 8f;

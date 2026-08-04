@@ -66,14 +66,24 @@ namespace HorticultureNovelSeeds
 
         private static bool ResourceRegression()
         {
-            VarietyTraitDef resource = new VarietyTraitDef
+            VarietyTraitDef[] resources =
             {
-                requiredResourceDef = DefDatabase<ThingDef>.GetNamedSilentFail("WoodLog"),
-                requiredResourceCount = 5,
-                growthRateFactor = 1.15f
+                DefDatabase<VarietyTraitDef>.GetNamedSilentFail("HNS_ResourceDependent_Mulch"),
+                DefDatabase<VarietyTraitDef>.GetNamedSilentFail("HNS_ResourceDependent_Hay"),
+                DefDatabase<VarietyTraitDef>.GetNamedSilentFail("HNS_ResourceDependent_Fungus")
             };
-            return resource.requiredResourceDef != null && resource.requiredResourceCount == 5
-                && Mathf.Approximately(NovelSeedUtility.GrowthRateFactor(new[] { resource }), 1.15f);
+            return resources.All(resource => resource != null && resource.requiredResourceCount == 1
+                && resource.requiredResourceDef != null && Mathf.Approximately(resource.growthRateFactor, 1.15f)
+                && Mathf.Approximately(NovelSeedUtility.GrowthRateFactor(new[] { resource }), 1.15f))
+                && ResourcePaymentUtility.CanSatisfyStack(1, 1)
+                && !ResourcePaymentUtility.CanSatisfyStack(0, 1)
+                && ResourcePaymentUtility.CanReserveStack(1, 1, true)
+                && !ResourcePaymentUtility.CanReserveStack(1, 1, false)
+                && ResourcePaymentUtility.ConsumedUnits(3, 1) == 1
+                && 3 - ResourcePaymentUtility.ConsumedUnits(3, 1) == 2
+                && ResourcePaymentUtility.ConsumedUnits(0, 1) == 0
+                && Mathf.Approximately(NovelSeedUtility.ApplyResourceGrowthGate(1.15f, false), 1.15f)
+                && Mathf.Approximately(NovelSeedUtility.ApplyResourceGrowthGate(1.15f, true), 0f);
         }
 
         private static bool SynergyRegression()

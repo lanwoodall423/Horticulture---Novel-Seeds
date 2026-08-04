@@ -15,6 +15,8 @@ namespace HorticultureNovelSeeds
             {
                 if (trait.balanceValueExplicit && !Mathf.Approximately(NovelSeedUtility.TraitBalanceValue(trait), trait.balanceValue))
                     errors.Add(trait.defName + " has an explicit balance value but still uses tag fallback.");
+                if (trait.requiredResourceDef != null && trait.requiredResourceCount != 1)
+                    errors.Add(trait.defName + " must consume exactly one required resource unit.");
                 if (IsCosmetic(trait) || trait.configRoot) continue;
                 if (!HasBenefit(trait)) errors.Add(trait.defName + " has no mechanical benefit.");
                 if (!HasCostOrRestriction(trait)) errors.Add(trait.defName + " has no mechanical cost or substantial restriction.");
