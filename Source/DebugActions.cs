@@ -230,6 +230,16 @@ namespace HorticultureNovelSeeds
             return HorticultureNovelSeeds.TraitCatalogRegression.Run();
         }
 
+        internal static bool BreedingMixDiagnostic()
+        {
+            return HorticultureNovelSeeds.BreedingMixRegression.Run();
+        }
+
+        internal static string BreedingMixDiagnosticReport()
+        {
+            return HorticultureNovelSeeds.BreedingMixRegression.Report();
+        }
+
         [DebugAction(Category, "Spawn crossbred seed pack by generation", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
         private static void ChooseCrossbredGenerationDepth()
         {

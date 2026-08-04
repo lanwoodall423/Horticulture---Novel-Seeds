@@ -6,8 +6,11 @@ $settings = Get-Content -Raw (Join-Path $root 'Source\Settings.cs')
 $bridge = Get-Content -Raw (Join-Path $root 'DevTools\BridgeAdapter\HorticultureBridgeAdapter.cs')
 $projection = Get-Content -Raw (Join-Path $root 'Source\MaskProjection.cs')
 $identity = Get-Content -Raw (Join-Path $root 'Source\MaskTextureIdentity.cs')
+$auto = Get-Content -Raw (Join-Path $root 'Source\AutoPlantMasks.cs')
 $review = Get-Content -Raw (Join-Path $root 'Source\MaskReviewQueue.cs')
+$breeding = Get-Content -Raw (Join-Path $root 'Source\BreedingMixRegression.cs')
 $modern = Get-Content -Raw (Join-Path $root 'Source\ModernSettingsUI.cs')
+$patches = Get-Content -Raw (Join-Path $root 'Source\Patches.cs')
 
 $checks = [ordered]@{
     'grow and shrink support configurable distance' = $operations -match 'Grow\(' -and $operations -match 'Shrink\(' -and $editor -match 'selectionAmount'
@@ -34,13 +37,21 @@ $checks = [ordered]@{
     'projection is preview-only before settings mutation' = $editor -match 'projectionPreview' -and $editor -match 'ApplyProjectionPreview' -and $editor -match 'CancelProjectionPreview' -and $editor -match 'SemanticMaskProjection\.Build'
     'semantic projection scores spatial and visual correspondence' = $projection -match 'RelativeX' -and $projection -match 'ColorDistance' -and $projection -match 'Compactness' -and $projection -match 'Adjacency' -and $projection -match 'Connectivity' -and $projection -match '0\.30f' -and $projection -match '0\.20f' -and $projection -match '0\.15f' -and $projection -match '0\.10f'
     'projection preserves target transparency and channel exclusivity' = $projection -match 'VisibleAlpha' -and $projection -match 'PaintTargetPixel' -and $projection -match 'ApplyAccepted' -and $projection -match 'accepted\[channel\]' -and $projection -match 'blocked'
+    'projection starts with complete visible-bounds candidates and resolves overlap deterministically' = $projection -match 'InitialCandidates' -and $projection -match 'CandidateLayers\[channel\] = initialCandidates\[channel\]\.Clone' -and $projection -match 'ResolveCandidateOverlaps'
+    'accepted channels clear before painting while rejected channels remain authoritative' = $projection -match 'Clear every accepted channel first' -and $projection -match 'if \(!accepted\[channel\]\) continue' -and $projection -match 'result\[other\]\.IsPainted'
     'projection reports channel confidence and mutation counts' = $projection -match 'Confidence' -and $projection -match 'AddedPixels' -and $projection -match 'RemovedPixels' -and $projection -match 'Conflicts' -and $projection -match 'RemainingUnmaskedVisiblePixels'
     'exact texture identity is def-independent and deterministic' = $identity -match 'PixelFingerprint' -and $identity -match 'texture\.width' -and $identity -match 'texture\.height' -and $identity -match 'OrientationFor' -and $identity -match 'ClearCache'
+    'normal rendering uses cached identity while startup/editor may precompute readbacks' = $identity -match 'TryGetCached' -and $identity -match 'allowRead' -and $identity -match 'PreloadPlantTextures' -and $auto -match 'allowIdentityGeneration'
     'shared manual conflicts are ambiguous and manual authority remains first' = $identity -match 'entry\.ambiguous' -and $editor -match 'CurrentUsesSharedManual' -and $editor -match 'PromoteAutoToManual'
     'batch review groups and sorts exact texture work' = $review -match 'MaskReviewQueueBuilder' -and $review -match 'IdentityKey' -and $review -match 'ThenBy\(row => row\.Confidence\)' -and $review -match 'ThenByDescending\(row => row\.IssueCount\)'
     'batch review validates lazily by identity and mask hash' = $review -match 'ValidationCache' -and $review -match 'ValidationKey' -and $review -match 'MaskPainterOperations\.Validate' -and $modern -match 'Review Mask Queue'
     'review opens existing painter and refreshes after close' = $review -match 'new Dialog_PlantMasks' -and $editor -match 'Action reviewRefresh' -and $editor -match 'reviewRefresh\?\.Invoke'
+    'projection regression measures per-channel coverage and IoU' = (Test-Path (Join-Path $root 'Source\MaskProjectionRegression.cs')) -and (Get-Content -Raw (Join-Path $root 'Source\MaskProjectionRegression.cs')) -match 'IntersectionOverUnion' -and (Get-Content -Raw (Join-Path $root 'Source\MaskProjectionRegression.cs')) -match 'Coverage'
     'projection regression covers translation scale conflicts rejection cancel undo and identity' = $projection -match 'MaskProjectionRegression' -or (Test-Path (Join-Path $root 'Source\MaskProjectionRegression.cs'))
+    'projection application uses one existing editor history transaction' = $editor -match 'ApplyProjectionPreview\([\s\S]*?CaptureHistory\(0, projectionTargetVariation\)[\s\S]*?CompleteImmediateChange\(before, true\)'
+    'breeding mix diagnostic covers empty staggered and complete harvest scenarios' = $breeding -match 'initialEmptyField' -and $breeding -match 'partialStaggeredHarvest' -and $breeding -match 'completeHarvestReplant' -and $bridge -match 'HNS_BREEDING_MIX_DIAGNOSTIC'
+    'manual edits invalidate shared identity indexes' = $editor -match 'SharedManualMaskCache\.Invalidate' -and $settings -match 'ReplaceMasks' -and $settings -match 'SharedManualMaskCache\.Invalidate'
+    'perennial harvest transpiler selects the exact helper overload' = $patches -match 'AccessTools\.Method\([\s\S]*typeof\(bool\), typeof\(Plant\), typeof\(PlantDestructionMode\)'
 }
 
 $failed = @($checks.GetEnumerator() | Where-Object { -not $_.Value })

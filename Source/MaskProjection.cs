@@ -59,6 +59,27 @@ namespace HorticultureNovelSeeds
             public float Score;
         }
 
+        private sealed class RegionProposal
+        {
+            public Component Source;
+            public Component Target;
+            public float Score;
+            public float InitialOverlap;
+            public float Evidence;
+        }
+
+        private struct Bounds
+        {
+            public int MinX;
+            public int MinY;
+            public int MaxX;
+            public int MaxY;
+            public bool HasPixels;
+
+            public float Width => Mathf.Max(1, MaxX - MinX);
+            public float Height => Mathf.Max(1, MaxY - MinY);
+        }
+
         public static MaskProjectionResult Build(IReadOnlyList<VisualMaskLayerRecord> sourceLayers,
             Color32[] sourcePixels, IReadOnlyList<VisualMaskLayerRecord> targetLayers, Color32[] targetPixels)
         {
@@ -73,39 +94,51 @@ namespace HorticultureNovelSeeds
             NormalizeFeatures(targets, targetPixels, false);
             result.VisibleTargetPixels = targetPixels.Count(pixel => pixel.a >= VisibleAlpha);
 
-            List<Match> matches = new List<Match>();
+            List<VisualMaskLayerRecord> initialCandidates = InitialCandidates(sourceLayers, sourcePixels, targetPixels);
+            for (int channel = 0; channel < 3; channel++)
+                result.CandidateLayers[channel] = initialCandidates[channel].Clone();
+            List<RegionProposal> proposals = new List<RegionProposal>();
             for (int channel = 0; channel < 3; channel++)
             {
                 List<Component> channelComponents = source.Where(component => component.Channel == channel)
                     .OrderByDescending(component => component.Pixels.Count).ThenBy(component => component.Index).ToList();
-                HashSet<int> usedTargets = new HashSet<int>();
-                foreach (Component component in channelComponents)
+                foreach (Component target in targets)
                 {
-                    Match best = targets.Where(target => !usedTargets.Contains(target.Index))
-                        .Select(target => new Match { Source = component, Target = target, Score = Score(component, target) })
-                        .OrderByDescending(match => match.Score)
-                        .ThenBy(match => match.Target.Index)
-                        .FirstOrDefault();
-                    if (best == null || best.Score < MinimumMatchScore) continue;
-                    usedTargets.Add(best.Target.Index);
-                    matches.Add(best);
+                    RegionProposal best = channelComponents.Select(component => new RegionProposal
+                    {
+                        Source = component,
+                        Target = target,
+                        Score = Score(component, target)
+                    }).OrderByDescending(proposal => proposal.Score)
+                        .ThenBy(proposal => proposal.Source.Index).FirstOrDefault();
+                    if (best == null) continue;
+                    best.InitialOverlap = InitialOverlap(target, initialCandidates[channel]);
+                    if (best.InitialOverlap <= 0f && best.Score < MinimumMatchScore) continue;
+                    best.Evidence = best.Score * 0.70f + best.InitialOverlap * 0.30f;
+                    proposals.Add(best);
                 }
             }
 
-            foreach (IGrouping<int, Match> group in matches.GroupBy(match => match.Target.Index))
+            List<Match> matches = new List<Match>();
+            foreach (IGrouping<int, RegionProposal> group in proposals.GroupBy(proposal => proposal.Target.Index))
             {
-                List<Match> contenders = group.OrderByDescending(match => match.Score)
-                    .ThenBy(match => match.Source.Channel).ThenBy(match => match.Source.Index).ToList();
-                Match winner = contenders[0];
-                foreach (int pixel in winner.Target.Pixels)
-                    PaintTargetPixel(result.CandidateLayers[winner.Source.Channel], pixel, true);
+                List<RegionProposal> contenders = group.OrderByDescending(proposal => proposal.Evidence)
+                    .ThenByDescending(proposal => proposal.Score)
+                    .ThenBy(proposal => proposal.Source.Channel).ThenBy(proposal => proposal.Source.Index).ToList();
+                RegionProposal winner = contenders[0];
+                matches.Add(new Match { Source = winner.Source, Target = winner.Target, Score = winner.Score });
+                foreach (int pixel in winner.Target.Pixels) PaintTargetPixel(result.CandidateLayers[winner.Source.Channel], pixel, true);
                 if (contenders.Count > 1)
-                    foreach (Match contender in contenders)
+                    foreach (RegionProposal contender in contenders.Skip(1))
                     {
-                        MaskProjectionChannelResult channelResult = GetChannel(result, contender.Source.Channel);
-                        channelResult.Conflicts += contender.Target.Pixels.Count;
+                        GetChannel(result, contender.Source.Channel).Conflicts += contender.Target.Pixels.Count;
                     }
             }
+
+            // Resolve only genuine source overlap after the complete visible-bounds candidates and
+            // region refinements have been combined. The lowest channel index wins ties so output is
+            // deterministic, while accepted-channel application still protects rejected layers.
+            ResolveCandidateOverlaps(result);
 
             for (int channel = 0; channel < 3; channel++)
             {
@@ -138,10 +171,13 @@ namespace HorticultureNovelSeeds
             changed = false;
             bool anyAccepted = accepted != null && accepted.Length >= 3 && accepted.Any(value => value);
             if (!anyAccepted || projection == null || !projection.HasCandidate) return result;
+            // Clear every accepted channel first. Rejected channels retain their current content and
+            // therefore remain authoritative when accepted candidates are made exclusive.
+            for (int channel = 0; channel < 3; channel++)
+                if (accepted[channel]) result[channel].Clear();
             for (int channel = 0; channel < 3; channel++)
             {
                 if (!accepted[channel]) continue;
-                result[channel].Clear();
                 for (int y = 0; y < Resolution; y++) for (int x = 0; x < Resolution; x++)
                 {
                     if (!projection.CandidateLayers[channel].IsPainted(x, y)) continue;
@@ -153,6 +189,91 @@ namespace HorticultureNovelSeeds
             }
             changed = Enumerable.Range(0, 3).Any(channel => beforeHashes[channel] != result[channel].ContentHash);
             return result;
+        }
+
+        private static List<VisualMaskLayerRecord> InitialCandidates(IReadOnlyList<VisualMaskLayerRecord> sourceLayers,
+            Color32[] sourcePixels, Color32[] targetPixels)
+        {
+            List<VisualMaskLayerRecord> candidates = EmptyLayers();
+            Bounds sourceBounds = VisibleBounds(sourcePixels);
+            if (!sourceBounds.HasPixels) sourceBounds = MaskBounds(sourceLayers);
+            Bounds targetBounds = VisibleBounds(targetPixels);
+            if (!sourceBounds.HasPixels || !targetBounds.HasPixels) return candidates;
+            for (int channel = 0; channel < 3; channel++)
+            {
+                VisualMaskLayerRecord sourceLayer = sourceLayers != null && channel < sourceLayers.Count
+                    ? sourceLayers[channel] : null;
+                if (sourceLayer == null) continue;
+                for (int maskY = 0; maskY < Resolution; maskY++) for (int x = 0; x < Resolution; x++)
+                {
+                    if (!sourceLayer.IsPainted(x, maskY)) continue;
+                    int topY = Resolution - 1 - maskY;
+                    float relativeX = (x - sourceBounds.MinX) / sourceBounds.Width;
+                    float relativeY = (topY - sourceBounds.MinY) / sourceBounds.Height;
+                    int targetX = Mathf.RoundToInt(targetBounds.MinX + relativeX * (targetBounds.MaxX - targetBounds.MinX));
+                    int targetY = Mathf.RoundToInt(targetBounds.MinY + relativeY * (targetBounds.MaxY - targetBounds.MinY));
+                    int targetPixel = NearestVisiblePixel(targetPixels, targetX, targetY, targetBounds);
+                    if (targetPixel >= 0) PaintTargetPixel(candidates[channel], targetPixel, true);
+                }
+            }
+            return candidates;
+        }
+
+        private static int NearestVisiblePixel(Color32[] pixels, int x, int y, Bounds bounds)
+        {
+            x = Mathf.Clamp(x, bounds.MinX, bounds.MaxX);
+            y = Mathf.Clamp(y, bounds.MinY, bounds.MaxY);
+            if (pixels[y * Resolution + x].a >= VisibleAlpha) return y * Resolution + x;
+            for (int radius = 1; radius <= 8; radius++)
+                for (int dy = -radius; dy <= radius; dy++) for (int dx = -radius; dx <= radius; dx++)
+                {
+                    if (Mathf.Abs(dx) != radius && Mathf.Abs(dy) != radius) continue;
+                    int nx = Mathf.Clamp(x + dx, bounds.MinX, bounds.MaxX);
+                    int ny = Mathf.Clamp(y + dy, bounds.MinY, bounds.MaxY);
+                    if (pixels[ny * Resolution + nx].a >= VisibleAlpha) return ny * Resolution + nx;
+                }
+            return -1;
+        }
+
+        private static float InitialOverlap(Component target, VisualMaskLayerRecord initial)
+        {
+            if (target == null || initial == null || target.Pixels.Count == 0) return 0f;
+            int overlap = target.Pixels.Count(pixel => initial.IsPainted(pixel % Resolution, Resolution - 1 - pixel / Resolution));
+            return overlap / (float)target.Pixels.Count;
+        }
+
+        private static Bounds VisibleBounds(Color32[] pixels)
+        {
+            Bounds bounds = new Bounds { MinX = Resolution, MinY = Resolution, MaxX = -1, MaxY = -1 };
+            if (pixels == null) return bounds;
+            for (int index = 0; index < pixels.Length; index++) if (pixels[index].a >= VisibleAlpha)
+            {
+                int x = index % Resolution; int y = index / Resolution;
+                bounds.MinX = Mathf.Min(bounds.MinX, x); bounds.MinY = Mathf.Min(bounds.MinY, y);
+                bounds.MaxX = Mathf.Max(bounds.MaxX, x); bounds.MaxY = Mathf.Max(bounds.MaxY, y);
+            }
+            bounds.HasPixels = bounds.MaxX >= bounds.MinX && bounds.MaxY >= bounds.MinY;
+            return bounds;
+        }
+
+        private static Bounds MaskBounds(IReadOnlyList<VisualMaskLayerRecord> layers)
+        {
+            Bounds bounds = new Bounds { MinX = Resolution, MinY = Resolution, MaxX = -1, MaxY = -1 };
+            if (layers == null) return bounds;
+            for (int channel = 0; channel < layers.Count; channel++)
+            {
+                VisualMaskLayerRecord layer = layers[channel];
+                if (layer == null) continue;
+                for (int maskY = 0; maskY < Resolution; maskY++) for (int x = 0; x < Resolution; x++)
+                    if (layer.IsPainted(x, maskY))
+                    {
+                        int topY = Resolution - 1 - maskY;
+                        bounds.MinX = Mathf.Min(bounds.MinX, x); bounds.MinY = Mathf.Min(bounds.MinY, topY);
+                        bounds.MaxX = Mathf.Max(bounds.MaxX, x); bounds.MaxY = Mathf.Max(bounds.MaxY, topY);
+                    }
+            }
+            bounds.HasPixels = bounds.MaxX >= bounds.MinX && bounds.MaxY >= bounds.MinY;
+            return bounds;
         }
 
         private static List<Component> SourceComponents(IReadOnlyList<VisualMaskLayerRecord> layers, Color32[] pixels)
@@ -301,6 +422,24 @@ namespace HorticultureNovelSeeds
                 if (!assigned) count++;
             }
             return count;
+        }
+
+        private static void ResolveCandidateOverlaps(MaskProjectionResult result)
+        {
+            for (int y = 0; y < Resolution; y++) for (int x = 0; x < Resolution; x++)
+            {
+                int winner = -1;
+                for (int channel = 0; channel < 3; channel++)
+                {
+                    if (!result.CandidateLayers[channel].IsPainted(x, y)) continue;
+                    if (winner < 0) winner = channel;
+                    else
+                    {
+                        result.CandidateLayers[channel].PaintPixel(x, y, false);
+                        GetChannel(result, channel).Conflicts++;
+                    }
+                }
+            }
         }
 
         private static MaskProjectionChannelResult GetChannel(MaskProjectionResult result, int channel)

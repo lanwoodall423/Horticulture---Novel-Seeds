@@ -22,16 +22,29 @@ namespace HorticultureNovelSeeds
             PaintRect(sourceLayers[2], 166, 56, 3, 116, new Color32(88, 124, 72, 255), sourcePixels);
 
             Color32[] targetPixels = new Color32[Size * Size];
-            SetTopRect(targetPixels, 94, 26, 30, 36, new Color32(190, 84, 66, 255));
-            SetTopRect(targetPixels, 150, 112, 20, 22, new Color32(188, 84, 66, 255));
-            SetTopRect(targetPixels, 44, 58, 48, 30, new Color32(182, 94, 66, 255));
-            SetTopRect(targetPixels, 214, 70, 5, 134, new Color32(88, 124, 72, 255));
+            SetTopRect(targetPixels, 40, 30, 12, 12, new Color32(190, 84, 66, 255));
+            SetTopRect(targetPixels, 59, 54, 8, 8, new Color32(188, 84, 66, 255));
+            SetTopRect(targetPixels, 94, 67, 21, 15, new Color32(182, 94, 66, 255));
+            SetTopRect(targetPixels, 154, 62, 3, 93, new Color32(88, 124, 72, 255));
             List<VisualMaskLayerRecord> targetLayers = EmptyLayers();
             MaskProjectionResult projection = SemanticMaskProjection.Build(sourceLayers, sourcePixels, targetLayers, targetPixels);
             if (!projection.HasCandidate || projection.VisibleTargetPixels <= 0) return false;
 
-            bool translatedAndScaled = projection.CandidateLayers.Any(layer => layer.HasPixels)
-                && projection.Channels.All(channel => channel.Confidence >= 0f);
+            List<VisualMaskLayerRecord> expectedLayers = EmptyLayers();
+            PaintTopRect(expectedLayers[0], 40, 30, 12, 12);
+            PaintTopRect(expectedLayers[0], 59, 54, 8, 8);
+            PaintTopRect(expectedLayers[1], 94, 67, 21, 15);
+            PaintTopRect(expectedLayers[2], 154, 62, 3, 93);
+            float produceIoU = IntersectionOverUnion(projection.CandidateLayers[0], expectedLayers[0]);
+            float leavesIoU = IntersectionOverUnion(projection.CandidateLayers[1], expectedLayers[1]);
+            float stemIoU = IntersectionOverUnion(projection.CandidateLayers[2], expectedLayers[2]);
+            bool translatedAndScaled = produceIoU >= 0.70f && leavesIoU >= 0.70f && stemIoU >= 0.70f
+                && Coverage(projection.CandidateLayers[0], expectedLayers[0]) >= 0.80f
+                && Coverage(projection.CandidateLayers[1], expectedLayers[1]) >= 0.80f
+                && Coverage(projection.CandidateLayers[2], expectedLayers[2]) >= 0.80f;
+            bool correctAssignment = IntersectionOverUnion(projection.CandidateLayers[0], expectedLayers[1]) < 0.20f
+                && IntersectionOverUnion(projection.CandidateLayers[1], expectedLayers[0]) < 0.20f
+                && IntersectionOverUnion(projection.CandidateLayers[2], expectedLayers[0]) < 0.20f;
             bool transparentBoundary = !HasTransparentPaint(projection.CandidateLayers, targetPixels);
 
             List<VisualMaskLayerRecord> conflictSource = EmptyLayers();
@@ -87,7 +100,7 @@ namespace HorticultureNovelSeeds
             manualRecord.SetManualPlantMask(2, manualLayers);
             bool manualLoading = manualRecord.HasManualPlantMask(2)
                 && manualRecord.ManualPlantMaskLayersForVariation(2)[2].IsPainted(7, 9);
-            return translatedAndScaled && transparentBoundary && conflictDetected && rejected && cancelWithoutMutation
+            return translatedAndScaled && correctAssignment && transparentBoundary && conflictDetected && rejected && cancelWithoutMutation
                 && changed && undoRedo && sameIdentity && conflictingManual && legacyCache && manualLoading;
         }
 
@@ -115,6 +128,39 @@ namespace HorticultureNovelSeeds
         {
             for (int y = topY; y < topY + height; y++) for (int px = x; px < x + width; px++)
                 pixels[y * Size + px] = color;
+        }
+
+        private static void PaintTopRect(VisualMaskLayerRecord layer, int x, int topY, int width, int height)
+        {
+            for (int y = topY; y < topY + height; y++) for (int px = x; px < x + width; px++)
+                layer.PaintPixel(px, Size - 1 - y, true);
+        }
+
+        private static float Coverage(VisualMaskLayerRecord actual, VisualMaskLayerRecord expected)
+        {
+            int expectedPixels = 0;
+            int coveredPixels = 0;
+            for (int y = 0; y < Size; y++) for (int x = 0; x < Size; x++)
+            {
+                if (!expected.IsPainted(x, y)) continue;
+                expectedPixels++;
+                if (actual.IsPainted(x, y)) coveredPixels++;
+            }
+            return coveredPixels / (float)System.Math.Max(1, expectedPixels);
+        }
+
+        private static float IntersectionOverUnion(VisualMaskLayerRecord first, VisualMaskLayerRecord second)
+        {
+            int intersection = 0;
+            int union = 0;
+            for (int y = 0; y < Size; y++) for (int x = 0; x < Size; x++)
+            {
+                bool a = first.IsPainted(x, y);
+                bool b = second.IsPainted(x, y);
+                if (a && b) intersection++;
+                if (a || b) union++;
+            }
+            return intersection / (float)System.Math.Max(1, union);
         }
 
         private static bool HasTransparentPaint(IReadOnlyList<VisualMaskLayerRecord> layers, Color32[] pixels)

@@ -13,10 +13,21 @@ namespace HorticultureNovelSeeds
 
         public static bool TryGet(Texture texture, string stateLabel, out string key)
         {
+            return TryGet(texture, stateLabel, true, out key);
+        }
+
+        public static bool TryGetCached(Texture texture, string stateLabel, out string key)
+        {
+            return TryGet(texture, stateLabel, false, out key);
+        }
+
+        private static bool TryGet(Texture texture, string stateLabel, bool allowRead, out string key)
+        {
             key = null;
             if (texture == null || texture.width <= 0 || texture.height <= 0) return false;
             string cacheKey = texture.GetInstanceID() + "|" + NormalizeStateLabel(stateLabel);
             if (IdentityCache.TryGetValue(cacheKey, out key)) return !key.NullOrEmpty();
+            if (!allowRead) return false;
             Color32[] pixels = ReadPixels(texture, texture.width, texture.height);
             if (pixels == null) { IdentityCache[cacheKey] = string.Empty; return false; }
             key = "v1|" + (texture.name ?? string.Empty) + "|" + texture.width + "x" + texture.height
@@ -31,6 +42,20 @@ namespace HorticultureNovelSeeds
             key = null;
             Texture texture = PlantMaskUtility.TextureForVariation(plantDef, variationIndex);
             return TryGet(texture, PlantMaskUtility.VariationLabel(plantDef, variationIndex), out key);
+        }
+
+        public static bool TryGetCached(ThingDef plantDef, int variationIndex, out string key)
+        {
+            key = null;
+            Texture texture = PlantMaskUtility.TextureForVariation(plantDef, variationIndex);
+            return TryGetCached(texture, PlantMaskUtility.VariationLabel(plantDef, variationIndex), out key);
+        }
+
+        public static void PreloadPlantTextures()
+        {
+            foreach (ThingDef plant in DefDatabase<ThingDef>.AllDefsListForReading.Where(def => def?.plant != null))
+                for (int variation = 0; variation < PlantMaskUtility.VariationCount(plant); variation++)
+                    TryGet(plant, variation, out _);
         }
 
         public static string NormalizeStateLabel(string stateLabel)
@@ -127,19 +152,31 @@ namespace HorticultureNovelSeeds
 
         private static readonly Dictionary<string, Entry> Entries = new Dictionary<string, Entry>();
         private static bool built;
+        private static bool builtWithFingerprint;
 
         public static void Invalidate()
         {
             built = false;
+            builtWithFingerprint = false;
             Entries.Clear();
-            MaskTextureIdentity.ClearCache();
+            // Texture identity is precomputed and keyed by texture instance/state. Keep it
+            // available to cache-only runtime lookups while rebuilding authored-mask indexes.
         }
 
         public static SharedManualMaskResolution Resolve(ThingDef target, int variationIndex)
         {
+            return Resolve(target, variationIndex, false);
+        }
+
+        public static SharedManualMaskResolution Resolve(ThingDef target, int variationIndex, bool allowFingerprint)
+        {
             SharedManualMaskResolution result = new SharedManualMaskResolution();
-            if (!MaskTextureIdentity.TryGet(target, variationIndex, out string identity)) return result;
-            EnsureBuilt();
+            string identity;
+            bool found = allowFingerprint
+                ? MaskTextureIdentity.TryGet(target, variationIndex, out identity)
+                : MaskTextureIdentity.TryGetCached(target, variationIndex, out identity);
+            if (!found) return result;
+            EnsureBuilt(allowFingerprint);
             result.IdentityKey = identity;
             if (!Entries.TryGetValue(identity, out Entry entry)) return result;
             result.Ambiguous = entry.ambiguous;
@@ -149,10 +186,12 @@ namespace HorticultureNovelSeeds
             return result;
         }
 
-        private static void EnsureBuilt()
+        private static void EnsureBuilt(bool allowFingerprint)
         {
-            if (built) return;
+            if (built && (!allowFingerprint || builtWithFingerprint)) return;
+            if (built) Entries.Clear();
             built = true;
+            builtWithFingerprint = allowFingerprint;
             foreach (ThingDef plant in DefDatabase<ThingDef>.AllDefsListForReading.Where(def => def?.plant != null).OrderBy(def => def.defName))
             {
                 PlantSettingsRecord settings = HorticultureNovelSeedsMod.Settings?.GetPlantSettings(plant, false);
@@ -161,7 +200,11 @@ namespace HorticultureNovelSeeds
                 for (int variation = 0; variation < count; variation++)
                 {
                     if (!settings.HasManualPlantMask(variation)) continue;
-                    if (!MaskTextureIdentity.TryGet(plant, variation, out string identity)) continue;
+                    string identity;
+                    bool identified = allowFingerprint
+                        ? MaskTextureIdentity.TryGet(plant, variation, out identity)
+                        : MaskTextureIdentity.TryGetCached(plant, variation, out identity);
+                    if (!identified) continue;
                     List<VisualMaskLayerRecord> layers = settings.ManualPlantMaskLayersForVariation(variation)
                         ?.Select(layer => layer.Clone()).ToList();
                     if (layers == null) continue;

@@ -41,6 +41,8 @@ namespace HorticultureNovelSeeds
             LongEventHandler.ExecuteWhenFinished(() =>
             {
                 IPlantToGrowSettable_SetPlantDefToGrow_ClearVariety_Patch.Apply(HarmonyInstance);
+                // Identity readbacks happen during the long event, never from plant rendering.
+                MaskTextureIdentity.PreloadPlantTextures();
                 PlantAutoMaskCache.InitializeAndGenerateMissing();
             });
         }

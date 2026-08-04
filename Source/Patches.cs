@@ -201,7 +201,9 @@ namespace HorticultureNovelSeeds
         private const PlantDestructionMode HarvestMode = (PlantDestructionMode)2;
         private const PlantDestructionMode CutMode = (PlantDestructionMode)3;
         private static readonly MethodInfo HarvestDestroysGetter = AccessTools.PropertyGetter(typeof(PlantProperties), nameof(PlantProperties.HarvestDestroys));
-        private static readonly MethodInfo EffectiveHarvestDestroysMethod = AccessTools.Method(typeof(PlantCollected_DropMutationSeed_Patch), nameof(EffectiveHarvestDestroys));
+        private static readonly MethodInfo EffectiveHarvestDestroysMethod = AccessTools.Method(
+            typeof(PlantCollected_DropMutationSeed_Patch), nameof(EffectiveHarvestDestroys),
+            new[] { typeof(bool), typeof(Plant), typeof(PlantDestructionMode) });
 
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {

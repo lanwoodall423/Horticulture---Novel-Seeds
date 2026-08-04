@@ -84,7 +84,7 @@ namespace HorticultureNovelSeeds
                 row.Uses.AddRange(group.Value.Select(usage => usage.label));
                 if (row.Layers == null && !row.Ambiguous)
                 {
-                    SharedManualMaskResolution shared = SharedManualMaskCache.Resolve(representative.plant, representative.variation);
+                    SharedManualMaskResolution shared = SharedManualMaskCache.Resolve(representative.plant, representative.variation, true);
                     if (shared.Ambiguous)
                     {
                         row.Ambiguous = true;
@@ -96,7 +96,7 @@ namespace HorticultureNovelSeeds
                         row.Origin = "Shared manual";
                     }
                 }
-                AutoPlantMaskRecord auto = PlantAutoMaskCache.GetRecord(representative.plant, representative.variation, false);
+                    AutoPlantMaskRecord auto = PlantAutoMaskCache.GetRecord(representative.plant, representative.variation, false, true);
                 if (row.Layers == null && !row.Ambiguous && auto != null)
                 {
                     row.Layers = auto.Layers.Select(layer => layer.Clone()).ToList();

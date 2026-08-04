@@ -194,7 +194,7 @@ namespace HorticultureNovelSeeds
                         result.manualSkipped++;
                         continue;
                     }
-                    AutoPlantMaskRecord existing = GetRecord(plant, variation, false);
+                    AutoPlantMaskRecord existing = GetRecord(plant, variation, false, true);
                     if (!regenerateAutomatic && existing != null)
                     {
                         result.reused++;
@@ -214,11 +214,17 @@ namespace HorticultureNovelSeeds
             return result;
         }
 
-        public static AutoPlantMaskRecord GetRecord(ThingDef plantDef, int variationIndex, bool generateIfMissing = true)
+        public static AutoPlantMaskRecord GetRecord(ThingDef plantDef, int variationIndex, bool generateIfMissing = true,
+            bool allowIdentityGeneration = false)
         {
             EnsureLoaded();
             if (plantDef == null) return null;
             string key = RecordKey(plantDef.defName, variationIndex);
+            if (!allowIdentityGeneration)
+            {
+                if (SessionValidated.Contains(key) && Records.TryGetValue(key, out AutoPlantMaskRecord sessionRecord)) return sessionRecord;
+                return null;
+            }
             Texture texture = PlantMaskUtility.TextureForVariation(plantDef, variationIndex);
             if (texture == null) return null;
             ProduceSignature produce = ProduceColorFor(plantDef);
@@ -247,9 +253,10 @@ namespace HorticultureNovelSeeds
             return generateIfMissing ? Generate(plantDef, variationIndex, true) : null;
         }
 
-        public static List<VisualMaskLayerRecord> LayersFor(ThingDef plantDef, int variationIndex, bool generateIfMissing = true)
+        public static List<VisualMaskLayerRecord> LayersFor(ThingDef plantDef, int variationIndex, bool generateIfMissing = true,
+            bool allowIdentityGeneration = false)
         {
-            AutoPlantMaskRecord record = GetRecord(plantDef, variationIndex, generateIfMissing);
+            AutoPlantMaskRecord record = GetRecord(plantDef, variationIndex, generateIfMissing, allowIdentityGeneration);
             return IsRenderable(record) ? record.Layers.Select(layer => layer).ToList() : null;
         }
 

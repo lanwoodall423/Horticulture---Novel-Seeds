@@ -48,6 +48,7 @@ namespace HorticultureNovelSeeds
             "HNS_MASK_REGRESSIONS|R|Run each automatic mask regression separately",
             "HNS_CROSS_REGRESSIONS|R|Run deterministic cross-pollination regressions",
             "HNS_TRAIT_CATALOG_REGRESSIONS|R|Run trait specialization and balance regressions",
+            "HNS_BREEDING_MIX_DIAGNOSTIC|R|Run deterministic Breeding Mix donor scenarios",
             "HNS_GENERATE_AUTO_MASKS|W|Generate every missing automatic plant mask",
             "HNS_OPEN_MASK_EDITOR|W|Open the existing mask editor for a plant def",
             "HNS_MASK_EDITOR_STATE|R|Inspect the current mask editor source and confidence",
@@ -108,6 +109,7 @@ namespace HorticultureNovelSeeds
                 case "HNS_MASK_REGRESSIONS": return MaskRegressions();
                 case "HNS_CROSS_REGRESSIONS": return CrossRegressions();
                 case "HNS_TRAIT_CATALOG_REGRESSIONS": return TraitCatalogRegressions();
+                case "HNS_BREEDING_MIX_DIAGNOSTIC": return BreedingMixDiagnostic();
                 case "HNS_GENERATE_AUTO_MASKS": return GenerateAutoMasks();
                 case "HNS_OPEN_MASK_EDITOR": return OpenMaskEditor(argument);
                 case "HNS_MASK_EDITOR_STATE": return MaskEditorState();
@@ -959,6 +961,26 @@ namespace HorticultureNovelSeeds
             catch (Exception exception)
             {
                 return new List<string> { "TraitCatalogRegression=error:" + (exception.InnerException ?? exception).Message };
+            }
+        }
+
+        private static List<string> BreedingMixDiagnostic()
+        {
+            try
+            {
+                MethodInfo resultMethod = typeof(NovelSeedsDebugActions).GetMethod("BreedingMixDiagnostic",
+                    BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+                MethodInfo reportMethod = typeof(NovelSeedsDebugActions).GetMethod("BreedingMixDiagnosticReport",
+                    BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+                return new List<string>
+                {
+                    "BreedingMixDiagnostic=" + resultMethod?.Invoke(null, null),
+                    "BreedingMixReport=" + reportMethod?.Invoke(null, null)
+                };
+            }
+            catch (Exception exception)
+            {
+                return new List<string> { "BreedingMixDiagnostic=error:" + (exception.InnerException ?? exception).Message };
             }
         }
 

@@ -275,16 +275,16 @@ namespace HorticultureNovelSeeds
             height = Mathf.Max(1, Mathf.RoundToInt(sourceHeight * scale));
         }
 
-        public static bool HasActiveMasks(ThingDef plantDef)
+        public static bool HasActiveMasks(ThingDef plantDef, bool allowIdentityGeneration = false)
         {
             if (plantDef == null) return false;
             PlantSettingsRecord settings = HorticultureNovelSeedsMod.Settings?.GetPlantSettings(plantDef, false);
             if (settings?.HasAnyManualPlantMask == true) return settings.HasActivePlantMasks;
             for (int variation = 0; variation < VariationCount(plantDef); variation++)
-                if (SharedManualMaskCache.Resolve(plantDef, variation).Found) return true;
+                if (SharedManualMaskCache.Resolve(plantDef, variation, allowIdentityGeneration).Found) return true;
             if (settings?.disableAutoPlantMasks == true) return false;
             for (int variation = 0; variation < VariationCount(plantDef); variation++)
-                if (PlantAutoMaskCache.IsRenderable(PlantAutoMaskCache.GetRecord(plantDef, variation, false))) return true;
+                if (PlantAutoMaskCache.IsRenderable(PlantAutoMaskCache.GetRecord(plantDef, variation, false, allowIdentityGeneration))) return true;
             return false;
         }
 
@@ -342,15 +342,16 @@ namespace HorticultureNovelSeeds
             return Mathf.Clamp(fallbackIndex, 0, variations.Count - 1);
         }
 
-        public static List<VisualMaskLayerRecord> LayersForVariation(ThingDef plantDef, int variationIndex, bool create = false)
+        public static List<VisualMaskLayerRecord> LayersForVariation(ThingDef plantDef, int variationIndex, bool create = false,
+            bool allowIdentityGeneration = false)
         {
             PlantSettingsRecord settings = HorticultureNovelSeedsMod.Settings?.GetPlantSettings(plantDef, create);
             if (settings?.HasManualPlantMask(variationIndex) == true)
                 return settings.usePlantMasks ? settings.ManualPlantMaskLayersForVariation(variationIndex) : null;
-            SharedManualMaskResolution shared = SharedManualMaskCache.Resolve(plantDef, variationIndex);
+            SharedManualMaskResolution shared = SharedManualMaskCache.Resolve(plantDef, variationIndex, allowIdentityGeneration);
             if (shared.Found) return shared.Layers;
             if (settings?.disableAutoPlantMasks == true) return null;
-            return PlantAutoMaskCache.LayersFor(plantDef, variationIndex, false);
+            return PlantAutoMaskCache.LayersFor(plantDef, variationIndex, false, allowIdentityGeneration);
         }
 
         public static bool HasManualMask(ThingDef plantDef, int variationIndex)
@@ -358,9 +359,10 @@ namespace HorticultureNovelSeeds
             return HorticultureNovelSeedsMod.Settings?.GetPlantSettings(plantDef, false)?.HasManualPlantMask(variationIndex) == true;
         }
 
-        public static bool HasSharedManualMask(ThingDef plantDef, int variationIndex, out bool ambiguous)
+        public static bool HasSharedManualMask(ThingDef plantDef, int variationIndex, out bool ambiguous,
+            bool allowIdentityGeneration = false)
         {
-            SharedManualMaskResolution shared = SharedManualMaskCache.Resolve(plantDef, variationIndex);
+            SharedManualMaskResolution shared = SharedManualMaskCache.Resolve(plantDef, variationIndex, allowIdentityGeneration);
             ambiguous = shared.Ambiguous;
             return shared.Found;
         }
@@ -1013,7 +1015,7 @@ namespace HorticultureNovelSeeds
 
         private bool CurrentIsManual => selectedPage != 0 || settings.HasManualPlantMask(selectedVariation);
         private bool CurrentUsesSharedManual => selectedPage == 0 && !CurrentIsManual
-            && PlantMaskUtility.HasSharedManualMask(plantDef, selectedVariation, out _);
+            && PlantMaskUtility.HasSharedManualMask(plantDef, selectedVariation, out _, true);
         private bool ProjectionPreviewActive => projectionPreview != null && projectionTargetVariation >= 0;
         private IReadOnlyList<VisualMaskLayerRecord> DisplayLayers => ProjectionPreviewActive ? projectionDisplayLayers : CurrentLayers;
 
@@ -1021,7 +1023,7 @@ namespace HorticultureNovelSeeds
         {
             if (settings.HasManualPlantMask(variation)) return settings.ManualPlantMaskLayersForVariation(variation);
             if (autoWorkingLayers.TryGetValue(variation, out List<VisualMaskLayerRecord> existingLayers)) return existingLayers;
-            SharedManualMaskResolution shared = SharedManualMaskCache.Resolve(plantDef, variation);
+            SharedManualMaskResolution shared = SharedManualMaskCache.Resolve(plantDef, variation, true);
             if (shared.Found)
             {
                 List<VisualMaskLayerRecord> sharedLayers = shared.Layers.Select(layer => layer.Clone()).ToList();
@@ -1044,9 +1046,9 @@ namespace HorticultureNovelSeeds
 
         private void DrawMaskOrigin(Rect rect)
         {
-            AutoPlantMaskRecord auto = PlantAutoMaskCache.GetRecord(plantDef, selectedVariation, false);
+            AutoPlantMaskRecord auto = PlantAutoMaskCache.GetRecord(plantDef, selectedVariation, false, true);
             bool ambiguousShared = false;
-            bool shared = PlantMaskUtility.HasSharedManualMask(plantDef, selectedVariation, out ambiguousShared);
+            bool shared = PlantMaskUtility.HasSharedManualMask(plantDef, selectedVariation, out ambiguousShared, true);
             string origin = CurrentIsManual ? "Manual" : shared ? "Shared manual" : ambiguousShared ? "Ambiguous shared manual - auto-generated" : "Auto-generated";
             if (!CurrentIsManual && auto?.LowConfidence == true) origin += " - manual review recommended";
             Color old = GUI.color;
@@ -2182,6 +2184,7 @@ namespace HorticultureNovelSeeds
 
         private void Changed()
         {
+            SharedManualMaskCache.Invalidate();
             validationResult = null;
             ResetValidationNavigation();
             DestroyPreviews();
@@ -2288,7 +2291,8 @@ namespace HorticultureNovelSeeds
             DestroyPreviewTexture();
         }
 
-        private List<VisualMaskLayerRecord> CurrentLayers => producePage ? settings.ProduceMaskLayers : PlantMaskUtility.LayersForVariation(plantDef, variationIndex, false);
+        private List<VisualMaskLayerRecord> CurrentLayers => producePage ? settings.ProduceMaskLayers
+            : PlantMaskUtility.LayersForVariation(plantDef, variationIndex, false, true);
 
         private void RandomizeColors()
         {
