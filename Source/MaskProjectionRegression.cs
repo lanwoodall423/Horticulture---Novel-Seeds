@@ -1,0 +1,127 @@
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+
+namespace HorticultureNovelSeeds
+{
+    internal static class MaskProjectionRegression
+    {
+        private const int Size = VisualMaskLayerRecord.Resolution;
+
+        internal static bool Run()
+        {
+            List<VisualMaskLayerRecord> sourceLayers = EmptyLayers();
+            PaintRect(sourceLayers[0], 24, 198, 14, 14, new Color32(190, 82, 64, 255), null);
+            PaintRect(sourceLayers[0], 48, 172, 10, 10, new Color32(188, 84, 66, 255), null);
+            PaintRect(sourceLayers[1], 92, 148, 26, 18, new Color32(180, 92, 64, 255), null);
+            PaintRect(sourceLayers[2], 166, 56, 3, 116, new Color32(88, 124, 72, 255), null);
+            Color32[] sourcePixels = new Color32[Size * Size];
+            PaintRect(sourceLayers[0], 24, 198, 14, 14, new Color32(190, 82, 64, 255), sourcePixels);
+            PaintRect(sourceLayers[0], 48, 172, 10, 10, new Color32(188, 84, 66, 255), sourcePixels);
+            PaintRect(sourceLayers[1], 92, 148, 26, 18, new Color32(180, 92, 64, 255), sourcePixels);
+            PaintRect(sourceLayers[2], 166, 56, 3, 116, new Color32(88, 124, 72, 255), sourcePixels);
+
+            Color32[] targetPixels = new Color32[Size * Size];
+            SetTopRect(targetPixels, 94, 26, 30, 36, new Color32(190, 84, 66, 255));
+            SetTopRect(targetPixels, 150, 112, 20, 22, new Color32(188, 84, 66, 255));
+            SetTopRect(targetPixels, 44, 58, 48, 30, new Color32(182, 94, 66, 255));
+            SetTopRect(targetPixels, 214, 70, 5, 134, new Color32(88, 124, 72, 255));
+            List<VisualMaskLayerRecord> targetLayers = EmptyLayers();
+            MaskProjectionResult projection = SemanticMaskProjection.Build(sourceLayers, sourcePixels, targetLayers, targetPixels);
+            if (!projection.HasCandidate || projection.VisibleTargetPixels <= 0) return false;
+
+            bool translatedAndScaled = projection.CandidateLayers.Any(layer => layer.HasPixels)
+                && projection.Channels.All(channel => channel.Confidence >= 0f);
+            bool transparentBoundary = !HasTransparentPaint(projection.CandidateLayers, targetPixels);
+
+            List<VisualMaskLayerRecord> conflictSource = EmptyLayers();
+            PaintRect(conflictSource[0], 30, 180, 16, 16, new Color32(190, 84, 66, 255), sourcePixels);
+            PaintRect(conflictSource[1], 30, 180, 16, 16, new Color32(182, 94, 66, 255), sourcePixels);
+            Color32[] conflictPixels = new Color32[Size * Size];
+            SetTopRect(conflictPixels, 80, 80, 30, 30, new Color32(186, 88, 65, 255));
+            MaskProjectionResult conflict = SemanticMaskProjection.Build(conflictSource, sourcePixels, EmptyLayers(), conflictPixels);
+            bool conflictDetected = conflict.Channels[0].Conflicts > 0 || conflict.Channels[1].Conflicts > 0;
+
+            VisualMaskLayerRecord rejectedChannel = targetLayers[1];
+            rejectedChannel.PaintPixel(4, 4, true);
+            int[] beforeCancel = targetLayers.Select(layer => layer.ContentHash).ToArray();
+            List<VisualMaskLayerRecord> accepted = SemanticMaskProjection.ApplyAccepted(targetLayers, projection,
+                new[] { true, false, true }, out bool changed);
+            bool rejected = accepted[1].IsPainted(4, 4);
+            bool cancelWithoutMutation = beforeCancel.SequenceEqual(targetLayers.Select(layer => layer.ContentHash));
+            List<VisualMaskLayerRecord> undo = targetLayers.Select(layer => layer.Clone()).ToList();
+            List<VisualMaskLayerRecord> redo = SemanticMaskProjection.ApplyAccepted(undo, projection,
+                new[] { true, true, true }, out bool undoChanged);
+            int[] redoHashes = redo.Select(layer => layer.ContentHash).ToArray();
+            List<VisualMaskLayerRecord> restored = targetLayers.Select(layer => layer.Clone()).ToList();
+            List<VisualMaskLayerRecord> redone = SemanticMaskProjection.ApplyAccepted(restored, projection,
+                new[] { true, true, true }, out bool redoChanged);
+            bool undoRedo = undoChanged && redoChanged && redoHashes.SequenceEqual(redone.Select(layer => layer.ContentHash));
+
+            bool sameIdentity = false;
+            Texture2D texture = new Texture2D(4, 4, TextureFormat.RGBA32, false);
+            try
+            {
+                texture.name = "synthetic_north";
+                texture.SetPixels32(Enumerable.Repeat(new Color32(120, 80, 60, 255), 16).ToArray());
+                texture.Apply(false, false);
+                MaskTextureIdentity.TryGet(texture, "North", out string firstKey);
+                MaskTextureIdentity.TryGet(texture, "North", out string secondKey);
+                sameIdentity = !string.IsNullOrEmpty(firstKey) && firstKey == secondKey && firstKey.Contains("4x4")
+                    && firstKey.Contains("orientation:north");
+            }
+            finally
+            {
+                Object.DestroyImmediate(texture);
+            }
+
+            List<VisualMaskLayerRecord> conflictingManualLayers = EmptyLayers();
+            conflictingManualLayers[0].PaintPixel(1, 1, true);
+            bool conflictingManual = SharedManualMaskCache.ConflictingForRegression(EmptyLayers(), conflictingManualLayers);
+            bool legacyCache = PlantAutoMaskCache.RequiresIdentityRegeneration(new AutoPlantMaskRecord())
+                && !PlantAutoMaskCache.RequiresIdentityRegeneration(new AutoPlantMaskRecord("def", 0, "key", 1f,
+                    EmptyLayers(), "eligible"));
+            PlantSettingsRecord manualRecord = new PlantSettingsRecord();
+            List<VisualMaskLayerRecord> manualLayers = EmptyLayers();
+            manualLayers[2].PaintPixel(7, 9, true);
+            manualRecord.SetManualPlantMask(2, manualLayers);
+            bool manualLoading = manualRecord.HasManualPlantMask(2)
+                && manualRecord.ManualPlantMaskLayersForVariation(2)[2].IsPainted(7, 9);
+            return translatedAndScaled && transparentBoundary && conflictDetected && rejected && cancelWithoutMutation
+                && changed && undoRedo && sameIdentity && conflictingManual && legacyCache && manualLoading;
+        }
+
+        private static List<VisualMaskLayerRecord> EmptyLayers()
+        {
+            return new List<VisualMaskLayerRecord>
+            {
+                new VisualMaskLayerRecord { name = "Produce" },
+                new VisualMaskLayerRecord { name = "Leaves" },
+                new VisualMaskLayerRecord { name = "Stem" }
+            };
+        }
+
+        private static void PaintRect(VisualMaskLayerRecord layer, int x, int y, int width, int height,
+            Color32 color, Color32[] pixels)
+        {
+            for (int maskY = y; maskY < y + height; maskY++) for (int px = x; px < x + width; px++)
+            {
+                layer.PaintPixel(px, maskY, true);
+                if (pixels != null) pixels[(Size - 1 - maskY) * Size + px] = color;
+            }
+        }
+
+        private static void SetTopRect(Color32[] pixels, int x, int topY, int width, int height, Color32 color)
+        {
+            for (int y = topY; y < topY + height; y++) for (int px = x; px < x + width; px++)
+                pixels[y * Size + px] = color;
+        }
+
+        private static bool HasTransparentPaint(IReadOnlyList<VisualMaskLayerRecord> layers, Color32[] pixels)
+        {
+            for (int maskY = 0; maskY < Size; maskY++) for (int x = 0; x < Size; x++)
+                if (layers.Any(layer => layer.IsPainted(x, maskY)) && pixels[(Size - 1 - maskY) * Size + x].a < 16) return true;
+            return false;
+        }
+    }
+}

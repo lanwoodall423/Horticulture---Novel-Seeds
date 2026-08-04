@@ -13,6 +13,7 @@ namespace HorticultureNovelSeeds
         private string plantDefName;
         private int variationIndex;
         private string textureKey;
+        private string eligibilityKey;
         private float confidence;
         private bool lowConfidence;
         private List<VisualMaskLayerRecord> layers = new List<VisualMaskLayerRecord>();
@@ -20,6 +21,7 @@ namespace HorticultureNovelSeeds
         public string PlantDefName => plantDefName;
         public int VariationIndex => variationIndex;
         public string TextureKey => textureKey;
+        public string EligibilityKey => eligibilityKey;
         public float Confidence => confidence;
         public bool LowConfidence => lowConfidence;
         public IReadOnlyList<VisualMaskLayerRecord> Layers => layers;
@@ -27,11 +29,12 @@ namespace HorticultureNovelSeeds
         public AutoPlantMaskRecord() { }
 
         internal AutoPlantMaskRecord(string plantDefName, int variationIndex, string textureKey,
-            float confidence, IEnumerable<VisualMaskLayerRecord> layers)
+            float confidence, IEnumerable<VisualMaskLayerRecord> layers, string eligibilityKey = null)
         {
             this.plantDefName = plantDefName;
             this.variationIndex = variationIndex;
             this.textureKey = textureKey;
+            this.eligibilityKey = eligibilityKey;
             this.confidence = Mathf.Clamp01(confidence);
             lowConfidence = this.confidence < PlantAutoMaskCache.LowConfidenceThreshold;
             this.layers = layers?.Select(layer => layer.Clone()).ToList() ?? new List<VisualMaskLayerRecord>();
@@ -43,6 +46,7 @@ namespace HorticultureNovelSeeds
             Scribe_Values.Look(ref plantDefName, "plantDef");
             Scribe_Values.Look(ref variationIndex, "variationIndex", 0);
             Scribe_Values.Look(ref textureKey, "textureKey");
+            Scribe_Values.Look(ref eligibilityKey, "eligibilityKey");
             Scribe_Values.Look(ref confidence, "confidence", 0f);
             Scribe_Values.Look(ref lowConfidence, "lowConfidence", true);
             Scribe_Collections.Look(ref layers, "layers", LookMode.Deep);
@@ -153,7 +157,7 @@ namespace HorticultureNovelSeeds
         }
 
         public const int FormatVersion = 1;
-        public const int GeneratorVersion = 13;
+        public const int GeneratorVersion = 14;
         public const float LowConfidenceThreshold = 0.54f;
         private const byte TransparentAlpha = 4;
         private const int AnalysisSize = VisualMaskLayerRecord.Resolution;
@@ -215,14 +219,30 @@ namespace HorticultureNovelSeeds
             EnsureLoaded();
             if (plantDef == null) return null;
             string key = RecordKey(plantDef.defName, variationIndex);
-            if (SessionValidated.Contains(key) && Records.TryGetValue(key, out AutoPlantMaskRecord validated)) return validated;
             Texture texture = PlantMaskUtility.TextureForVariation(plantDef, variationIndex);
             if (texture == null) return null;
-            string textureKey = TextureKey(plantDef, variationIndex, texture, ProduceColorFor(plantDef));
-            if (Records.TryGetValue(key, out AutoPlantMaskRecord record) && record.TextureKey == textureKey)
+            ProduceSignature produce = ProduceColorFor(plantDef);
+            LayerEligibility eligibility = EligibilityFor(plantDef, variationIndex, texture, produce);
+            string textureKey = TextureKey(plantDef, variationIndex, texture, produce);
+            string eligibilityKey = EligibilityKey(plantDef, variationIndex, texture, produce, eligibility);
+            if (Records.TryGetValue(key, out AutoPlantMaskRecord record)
+                && record.TextureKey == textureKey && record.EligibilityKey == eligibilityKey)
             {
                 SessionValidated.Add(key);
                 return record;
+            }
+            AutoPlantMaskRecord reusable = Records.Values
+                .Where(candidate => candidate != null && candidate.TextureKey == textureKey && candidate.EligibilityKey == eligibilityKey)
+                .OrderBy(candidate => candidate.PlantDefName)
+                .FirstOrDefault();
+            if (reusable != null)
+            {
+                AutoPlantMaskRecord clone = new AutoPlantMaskRecord(plantDef.defName, variationIndex, textureKey,
+                    reusable.Confidence, reusable.Layers, eligibilityKey);
+                Records[key] = clone;
+                SessionValidated.Add(key);
+                dirty = true;
+                return clone;
             }
             return generateIfMissing ? Generate(plantDef, variationIndex, true) : null;
         }
@@ -245,13 +265,14 @@ namespace HorticultureNovelSeeds
             if (plantDef == null || texture == null) return null;
             ProduceSignature produce = ProduceColorFor(plantDef);
             string textureKey = TextureKey(plantDef, variationIndex, texture, produce);
+            LayerEligibility eligibility = EligibilityFor(plantDef, variationIndex, texture, produce);
+            string eligibilityKey = EligibilityKey(plantDef, variationIndex, texture, produce, eligibility);
             string key = RecordKey(plantDef.defName, variationIndex);
             FailedKeys.Remove(key);
             try
             {
                 SourceData source = AnalyzeTexture(texture);
                 if (source == null) return Failed(key);
-                LayerEligibility eligibility = EligibilityFor(plantDef, variationIndex, texture, produce);
                 Color32[] immatureReference = ReadPixels(PlantMaskUtility.ReferenceTextureForVariation(plantDef,
                     variationIndex, "Immature"), AnalysisSize);
                 string variationLabel = PlantMaskUtility.VariationLabel(plantDef, variationIndex) ?? string.Empty;
@@ -262,7 +283,8 @@ namespace HorticultureNovelSeeds
                 if (leaflessReference != null && HasTreeMorphology(plantDef)) eligibility.forceStem = true;
                 List<VisualMaskLayerRecord> layers = Classify(source, produce, eligibility, immatureReference,
                     leaflessReference, out float confidence);
-                AutoPlantMaskRecord record = new AutoPlantMaskRecord(plantDef.defName, variationIndex, textureKey, confidence, layers);
+                AutoPlantMaskRecord record = new AutoPlantMaskRecord(plantDef.defName, variationIndex, textureKey,
+                    confidence, layers, eligibilityKey);
                 Records[key] = record;
                 SessionValidated.Add(key);
                 dirty = true;
@@ -312,9 +334,16 @@ namespace HorticultureNovelSeeds
                 Scribe.loader.InitLoading(CachePath);
                 Scribe_Deep.Look(ref file, "autoMaskCache");
                 Scribe.loader.FinalizeLoading();
-                if (file == null || file.LoadedFormatVersion != FormatVersion || file.LoadedGeneratorVersion != GeneratorVersion) return;
+                if (file == null || file.LoadedFormatVersion != FormatVersion) return;
                 foreach (AutoPlantMaskRecord record in file.Masks)
                     Records[RecordKey(record.PlantDefName, record.VariationIndex)] = record;
+                if (file.LoadedGeneratorVersion != GeneratorVersion)
+                {
+                    foreach (string key in Records.Where(pair => RequiresIdentityRegeneration(pair.Value))
+                        .Select(pair => pair.Key).ToList()) Records.Remove(key);
+                    dirty = true;
+                    Log.Message("[Horticulture - Novel Seeds] Loaded a legacy automatic plant-mask cache; records will be regenerated or reused by texture identity.");
+                }
             }
             catch (Exception exception)
             {
@@ -322,6 +351,11 @@ namespace HorticultureNovelSeeds
                 Records.Clear();
                 Log.Warning("[Horticulture - Novel Seeds] Could not load the automatic plant-mask cache: " + exception.Message);
             }
+        }
+
+        internal static bool RequiresIdentityRegeneration(AutoPlantMaskRecord record)
+        {
+            return record == null || record.EligibilityKey.NullOrEmpty();
         }
 
         private static AutoPlantMaskRecord Failed(string key)
@@ -334,12 +368,20 @@ namespace HorticultureNovelSeeds
 
         private static string TextureKey(ThingDef plantDef, int variationIndex, Texture texture, ProduceSignature produce)
         {
+            return MaskTextureIdentity.TryGet(texture, PlantMaskUtility.VariationLabel(plantDef, variationIndex), out string key)
+                ? key : "unreadable|" + (texture?.name ?? "none") + "|" + texture?.width + "x" + texture?.height;
+        }
+
+        private static string EligibilityKey(ThingDef plantDef, int variationIndex, Texture texture,
+            ProduceSignature produce, LayerEligibility eligibility)
+        {
             Texture immature = PlantMaskUtility.ReferenceTextureForVariation(plantDef, variationIndex, "Immature");
             Texture leafless = PlantMaskUtility.ReferenceTextureForVariation(plantDef, variationIndex, "Leafless");
-            return GeneratorVersion + "|" + (plantDef.modContentPack?.PackageId ?? "unknown") + "|" + plantDef.defName
-                + "|" + variationIndex + "|" + PlantMaskUtility.VariationLabel(plantDef, variationIndex)
-                + "|" + texture.name + "|" + texture.width + "x" + texture.height + "|" + PixelFingerprint(texture)
-                + "|immature:" + ReferenceFingerprint(immature) + "|leafless:" + ReferenceFingerprint(leafless) + "|" + produce.key;
+            string immatureKey = MaskTextureIdentity.TryGet(immature, "Immature", out string immatureIdentity) ? immatureIdentity : "none";
+            string leaflessKey = MaskTextureIdentity.TryGet(leafless, "Leafless", out string leaflessIdentity) ? leaflessIdentity : "none";
+            return "p:" + eligibility.produce + "|l:" + eligibility.leaves + "|s:" + eligibility.stem
+                + "|f:" + eligibility.forceStem + "|struct:" + eligibility.structuralOnly
+                + "|immature:" + immatureKey + "|leafless:" + leaflessKey + "|produce:" + produce.key;
         }
 
         private static string ReferenceFingerprint(Texture texture)

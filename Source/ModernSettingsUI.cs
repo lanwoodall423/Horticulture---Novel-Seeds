@@ -152,18 +152,35 @@ namespace HorticultureNovelSeeds
             List<VarietyTraitDef> allTraits = AllTraits();
             List<string> categories = settings.TraitGroupNames().ToList();
             List<VarietyTraitDef> shownTraits = FilterTraits(allTraits, globalTraitSearch, settings);
-            float contentHeight = 970f + Mathf.CeilToInt(categories.Count / 2f) * 32f + TraitGroupsHeight(shownTraits, settings, OpenGlobalCategories, expandedGlobalTrait, ExpandedGlobalHeight, 124f, globalTraitSearch);
+            float contentHeight = 1160f + Mathf.CeilToInt(categories.Count / 2f) * 32f + TraitGroupsHeight(shownTraits, settings, OpenGlobalCategories, expandedGlobalTrait, ExpandedGlobalHeight, 124f, globalTraitSearch);
             BeginPage(rect, contentHeight, out Rect view);
             float y = 0f;
-            DrawPageTitle(view, ref y, "General Settings", "Defaults used by every growable plant unless overridden.");
+            DrawPageTitle(view, ref y, "General Settings", "Defaults used by every growable plant unless overridden. Cross-pollination is checked when sowing.");
             DrawSectionHeader(view, ref y, "Mutation And Cross-Pollination");
             float half = (view.width - 14f) / 2f;
-            DrawPercentControl(new Rect(0f, y, half, 58f), "Default Mutation Rate", ref settings.globalMutationChance, 0f, 1f);
-            DrawPercentControl(new Rect(half + 14f, y, half, 58f), "Default Cross-Pollination Rate", ref settings.globalCrossPollinationChance, 0f, 1f);
+            Rect mutationRateRect = new Rect(0f, y, half, 58f);
+            Rect crossRateRect = new Rect(half + 14f, y, half, 58f);
+            DrawPercentControl(mutationRateRect, "Default Mutation Rate", ref settings.globalMutationChance, 0f, 1f);
+            DrawPercentControl(crossRateRect, "Default Cross-Pollination Rate", ref settings.globalCrossPollinationChance, 0f, 1f);
+            TooltipHandler.TipRegion(crossRateRect, "HNS_SettingsCrossPollinationRateTip".Translate());
             y += 66f;
             DrawStepper(new Rect(0f, y, half, 84f), "Max New Traits Per Mutation", ref settings.maxTraitsPerEvent, 1, 10);
-            DrawStepper(new Rect(half + 14f, y, half, 84f), "Max Donor Traits Per Cross", ref settings.maxCrossPollinationTraits, 1, 10);
+            Rect maxCrossRect = new Rect(half + 14f, y, half, 84f);
+            DrawStepper(maxCrossRect, "Max Mechanical Traits Per Cross", ref settings.maxCrossPollinationTraits, 1, 10);
+            TooltipHandler.TipRegion(maxCrossRect, "HNS_SettingsCrossPollinationColorTip".Translate());
             y += 94f;
+            DrawSectionHeader(view, ref y, "Advanced Cross-Pollination");
+            Rect growthRect = new Rect(0f, y, half, 58f);
+            Rect secondSlotRect = new Rect(half + 14f, y, half, 58f);
+            DrawPercentControl(growthRect, "Minimum Established Donor Growth", ref settings.minimumDonorGrowth, 0f, 1f);
+            DrawPercentControl(secondSlotRect, "Second Mechanical Slot Chance", ref settings.secondCrossPollinationTraitChance, 0f, 1f);
+            TooltipHandler.TipRegion(growthRect, "HNS_SettingsCrossPollinationDonorTip".Translate());
+            TooltipHandler.TipRegion(secondSlotRect, "HNS_SettingsCrossPollinationSlotTip".Translate());
+            y += 66f;
+            Rect laterSlotRect = new Rect(0f, y, half, 58f);
+            DrawPercentControl(laterSlotRect, "Third And Later Slot Chance", ref settings.laterCrossPollinationTraitChance, 0f, 1f);
+            TooltipHandler.TipRegion(laterSlotRect, "HNS_SettingsCrossPollinationSlotTip".Translate());
+            y += 68f;
             DrawSectionHeader(view, ref y, "Trait Balance");
             Rect balanceToggleRect = new Rect(0f, y, view.width, 28f);
             Widgets.CheckboxLabeled(balanceToggleRect, "Balance Positive And Negative Traits", ref settings.enableTraitBalancing);
@@ -428,7 +445,10 @@ namespace HorticultureNovelSeeds
             y += 32f;
             if (plant.useCustomCrossPollinationChance)
             {
-                DrawPercentControl(new Rect(18f, y, view.width - 18f, 42f), "Cross-Pollination Rate", ref plant.crossPollinationChance, 0f, 1f, true);
+                Rect crossRateRect = new Rect(18f, y, view.width - 18f, 42f);
+                DrawPercentControl(crossRateRect, "Cross-Pollination Rate", ref plant.crossPollinationChance, 0f, 1f, true);
+                TooltipHandler.TipRegion(crossRateRect, ("HNS_SettingsCrossPollinationRateTip".Translate() + " "
+                    + "HNS_SettingsCrossPollinationDonorTip".Translate()));
                 y += 48f;
             }
             else DrawInheritedValue(new Rect(inheritedX, y - 32f, inheritedWidth, 28f), "Global: " + settings.globalCrossPollinationChance.ToStringPercent());
@@ -466,7 +486,7 @@ namespace HorticultureNovelSeeds
         {
             List<SettingsProfileInfo> profiles = SettingsProfileManager.Profiles.ToList();
             List<PlantMaskFileInfo> maskFiles = PlantMaskFileManager.Files.ToList();
-            float contentHeight = 468f + profiles.Count * 62f + maskFiles.Count * 62f;
+            float contentHeight = 510f + profiles.Count * 62f + maskFiles.Count * 62f;
             BeginPage(rect, contentHeight, out Rect view);
             float y = 0f;
             DrawPageTitle(view, ref y, "Configuration Profiles", "Save complete configurations or transfer only the painted masks for every plant.");
@@ -511,7 +531,9 @@ namespace HorticultureNovelSeeds
                     + result.manualSkipped + " manual skipped, " + result.lowConfidence + " flagged for review, " + result.failed + " failed.",
                     result.failed > 0 ? MessageTypeDefOf.CautionInput : MessageTypeDefOf.TaskCompletion, false);
             }
-            y += 38f;
+            if (Widgets.ButtonText(new Rect(432f, y + 36f, 230f, 32f), "Review Mask Queue"))
+                Find.WindowStack.Add(new Dialog_MaskReviewQueue());
+            y += 80f;
             DrawMutedLabel(new Rect(0f, y, view.width, 38f), PlantMaskFileManager.DirectoryPath);
             y += 46f;
             if (maskFiles.Count == 0)

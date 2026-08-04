@@ -220,6 +220,16 @@ namespace HorticultureNovelSeeds
                 && cells.Min(cell => cell.z) == 25 && cells.Max(cell => cell.z) == 34;
         }
 
+        internal static bool CrossPollinationRegression()
+        {
+            return HorticultureNovelSeeds.CrossPollinationRegression.Run();
+        }
+
+        internal static bool TraitCatalogRegression()
+        {
+            return HorticultureNovelSeeds.TraitCatalogRegression.Run();
+        }
+
         [DebugAction(Category, "Spawn crossbred seed pack by generation", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
         private static void ChooseCrossbredGenerationDepth()
         {

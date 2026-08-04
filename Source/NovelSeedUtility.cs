@@ -78,8 +78,11 @@ namespace HorticultureNovelSeeds
         };
         private static bool? vanillaFlowersExpandedActive;
         public const float SpontaneousMutationChance = 0.08f;
-        public const float DefaultCrossPollinationChance = 0.10f;
+        public const float DefaultCrossPollinationChance = 0.007f;
         public const float DefaultWildMutationChance = 0.005f;
+        public const float DefaultMinimumDonorGrowth = 0.50f;
+        public const float DefaultSecondCrossPollinationTraitChance = 0.10f;
+        public const float DefaultLaterCrossPollinationTraitChance = 0.01f;
         private const float CrossPollinationRadius = 4.9f;
 
         public static bool IsGrowableCrop(ThingDef def)
@@ -190,46 +193,212 @@ namespace HorticultureNovelSeeds
             return result;
         }
 
+        internal struct CrossPollinationDonorState
+        {
+            public bool spawned;
+            public bool destroyed;
+            public bool healthy;
+            public bool sown;
+            public bool sameThingDef;
+            public bool distinctCultivar;
+            public bool blighted;
+            public bool dormant;
+            public bool ableToGrow;
+            public float growth;
+        }
+
+        internal sealed class CrossPollinationDonorCandidate
+        {
+            public Plant plant;
+            public VarietyRecord variety;
+            public float weight;
+        }
+
+        internal sealed class CrossPollinationCultivarCandidate
+        {
+            public string id;
+            public VarietyRecord variety;
+            public float weight;
+        }
+
+        internal static bool IsEligibleCrossPollinationDonor(CrossPollinationDonorState state, float minimumGrowth)
+        {
+            float threshold = Mathf.Clamp01(minimumGrowth);
+            return state.spawned && !state.destroyed && state.healthy && state.sown && state.sameThingDef
+                && state.distinctCultivar && state.growth > 0f && state.growth >= threshold
+                && !state.blighted && !state.dormant && state.ableToGrow;
+        }
+
+        internal static float CrossPollinationDonorWeight(float distanceSquared, float growth)
+        {
+            return Mathf.Max(0f, growth) / (1f + Mathf.Max(0f, distanceSquared));
+        }
+
+        internal static float CrossPollinationSlotChance(int slotIndex, float secondSlotChance, float laterSlotChance)
+        {
+            if (slotIndex <= 0) return 1f;
+            return Mathf.Clamp01(slotIndex == 1 ? secondSlotChance : laterSlotChance);
+        }
+
+        internal static bool CrossPollinationSlotPasses(int slotIndex, int maximumSlots, float roll,
+            float secondSlotChance, float laterSlotChance)
+        {
+            int maximum = Mathf.Clamp(maximumSlots, 1, 10);
+            if (slotIndex < 0 || slotIndex >= maximum) return false;
+            return slotIndex == 0 || roll < CrossPollinationSlotChance(slotIndex, secondSlotChance, laterSlotChance);
+        }
+
+        internal static bool CrossPollinationChancePasses(float roll, float chance, int eligibleDonorCount)
+        {
+            return eligibleDonorCount > 0 && roll < Mathf.Clamp01(chance);
+        }
+
+        internal static bool IsCosmeticCrossPollinationTrait(VarietyTraitDef trait)
+        {
+            return trait != null && ColorTraitFactory.IsColorFamily(trait.configFamily);
+        }
+
+        internal static int MechanicalCrossPollinationTraitCount(IEnumerable<VarietyTraitDef> traits)
+        {
+            int count = 0;
+            if (traits == null) return count;
+            foreach (VarietyTraitDef trait in traits)
+                if (trait != null && !IsCosmeticCrossPollinationTrait(trait)) count++;
+            return count;
+        }
+
         private static bool TryAssignCrossPollination(Plant plant, CompPlantVariety comp, VarietyRecord selected)
         {
             if (plant?.Map == null || comp == null || selected?.traits == null) return false;
-            List<VarietyRecord> donors = GenRadial.RadialCellsAround(plant.Position, CrossPollinationRadius, true)
-                .Where(cell => cell.InBounds(plant.Map)).Select(cell => cell.GetPlant(plant.Map))
-                .Where(other => other != null && other != plant && other.sown && other.def == plant.def)
-                .Select(other => other.TryGetComp<CompPlantVariety>()?.Variety)
-                .Where(variety => variety != null && variety.id != selected.id).GroupBy(variety => variety.id).Select(group => group.First()).ToList();
-            if (donors.Count == 0) return false;
-            float chance = HorticultureNovelSeedsMod.Settings?.CrossPollinationChanceFor(plant.def) ?? DefaultCrossPollinationChance;
+            NovelSeedsSettings settings = HorticultureNovelSeedsMod.Settings;
+            List<CrossPollinationDonorCandidate> donors = CollectCrossPollinationDonors(plant, selected, settings);
+            List<CrossPollinationCultivarCandidate> cultivars = AggregateCrossPollinationDonors(donors);
+            if (cultivars.Count == 0) return false;
+            float chance = settings?.CrossPollinationChanceFor(plant.def) ?? DefaultCrossPollinationChance;
             if (!Rand.Chance(Mathf.Clamp01(chance))) return false;
-            int maxDonorTraits = HorticultureNovelSeedsMod.Settings?.MaxCrossPollinationTraits ?? 3;
-            bool exceptional = IsExceptionalBalanceEvent(HorticultureNovelSeedsMod.Settings);
-            foreach (VarietyRecord donor in donors.InRandomOrder())
-            {
-                List<VarietyTraitDef> candidates = donor.traits.Where(trait => trait != null && !selected.traits.Any(existing => SameConfigGroup(existing, trait))).Distinct().ToList();
-                for (int attempt = 0; attempt < 8; attempt++)
-                {
-                    List<VarietyTraitDef> replacements = new List<VarietyTraitDef>();
-                    VarietyTraitDef nutritious = PercentageTraitFactory.Cross(selected.traits, donor.traits);
-                    if (nutritious != null) replacements.Add(nutritious);
-                    replacements.AddRange(ColorTraitFactory.Cross(selected.traits, donor.traits, plant.def));
-                    int remaining = Mathf.Max(0, Mathf.Clamp(maxDonorTraits, 1, 10) - replacements.Count);
-                    List<VarietyTraitDef> additions = replacements.ToList();
-                    List<VarietyTraitDef> inheritedForBalance = selected.traits
-                        .Where(existing => !replacements.Any(replacement => SameConfigGroup(existing, replacement)))
-                        .Concat(replacements).ToList();
-                    if (remaining > 0 && candidates.Count > 0)
-                        additions.AddRange(CrossPollinatedTraitSubset(inheritedForBalance, candidates, remaining, HorticultureNovelSeedsMod.Settings, exceptional));
-                    if (additions.Count == 0) continue;
-                    List<VarietyTraitDef> combined = selected.traits.Where(existing => !replacements.Any(replacement => SameConfigGroup(existing, replacement)))
-                        .Concat(additions).Where(trait => trait != null).Distinct().ToList();
-                    if (GameComponent_NovelSeeds.Instance?.FindMatchingVariety(plant.def, combined) != null) continue;
-                    comp.SetCrossPollinatedTraits(additions, donor);
-                    return comp.CrossPollinated;
-                }
-            }
-            return false;
+            CrossPollinationCultivarCandidate donorCandidate = SelectWeightedCrossPollinationDonor(cultivars);
+            if (donorCandidate?.variety == null) return false;
+
+            int maximumSlots = settings?.MaxCrossPollinationTraits ?? 3;
+            bool exceptional = IsExceptionalBalanceEvent(settings);
+            VarietyRecord donor = donorCandidate.variety;
+            List<VarietyTraitDef> replacements = new List<VarietyTraitDef>();
+            VarietyTraitDef nutritious = PercentageTraitFactory.Cross(selected.traits, donor.traits);
+            if (nutritious != null) replacements.Add(nutritious);
+            replacements.AddRange(CrossPollinationCosmeticTraits(selected.traits, donor.traits, plant.def));
+
+            List<VarietyTraitDef> candidates = donor.traits
+                .Where(trait => trait != null && !IsCosmeticCrossPollinationTrait(trait)
+                    && !selected.traits.Any(existing => SameConfigGroup(existing, trait))
+                    && !replacements.Any(existing => SameConfigGroup(existing, trait))).Distinct().ToList();
+            int usedMechanicalSlots = MechanicalCrossPollinationTraitCount(new[] { nutritious });
+            List<VarietyTraitDef> additions = replacements.ToList();
+            List<VarietyTraitDef> inheritedForBalance = selected.traits
+                .Where(existing => !replacements.Any(replacement => SameConfigGroup(existing, replacement)))
+                .Concat(replacements).ToList();
+            if (usedMechanicalSlots < Mathf.Clamp(maximumSlots, 1, 10) && candidates.Count > 0)
+                additions.AddRange(CrossPollinatedTraitSubset(inheritedForBalance, candidates, maximumSlots,
+                    usedMechanicalSlots, settings, exceptional));
+            if (additions.Count == 0) return false;
+            List<VarietyTraitDef> combined = selected.traits.Where(existing => !replacements.Any(replacement => SameConfigGroup(existing, replacement)))
+                .Concat(additions).Where(trait => trait != null).Distinct().ToList();
+            if (GameComponent_NovelSeeds.Instance?.FindMatchingVariety(plant.def, combined) != null) return false;
+            comp.SetCrossPollinatedTraits(additions, donor);
+            return comp.CrossPollinated;
         }
-        private static List<VarietyTraitDef> CrossPollinatedTraitSubset(IEnumerable<VarietyTraitDef> inherited, List<VarietyTraitDef> candidates, int maxDonorTraits, NovelSeedsSettings settings, bool exceptional)
+
+        private static List<CrossPollinationDonorCandidate> CollectCrossPollinationDonors(Plant recipient,
+            VarietyRecord selected, NovelSeedsSettings settings)
+        {
+            List<CrossPollinationDonorCandidate> result = new List<CrossPollinationDonorCandidate>();
+            float minimumGrowth = settings?.MinimumDonorGrowth ?? DefaultMinimumDonorGrowth;
+            foreach (IntVec3 cell in GenRadial.RadialCellsAround(recipient.Position, CrossPollinationRadius, true))
+            {
+                if (!cell.InBounds(recipient.Map)) continue;
+                Plant donorPlant = cell.GetPlant(recipient.Map);
+                if (donorPlant == null || donorPlant == recipient || donorPlant.def != recipient.def) continue;
+                if (!donorPlant.Spawned || donorPlant.Destroyed || donorPlant.HitPoints <= 0) continue;
+                CompPlantVariety donorComp = donorPlant.TryGetComp<CompPlantVariety>();
+                VarietyRecord donor = donorComp?.Variety;
+                CrossPollinationDonorState state = new CrossPollinationDonorState
+                {
+                    spawned = donorPlant.Spawned,
+                    destroyed = donorPlant.Destroyed,
+                    healthy = donorPlant.HitPoints > 0,
+                    sown = donorPlant.sown,
+                    sameThingDef = donorPlant.def == recipient.def,
+                    distinctCultivar = donor != null && donor.id != selected.id,
+                    blighted = donorPlant.Blighted,
+                    // Plant.Resting is not public in RimWorld 1.6; zero temperature growth covers dormant or unable plants.
+                    dormant = donorPlant.GrowthRateFactor_Temperature <= 0f,
+                    ableToGrow = donorPlant.GrowthRateFactor_Temperature > 0f,
+                    growth = donorPlant.Growth
+                };
+                if (donor == null || !IsEligibleCrossPollinationDonor(state, minimumGrowth)) continue;
+                int dx = donorPlant.Position.x - recipient.Position.x;
+                int dz = donorPlant.Position.z - recipient.Position.z;
+                result.Add(new CrossPollinationDonorCandidate
+                {
+                    plant = donorPlant,
+                    variety = donor,
+                    weight = CrossPollinationDonorWeight(dx * dx + dz * dz, donorPlant.Growth)
+                });
+            }
+            return result;
+        }
+
+        internal static List<CrossPollinationCultivarCandidate> AggregateCrossPollinationDonors(
+            List<CrossPollinationDonorCandidate> donors)
+        {
+            List<CrossPollinationDonorCandidate> ordered = new List<CrossPollinationDonorCandidate>();
+            if (donors != null)
+            {
+                foreach (CrossPollinationDonorCandidate donor in donors)
+                    if (donor?.variety != null && !donor.variety.id.NullOrEmpty()) ordered.Add(donor);
+            }
+            ordered.Sort((left, right) => StringComparer.Ordinal.Compare(left.variety.id, right.variety.id));
+            List<CrossPollinationCultivarCandidate> result = new List<CrossPollinationCultivarCandidate>();
+            foreach (CrossPollinationDonorCandidate donor in ordered)
+            {
+                CrossPollinationCultivarCandidate aggregate = result.LastOrDefault(item => item.id == donor.variety.id);
+                if (aggregate == null)
+                {
+                    aggregate = new CrossPollinationCultivarCandidate { id = donor.variety.id, variety = donor.variety };
+                    result.Add(aggregate);
+                }
+                aggregate.weight += donor.weight;
+            }
+            return result;
+        }
+
+        private static CrossPollinationCultivarCandidate SelectWeightedCrossPollinationDonor(
+            List<CrossPollinationCultivarCandidate> cultivars)
+        {
+            float total = 0f;
+            foreach (CrossPollinationCultivarCandidate candidate in cultivars) total += Mathf.Max(0f, candidate.weight);
+            if (total <= 0f) return null;
+            float pick = Rand.Value * total;
+            foreach (CrossPollinationCultivarCandidate candidate in cultivars)
+            {
+                pick -= Mathf.Max(0f, candidate.weight);
+                if (pick < 0f) return candidate;
+            }
+            return cultivars[cultivars.Count - 1];
+        }
+
+        private static List<VarietyTraitDef> CrossPollinationCosmeticTraits(IEnumerable<VarietyTraitDef> selected,
+            IEnumerable<VarietyTraitDef> donor, ThingDef cropDef)
+        {
+            List<VarietyTraitDef> result = ColorTraitFactory.Cross(selected, donor, cropDef);
+            HashSet<string> blockedTags = new HashSet<string>();
+            List<VarietyTraitDef> selectedList = selected?.Where(trait => trait != null).ToList() ?? new List<VarietyTraitDef>();
+            foreach (VarietyTraitDef trait in selectedList) AddBlockedTags(trait, blockedTags);
+            return result.Where(trait => trait != null && !SharesBlockedTag(trait, blockedTags)).Distinct().ToList();
+        }
+
+        private static List<VarietyTraitDef> CrossPollinatedTraitSubset(IEnumerable<VarietyTraitDef> inherited,
+            List<VarietyTraitDef> candidates, int maximumSlots, int usedMechanicalSlots,
+            NovelSeedsSettings settings, bool exceptional)
         {
             List<VarietyTraitDef> result = new List<VarietyTraitDef>();
             List<VarietyTraitDef> available = candidates.Where(trait => trait != null).Distinct().ToList();
@@ -237,12 +406,13 @@ namespace HorticultureNovelSeeds
             HashSet<string> blockedTags = new HashSet<string>();
             foreach (VarietyTraitDef trait in inheritedList) AddBlockedTags(trait, blockedTags);
 
-            int limit = Mathf.Clamp(maxDonorTraits, 1, 10);
-            while (result.Count < limit && available.Count > 0)
+            int limit = Mathf.Clamp(maximumSlots, 1, 10);
+            while (usedMechanicalSlots + result.Count < limit && available.Count > 0)
             {
-                bool needsCompensation = settings?.enableTraitBalancing == true && !exceptional
-                    && Mathf.Abs(TraitBalanceScore(inheritedList.Concat(result), settings)) > settings.allowedTraitImbalance;
-                if (result.Count > 0 && !needsCompensation && !Rand.Chance(0.65f)) break;
+                int slotIndex = usedMechanicalSlots + result.Count;
+                if (slotIndex > 0 && !CrossPollinationSlotPasses(slotIndex, maximumSlots, Rand.Value,
+                        settings?.SecondCrossPollinationTraitChance ?? DefaultSecondCrossPollinationTraitChance,
+                        settings?.LaterCrossPollinationTraitChance ?? DefaultLaterCrossPollinationTraitChance)) break;
                 List<VarietyTraitDef> valid = available.Where(trait => !SharesBlockedTag(trait, blockedTags)).ToList();
                 if (valid.Count == 0) break;
                 VarietyTraitDef trait = SelectBalancedDirectTrait(valid, inheritedList.Concat(result), settings, exceptional);
@@ -356,6 +526,7 @@ namespace HorticultureNovelSeeds
         public static float TraitBalanceValue(VarietyTraitDef trait, NovelSeedsSettings settings = null)
         {
             if (trait == null) return 0f;
+            if (trait.balanceValueExplicit) return trait.balanceValue;
             if (!Mathf.Approximately(trait.balanceValue, 0f)) return trait.balanceValue;
             switch (trait.defName)
             {
@@ -513,6 +684,20 @@ namespace HorticultureNovelSeeds
                 factor *= trait.yieldFactor <= 0f ? 1f : trait.yieldFactor;
             }
             return factor;
+        }
+
+        public static float GrowthRateFactor(CompPlantVariety comp)
+        {
+            return comp?.GrowthRateFactor ?? 1f;
+        }
+
+        public static float GrowthRateFactor(IEnumerable<VarietyTraitDef> traits)
+        {
+            float factor = 1f;
+            if (traits == null) return factor;
+            foreach (VarietyTraitDef trait in traits.Where(t => t != null))
+                factor *= trait.growthRateFactor <= 0f ? 1f : trait.growthRateFactor;
+            return Mathf.Max(0.05f, factor);
         }
 
         private static VisualSettingsRecord VisualOverride(ThingDef cropDef, VarietyTraitDef trait)
@@ -1204,6 +1389,7 @@ namespace HorticultureNovelSeeds
         private static void AddTraitStatChangeLines(List<string> lines, VarietyTraitDef trait, ThingDef cropDef)
         {
             float yieldFactor = trait.yieldFactor <= 0f ? 1f : trait.yieldFactor;
+            float growthRateFactor = trait.growthRateFactor <= 0f ? 1f : trait.growthRateFactor;
             PlantVisualParameters visual = TraitVisualParameters(cropDef, trait);
             float visualScale = visual.scale, visualWidth = visual.width, visualHeight = visual.height, visualDensity = visual.density;
             float tintRed = visual.tintRed, tintGreen = visual.tintGreen, tintBlue = visual.tintBlue;
@@ -1220,6 +1406,10 @@ namespace HorticultureNovelSeeds
             if (!Mathf.Approximately(yieldFactor, 1f))
             {
                 AddTraitEffectLine(lines, trait, "HNS_StatYieldMultiplier".Translate(yieldFactor.ToStringPercent()).ToString());
+            }
+            if (!Mathf.Approximately(growthRateFactor, 1f))
+            {
+                AddTraitEffectLine(lines, trait, "HNS_StatGrowthRate".Translate(growthRateFactor.ToStringPercent()).ToString());
             }
             if (!Mathf.Approximately(workFactor, 1f))
             {
@@ -1291,7 +1481,14 @@ namespace HorticultureNovelSeeds
             if (trait.humongousSpacing) AddTraitEffectLine(lines, trait, "HNS_StatSpacing".Translate().ToString());
             if (!trait.requiredSowTag.NullOrEmpty()) AddTraitEffectLine(lines, trait, "HNS_StatZone".Translate(trait.requiredSowTag == "VCE_Aquatic" ? "aquatic" : "sandy").ToString());
             if (!Mathf.Approximately(trait.fishingYieldFactor, 1f)) AddTraitEffectLine(lines, trait, "HNS_StatFishingYield".Translate(trait.fishingYieldFactor.ToStringPercent()).ToString());
-            if (!Mathf.Approximately(trait.companionGrowthFactor, 1f)) AddTraitEffectLine(lines, trait, "HNS_StatCompanion".Translate(trait.companionGrowthFactor.ToStringPercent()).ToString());            if (trait.synergyPlantDef != null && !trait.synergyStat.NullOrEmpty()) AddTraitEffectLine(lines, trait, "HNS_StatSynergyTyped".Translate(trait.synergyPlantDef.LabelCap, SynergyTraitFactory.StatLabel(trait.synergyStat), (trait.synergyFactor > 0f ? trait.synergyFactor : 1.15f).ToStringPercent()).ToString());
+            if (!Mathf.Approximately(trait.companionGrowthFactor, 1f)) AddTraitEffectLine(lines, trait, "HNS_StatCompanion".Translate(trait.companionGrowthFactor.ToStringPercent()).ToString());
+            if (trait.synergyPlantDef != null && !trait.synergyStat.NullOrEmpty())
+            {
+                float absentFactor = trait.synergyAbsentFactor > 0f ? trait.synergyAbsentFactor : 1f;
+                float presentFactor = trait.synergyFactor > 0f ? trait.synergyFactor : 1.15f;
+                AddTraitEffectLine(lines, trait, "HNS_StatSynergyTyped".Translate(trait.synergyPlantDef.LabelCap,
+                    SynergyTraitFactory.StatLabel(trait.synergyStat), absentFactor.ToStringPercent(), presentFactor.ToStringPercent()).ToString());
+            }
             if (trait.byproductDef != null) AddTraitEffectLine(lines, trait, "HNS_StatByproduct".Translate(trait.byproductDef.LabelCap, Mathf.Clamp01(trait.byproductChance).ToStringPercent()).ToString());
             if (trait.resinHediff != null || trait.resinDamage != null) AddTraitEffectLine(lines, trait, "HNS_StatResin".Translate().ToString());
             float nutritionFactor = trait.nutritionFactor <= 0f ? 1f : trait.nutritionFactor;

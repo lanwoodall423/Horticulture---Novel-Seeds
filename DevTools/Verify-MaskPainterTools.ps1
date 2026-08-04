@@ -4,6 +4,10 @@ $operations = Get-Content -Raw (Join-Path $root 'Source\MaskPainterOperations.cs
 $editor = Get-Content -Raw (Join-Path $root 'Source\ProduceMasking.cs')
 $settings = Get-Content -Raw (Join-Path $root 'Source\Settings.cs')
 $bridge = Get-Content -Raw (Join-Path $root 'DevTools\BridgeAdapter\HorticultureBridgeAdapter.cs')
+$projection = Get-Content -Raw (Join-Path $root 'Source\MaskProjection.cs')
+$identity = Get-Content -Raw (Join-Path $root 'Source\MaskTextureIdentity.cs')
+$review = Get-Content -Raw (Join-Path $root 'Source\MaskReviewQueue.cs')
+$modern = Get-Content -Raw (Join-Path $root 'Source\ModernSettingsUI.cs')
 
 $checks = [ordered]@{
     'grow and shrink support configurable distance' = $operations -match 'Grow\(' -and $operations -match 'Shrink\(' -and $editor -match 'selectionAmount'
@@ -18,10 +22,25 @@ $checks = [ordered]@{
     'keyboard workflow covers tools layers operations and history' = $editor -match 'HandleEditorShortcuts' -and $editor -match 'KeyCode\.Alpha1' -and $editor -match 'KeyCode\.LeftBracket' -and $editor -match 'KeyCode\.Z'
     'masks can copy and project between texture variations' = $editor -match 'CopyMaskToVariation' -and $editor -match 'ProjectMaskToVariation' -and $operations -match 'Project\('
     'validation covers transparency overlaps empty fragments and gaps' = $operations -match 'MaskValidationResult' -and $operations -match 'transparentPixels' -and $operations -match 'overlappingPixels' -and $operations -match 'emptyChannels' -and $operations -match 'tinyFragments' -and $operations -match 'unmaskedVisiblePixels'
+    'fill unmasked excludes transparent and assigned pixels' = $operations -match 'FillUnmasked\(' -and $operations -match 'VisibleAlpha' -and $operations -match 'assigned' -and $editor -match 'Fill Unmasked'
+    'fill unmasked is lock-aware and one transaction' = $operations -match 'targetLocked' -and $editor -match 'FillUnmaskedPixels' -and $editor -match 'CompleteImmediateChange\(before, changed\)'
+    'validation retains separate issue categories' = $operations -match 'transparentPaintIssues' -and $operations -match 'overlapIssues' -and $operations -match 'tinyFragmentIssues' -and $operations -match 'unmaskedVisibleIssues'
+    'validation navigation groups components and centers issues' = $operations -match 'MaskValidationNavigator' -and $operations -match 'MaskIssueComponent' -and $editor -match 'Previous Issue' -and $editor -match 'Next Issue' -and $editor -match 'CenterOnCurrentValidationIssue'
+    'region labeling documents replace add and remove' = $editor -match 'normal click replaces the selected channel' -and $editor -match 'Shift adds; Ctrl removes'
     'validation state clears when masks or variations change' = $editor -match 'validationResult = null' -and $editor -match 'ResetToAutoMask[\s\S]*?validationResult = null'
     'new operations have deterministic regression coverage' = $operations -match 'MaskPainterOperationsRegression' -and $bridge -match 'MaskPainterOperationsRegression'
     'manual mask serialization keys remain unchanged' = $settings -match '"plantMaskLayers"' -and $settings -match '"plantMaskVariations"'
     'three semantic layer contract remains unchanged' = $editor -match 'new VisualMaskLayerRecord \{ name = "Produce" \}' -and $editor -match 'new VisualMaskLayerRecord \{ name = "Leaves" \}' -and $editor -match 'new VisualMaskLayerRecord \{ name = "Stem" \}'
+    'projection is preview-only before settings mutation' = $editor -match 'projectionPreview' -and $editor -match 'ApplyProjectionPreview' -and $editor -match 'CancelProjectionPreview' -and $editor -match 'SemanticMaskProjection\.Build'
+    'semantic projection scores spatial and visual correspondence' = $projection -match 'RelativeX' -and $projection -match 'ColorDistance' -and $projection -match 'Compactness' -and $projection -match 'Adjacency' -and $projection -match 'Connectivity' -and $projection -match '0\.30f' -and $projection -match '0\.20f' -and $projection -match '0\.15f' -and $projection -match '0\.10f'
+    'projection preserves target transparency and channel exclusivity' = $projection -match 'VisibleAlpha' -and $projection -match 'PaintTargetPixel' -and $projection -match 'ApplyAccepted' -and $projection -match 'accepted\[channel\]' -and $projection -match 'blocked'
+    'projection reports channel confidence and mutation counts' = $projection -match 'Confidence' -and $projection -match 'AddedPixels' -and $projection -match 'RemovedPixels' -and $projection -match 'Conflicts' -and $projection -match 'RemainingUnmaskedVisiblePixels'
+    'exact texture identity is def-independent and deterministic' = $identity -match 'PixelFingerprint' -and $identity -match 'texture\.width' -and $identity -match 'texture\.height' -and $identity -match 'OrientationFor' -and $identity -match 'ClearCache'
+    'shared manual conflicts are ambiguous and manual authority remains first' = $identity -match 'entry\.ambiguous' -and $editor -match 'CurrentUsesSharedManual' -and $editor -match 'PromoteAutoToManual'
+    'batch review groups and sorts exact texture work' = $review -match 'MaskReviewQueueBuilder' -and $review -match 'IdentityKey' -and $review -match 'ThenBy\(row => row\.Confidence\)' -and $review -match 'ThenByDescending\(row => row\.IssueCount\)'
+    'batch review validates lazily by identity and mask hash' = $review -match 'ValidationCache' -and $review -match 'ValidationKey' -and $review -match 'MaskPainterOperations\.Validate' -and $modern -match 'Review Mask Queue'
+    'review opens existing painter and refreshes after close' = $review -match 'new Dialog_PlantMasks' -and $editor -match 'Action reviewRefresh' -and $editor -match 'reviewRefresh\?\.Invoke'
+    'projection regression covers translation scale conflicts rejection cancel undo and identity' = $projection -match 'MaskProjectionRegression' -or (Test-Path (Join-Path $root 'Source\MaskProjectionRegression.cs'))
 }
 
 $failed = @($checks.GetEnumerator() | Where-Object { -not $_.Value })

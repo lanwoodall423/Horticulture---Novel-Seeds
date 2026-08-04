@@ -35,6 +35,7 @@ namespace HorticultureNovelSeeds
         [Unsaved(false)] private float blightDamageFactorCache;
         [Unsaved(false)] private float workFactorCache;
         [Unsaved(false)] private float harvestWorkFactorCache;
+        [Unsaved(false)] private float growthRateFactorCache;
         [Unsaved(false)] private float maxHitPointsFactorCache;
         [Unsaved(false)] private float forageNutritionFactorCache;
         [Unsaved(false)] private float coldGrowthOffsetCache;
@@ -64,6 +65,7 @@ namespace HorticultureNovelSeeds
         public float BlightDamageFactor { get { EnsureTraitCache(); return blightDamageFactorCache; } }
         public float WorkFactor { get { EnsureTraitCache(); return workFactorCache; } }
         public float HarvestWorkFactor { get { EnsureTraitCache(); return harvestWorkFactorCache; } }
+        public float GrowthRateFactor { get { EnsureTraitCache(); return growthRateFactorCache; } }
         public float MaxHitPointsFactor { get { EnsureTraitCache(); return maxHitPointsFactorCache; } }
         public float ForageNutritionFactor { get { EnsureTraitCache(); return forageNutritionFactorCache; } }
         public float ColdGrowthOffset { get { EnsureTraitCache(); return coldGrowthOffsetCache; } }
@@ -239,6 +241,7 @@ namespace HorticultureNovelSeeds
             blightDamageFactorCache = 1f;
             workFactorCache = 1f;
             harvestWorkFactorCache = 1f;
+            growthRateFactorCache = 1f;
             maxHitPointsFactorCache = 1f;
             forageNutritionFactorCache = 1f;
             coldGrowthOffsetCache = 0f;
@@ -259,6 +262,7 @@ namespace HorticultureNovelSeeds
                 blightDamageFactorCache *= trait.blightDamageFactor <= 0f ? 1f : trait.blightDamageFactor;
                 workFactorCache *= trait.workFactor <= 0f ? 1f : trait.workFactor;
                 harvestWorkFactorCache *= trait.harvestWorkFactor <= 0f ? 1f : trait.harvestWorkFactor;
+                growthRateFactorCache *= trait.growthRateFactor <= 0f ? 1f : trait.growthRateFactor;
                 maxHitPointsFactorCache *= trait.maxHitPointsFactor <= 0f ? 1f : trait.maxHitPointsFactor;
                 forageNutritionFactorCache *= trait.forageNutritionFactor <= 0f ? 1f : trait.forageNutritionFactor;
                 coldGrowthOffsetCache += trait.coldGrowthOffset;
@@ -266,6 +270,7 @@ namespace HorticultureNovelSeeds
             }
             workFactorCache = Mathf.Max(0.05f, workFactorCache);
             harvestWorkFactorCache = Mathf.Max(0.05f, harvestWorkFactorCache * workFactorCache);
+            growthRateFactorCache = Mathf.Max(0.05f, growthRateFactorCache);
             maxHitPointsFactorCache = Mathf.Max(0.05f, maxHitPointsFactorCache);
             forageNutritionFactorCache = Mathf.Max(0.05f, forageNutritionFactorCache);
         }

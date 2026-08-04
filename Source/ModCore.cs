@@ -94,9 +94,11 @@ namespace HorticultureNovelSeeds
         public bool positive;
         public List<string> traitTags = new List<string>();
         public float balanceValue;
+        public bool balanceValueExplicit;
         public float commonality = 1f;
         public float visualScale = 1f;
         public float yieldFactor = 1f;
+        public float growthRateFactor = 1f;
         public float coldGrowthOffset;
         public float heatGrowthOffset;
         public float blightChanceFactor = 1f;
@@ -152,6 +154,7 @@ namespace HorticultureNovelSeeds
         public ThingDef synergyPlantDef;
         public string synergyStat;
         public float synergyFactor = 1.15f;
+        public float synergyAbsentFactor = 1f;
         public bool perennial;
         public float harvestAfterGrowth = 0.30f;
         public ThoughtDef joyResinThought;

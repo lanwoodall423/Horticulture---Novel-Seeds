@@ -16,6 +16,7 @@
   <HNS_NoTraits>No traits.</HNS_NoTraits>
   <HNS_NoStatChanges>No stat changes.</HNS_NoStatChanges>
   <HNS_StatYieldMultiplier>Harvest yield: {0} of base</HNS_StatYieldMultiplier>
+  <HNS_StatGrowthRate>Plant growth rate: {0} of base</HNS_StatGrowthRate>
   <HNS_StatVisualScale>Visual size: {0} of base</HNS_StatVisualScale>
   <HNS_StatColdOffset>Lower growth temperature range: {0}</HNS_StatColdOffset>
   <HNS_StatHeatOffset>Upper growth temperature range: {0}</HNS_StatHeatOffset>
@@ -50,7 +51,7 @@
   <HNS_NeedsResource>Needs fertilizer: {0} x {1}</HNS_NeedsResource>
   <HNS_StatResourceNeed>Required fertilizer: {0} x {1}</HNS_StatResourceNeed>
   <HNS_RequiresZone>requires {0} growing zone</HNS_RequiresZone>
-  <HNS_StatSynergyTyped>Synergy near {0}: {1} at {2} of base</HNS_StatSynergyTyped>
+  <HNS_StatSynergyTyped>Synergy near {0}: {1} at {2} of base without the companion and {3} with it</HNS_StatSynergyTyped>
   <HNS_StatPerennial>Reharvestable: resets to {0} growth after each harvest</HNS_StatPerennial>
   <HNS_StatJoyresin>Joyresin: sowing or harvesting gives a temporary mood boost; fully covered hands prevent harvesting exposure</HNS_StatJoyresin>
   <HNS_StatThorny>Thorn scratches: {0} chance, {1} damage to an uncovered hand; hand-covering apparel prevents it</HNS_StatThorny>
@@ -112,11 +113,15 @@
   <HNS_UnknownDiscoverer>Unknown</HNS_UnknownDiscoverer>
   <HNS_SelectBreedingMix>Breeding Mix...</HNS_SelectBreedingMix>
   <HNS_BreedingMixTitle>{0} Breeding Mix</HNS_BreedingMixTitle>
-  <HNS_BreedingMixDescription>Select at least two varieties. Sowers will interleave them across the growing area, creating deliberate opportunities for cross-pollination.</HNS_BreedingMixDescription>
+  <HNS_BreedingMixDescription>Select at least two varieties. Sowers will interleave them across the growing area, creating deliberate opportunities for cross-pollination. Cross-pollination is checked when sowing; established, healthy nearby plants influence parent selection, not the total chance.</HNS_BreedingMixDescription>
   <HNS_BreedingMixRequiresTwo>Select at least two compatible varieties.</HNS_BreedingMixRequiresTwo>
   <HNS_ApplyMix>Apply Mix</HNS_ApplyMix>
   <HNS_BreedingMixHeader>Breeding Mix</HNS_BreedingMixHeader>
   <HNS_BreedingMixMembers>Interleaved parents: {0}</HNS_BreedingMixMembers>
+  <HNS_SettingsCrossPollinationRateTip>Checked when sowing. Nearby cultivar representation affects parent selection, not the total cross-pollination chance.</HNS_SettingsCrossPollinationRateTip>
+  <HNS_SettingsCrossPollinationDonorTip>Donors must be established and healthy: sown, sufficiently mature, unblighted, and able to grow.</HNS_SettingsCrossPollinationDonorTip>
+  <HNS_SettingsCrossPollinationColorTip>Produce, leaf, and stem color inheritance is cosmetic and separate from the mechanical donor-trait budget.</HNS_SettingsCrossPollinationColorTip>
+  <HNS_SettingsCrossPollinationSlotTip>After the first mechanical slot, this chance is rolled for each additional slot. The first slot is guaranteed when a valid donor trait exists; color inheritance is separate.</HNS_SettingsCrossPollinationSlotTip>
   <HNS_RegistryTitle>Cultivar Registry</HNS_RegistryTitle>
   <HNS_RegistryWildlifeButton>Cultivars</HNS_RegistryWildlifeButton>
   <HNS_RegistryWildlifeButtonTip>Open the Cultivar Registry.</HNS_RegistryWildlifeButtonTip>

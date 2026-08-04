@@ -46,6 +46,8 @@ namespace HorticultureNovelSeeds
             "HNS_AUTO_MASKS|R|Inspect automatic and manual plant-mask resolution",
             "HNS_EXPORT_MASK_DIAGNOSTIC|W|Export a source sprite and resolved layer overlays",
             "HNS_MASK_REGRESSIONS|R|Run each automatic mask regression separately",
+            "HNS_CROSS_REGRESSIONS|R|Run deterministic cross-pollination regressions",
+            "HNS_TRAIT_CATALOG_REGRESSIONS|R|Run trait specialization and balance regressions",
             "HNS_GENERATE_AUTO_MASKS|W|Generate every missing automatic plant mask",
             "HNS_OPEN_MASK_EDITOR|W|Open the existing mask editor for a plant def",
             "HNS_MASK_EDITOR_STATE|R|Inspect the current mask editor source and confidence",
@@ -104,6 +106,8 @@ namespace HorticultureNovelSeeds
                 case "HNS_AUTO_MASKS": return AutoMasks(argument);
                 case "HNS_EXPORT_MASK_DIAGNOSTIC": return ExportMaskDiagnostic(argument);
                 case "HNS_MASK_REGRESSIONS": return MaskRegressions();
+                case "HNS_CROSS_REGRESSIONS": return CrossRegressions();
+                case "HNS_TRAIT_CATALOG_REGRESSIONS": return TraitCatalogRegressions();
                 case "HNS_GENERATE_AUTO_MASKS": return GenerateAutoMasks();
                 case "HNS_OPEN_MASK_EDITOR": return OpenMaskEditor(argument);
                 case "HNS_MASK_EDITOR_STATE": return MaskEditorState();
@@ -616,7 +620,11 @@ namespace HorticultureNovelSeeds
             return new List<string>
             {
                 "mutation=global:" + settings.globalMutationChance.ToStringPercent() + " wild:" + settings.wildMutationChance.ToStringPercent(),
-                "cross=global:" + settings.globalCrossPollinationChance.ToStringPercent() + " maxDonorTraits:" + settings.MaxCrossPollinationTraits,
+                "cross=global:" + settings.globalCrossPollinationChance.ToStringPercent()
+                    + " minimumDonorGrowth:" + settings.MinimumDonorGrowth.ToStringPercent()
+                    + " secondSlot:" + settings.SecondCrossPollinationTraitChance.ToStringPercent()
+                    + " laterSlots:" + settings.LaterCrossPollinationTraitChance.ToStringPercent()
+                    + " maxDonorTraits:" + settings.MaxCrossPollinationTraits,
                 "traits=maxNew:" + settings.maxTraitsPerEvent + " defs:" + DefDatabase<VarietyTraitDef>.DefCount,
                 "produceVisuals=" + settings.enableProduceVisuals
             };
@@ -924,6 +932,34 @@ namespace HorticultureNovelSeeds
             try { result.Add("MaskPainterOperationsRegression=" + typeof(MaskPainterOperations).GetMethod("MaskPainterOperationsRegression", flags)?.Invoke(null, null)); }
             catch (Exception exception) { result.Add("MaskPainterOperationsRegression=error:" + (exception.InnerException ?? exception).Message); }
             return result;
+        }
+
+        private static List<string> CrossRegressions()
+        {
+            try
+            {
+                MethodInfo method = typeof(NovelSeedsDebugActions).GetMethod("CrossPollinationRegression",
+                    BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+                return new List<string> { "CrossPollinationRegression=" + method?.Invoke(null, null) };
+            }
+            catch (Exception exception)
+            {
+                return new List<string> { "CrossPollinationRegression=error:" + (exception.InnerException ?? exception).Message };
+            }
+        }
+
+        private static List<string> TraitCatalogRegressions()
+        {
+            try
+            {
+                MethodInfo method = typeof(NovelSeedsDebugActions).GetMethod("TraitCatalogRegression",
+                    BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+                return new List<string> { "TraitCatalogRegression=" + method?.Invoke(null, null) };
+            }
+            catch (Exception exception)
+            {
+                return new List<string> { "TraitCatalogRegression=error:" + (exception.InnerException ?? exception).Message };
+            }
         }
 
         private static List<string> ExportMaskDiagnostic(string argument)

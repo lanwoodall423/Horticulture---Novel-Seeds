@@ -5,6 +5,44 @@ using UnityEngine;
 
 namespace HorticultureNovelSeeds
 {
+    public enum MaskValidationCategory
+    {
+        All,
+        TransparentPaint,
+        Overlap,
+        TinyFragments,
+        UnmaskedVisible
+    }
+
+    public sealed class MaskIssueComponent
+    {
+        public readonly List<int> Pixels;
+        public readonly RectInt Bounds;
+        public readonly Vector2 Center;
+
+        public int Count => Pixels?.Count ?? 0;
+
+        internal MaskIssueComponent(List<int> pixels, int resolution)
+        {
+            Pixels = pixels ?? new List<int>();
+            int minX = resolution;
+            int minY = resolution;
+            int maxX = -1;
+            int maxY = -1;
+            foreach (int index in Pixels)
+            {
+                int x = index % resolution;
+                int y = index / resolution;
+                minX = Mathf.Min(minX, x);
+                minY = Mathf.Min(minY, y);
+                maxX = Mathf.Max(maxX, x);
+                maxY = Mathf.Max(maxY, y);
+            }
+            Bounds = maxX < minX ? new RectInt() : new RectInt(minX, minY, maxX - minX + 1, maxY - minY + 1);
+            Center = maxX < minX ? Vector2.zero : new Vector2((minX + maxX + 1) * 0.5f, (minY + maxY + 1) * 0.5f);
+        }
+    }
+
     public sealed class MaskValidationResult
     {
         public int transparentPixels;
@@ -12,10 +50,86 @@ namespace HorticultureNovelSeeds
         public int emptyChannels;
         public int tinyFragments;
         public int unmaskedVisiblePixels;
+        public int allIssuePixels;
+        public VisualMaskLayerRecord transparentPaintIssues = new VisualMaskLayerRecord { name = "Transparent Paint" };
+        public VisualMaskLayerRecord overlapIssues = new VisualMaskLayerRecord { name = "Overlap" };
+        public VisualMaskLayerRecord tinyFragmentIssues = new VisualMaskLayerRecord { name = "Tiny Fragments" };
+        public VisualMaskLayerRecord unmaskedVisibleIssues = new VisualMaskLayerRecord { name = "Unmasked Visible" };
         public VisualMaskLayerRecord issues = new VisualMaskLayerRecord { name = "Validation" };
+        public List<MaskIssueComponent> transparentPaintComponents = new List<MaskIssueComponent>();
+        public List<MaskIssueComponent> overlapComponents = new List<MaskIssueComponent>();
+        public List<MaskIssueComponent> tinyFragmentComponents = new List<MaskIssueComponent>();
+        public List<MaskIssueComponent> unmaskedVisibleComponents = new List<MaskIssueComponent>();
+        public List<MaskIssueComponent> allComponents = new List<MaskIssueComponent>();
 
         public bool HasIssues => transparentPixels > 0 || overlappingPixels > 0 || emptyChannels > 0
             || tinyFragments > 0 || unmaskedVisiblePixels > 0;
+
+        public VisualMaskLayerRecord IssuesFor(MaskValidationCategory category)
+        {
+            switch (category)
+            {
+                case MaskValidationCategory.TransparentPaint: return transparentPaintIssues;
+                case MaskValidationCategory.Overlap: return overlapIssues;
+                case MaskValidationCategory.TinyFragments: return tinyFragmentIssues;
+                case MaskValidationCategory.UnmaskedVisible: return unmaskedVisibleIssues;
+                default: return issues;
+            }
+        }
+
+        public List<MaskIssueComponent> ComponentsFor(MaskValidationCategory category)
+        {
+            switch (category)
+            {
+                case MaskValidationCategory.TransparentPaint: return transparentPaintComponents;
+                case MaskValidationCategory.Overlap: return overlapComponents;
+                case MaskValidationCategory.TinyFragments: return tinyFragmentComponents;
+                case MaskValidationCategory.UnmaskedVisible: return unmaskedVisibleComponents;
+                default: return allComponents;
+            }
+        }
+    }
+
+    public sealed class MaskValidationNavigator
+    {
+        public MaskValidationCategory Category { get; private set; } = MaskValidationCategory.All;
+        public int IssueIndex { get; private set; } = -1;
+
+        public void Reset()
+        {
+            Category = MaskValidationCategory.All;
+            IssueIndex = -1;
+        }
+
+        public void Invalidate()
+        {
+            Reset();
+        }
+
+        public void SelectCategory(MaskValidationCategory category, MaskValidationResult result)
+        {
+            Category = category;
+            IssueIndex = -1;
+        }
+
+        public bool Move(MaskValidationResult result, int direction)
+        {
+            List<MaskIssueComponent> components = result?.ComponentsFor(Category);
+            if (components == null || components.Count == 0 || direction == 0)
+            {
+                IssueIndex = -1;
+                return false;
+            }
+            if (IssueIndex < 0) IssueIndex = direction > 0 ? 0 : components.Count - 1;
+            else IssueIndex = (IssueIndex + (direction > 0 ? 1 : -1) + components.Count) % components.Count;
+            return true;
+        }
+
+        public MaskIssueComponent Current(MaskValidationResult result)
+        {
+            List<MaskIssueComponent> components = result?.ComponentsFor(Category);
+            return components != null && IssueIndex >= 0 && IssueIndex < components.Count ? components[IssueIndex] : null;
+        }
     }
 
     public static class MaskPainterOperations
@@ -96,6 +210,25 @@ namespace HorticultureNovelSeeds
             }
             for (int index = 0; index < bits.Length; index++) if (!bits[index] && !outside[index]) bits[index] = true;
             return Transform(layer, bits);
+        }
+
+        public static bool FillUnmasked(VisualMaskLayerRecord target, IReadOnlyList<VisualMaskLayerRecord> layers,
+            Color32[] pixels, bool targetLocked = false)
+        {
+            int size = VisualMaskLayerRecord.Resolution;
+            if (target == null || targetLocked || layers == null || pixels?.Length != size * size) return false;
+            bool changed = false;
+            for (int y = 0; y < size; y++)
+            for (int x = 0; x < size; x++)
+            {
+                int pixelIndex = (size - 1 - y) * size + x;
+                if (pixels[pixelIndex].a < VisibleAlpha) continue;
+                bool assigned = false;
+                for (int layer = 0; layer < layers.Count; layer++)
+                    if (layers[layer]?.IsPainted(x, y) == true) { assigned = true; break; }
+                if (!assigned) changed |= target.PaintPixel(x, y, true);
+            }
+            return changed;
         }
 
         public static bool KeepLargest(VisualMaskLayerRecord layer)
@@ -202,7 +335,13 @@ namespace HorticultureNovelSeeds
                 {
                     if (component.Count >= Mathf.Max(1, tinySize)) continue;
                     result.tinyFragments++;
-                    foreach (int index in component) result.issues.PaintPixel(index % size, index / size, true);
+                    foreach (int index in component)
+                    {
+                        int x = index % size;
+                        int y = index / size;
+                        result.tinyFragmentIssues.PaintPixel(x, y, true);
+                        result.issues.PaintPixel(x, y, true);
+                    }
                 }
             }
             for (int y = 0; y < size; y++)
@@ -211,10 +350,33 @@ namespace HorticultureNovelSeeds
                 int count = 0;
                 for (int layer = 0; layer < layers.Count; layer++) if (layers[layer]?.IsPainted(x, y) == true) count++;
                 bool visible = pixels[(size - 1 - y) * size + x].a >= VisibleAlpha;
-                if (count > 0 && !visible) { result.transparentPixels++; result.issues.PaintPixel(x, y, true); }
-                if (count > 1) { result.overlappingPixels++; result.issues.PaintPixel(x, y, true); }
-                if (count == 0 && visible) { result.unmaskedVisiblePixels++; result.issues.PaintPixel(x, y, true); }
+                if (count > 0 && !visible)
+                {
+                    result.transparentPixels++;
+                    result.transparentPaintIssues.PaintPixel(x, y, true);
+                    result.issues.PaintPixel(x, y, true);
+                }
+                if (count > 1)
+                {
+                    result.overlappingPixels++;
+                    result.overlapIssues.PaintPixel(x, y, true);
+                    result.issues.PaintPixel(x, y, true);
+                }
+                if (count == 0 && visible)
+                {
+                    result.unmaskedVisiblePixels++;
+                    result.unmaskedVisibleIssues.PaintPixel(x, y, true);
+                    result.issues.PaintPixel(x, y, true);
+                }
             }
+            for (int y = 0; y < size; y++)
+                for (int x = 0; x < size; x++)
+                    if (result.issues.IsPainted(x, y)) result.allIssuePixels++;
+            result.transparentPaintComponents = IssueComponents(result.transparentPaintIssues);
+            result.overlapComponents = IssueComponents(result.overlapIssues);
+            result.tinyFragmentComponents = IssueComponents(result.tinyFragmentIssues);
+            result.unmaskedVisibleComponents = IssueComponents(result.unmaskedVisibleIssues);
+            result.allComponents = IssueComponents(result.issues);
             return result;
         }
 
@@ -242,7 +404,75 @@ namespace HorticultureNovelSeeds
             VisualMaskLayerRecord projected = Project(layer, pixels, shifted);
             if (!projected.HasPixels) return false;
             MaskValidationResult validation = Validate(new[] { layer, layer.Clone(), new VisualMaskLayerRecord() }, pixels, 8);
-            return validation.overlappingPixels > 0 && validation.emptyChannels == 1 && validation.HasIssues;
+            if (validation.overlappingPixels <= 0 || validation.emptyChannels != 1 || !validation.HasIssues) return false;
+
+            Color32[] fillPixels = new Color32[size * size];
+            fillPixels[(size - 1 - 10) * size + 10] = new Color32(255, 255, 255, 255);
+            fillPixels[(size - 1 - 11) * size + 11] = new Color32(255, 255, 255, 255);
+            fillPixels[(size - 1 - 12) * size + 12] = new Color32(0, 0, 0, 0);
+            VisualMaskLayerRecord fillTarget = new VisualMaskLayerRecord { name = "Produce" };
+            VisualMaskLayerRecord assigned = new VisualMaskLayerRecord { name = "Leaves" };
+            assigned.PaintPixel(11, 11, true);
+            List<VisualMaskLayerRecord> fillLayers = new List<VisualMaskLayerRecord> { fillTarget, assigned };
+            VisualMaskLayerRecord beforeFill = fillTarget.Clone();
+            bool filled = FillUnmasked(fillTarget, fillLayers, fillPixels);
+            VisualMaskLayerRecord afterFill = fillTarget.Clone();
+            bool fillRules = filled && fillTarget.IsPainted(10, 10) && !fillTarget.IsPainted(11, 11)
+                && !fillTarget.IsPainted(12, 12) && !FillUnmasked(fillTarget, fillLayers, fillPixels);
+            VisualMaskLayerRecord lockedTarget = beforeFill.Clone();
+            bool lockRules = !FillUnmasked(lockedTarget, new[] { lockedTarget, assigned }, fillPixels, true)
+                && lockedTarget.ContentHash == beforeFill.ContentHash;
+            RestoreMask(fillTarget, beforeFill);
+            bool undoRules = fillTarget.ContentHash == beforeFill.ContentHash;
+            RestoreMask(fillTarget, afterFill);
+            bool redoRules = fillTarget.ContentHash == afterFill.ContentHash;
+
+            VisualMaskLayerRecord transparent = new VisualMaskLayerRecord { name = "Transparent" };
+            VisualMaskLayerRecord overlap = new VisualMaskLayerRecord { name = "Overlap" };
+            VisualMaskLayerRecord overlapOther = new VisualMaskLayerRecord { name = "OverlapOther" };
+            VisualMaskLayerRecord tiny = new VisualMaskLayerRecord { name = "Tiny" };
+            transparent.PaintPixel(2, 2, true);
+            overlap.PaintPixel(3, 3, true);
+            overlapOther.PaintPixel(3, 3, true);
+            tiny.PaintPixel(5, 5, true);
+            Color32[] categoryPixels = new Color32[size * size];
+            categoryPixels[(size - 1 - 3) * size + 3] = new Color32(255, 255, 255, 255);
+            categoryPixels[(size - 1 - 5) * size + 5] = new Color32(255, 255, 255, 255);
+            categoryPixels[(size - 1 - 10) * size + 10] = new Color32(255, 255, 255, 255);
+            categoryPixels[(size - 1 - 10) * size + 12] = new Color32(255, 255, 255, 255);
+            MaskValidationResult categories = Validate(new[] { transparent, overlap, overlapOther, tiny }, categoryPixels, 2);
+            MaskValidationNavigator navigator = new MaskValidationNavigator();
+            navigator.SelectCategory(MaskValidationCategory.TransparentPaint, categories);
+            bool transparentCategory = categories.transparentPaintIssues.IsPainted(2, 2)
+                && categories.transparentPaintComponents.Count == 1;
+            navigator.SelectCategory(MaskValidationCategory.Overlap, categories);
+            bool overlapCategory = categories.overlapIssues.IsPainted(3, 3) && categories.overlapComponents.Count == 1;
+            navigator.SelectCategory(MaskValidationCategory.TinyFragments, categories);
+            bool tinyCategory = categories.tinyFragmentIssues.IsPainted(5, 5) && categories.tinyFragmentComponents.Count == 1;
+            navigator.SelectCategory(MaskValidationCategory.UnmaskedVisible, categories);
+            bool navigation = navigator.Move(categories, 1) && navigator.Current(categories)?.Count == 1
+                && navigator.Move(categories, 1) && navigator.Move(categories, -1);
+            navigator.Invalidate();
+            bool invalidated = navigator.Category == MaskValidationCategory.All && navigator.IssueIndex < 0;
+            return fillRules && lockRules && undoRules && redoRules && transparentCategory && overlapCategory
+                && tinyCategory && categories.unmaskedVisibleComponents.Count == 2 && navigation && invalidated
+                && MaskProjectionRegression.Run();
+        }
+
+        private static void RestoreMask(VisualMaskLayerRecord destination, VisualMaskLayerRecord source)
+        {
+            destination.Clear();
+            for (int y = 0; y < VisualMaskLayerRecord.Resolution; y++)
+                for (int x = 0; x < VisualMaskLayerRecord.Resolution; x++)
+                    if (source.IsPainted(x, y)) destination.PaintPixel(x, y, true);
+        }
+
+        private static List<MaskIssueComponent> IssueComponents(VisualMaskLayerRecord layer)
+        {
+            List<MaskIssueComponent> result = new List<MaskIssueComponent>();
+            foreach (List<int> component in Components(ToBits(layer)))
+                result.Add(new MaskIssueComponent(component, VisualMaskLayerRecord.Resolution));
+            return result;
         }
 
         private static bool[] ToBits(VisualMaskLayerRecord layer)

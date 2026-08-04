@@ -10,6 +10,9 @@ namespace HorticultureNovelSeeds
     {
         public float globalMutationChance = NovelSeedUtility.SpontaneousMutationChance;
         public float globalCrossPollinationChance = NovelSeedUtility.DefaultCrossPollinationChance;
+        public float minimumDonorGrowth = NovelSeedUtility.DefaultMinimumDonorGrowth;
+        public float secondCrossPollinationTraitChance = NovelSeedUtility.DefaultSecondCrossPollinationTraitChance;
+        public float laterCrossPollinationTraitChance = NovelSeedUtility.DefaultLaterCrossPollinationTraitChance;
         public float wildMutationChance = NovelSeedUtility.DefaultWildMutationChance;
         public int maxCrossPollinationTraits = 3;
         public int maxTraitsPerEvent = 3;
@@ -50,6 +53,9 @@ namespace HorticultureNovelSeeds
             base.ExposeData();
             Scribe_Values.Look(ref globalMutationChance, "globalMutationChance", NovelSeedUtility.SpontaneousMutationChance);
             Scribe_Values.Look(ref globalCrossPollinationChance, "globalCrossPollinationChance", NovelSeedUtility.DefaultCrossPollinationChance);
+            Scribe_Values.Look(ref minimumDonorGrowth, "minimumDonorGrowth", NovelSeedUtility.DefaultMinimumDonorGrowth);
+            Scribe_Values.Look(ref secondCrossPollinationTraitChance, "secondCrossPollinationTraitChance", NovelSeedUtility.DefaultSecondCrossPollinationTraitChance);
+            Scribe_Values.Look(ref laterCrossPollinationTraitChance, "laterCrossPollinationTraitChance", NovelSeedUtility.DefaultLaterCrossPollinationTraitChance);
             Scribe_Values.Look(ref wildMutationChance, "wildMutationChance", NovelSeedUtility.DefaultWildMutationChance);
             Scribe_Values.Look(ref maxCrossPollinationTraits, "maxCrossPollinationTraits", 3);
             Scribe_Values.Look(ref maxTraitsPerEvent, "maxTraitsPerEvent", 3);
@@ -96,6 +102,9 @@ namespace HorticultureNovelSeeds
             if (other == null) return;
             globalMutationChance = other.globalMutationChance;
             globalCrossPollinationChance = other.globalCrossPollinationChance;
+            minimumDonorGrowth = other.minimumDonorGrowth;
+            secondCrossPollinationTraitChance = other.secondCrossPollinationTraitChance;
+            laterCrossPollinationTraitChance = other.laterCrossPollinationTraitChance;
             wildMutationChance = other.wildMutationChance;
             maxCrossPollinationTraits = other.maxCrossPollinationTraits;
             maxTraitsPerEvent = other.maxTraitsPerEvent;
@@ -131,6 +140,9 @@ namespace HorticultureNovelSeeds
         {
             globalMutationChance = Mathf.Clamp01(globalMutationChance);
             globalCrossPollinationChance = Mathf.Clamp01(globalCrossPollinationChance);
+            minimumDonorGrowth = Mathf.Clamp01(minimumDonorGrowth);
+            secondCrossPollinationTraitChance = Mathf.Clamp01(secondCrossPollinationTraitChance);
+            laterCrossPollinationTraitChance = Mathf.Clamp01(laterCrossPollinationTraitChance);
             wildMutationChance = Mathf.Clamp01(wildMutationChance);
             maxCrossPollinationTraits = Mathf.Clamp(maxCrossPollinationTraits, 1, 10);
             maxTraitsPerEvent = Mathf.Clamp(maxTraitsPerEvent, 1, 10);
@@ -188,6 +200,9 @@ namespace HorticultureNovelSeeds
         {
             globalMutationChance = NovelSeedUtility.SpontaneousMutationChance;
             globalCrossPollinationChance = NovelSeedUtility.DefaultCrossPollinationChance;
+            minimumDonorGrowth = NovelSeedUtility.DefaultMinimumDonorGrowth;
+            secondCrossPollinationTraitChance = NovelSeedUtility.DefaultSecondCrossPollinationTraitChance;
+            laterCrossPollinationTraitChance = NovelSeedUtility.DefaultLaterCrossPollinationTraitChance;
             wildMutationChance = NovelSeedUtility.DefaultWildMutationChance;
             maxCrossPollinationTraits = 3;
             maxTraitsPerEvent = 3;
@@ -327,6 +342,9 @@ namespace HorticultureNovelSeeds
 
         public int MaxTraitsPerEvent => Mathf.Clamp(maxTraitsPerEvent, 1, 10);
         public int MaxCrossPollinationTraits => Mathf.Clamp(maxCrossPollinationTraits, 1, 10);
+        public float MinimumDonorGrowth => Mathf.Clamp01(minimumDonorGrowth);
+        public float SecondCrossPollinationTraitChance => Mathf.Clamp01(secondCrossPollinationTraitChance);
+        public float LaterCrossPollinationTraitChance => Mathf.Clamp01(laterCrossPollinationTraitChance);
 
         public float CrossPollinationChanceFor(ThingDef plantDef)
         {
@@ -1401,6 +1419,7 @@ namespace HorticultureNovelSeeds
                 record.Normalize();
             }
             RebuildTraitCaches();
+            SharedManualMaskCache.Invalidate();
         }
 
         public void ResetToDefaults()
@@ -1424,6 +1443,7 @@ namespace HorticultureNovelSeeds
             traitGroupSettings.Clear();
             traitSettings.Clear();
             RebuildTraitCaches();
+            SharedManualMaskCache.Invalidate();
         }
 
         private static void NormalizeFixedMasks(List<VisualMaskLayerRecord> layers, string firstName, string secondName, string thirdName)
@@ -1477,6 +1497,7 @@ namespace HorticultureNovelSeeds
             }
             usePlantMasks = true;
             disableAutoPlantMasks = false;
+            SharedManualMaskCache.Invalidate();
             return ManualPlantMaskLayersForVariation(variationIndex);
         }
 
@@ -1497,6 +1518,7 @@ namespace HorticultureNovelSeeds
                     new VisualMaskLayerRecord { name = "Stem" }
                 }));
             }
+            SharedManualMaskCache.Invalidate();
         }
 
         public void EnsurePlantMaskVariationCount(int count)

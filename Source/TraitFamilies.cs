@@ -60,10 +60,11 @@ namespace HorticultureNovelSeeds
                     {
                         defName = defName,
                         label = "Synergy (" + plant.LabelCap + ") (" + StatLabel(stat) + ")",
-                        description = "Gains 15% " + StatLabel(stat).ToLowerInvariant() + " when grown within three cells of " + plant.LabelCap + ".",
+                        description = "Provides 90% " + StatLabel(stat).ToLowerInvariant() + " without " + plant.LabelCap + " and 115% with that companion within three cells.",
                         positive = true,
-                        traitTags = new List<string> { "Positive" },
-                        balanceValue = 1f,
+                        traitTags = root.traitTags?.ToList() ?? new List<string>(),
+                        balanceValue = root.balanceValue,
+                        balanceValueExplicit = root.balanceValueExplicit,
                         commonality = 0f,
                         configCategory = "Synergy",
                         configFamily = "Synergy",
@@ -71,8 +72,10 @@ namespace HorticultureNovelSeeds
                         hiddenFromConfig = true,
                         synergyPlantDef = plant,
                         synergyStat = stat,
-                        synergyFactor = 1.15f,
-                        exclusionTags = new List<string> { "synergy" },
+                        synergyFactor = root.synergyFactor > 0f ? root.synergyFactor : 1.15f,
+                        synergyAbsentFactor = root.synergyAbsentFactor > 0f ? root.synergyAbsentFactor : 0.90f,
+                        inheritToProduce = root.inheritToProduce,
+                        exclusionTags = root.exclusionTags?.ToList() ?? new List<string>(),
                         generated = true,
                         modContentPack = root.modContentPack
                     });
@@ -206,13 +209,15 @@ namespace HorticultureNovelSeeds
                 additions.Add(new VarietyTraitDef
                 {
                     defName = defName, label = "Nutritious (+" + percent + "%)",
-                    description = "Harvested produce provides " + percent + "% more nutrition.",
-                    positive = true, traitTags = new List<string> { "Positive" },
-                    balanceValue = percent / 5f,
+                    description = "Harvested produce provides " + percent + "% more nutrition and requires " + percent + "% more harvest work.",
+                    positive = root.positive, traitTags = root.traitTags?.ToList() ?? new List<string>(),
+                    balanceValue = root.balanceValue,
+                    balanceValueExplicit = root.balanceValueExplicit,
                     commonality = percent == 5 ? 1f : percent == 10 ? 0.5f : percent == 15 ? 0.2f : 0f,
                     configCategory = root.configCategory, configFamily = NutritiousFamily, configType = percent.ToString(),
                     hiddenFromConfig = true, generated = true, percentageBonus = percent, nutritionFactor = 1f + percent / 100f,
-                    inheritToProduce = true, requiredPlantTags = root.requiredPlantTags?.ToList() ?? new List<string>(),
+                    harvestWorkFactor = 1f + percent / 100f,
+                    inheritToProduce = root.inheritToProduce, requiredPlantTags = root.requiredPlantTags?.ToList() ?? new List<string>(),
                     exclusionTags = root.exclusionTags?.ToList() ?? new List<string>(), modContentPack = root.modContentPack
                 });
             }

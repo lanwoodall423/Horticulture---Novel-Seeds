@@ -353,6 +353,7 @@ namespace HorticultureNovelSeeds
             {
                 DrawSection(view, ref y, "Cultivar Modifiers");
                 DrawRecord(view, ref y, "Yield", NovelSeedUtility.YieldFactor(selected.traits).ToStringPercent());
+                DrawRecord(view, ref y, "Growth rate", NovelSeedUtility.GrowthRateFactor(selected.traits).ToStringPercent() + " of base");
                 DrawRecord(view, ref y, "Sow time", ExpandedTraitUtility.SowWorkFactor(selected.traits).ToStringPercent() + " of base");
                 DrawRecord(view, ref y, "Harvest time", ExpandedTraitUtility.HarvestWorkFactor(selected.traits).ToStringPercent() + " of base");
                 DrawRecord(view, ref y, "Beauty", NovelSeedUtility.BeautyOffset(selected.traits).ToStringWithSign());
@@ -401,6 +402,8 @@ namespace HorticultureNovelSeeds
                 ? TraitColorUI.Summary(value.traits) : "Undiscovered information");
             DrawCompareRow(view, ref y, "Yield", selected, value => VisibleKnowledgeRank(value.cropDef) >= KnowledgeRank.Expert
                 ? NovelSeedUtility.YieldFactor(value.traits).ToStringPercent() : "Undiscovered information");
+            DrawCompareRow(view, ref y, "Growth rate", selected, value => VisibleKnowledgeRank(value.cropDef) >= KnowledgeRank.Expert
+                ? NovelSeedUtility.GrowthRateFactor(value.traits).ToStringPercent() + " of base" : "Undiscovered information");
             DrawCompareRow(view, ref y, "Sow time", selected, value => VisibleKnowledgeRank(value.cropDef) >= KnowledgeRank.Expert
                 ? ExpandedTraitUtility.SowWorkFactor(value.traits).ToStringPercent() + " of base" : "Undiscovered information");
             DrawCompareRow(view, ref y, "Harvest time", selected, value => VisibleKnowledgeRank(value.cropDef) >= KnowledgeRank.Expert

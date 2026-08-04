@@ -280,6 +280,8 @@ namespace HorticultureNovelSeeds
             if (plantDef == null) return false;
             PlantSettingsRecord settings = HorticultureNovelSeedsMod.Settings?.GetPlantSettings(plantDef, false);
             if (settings?.HasAnyManualPlantMask == true) return settings.HasActivePlantMasks;
+            for (int variation = 0; variation < VariationCount(plantDef); variation++)
+                if (SharedManualMaskCache.Resolve(plantDef, variation).Found) return true;
             if (settings?.disableAutoPlantMasks == true) return false;
             for (int variation = 0; variation < VariationCount(plantDef); variation++)
                 if (PlantAutoMaskCache.IsRenderable(PlantAutoMaskCache.GetRecord(plantDef, variation, false))) return true;
@@ -345,6 +347,8 @@ namespace HorticultureNovelSeeds
             PlantSettingsRecord settings = HorticultureNovelSeedsMod.Settings?.GetPlantSettings(plantDef, create);
             if (settings?.HasManualPlantMask(variationIndex) == true)
                 return settings.usePlantMasks ? settings.ManualPlantMaskLayersForVariation(variationIndex) : null;
+            SharedManualMaskResolution shared = SharedManualMaskCache.Resolve(plantDef, variationIndex);
+            if (shared.Found) return shared.Layers;
             if (settings?.disableAutoPlantMasks == true) return null;
             return PlantAutoMaskCache.LayersFor(plantDef, variationIndex, false);
         }
@@ -352,6 +356,13 @@ namespace HorticultureNovelSeeds
         public static bool HasManualMask(ThingDef plantDef, int variationIndex)
         {
             return HorticultureNovelSeedsMod.Settings?.GetPlantSettings(plantDef, false)?.HasManualPlantMask(variationIndex) == true;
+        }
+
+        public static bool HasSharedManualMask(ThingDef plantDef, int variationIndex, out bool ambiguous)
+        {
+            SharedManualMaskResolution shared = SharedManualMaskCache.Resolve(plantDef, variationIndex);
+            ambiguous = shared.Ambiguous;
+            return shared.Found;
         }
 
         public static bool AnyResolvedLayerHasPixels(ThingDef plantDef, int layerIndex)
@@ -906,6 +917,17 @@ namespace HorticultureNovelSeeds
         private Texture2D finalPreviewTexture;
         private int finalPreviewHash;
         private MaskValidationResult validationResult;
+        private readonly MaskValidationNavigator validationNavigator = new MaskValidationNavigator();
+        private MaskProjectionResult projectionPreview;
+        private List<VisualMaskLayerRecord> projectionTargetLayers;
+        private List<VisualMaskLayerRecord> projectionDisplayLayers;
+        private bool[] projectionAccepted;
+        private int projectionSourceVariation = -1;
+        private int projectionTargetVariation = -1;
+        private readonly Action reviewRefresh;
+        private Rect lastCanvasStage;
+        private Rect lastCanvasBaseImageRect;
+        private bool canvasLayoutValid;
         private static readonly Color[] LayerColors =
         {
             new Color(0.95f, 0.22f, 0.68f),
@@ -915,9 +937,10 @@ namespace HorticultureNovelSeeds
 
         public override Vector2 InitialSize => new Vector2(1080f, 780f);
 
-        public Dialog_PlantMasks(ThingDef plantDef, bool openProducePage = false, int initialVariation = 0)
+        public Dialog_PlantMasks(ThingDef plantDef, bool openProducePage = false, int initialVariation = 0, Action reviewRefresh = null)
         {
             this.plantDef = plantDef;
+            this.reviewRefresh = reviewRefresh;
             settings = HorticultureNovelSeedsMod.Settings.GetPlantSettings(plantDef);
             settings.Normalize();
             variationCount = PlantMaskUtility.VariationCount(plantDef);
@@ -973,30 +996,41 @@ namespace HorticultureNovelSeeds
             DestroyPreviews();
             DestroyFinalPreview();
             ClearMagicWandCache();
+            CancelProjectionPreview(false);
             settings.Normalize();
             ProduceMaskRenderer.Invalidate(plantDef);
             HorticultureNovelSeedsMod.Settings.Write();
+            reviewRefresh?.Invoke();
         }
 
         private List<VisualMaskLayerRecord> CurrentLayers => selectedPage == 0 ? EditorPlantLayers(selectedVariation) : settings.ProduceMaskLayers;
         private VisualMaskLayerRecord Selected => CurrentLayers[Mathf.Clamp(selectedLayer, 0, 2)];
         private bool SelectedLocked => channelLocks[Mathf.Clamp(selectedLayer, 0, 2)];
         private bool CurrentEnabled => selectedPage == 0
-            ? (CurrentIsManual ? settings.usePlantMasks : !settings.disableAutoPlantMasks)
+            ? (CurrentIsManual || CurrentUsesSharedManual ? settings.usePlantMasks || CurrentUsesSharedManual : !settings.disableAutoPlantMasks)
             : settings.useProduceMasks;
         private string PageName => selectedPage == 0 ? "Plant" : "Produce";
 
         private bool CurrentIsManual => selectedPage != 0 || settings.HasManualPlantMask(selectedVariation);
+        private bool CurrentUsesSharedManual => selectedPage == 0 && !CurrentIsManual
+            && PlantMaskUtility.HasSharedManualMask(plantDef, selectedVariation, out _);
+        private bool ProjectionPreviewActive => projectionPreview != null && projectionTargetVariation >= 0;
+        private IReadOnlyList<VisualMaskLayerRecord> DisplayLayers => ProjectionPreviewActive ? projectionDisplayLayers : CurrentLayers;
 
         private List<VisualMaskLayerRecord> EditorPlantLayers(int variation)
         {
             if (settings.HasManualPlantMask(variation)) return settings.ManualPlantMaskLayersForVariation(variation);
-            if (!autoWorkingLayers.TryGetValue(variation, out List<VisualMaskLayerRecord> layers))
+            if (autoWorkingLayers.TryGetValue(variation, out List<VisualMaskLayerRecord> existingLayers)) return existingLayers;
+            SharedManualMaskResolution shared = SharedManualMaskCache.Resolve(plantDef, variation);
+            if (shared.Found)
             {
-                AutoPlantMaskRecord record = PlantAutoMaskCache.GetRecord(plantDef, variation, true);
-                layers = record?.Layers.Select(layer => layer.Clone()).ToList() ?? NewEmptyLayers();
-                autoWorkingLayers[variation] = layers;
+                List<VisualMaskLayerRecord> sharedLayers = shared.Layers.Select(layer => layer.Clone()).ToList();
+                autoWorkingLayers[variation] = sharedLayers;
+                return sharedLayers;
             }
+            AutoPlantMaskRecord record = PlantAutoMaskCache.GetRecord(plantDef, variation, true);
+            List<VisualMaskLayerRecord> layers = record?.Layers.Select(layer => layer.Clone()).ToList() ?? NewEmptyLayers();
+            autoWorkingLayers[variation] = layers;
             return layers;
         }
 
@@ -1011,10 +1045,12 @@ namespace HorticultureNovelSeeds
         private void DrawMaskOrigin(Rect rect)
         {
             AutoPlantMaskRecord auto = PlantAutoMaskCache.GetRecord(plantDef, selectedVariation, false);
-            string origin = CurrentIsManual ? "Manual" : "Auto-generated";
+            bool ambiguousShared = false;
+            bool shared = PlantMaskUtility.HasSharedManualMask(plantDef, selectedVariation, out ambiguousShared);
+            string origin = CurrentIsManual ? "Manual" : shared ? "Shared manual" : ambiguousShared ? "Ambiguous shared manual - auto-generated" : "Auto-generated";
             if (!CurrentIsManual && auto?.LowConfidence == true) origin += " - manual review recommended";
             Color old = GUI.color;
-            GUI.color = !CurrentIsManual && auto?.LowConfidence == true ? ColorLibrary.RedReadable : Color.gray;
+            GUI.color = ambiguousShared || (!CurrentIsManual && auto?.LowConfidence == true) ? ColorLibrary.RedReadable : Color.gray;
             Widgets.Label(rect, origin);
             GUI.color = old;
         }
@@ -1037,10 +1073,12 @@ namespace HorticultureNovelSeeds
                 if (i == selectedPage) Widgets.DrawHighlightSelected(tab);
                 if (Widgets.ButtonText(tab, labels[i]))
                 {
+                    CancelProjectionPreview(false);
                     selectedPage = i;
                     selectedLayer = 0;
                     selectedVariation = 0;
                     validationResult = null;
+                    ResetValidationNavigation();
                     ClearMagicWandCache();
                     ResetCanvasView();
                     DestroyFinalPreview();
@@ -1076,9 +1114,11 @@ namespace HorticultureNovelSeeds
 
         private void SelectVariation(int variation, bool resetLayer)
         {
+            CancelProjectionPreview(false);
             selectedVariation = Mathf.Clamp(variation, 0, Mathf.Max(0, variationCount - 1));
             if (resetLayer) selectedLayer = 0;
             validationResult = null;
+            ResetValidationNavigation();
             DestroyPreviews();
             DestroyFinalPreview();
             ClearMagicWandCache();
@@ -1099,7 +1139,7 @@ namespace HorticultureNovelSeeds
                 Color swatch = LayerColor(i);
                 Widgets.DrawBoxSolid(new Rect(row.x + 8f, row.y + 10f, 20f, 20f), swatch);
                 Widgets.DrawBox(new Rect(row.x + 8f, row.y + 10f, 20f, 20f));
-                VisualMaskLayerRecord layer = CurrentLayers[i];
+                VisualMaskLayerRecord layer = DisplayLayers[i];
                 string status = layer.HasPixels ? string.Empty : CurrentIsManual ? " - empty" : " - absent";
                 Widgets.Label(new Rect(row.x + 38f, row.y + 10f, row.width - 100f, 24f), layer.name + status);
                 Rect lockButton = new Rect(row.xMax - 54f, row.y + 7f, 50f, 28f);
@@ -1143,19 +1183,22 @@ namespace HorticultureNovelSeeds
             }
 
             Rect baseImageRect = FitRect(stage.ContractedBy(16f), texture.width, texture.height);
+            lastCanvasStage = stage;
+            lastCanvasBaseImageRect = baseImageRect;
+            canvasLayoutValid = true;
             Rect imageRect = ZoomedImageRect(baseImageRect);
             HandleCanvasZoom(stage, baseImageRect, ref imageRect);
 
             GUI.BeginGroup(stage);
             Rect localImageRect = imageRect;
             localImageRect.position -= stage.position;
-            Texture displayTexture = previewMode == MaskPreviewMode.Final ? FinalPreviewTexture(texture) : texture;
+            Texture displayTexture = previewMode == MaskPreviewMode.Final ? FinalPreviewTexture(texture, DisplayLayers) : texture;
             GUI.DrawTexture(localImageRect, displayTexture ?? texture, ScaleMode.StretchToFill, true);
             if (previewMode == MaskPreviewMode.Mask)
             {
                 for (int i = 0; i < 3; i++)
                 {
-                    VisualMaskLayerRecord layer = CurrentLayers[i];
+                    VisualMaskLayerRecord layer = DisplayLayers[i];
                     if (!layer.HasPixels) continue;
                     Color old = GUI.color;
                     Color color = LayerColor(i);
@@ -1165,11 +1208,12 @@ namespace HorticultureNovelSeeds
                     GUI.color = old;
                 }
             }
-            if (validationResult?.issues?.HasPixels == true)
+            VisualMaskLayerRecord validationOverlay = validationResult?.IssuesFor(validationNavigator.Category);
+            if (validationOverlay?.HasPixels == true)
             {
                 Color old = GUI.color;
                 GUI.color = new Color(1f, 0.14f, 0.08f, 0.72f);
-                GUI.DrawTexture(localImageRect, PreviewTexture(validationResult.issues), ScaleMode.StretchToFill, true);
+                GUI.DrawTexture(localImageRect, PreviewTexture(validationOverlay), ScaleMode.StretchToFill, true);
                 GUI.color = old;
             }
             Widgets.DrawBox(localImageRect);
@@ -1194,6 +1238,11 @@ namespace HorticultureNovelSeeds
             Widgets.Label(new Rect(rect.x, y, rect.width, 28f), Selected.name + " Mask");
             Text.Font = GameFont.Small;
             y += 42f;
+            if (ProjectionPreviewActive)
+            {
+                DrawProjectionPreviewControls(rect, ref y);
+                return;
+            }
             float toolWidth = (rect.width - 32f) / 5f;
             Rect paintButton = new Rect(rect.x, y, toolWidth, 30f);
             Rect eraseButton = new Rect(paintButton.xMax + 8f, y, toolWidth, 30f);
@@ -1209,7 +1258,7 @@ namespace HorticultureNovelSeeds
             if (Widgets.ButtonText(regionButton, "Region")) SetTool(false, false, false, true);
             TooltipHandler.TipRegion(wandButton, "Magic Wand: Assign the connected region of a similar color to this mask layer.");
             TooltipHandler.TipRegion(reassignButton, "Move: Reassign the clicked connected region from its current mask to the selected mask.");
-            TooltipHandler.TipRegion(regionButton, "Select one texture region. Shift adds and Ctrl removes.");
+            TooltipHandler.TipRegion(regionButton, "Region: normal click replaces the selected channel with this connected region. Shift adds; Ctrl removes.");
             y += 44f;
             string[] paintModes = { "Add", "Remove", "Replace" };
             float paintModeWidth = (rect.width - 16f) / 3f;
@@ -1256,6 +1305,13 @@ namespace HorticultureNovelSeeds
             if (Widgets.ButtonText(new Rect(rect.x, y, half, 28f), "Remove Tiny")) RemoveTinyFragments();
             if (Widgets.ButtonText(new Rect(rect.x + half + 8f, y, half, 28f), "Fill Holes")) FillSelectionHoles();
             y += 36f;
+            bool fillUnmaskedEnabled = GUI.enabled;
+            GUI.enabled = fillUnmaskedEnabled && !SelectedLocked;
+            Rect fillUnmaskedButton = new Rect(rect.x, y, rect.width, 28f);
+            if (Widgets.ButtonText(fillUnmaskedButton, "Fill Unmasked")) FillUnmaskedPixels();
+            TooltipHandler.TipRegion(fillUnmaskedButton, "Fill every visible pixel that belongs to no channel. Transparent and already assigned pixels are unchanged.");
+            GUI.enabled = fillUnmaskedEnabled;
+            y += 36f;
             if (Widgets.ButtonText(new Rect(rect.x, y, half, 28f), "Keep Largest")) KeepLargestSelection();
             if (Widgets.ButtonText(new Rect(rect.x + half + 8f, y, half, 28f), "Smart Edge")) SmartExpandSelection();
             y += 44f;
@@ -1271,6 +1327,48 @@ namespace HorticultureNovelSeeds
             GUI.enabled = clearEnabled;
             if (Widgets.ButtonText(new Rect(rect.x + half + 8f, y, half, 30f), "Validate")) ValidateCurrentMask();
             y += 40f;
+            if (validationResult != null)
+            {
+                Widgets.Label(new Rect(rect.x, y, rect.width, 22f), "Validation categories");
+                y += 24f;
+                string[] categoryLabels = {
+                    "All (" + validationResult.allIssuePixels + ")",
+                    "Transparent (" + validationResult.transparentPixels + ")",
+                    "Overlap (" + validationResult.overlappingPixels + ")",
+                    "Tiny (" + validationResult.tinyFragments + ")",
+                    "Unmasked (" + validationResult.unmaskedVisiblePixels + ")"
+                };
+                MaskValidationCategory[] categories = {
+                    MaskValidationCategory.All, MaskValidationCategory.TransparentPaint,
+                    MaskValidationCategory.Overlap, MaskValidationCategory.TinyFragments,
+                    MaskValidationCategory.UnmaskedVisible
+                };
+                float categoryWidth = (rect.width - 32f) / 5f;
+                for (int i = 0; i < categories.Length; i++)
+                {
+                    Rect categoryButton = new Rect(rect.x + i * (categoryWidth + 8f), y, categoryWidth, 28f);
+                    if (validationNavigator.Category == categories[i]) Widgets.DrawHighlightSelected(categoryButton);
+                    if (Widgets.ButtonText(categoryButton, categoryLabels[i]))
+                    {
+                        validationNavigator.SelectCategory(categories[i], validationResult);
+                        CenterOnCurrentValidationIssue();
+                    }
+                }
+                y += 36f;
+                Widgets.Label(new Rect(rect.x, y, rect.width, 22f), "Transparent: " + validationResult.transparentPixels
+                    + "  Overlap: " + validationResult.overlappingPixels);
+                y += 22f;
+                Widgets.Label(new Rect(rect.x, y, rect.width, 22f), "Tiny fragments: " + validationResult.tinyFragments
+                    + "  Unmasked: " + validationResult.unmaskedVisiblePixels);
+                y += 28f;
+                bool hasNavigableIssues = validationResult.ComponentsFor(validationNavigator.Category).Count > 0;
+                bool oldNavigationEnabled = GUI.enabled;
+                GUI.enabled = oldNavigationEnabled && hasNavigableIssues;
+                if (Widgets.ButtonText(new Rect(rect.x, y, half, 28f), "Previous Issue")) MoveValidationIssue(-1);
+                if (Widgets.ButtonText(new Rect(rect.x + half + 8f, y, half, 28f), "Next Issue")) MoveValidationIssue(1);
+                GUI.enabled = oldNavigationEnabled;
+                y += 40f;
+            }
             if (selectedPage == 0 && variationCount > 1)
             {
                 if (Widgets.ButtonText(new Rect(rect.x, y, half, 30f), "Copy To...")) ChooseMaskTransfer(false);
@@ -1286,6 +1384,44 @@ namespace HorticultureNovelSeeds
                 if (Widgets.ButtonText(new Rect(rect.x, y, rect.width, 30f), "Reset to Auto-Mask")) ResetToAutoMask();
                 GUI.enabled = resetWasEnabled;
             }
+        }
+
+        private void DrawProjectionPreviewControls(Rect rect, ref float y)
+        {
+            Widgets.Label(new Rect(rect.x, y, rect.width, 24f), "Projection Preview");
+            y += 28f;
+            Widgets.Label(new Rect(rect.x, y, rect.width, 42f),
+                "Review the candidate on " + PlantMaskUtility.VariationLabel(plantDef, projectionTargetVariation)
+                + ". Only accepted channels will be applied.");
+            y += 48f;
+            for (int channel = 0; channel < 3; channel++)
+            {
+                MaskProjectionChannelResult result = projectionPreview.Channels[channel];
+                bool oldEnabled = GUI.enabled;
+                GUI.enabled = oldEnabled && !channelLocks[channel];
+                bool accepted = projectionAccepted[channel];
+                Widgets.CheckboxLabeled(new Rect(rect.x, y, rect.width, 26f),
+                    result.ChannelName + " " + result.Confidence.ToStringPercent("F0"), ref accepted);
+                if (accepted != projectionAccepted[channel])
+                {
+                    projectionAccepted[channel] = accepted;
+                    RefreshProjectionDisplayLayers();
+                }
+                GUI.enabled = oldEnabled;
+                Widgets.Label(new Rect(rect.x + 22f, y + 25f, rect.width - 22f, 38f),
+                    "+" + result.AddedPixels + " / -" + result.RemovedPixels
+                    + "  conflicts " + result.Conflicts + "  unmasked " + result.RemainingUnmaskedVisiblePixels);
+                y += 68f;
+            }
+            y += 8f;
+            float half = (rect.width - 8f) / 2f;
+            if (Widgets.ButtonText(new Rect(rect.x, y, half, 32f), "Apply Accepted")) ApplyProjectionPreview();
+            if (Widgets.ButtonText(new Rect(rect.x + half + 8f, y, half, 32f), "Cancel")) CancelProjectionPreview(true);
+            y += 44f;
+            GUI.color = Color.gray;
+            Widgets.Label(new Rect(rect.x, y, rect.width, 54f),
+                "Projection scores position 30%, color 20%, area 15%, shape 15%, adjacency 10%, and connectivity 10%.");
+            GUI.color = Color.white;
         }
 
         private static float halfWidth(Rect rect) => (rect.width - 8f) / 2f;
@@ -1316,6 +1452,7 @@ namespace HorticultureNovelSeeds
 
         private void HandlePainting(Rect stage, Rect imageRect, Texture texture)
         {
+            if (ProjectionPreviewActive) return;
             Event current = Event.current;
             if (current.rawType == EventType.MouseUp && current.button == 0)
             {
@@ -1576,18 +1713,55 @@ namespace HorticultureNovelSeeds
                 selectionAmount, magicWandTolerance));
         }
 
+        private void FillUnmaskedPixels()
+        {
+            if (SelectedLocked) return;
+            Texture texture = selectedPage == 0 ? PlantMaskUtility.TextureForVariation(plantDef, selectedVariation)
+                : plantDef.plant?.harvestedThingDef?.uiIcon;
+            if (!EnsureMagicWandPixels(texture)) return;
+            MaskHistoryEntry before = CaptureHistory(selectedPage, selectedVariation);
+            bool changed = MaskPainterOperations.FillUnmasked(Selected, CurrentLayers, magicWandPixels, SelectedLocked);
+            if (changed) PromoteAutoToManual();
+            CompleteImmediateChange(before, changed);
+        }
+
         private void ValidateCurrentMask()
         {
             Texture texture = selectedPage == 0 ? PlantMaskUtility.TextureForVariation(plantDef, selectedVariation)
                 : plantDef.plant?.harvestedThingDef?.uiIcon;
             if (!EnsureMagicWandPixels(texture)) return;
             validationResult = MaskPainterOperations.Validate(CurrentLayers, magicWandPixels, cleanupSize);
+            ResetValidationNavigation();
             DestroyPreviews();
             string summary = "Transparent " + validationResult.transparentPixels + ", overlaps "
                 + validationResult.overlappingPixels + ", empty " + validationResult.emptyChannels
                 + ", tiny " + validationResult.tinyFragments + ", gaps " + validationResult.unmaskedVisiblePixels + ".";
             Messages.Message(validationResult.HasIssues ? "Mask issues: " + summary : "Mask validation passed.",
                 validationResult.HasIssues ? MessageTypeDefOf.CautionInput : MessageTypeDefOf.TaskCompletion, false);
+        }
+
+        private void MoveValidationIssue(int direction)
+        {
+            if (validationResult != null && validationNavigator.Move(validationResult, direction))
+                CenterOnCurrentValidationIssue();
+        }
+
+        private void CenterOnCurrentValidationIssue()
+        {
+            MaskIssueComponent issue = validationNavigator.Current(validationResult);
+            if (issue == null || !canvasLayoutValid) return;
+            canvasZoom = Mathf.Max(canvasZoom, 1.5f);
+            Vector2 size = lastCanvasBaseImageRect.size * canvasZoom;
+            Vector2 normalized = new Vector2(issue.Center.x / VisualMaskLayerRecord.Resolution,
+                1f - issue.Center.y / VisualMaskLayerRecord.Resolution);
+            canvasOffset = lastCanvasStage.center - lastCanvasBaseImageRect.center
+                - Vector2.Scale(normalized - new Vector2(0.5f, 0.5f), size);
+        }
+
+        private void ResetValidationNavigation()
+        {
+            validationNavigator.Reset();
+            canvasLayoutValid = false;
         }
 
         private void ChooseMaskTransfer(bool project)
@@ -1621,14 +1795,62 @@ namespace HorticultureNovelSeeds
             Color32[] sourcePixels = ReadMaskTexturePixels(PlantMaskUtility.TextureForVariation(plantDef, selectedVariation));
             Color32[] targetPixels = ReadMaskTexturePixels(PlantMaskUtility.TextureForVariation(plantDef, targetVariation));
             if (sourcePixels == null || targetPixels == null) return;
-            MaskHistoryEntry before = CaptureHistory(0, targetVariation);
-            List<VisualMaskLayerRecord> target = EditorPlantLayers(targetVariation).Select(layer => layer.Clone()).ToList();
-            for (int layer = 0; layer < 3; layer++)
-                if (!channelLocks[layer]) target[layer] = MaskPainterOperations.Project(CurrentLayers[layer], sourcePixels, targetPixels);
-            settings.SetManualPlantMask(targetVariation, target);
+            List<VisualMaskLayerRecord> sourceLayers = CurrentLayers.Select(layer => layer.Clone()).ToList();
+            projectionTargetLayers = EditorPlantLayers(targetVariation).Select(layer => layer.Clone()).ToList();
+            projectionPreview = SemanticMaskProjection.Build(sourceLayers, sourcePixels, projectionTargetLayers, targetPixels);
+            projectionAccepted = Enumerable.Range(0, 3).Select(index => !channelLocks[index]).ToArray();
+            projectionSourceVariation = selectedVariation;
+            projectionTargetVariation = targetVariation;
+            selectedVariation = targetVariation;
+            projectionDisplayLayers = SemanticMaskProjection.ApplyAccepted(projectionTargetLayers, projectionPreview,
+                projectionAccepted, out _);
+            validationResult = null;
+            ResetValidationNavigation();
+            ResetCanvasView();
+            DestroyFinalPreview();
+        }
+
+        private void RefreshProjectionDisplayLayers()
+        {
+            if (!ProjectionPreviewActive) return;
+            projectionDisplayLayers = SemanticMaskProjection.ApplyAccepted(projectionTargetLayers, projectionPreview,
+                projectionAccepted, out _);
+            DestroyFinalPreview();
+        }
+
+        private void ApplyProjectionPreview()
+        {
+            if (!ProjectionPreviewActive) return;
+            MaskHistoryEntry before = CaptureHistory(0, projectionTargetVariation);
+            List<VisualMaskLayerRecord> applied = SemanticMaskProjection.ApplyAccepted(projectionTargetLayers,
+                projectionPreview, projectionAccepted, out bool changed);
+            if (!changed)
+            {
+                CancelProjectionPreview(true);
+                return;
+            }
+            settings.SetManualPlantMask(projectionTargetVariation, applied);
+            projectionPreview = null;
+            projectionTargetLayers = null;
+            projectionDisplayLayers = null;
+            projectionAccepted = null;
+            projectionSourceVariation = -1;
+            projectionTargetVariation = -1;
             CompleteImmediateChange(before, true);
-            Messages.Message("Mask projected to " + PlantMaskUtility.VariationLabel(plantDef, targetVariation) + ".",
-                MessageTypeDefOf.TaskCompletion, false);
+            Messages.Message("Mask projection applied to the accepted channels.", MessageTypeDefOf.TaskCompletion, false);
+        }
+
+        private void CancelProjectionPreview(bool restoreSourceVariation)
+        {
+            if (restoreSourceVariation && projectionSourceVariation >= 0) selectedVariation = projectionSourceVariation;
+            projectionPreview = null;
+            projectionTargetLayers = null;
+            projectionDisplayLayers = null;
+            projectionAccepted = null;
+            projectionSourceVariation = -1;
+            projectionTargetVariation = -1;
+            DestroyFinalPreview();
+            ResetCanvasView();
         }
 
         private static Color32[] ReadMaskTexturePixels(Texture texture)
@@ -1685,6 +1907,7 @@ namespace HorticultureNovelSeeds
             redoHistory.Clear();
             ResetPaintStroke();
             validationResult = null;
+            ResetValidationNavigation();
             DestroyPreviews();
             DestroyFinalPreview();
             ProduceMaskRenderer.Invalidate(plantDef);
@@ -1702,6 +1925,15 @@ namespace HorticultureNovelSeeds
         {
             Event current = Event.current;
             if (current.type != EventType.KeyDown) return;
+            if (ProjectionPreviewActive)
+            {
+                if (current.keyCode == KeyCode.Escape)
+                {
+                    CancelProjectionPreview(true);
+                    current.Use();
+                }
+                return;
+            }
             if (current.control && current.keyCode == KeyCode.Z && undoHistory.Count > 0)
             {
                 Undo();
@@ -1888,11 +2120,16 @@ namespace HorticultureNovelSeeds
         private static Color LayerColor(int index) => LayerColors[Mathf.Clamp(index, 0, 2)];
         private Texture2D FinalPreviewTexture(Texture source)
         {
+            return FinalPreviewTexture(source, DisplayLayers);
+        }
+
+        private Texture2D FinalPreviewTexture(Texture source, IReadOnlyList<VisualMaskLayerRecord> layers)
+        {
             if (source == null || !EnsureMagicWandPixels(source)) return null;
             unchecked
             {
                 int hash = source.GetInstanceID();
-                foreach (VisualMaskLayerRecord layer in CurrentLayers) hash = hash * 31 + layer.ContentHash;
+                foreach (VisualMaskLayerRecord layer in layers) hash = hash * 31 + layer.ContentHash;
                 if (finalPreviewTexture != null && finalPreviewHash == hash) return finalPreviewTexture;
                 DestroyFinalPreview();
                 Color32[] pixels = (Color32[])magicWandPixels.Clone();
@@ -1902,9 +2139,9 @@ namespace HorticultureNovelSeeds
                     int index = pixelY * resolution + x;
                     if (pixels[index].a == 0) continue;
                     int topY = resolution - 1 - pixelY;
-                    for (int layer = 0; layer < CurrentLayers.Count; layer++)
+                    for (int layer = 0; layer < layers.Count; layer++)
                     {
-                        if (!CurrentLayers[layer].IsPainted(x, topY)) continue;
+                        if (!layers[layer].IsPainted(x, topY)) continue;
                         Color original = pixels[index];
                         Color target = LayerColor(layer);
                         pixels[index] = PlantVisualColorUtility.Apply(original, target.r, target.g, target.b,
@@ -1946,6 +2183,7 @@ namespace HorticultureNovelSeeds
         private void Changed()
         {
             validationResult = null;
+            ResetValidationNavigation();
             DestroyPreviews();
             DestroyFinalPreview();
             ProduceMaskRenderer.Invalidate(plantDef);

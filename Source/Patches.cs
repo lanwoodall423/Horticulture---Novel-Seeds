@@ -41,6 +41,7 @@ namespace HorticultureNovelSeeds
             ColorTraitFactory.GenerateAll();
             PercentageTraitFactory.GenerateAll();
             SynergyTraitFactory.GenerateAll();
+            TraitCatalogValidation.Run();
             LongEventHandler.ExecuteWhenFinished(PlantTagUtility.RebuildCache);
             HorticultureNovelSeedsMod.Settings?.EnsureDefaultPlantGroups();
             HashSet<ThingDef> harvestedProducts = new HashSet<ThingDef>();
@@ -218,8 +219,15 @@ namespace HorticultureNovelSeeds
 
         public static bool EffectiveHarvestDestroys(bool baseValue, Plant plant, PlantDestructionMode mode)
         {
-            return baseValue && (mode != HarvestMode
-                || NovelSeedUtility.PerennialHarvestAfterGrowth(plant?.TryGetComp<CompPlantVariety>()) <= 0f);
+            if (!baseValue) return false;
+            if (mode != HarvestMode) return true;
+            return EffectiveHarvestDestroys(true, true,
+                NovelSeedUtility.PerennialHarvestAfterGrowth(plant?.TryGetComp<CompPlantVariety>()));
+        }
+
+        public static bool EffectiveHarvestDestroys(bool baseValue, bool regularHarvest, float perennialResetGrowth)
+        {
+            return baseValue && (!regularHarvest || perennialResetGrowth <= 0f);
         }
 
         public static void Prefix(Plant __instance, Pawn by, PlantDestructionMode plantDestructionMode, out HarvestState __state)
@@ -310,7 +318,7 @@ namespace HorticultureNovelSeeds
             }
             float factor = NovelSeedUtility.BlightChanceFactor(comp);
             float synergy = ExpandedTraitUtility.SynergyFactor(__instance, comp.ActiveTraits, "DiseaseResistance");
-            if (synergy > 1f) factor /= synergy;
+            factor = ExpandedTraitUtility.ApplyDiseaseResistanceFactor(factor, synergy);
             return factor >= 1f || Rand.Chance(factor);
         }
 

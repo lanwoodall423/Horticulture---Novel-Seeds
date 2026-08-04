@@ -169,6 +169,21 @@ namespace HorticultureNovelSeeds
             return SynergyFactor(plant, traits, "GrowthRate");
         }
 
+        public static float SynergyFactorValue(VarietyTraitDef synergy, bool companionPresent)
+        {
+            if (synergy == null) return 1f;
+            return companionPresent
+                ? (synergy.synergyFactor > 0f ? synergy.synergyFactor : 1.15f)
+                : (synergy.synergyAbsentFactor > 0f ? synergy.synergyAbsentFactor : 1f);
+        }
+
+        public static float ApplyDiseaseResistanceFactor(float baseChanceFactor, float synergyFactor)
+        {
+            return Mathf.Approximately(synergyFactor, 1f)
+                ? baseChanceFactor
+                : baseChanceFactor / Mathf.Max(0.05f, synergyFactor);
+        }
+
         public static float SynergyFactorAt(IntVec3 cell, Map map, IEnumerable<VarietyTraitDef> traits, string stat)
         {
             if (map == null || traits == null) return 1f;
@@ -179,7 +194,7 @@ namespace HorticultureNovelSeeds
             SynergyCacheKey key = new SynergyCacheKey { location = (map.GetHashCode() * 397) ^ cell.GetHashCode(), donor = synergy.synergyPlantDef.shortHash, stat = stat.GetHashCode() };
             if (SowSynergyCache.TryGetValue(key, out CachedFactor cached) && tick - cached.tick < 250) return cached.factor;
             bool found = HasNearbyPlant(cell, map, synergy.synergyPlantDef);
-            float factor = found ? (synergy.synergyFactor > 0f ? synergy.synergyFactor : 1.15f) : 1f;
+            float factor = SynergyFactorValue(synergy, found);
             SowSynergyCache[key] = new CachedFactor { tick = tick, factor = factor };
             return factor;
         }
@@ -194,7 +209,7 @@ namespace HorticultureNovelSeeds
             SynergyCacheKey key = new SynergyCacheKey { location = plant.thingIDNumber, donor = synergy.synergyPlantDef.shortHash, stat = stat.GetHashCode() };
             if (CompanionCache.TryGetValue(key, out CachedFactor cached) && tick - cached.tick < 250) return cached.factor;
             bool found = HasNearbyPlant(plant.Position, plant.Map, synergy.synergyPlantDef, plant);
-            float factor = found ? (synergy.synergyFactor > 0f ? synergy.synergyFactor : 1.15f) : 1f;
+            float factor = SynergyFactorValue(synergy, found);
             CompanionCache[key] = new CachedFactor { tick = tick, factor = factor };
             return factor;
         }
@@ -285,7 +300,7 @@ namespace HorticultureNovelSeeds
             {
                 __result = Mathf.Max(__result, comp.DormantGrowthFactor);
             }
-            __result *= ExpandedTraitUtility.CompanionFactor(__instance, comp.ActiveTraits);
+            __result *= comp.GrowthRateFactor * ExpandedTraitUtility.CompanionFactor(__instance, comp.ActiveTraits);
         }
     }
 
