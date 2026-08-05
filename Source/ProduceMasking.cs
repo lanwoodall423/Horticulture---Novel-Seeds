@@ -1231,6 +1231,14 @@ namespace HorticultureNovelSeeds
                     GUI.color = old;
                 }
             }
+            if (ProjectionPreviewActive && projectionPreview.UnresolvedConflictMask.HasPixels)
+            {
+                Color old = GUI.color;
+                GUI.color = new Color(1f, 0.08f, 0.72f, 0.80f);
+                GUI.DrawTexture(localImageRect, PreviewTexture(projectionPreview.UnresolvedConflictMask),
+                    ScaleMode.StretchToFill, true);
+                GUI.color = old;
+            }
             VisualMaskLayerRecord validationOverlay = validationResult?.IssuesFor(validationNavigator.Category);
             if (validationOverlay?.HasPixels == true)
             {
@@ -1436,6 +1444,14 @@ namespace HorticultureNovelSeeds
                     + "  conflicts " + result.Conflicts + "  ambiguous " + result.AmbiguousAssignments
                     + "  unmasked " + result.RemainingUnmaskedVisiblePixels);
                 y += 68f;
+            }
+            if (projectionPreview != null)
+            {
+                Widgets.Label(new Rect(rect.x, y, rect.width, 28f),
+                    "Overall conflicts " + projectionPreview.Conflicts
+                    + "  ambiguous " + projectionPreview.AmbiguousAssignments
+                    + "  unmasked " + projectionPreview.RemainingUnmaskedVisiblePixels);
+                y += 32f;
             }
             y += 8f;
             float half = (rect.width - 8f) / 2f;

@@ -13,6 +13,10 @@ namespace HorticultureNovelSeeds
         public float SpatialAgreement;
         public float SemanticAgreement;
         public float ConflictRatio;
+        public int ArbitrationDomainPixels;
+        public int ExpectedTargetPixels;
+        public int AssignedTargetPixels;
+        public int MissingCoveragePixels;
         public int AmbiguousAssignments;
         public int AddedPixels;
         public int RemovedPixels;
@@ -27,6 +31,12 @@ namespace HorticultureNovelSeeds
         public List<VisualMaskLayerRecord> CandidateLayers = new List<VisualMaskLayerRecord>();
         public MaskProjectionChannelResult[] Channels = new MaskProjectionChannelResult[3];
         public int VisibleTargetPixels;
+        public int ArbitrationDomainPixels;
+        public int UnresolvedConflictPixels;
+        public int Conflicts => UnresolvedConflictPixels;
+        public int AmbiguousAssignments => UnresolvedConflictPixels;
+        public int RemainingUnmaskedVisiblePixels;
+        public VisualMaskLayerRecord UnresolvedConflictMask = new VisualMaskLayerRecord { name = "Projection Conflicts" };
         internal float[][] EvidenceByChannel;
 
         public bool HasCandidate => CandidateLayers.Count == 3;
@@ -122,8 +132,20 @@ namespace HorticultureNovelSeeds
                 }
             }
 
+            bool[] arbitrationDomain = new bool[Resolution * Resolution];
+            bool[][] channelDomains = EmptyChannelPixelSets();
+            bool[][] ambiguousByChannel = EmptyChannelPixelSets();
+            for (int topPixel = 0; topPixel < targetPixels.Length; topPixel++)
+            {
+                if (targetPixels[topPixel].a < VisibleAlpha) continue;
+                arbitrationDomain[topPixel] = true;
+            }
+            for (int channel = 0; channel < 3; channel++)
+                MarkLayerPixels(initialCandidates[channel], channelDomains[channel]);
+
             bool[] ambiguousPixels = new bool[Resolution * Resolution];
-            ResolveRegionProposals(result, proposals, ambiguousPixels);
+            ResolveRegionProposals(result, proposals, arbitrationDomain, channelDomains, ambiguousPixels,
+                ambiguousByChannel);
             int[] targetRegionByPixel = TargetRegionByPixel(targets);
             result.EvidenceByChannel = BuildPixelEvidence(result.CandidateLayers, initialCandidates, source,
                 targets, targetRegionByPixel, targetPixels);
@@ -131,32 +153,44 @@ namespace HorticultureNovelSeeds
             VisualMaskLayerRecord[][] beforeArbitration = result.CandidateLayers
                 .Select(layer => new[] { layer.Clone() }).ToArray();
             ArbitrateCandidateOverlaps(result, beforeArbitration.Select(value => value[0]).ToList(), targetRegionByPixel,
-                ambiguousPixels);
+                arbitrationDomain, channelDomains, ambiguousPixels, ambiguousByChannel);
+
+            result.ArbitrationDomainPixels = CountPixels(arbitrationDomain);
+            result.UnresolvedConflictPixels = CountPixels(arbitrationDomain, ambiguousPixels);
+            result.RemainingUnmaskedVisiblePixels = RemainingVisible(targetPixels, result.CandidateLayers);
+            for (int topPixel = 0; topPixel < ambiguousPixels.Length; topPixel++)
+                if (arbitrationDomain[topPixel] && ambiguousPixels[topPixel]) PaintTargetPixel(result.UnresolvedConflictMask,
+                    topPixel, true);
 
             for (int channel = 0; channel < 3; channel++)
             {
                 MaskProjectionChannelResult channelResult = GetChannel(result, channel);
                 channelResult.CandidateLayer = result.CandidateLayers[channel];
-                CountAmbiguity(channelResult, beforeArbitration[channel][0], ambiguousPixels);
-                channelResult.RemainingUnmaskedVisiblePixels = RemainingVisible(targetPixels, result.CandidateLayers);
+                CountAmbiguity(channelResult, ambiguousByChannel[channel]);
+                channelResult.RemainingUnmaskedVisiblePixels = RemainingVisible(targetPixels,
+                    new List<VisualMaskLayerRecord> { channelResult.CandidateLayer });
                 VisualMaskLayerRecord existing = targetLayers != null && channel < targetLayers.Count
                     ? targetLayers[channel] : new VisualMaskLayerRecord();
                 int initialPixels = CountPainted(initialCandidates[channel]);
                 int sourcePixelsForChannel = source.Where(component => component.Channel == channel)
                     .Sum(component => component.Pixels.Count);
-                int beforePixels = CountPainted(beforeArbitration[channel][0]);
                 int finalPixels = CountPainted(channelResult.CandidateLayer);
+                int retainedInitialPixels = IntersectionCount(initialCandidates[channel], channelResult.CandidateLayer);
+                channelResult.ArbitrationDomainPixels = CountPixels(channelDomains[channel]);
+                channelResult.ExpectedTargetPixels = initialPixels;
+                channelResult.AssignedTargetPixels = finalPixels;
+                channelResult.MissingCoveragePixels = Math.Max(0, initialPixels - retainedInitialPixels);
                 channelResult.TransformedSourceCoverage = SafeRatio(initialPixels, sourcePixelsForChannel);
                 channelResult.SpatialAgreement = LayerIoU(initialCandidates[channel], channelResult.CandidateLayer);
                 channelResult.SemanticAgreement = SemanticAgreement(channelResult.CandidateLayer, source, channel,
                     targets, targetRegionByPixel);
-                channelResult.ConflictRatio = SafeRatio(channelResult.Conflicts, beforePixels);
-                float ambiguousRatio = SafeRatio(channelResult.AmbiguousAssignments, beforePixels);
-                float remainingCoverage = result.VisibleTargetPixels <= 0 ? 0f
-                    : 1f - SafeRatio(channelResult.RemainingUnmaskedVisiblePixels, result.VisibleTargetPixels);
+                channelResult.ConflictRatio = SafeRatio(channelResult.Conflicts, channelResult.ArbitrationDomainPixels);
+                float expectedCoverage = SafeRatio(retainedInitialPixels, initialPixels);
+                float ambiguityFree = 1f - SafeRatio(channelResult.AmbiguousAssignments,
+                    channelResult.ArbitrationDomainPixels);
                 channelResult.Confidence = BoundedConfidence(channelResult.TransformedSourceCoverage,
-                    channelResult.SpatialAgreement, channelResult.SemanticAgreement,
-                    1f - channelResult.ConflictRatio, remainingCoverage, 1f - ambiguousRatio);
+                    channelResult.SpatialAgreement, channelResult.SemanticAgreement, 1f - channelResult.ConflictRatio,
+                    expectedCoverage, ambiguityFree, sourcePixelsForChannel > 0);
                 for (int y = 0; y < Resolution; y++) for (int x = 0; x < Resolution; x++)
                 {
                     bool before = existing.IsPainted(x, y);
@@ -164,9 +198,6 @@ namespace HorticultureNovelSeeds
                     if (!before && after) channelResult.AddedPixels++;
                     if (before && !after) channelResult.RemovedPixels++;
                 }
-                // Keep this local alive for debugging and make it explicit that confidence is
-                // based on final retained pixels, not the number of matched regions.
-                if (finalPixels < 0) channelResult.Confidence = 0f;
             }
             return result;
         }
@@ -204,21 +235,34 @@ namespace HorticultureNovelSeeds
         }
 
         private static void ResolveRegionProposals(MaskProjectionResult result, List<RegionProposal> proposals,
-            bool[] ambiguousPixels)
+            bool[] arbitrationDomain, bool[][] channelDomains, bool[] ambiguousPixels, bool[][] ambiguousByChannel)
         {
             // Evidence orders proposals deterministically. Channel and component indexes only
             // break genuinely equal, already-separated evidence; a gap below the arbitration
-            // threshold remains unresolved instead of becoming a hidden channel priority.
+            // threshold (including an exact boundary tie) remains unresolved instead of becoming
+            // a hidden channel priority.
             foreach (IGrouping<int, RegionProposal> group in proposals.GroupBy(proposal => proposal.Target.Index))
             {
                 List<RegionProposal> contenders = group.OrderByDescending(proposal => proposal.Evidence)
                     .ThenByDescending(proposal => proposal.Score).ThenBy(proposal => proposal.Source.Channel)
                     .ThenBy(proposal => proposal.Source.Index).ToList();
+                foreach (RegionProposal proposal in contenders)
+                    foreach (int pixel in proposal.Target.Pixels)
+                    {
+                        arbitrationDomain[pixel] = true;
+                        channelDomains[proposal.Source.Channel][pixel] = true;
+                    }
                 RegionProposal winner = contenders[0];
                 RegionProposal second = contenders.FirstOrDefault(proposal => proposal.Source.Channel != winner.Source.Channel);
-                if (second != null && winner.Evidence - second.Evidence < MinimumArbitrationSeparation)
+                if (second != null && winner.Evidence - second.Evidence <= MinimumArbitrationSeparation)
                 {
-                    foreach (int pixel in winner.Target.Pixels) ambiguousPixels[pixel] = true;
+                    foreach (RegionProposal contender in contenders.Where(proposal =>
+                        winner.Evidence - proposal.Evidence <= MinimumArbitrationSeparation))
+                        foreach (int pixel in contender.Target.Pixels)
+                        {
+                            ambiguousPixels[pixel] = true;
+                            ambiguousByChannel[contender.Source.Channel][pixel] = true;
+                        }
                     continue;
                 }
                 foreach (int pixel in winner.Target.Pixels) PaintTargetPixel(result.CandidateLayers[winner.Source.Channel], pixel, true);
@@ -226,7 +270,8 @@ namespace HorticultureNovelSeeds
         }
 
         private static void ArbitrateCandidateOverlaps(MaskProjectionResult result,
-            IReadOnlyList<VisualMaskLayerRecord> beforeArbitration, int[] targetRegionByPixel, bool[] ambiguousPixels)
+            IReadOnlyList<VisualMaskLayerRecord> beforeArbitration, int[] targetRegionByPixel,
+            bool[] arbitrationDomain, bool[][] channelDomains, bool[] ambiguousPixels, bool[][] ambiguousByChannel)
         {
             for (int maskY = 0; maskY < Resolution; maskY++) for (int x = 0; x < Resolution; x++)
             {
@@ -237,14 +282,25 @@ namespace HorticultureNovelSeeds
                 if (contenders.Count == 0) continue;
                 if (ambiguousPixels[topPixel])
                 {
-                    foreach (int channel in contenders) result.CandidateLayers[channel].PaintPixel(x, maskY, false);
+                    foreach (int channel in contenders)
+                    {
+                        channelDomains[channel][topPixel] = true;
+                        ambiguousByChannel[channel][topPixel] = true;
+                        result.CandidateLayers[channel].PaintPixel(x, maskY, false);
+                    }
                     continue;
                 }
                 int winner = WinnerForPixel(result, contenders, x, maskY);
                 if (winner < 0)
                 {
                     ambiguousPixels[topPixel] = true;
-                    foreach (int channel in contenders) result.CandidateLayers[channel].PaintPixel(x, maskY, false);
+                    arbitrationDomain[topPixel] = true;
+                    foreach (int channel in contenders)
+                    {
+                        channelDomains[channel][topPixel] = true;
+                        ambiguousByChannel[channel][topPixel] = true;
+                        result.CandidateLayers[channel].PaintPixel(x, maskY, false);
+                    }
                     continue;
                 }
                 foreach (int channel in contenders)
@@ -265,7 +321,7 @@ namespace HorticultureNovelSeeds
             {
                 float first = EvidenceAt(result, ordered[0], topPixel);
                 float second = EvidenceAt(result, ordered[1], topPixel);
-                if (first - second < MinimumArbitrationSeparation) return -1;
+                if (first - second <= MinimumArbitrationSeparation) return -1;
             }
             return ordered[0];
         }
@@ -335,27 +391,65 @@ namespace HorticultureNovelSeeds
             return nearest >= 5 ? 0f : 1f - nearest / 5f;
         }
 
-        private static void CountAmbiguity(MaskProjectionChannelResult result, VisualMaskLayerRecord before,
-            bool[] ambiguousPixels)
+        private static void CountAmbiguity(MaskProjectionChannelResult result, bool[] ambiguousPixels)
         {
-            for (int topPixel = 0; topPixel < ambiguousPixels.Length; topPixel++) if (ambiguousPixels[topPixel])
-            {
-                int x = topPixel % Resolution; int maskY = Resolution - 1 - topPixel / Resolution;
-                if (before.IsPainted(x, maskY))
-                {
-                    result.Conflicts++;
-                    result.AmbiguousAssignments++;
-                }
-            }
+            int count = CountPixels(ambiguousPixels);
+            result.Conflicts = count;
+            result.AmbiguousAssignments = count;
         }
 
         private static float BoundedConfidence(float transformedCoverage, float spatialAgreement,
-            float semanticAgreement, float conflictFree, float remainingCoverage, float ambiguityFree)
+            float semanticAgreement, float conflictFree, float expectedCoverage, float ambiguityFree,
+            bool hasSourcePixels)
         {
+            if (!hasSourcePixels) return 0f;
+            // Channel-local confidence: transformed coverage .20, spatial agreement .20,
+            // semantic agreement .25, conflict-free ratio .15, retained expected coverage .10,
+            // and ambiguity-free ratio .10. Empty source channels are explicitly zero.
             float value = transformedCoverage * 0.20f + spatialAgreement * 0.20f + semanticAgreement * 0.25f
-                + conflictFree * 0.15f + remainingCoverage * 0.10f + ambiguityFree * 0.10f;
+                + conflictFree * 0.15f + expectedCoverage * 0.10f + ambiguityFree * 0.10f;
             if (float.IsNaN(value) || float.IsInfinity(value)) return 0f;
             return Mathf.Clamp01(value);
+        }
+
+        private static bool[][] EmptyChannelPixelSets()
+        {
+            return new[]
+            {
+                new bool[Resolution * Resolution],
+                new bool[Resolution * Resolution],
+                new bool[Resolution * Resolution]
+            };
+        }
+
+        private static void MarkLayerPixels(VisualMaskLayerRecord layer, bool[] destination)
+        {
+            if (layer == null || destination == null) return;
+            for (int maskY = 0; maskY < Resolution; maskY++) for (int x = 0; x < Resolution; x++)
+                if (layer.IsPainted(x, maskY)) destination[(Resolution - 1 - maskY) * Resolution + x] = true;
+        }
+
+        private static int CountPixels(bool[] pixels)
+        {
+            return pixels?.Count(value => value) ?? 0;
+        }
+
+        private static int CountPixels(bool[] domain, bool[] pixels)
+        {
+            if (domain == null || pixels == null) return 0;
+            int count = 0;
+            for (int index = 0; index < Mathf.Min(domain.Length, pixels.Length); index++)
+                if (domain[index] && pixels[index]) count++;
+            return count;
+        }
+
+        private static int IntersectionCount(VisualMaskLayerRecord first, VisualMaskLayerRecord second)
+        {
+            int count = 0;
+            if (first == null || second == null) return count;
+            for (int y = 0; y < Resolution; y++) for (int x = 0; x < Resolution; x++)
+                if (first.IsPainted(x, y) && second.IsPainted(x, y)) count++;
+            return count;
         }
 
         private static float SemanticAgreement(VisualMaskLayerRecord layer, List<Component> source, int channel,
@@ -412,15 +506,14 @@ namespace HorticultureNovelSeeds
             Color32[] sourcePixels, Color32[] targetPixels)
         {
             List<VisualMaskLayerRecord> candidates = EmptyLayers();
-            Bounds sourceBounds = VisibleBounds(sourcePixels);
-            if (!sourceBounds.HasPixels) sourceBounds = MaskBounds(sourceLayers);
             Bounds targetBounds = VisibleBounds(targetPixels);
-            if (!sourceBounds.HasPixels || !targetBounds.HasPixels) return candidates;
             for (int channel = 0; channel < 3; channel++)
             {
                 VisualMaskLayerRecord sourceLayer = sourceLayers != null && channel < sourceLayers.Count
                     ? sourceLayers[channel] : null;
                 if (sourceLayer == null) continue;
+                Bounds sourceBounds = MaskBounds(new[] { sourceLayer });
+                if (!sourceBounds.HasPixels || !targetBounds.HasPixels) continue;
                 for (int maskY = 0; maskY < Resolution; maskY++) for (int x = 0; x < Resolution; x++)
                 {
                     if (!sourceLayer.IsPainted(x, maskY)) continue;
@@ -542,6 +635,13 @@ namespace HorticultureNovelSeeds
         private static void NormalizeFeatures(List<Component> components, Color32[] pixels, bool maskCoordinates)
         {
             if (components.Count == 0) return;
+            if (components.Select(component => component.Channel).Distinct().Count() > 1)
+            {
+                foreach (List<Component> channel in components.GroupBy(component => component.Channel)
+                    .OrderBy(group => group.Key).Select(group => group.ToList()))
+                    NormalizeFeatures(channel, pixels, maskCoordinates);
+                return;
+            }
             int minX = Resolution; int minY = Resolution; int maxX = 0; int maxY = 0; int visible = 0;
             bool[] occupied = new bool[Resolution * Resolution];
             foreach (Component component in components) foreach (int pixelIndex in component.Pixels) occupied[pixelIndex] = true;

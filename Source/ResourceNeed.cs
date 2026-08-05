@@ -7,6 +7,19 @@ namespace HorticultureNovelSeeds
 {
     internal static class ResourcePaymentUtility
     {
+        internal struct PaymentResult
+        {
+            internal int Consumed;
+            internal bool FullyPaid;
+        }
+
+        internal static bool CanStartJob(bool needsResource, int requiredCount, bool plantForbidden,
+            bool plantReservable, bool resourceAvailable, bool resourceReservable)
+        {
+            return needsResource && requiredCount > 0 && !plantForbidden && plantReservable
+                && resourceAvailable && resourceReservable;
+        }
+
         internal static bool CanSatisfyStack(int stackCount, int requiredCount)
         {
             return requiredCount > 0 && stackCount >= requiredCount;
@@ -21,6 +34,16 @@ namespace HorticultureNovelSeeds
         {
             return System.Math.Min(System.Math.Max(0, carriedStackCount), System.Math.Max(0, requiredCount));
         }
+
+        internal static PaymentResult EvaluatePayment(bool needsResource, int carriedStackCount, int requiredCount)
+        {
+            int consumed = needsResource ? ConsumedUnits(carriedStackCount, requiredCount) : 0;
+            return new PaymentResult
+            {
+                Consumed = consumed,
+                FullyPaid = needsResource && requiredCount > 0 && consumed >= requiredCount
+            };
+        }
     }
 
     public class WorkGiver_FertilizeNovelPlant : WorkGiver_Scanner
@@ -34,8 +57,10 @@ namespace HorticultureNovelSeeds
             Plant plant = thing as Plant;
             CompPlantVariety comp = plant?.TryGetComp<CompPlantVariety>();
             VarietyTraitDef trait = comp?.RequiredResourceTrait;
-            if (comp?.NeedsResource != true || trait?.requiredResourceDef == null || plant.IsForbidden(pawn) || !pawn.CanReserve(plant)) return false;
-            return FindResource(pawn, trait.requiredResourceDef, trait.requiredResourceCount) != null;
+            if (comp?.NeedsResource != true || trait?.requiredResourceDef == null) return false;
+            Thing resource = FindResource(pawn, trait.requiredResourceDef, trait.requiredResourceCount);
+            return ResourcePaymentUtility.CanStartJob(true, trait.requiredResourceCount,
+                plant.IsForbidden(pawn), pawn.CanReserve(plant), resource != null, resource != null && pawn.CanReserve(resource));
         }
 
         public override Job JobOnThing(Pawn pawn, Thing thing, bool forced = false)
@@ -84,10 +109,12 @@ namespace HorticultureNovelSeeds
                 VarietyTraitDef trait = comp?.RequiredResourceTrait;
                 Thing carried = pawn.carryTracker.CarriedThing;
                 if (comp?.NeedsResource != true || trait == null || carried == null || carried.def != trait.requiredResourceDef) return;
-                int consumed = ResourcePaymentUtility.ConsumedUnits(carried.stackCount, trait.requiredResourceCount);
-                carried.SplitOff(consumed).Destroy();
-                if (consumed >= trait.requiredResourceCount) comp.SatisfyResource();
-                if (consumed >= trait.requiredResourceCount) HorticultureEventRouter.FertilizationCompleted(pawn, plant);
+                ResourcePaymentUtility.PaymentResult payment = ResourcePaymentUtility.EvaluatePayment(true,
+                    carried.stackCount, trait.requiredResourceCount);
+                if (payment.Consumed <= 0) return;
+                carried.SplitOff(payment.Consumed).Destroy();
+                if (payment.FullyPaid) comp.SatisfyResource();
+                if (payment.FullyPaid) HorticultureEventRouter.FertilizationCompleted(pawn, plant);
             };
             apply.defaultCompleteMode = ToilCompleteMode.Instant;
             yield return apply;

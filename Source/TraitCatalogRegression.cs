@@ -13,6 +13,7 @@ namespace HorticultureNovelSeeds
                 && ClimateAndBlightRegression()
                 && PerennialRegression()
                 && ResourceRegression()
+                && ResourceProductionRegression()
                 && SynergyRegression()
                 && NutritionRegression()
                 && BalanceAndValidationRegression()
@@ -82,6 +83,25 @@ namespace HorticultureNovelSeeds
                 && ResourcePaymentUtility.ConsumedUnits(3, 1) == 1
                 && 3 - ResourcePaymentUtility.ConsumedUnits(3, 1) == 2
                 && ResourcePaymentUtility.ConsumedUnits(0, 1) == 0
+                && Mathf.Approximately(NovelSeedUtility.ApplyResourceGrowthGate(1.15f, false), 1.15f)
+                && Mathf.Approximately(NovelSeedUtility.ApplyResourceGrowthGate(1.15f, true), 0f);
+        }
+
+        private static bool ResourceProductionRegression()
+        {
+            bool start = ResourcePaymentUtility.CanStartJob(true, 1, false, true, true, true);
+            bool unavailable = !ResourcePaymentUtility.CanStartJob(true, 1, false, true, false, false);
+            bool plantReservation = !ResourcePaymentUtility.CanStartJob(true, 1, false, false, true, true);
+            bool resourceReservation = !ResourcePaymentUtility.CanStartJob(true, 1, false, true, true, false);
+            ResourcePaymentUtility.PaymentResult paid = ResourcePaymentUtility.EvaluatePayment(true, 1, 1);
+            ResourcePaymentUtility.PaymentResult removed = ResourcePaymentUtility.EvaluatePayment(true, 0, 1);
+            ResourcePaymentUtility.PaymentResult retry = ResourcePaymentUtility.EvaluatePayment(true, 1, 1);
+            ResourcePaymentUtility.PaymentResult noDoublePayment = ResourcePaymentUtility.EvaluatePayment(false, 1, 1);
+            return start && unavailable && plantReservation && resourceReservation
+                && paid.Consumed == 1 && paid.FullyPaid
+                && removed.Consumed == 0 && !removed.FullyPaid
+                && retry.Consumed == 1 && retry.FullyPaid
+                && noDoublePayment.Consumed == 0 && !noDoublePayment.FullyPaid
                 && Mathf.Approximately(NovelSeedUtility.ApplyResourceGrowthGate(1.15f, false), 1.15f)
                 && Mathf.Approximately(NovelSeedUtility.ApplyResourceGrowthGate(1.15f, true), 0f);
         }

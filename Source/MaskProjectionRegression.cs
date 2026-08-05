@@ -103,10 +103,12 @@ namespace HorticultureNovelSeeds
                 && manualRecord.ManualPlantMaskLayersForVariation(2)[2].IsPainted(7, 9);
             bool confidence = ConfidenceRegression(sourceLayers, sourcePixels, targetPixels, projection, conflictPixels,
                 conflictSource);
+            bool shadedFoliage = ShadedMultiIslandRegression();
+            bool largeAmbiguousRegion = LargeAmbiguousRegionRegression();
             bool editorHistory = EditorHistoryRegression(projection);
             return translatedAndScaled && correctAssignment && transparentBoundary && conflictDetected && rejected && cancelWithoutMutation
                 && changed && undoRedo && sameIdentity && conflictingManual && legacyCache && manualLoading
-                && confidence && editorHistory;
+                && confidence && shadedFoliage && largeAmbiguousRegion && editorHistory;
         }
 
         private static bool ConfidenceRegression(List<VisualMaskLayerRecord> sourceLayers, Color32[] sourcePixels,
@@ -129,8 +131,72 @@ namespace HorticultureNovelSeeds
             bool missingCoveragePenalty = incorrect.Channels.Sum(channel => channel.RemainingUnmaskedVisiblePixels)
                 >= correct.Channels.Sum(channel => channel.RemainingUnmaskedVisiblePixels)
                 && incorrectConfidence <= correctConfidence + 0.0001f;
-            return bounded && correctConfidence > incorrectConfidence && ambiguousCannotImprove
-                && conflictPenalty && missingCoveragePenalty;
+            List<VisualMaskLayerRecord> emptySource = EmptyLayers();
+            emptySource[0] = sourceLayers[0].Clone();
+            MaskProjectionResult empty = SemanticMaskProjection.Build(emptySource, sourcePixels,
+                EmptyLayers(), targetPixels);
+            List<VisualMaskLayerRecord> changedLeaves = sourceLayers.Select(layer => layer.Clone()).ToList();
+            Color32[] changedLeafPixels = (Color32[])sourcePixels.Clone();
+            PaintRect(changedLeaves[1], 122, 112, 4, 4, new Color32(180, 92, 64, 255), changedLeafPixels);
+            MaskProjectionResult changedLeafProjection = SemanticMaskProjection.Build(changedLeaves,
+                changedLeafPixels, EmptyLayers(), targetPixels);
+            bool emptyIsZero = empty.Channels[1].Confidence == 0f && empty.Channels[2].Confidence == 0f;
+            bool channelLocal = Mathf.Abs(correct.Channels[0].Confidence - changedLeafProjection.Channels[0].Confidence) < 0.0001f
+                && Mathf.Abs(correct.Channels[2].Confidence - changedLeafProjection.Channels[2].Confidence) < 0.0001f;
+            return bounded && emptyIsZero && channelLocal && correctConfidence > incorrectConfidence
+                && ambiguousCannotImprove && conflictPenalty && missingCoveragePenalty;
+        }
+
+        private static bool ShadedMultiIslandRegression()
+        {
+            List<VisualMaskLayerRecord> source = EmptyLayers();
+            Color32[] sourcePixels = new Color32[Size * Size];
+            PaintRect(source[1], 28, 164, 96, 54, new Color32(92, 128, 74, 255), sourcePixels);
+            Color32[] targetPixels = new Color32[Size * Size];
+            List<VisualMaskLayerRecord> expected = EmptyLayers();
+            int islandCount = 0;
+            for (int row = 0; row < 4; row++) for (int column = 0; column < 5; column++)
+            {
+                int x = 44 + column * 24;
+                int y = 34 + row * 20;
+                int width = 18;
+                int height = 14;
+                Color32 color = new Color32((byte)(74 + row * 8), (byte)(118 + column * 5),
+                    (byte)(66 + (row + column) * 3), 255);
+                SetTopRect(targetPixels, x, y, width, height, color);
+                PaintTopRect(expected[1], x, y, width, height);
+                islandCount++;
+            }
+            MaskProjectionResult result = SemanticMaskProjection.Build(source, sourcePixels, EmptyLayers(), targetPixels);
+            float iou = IntersectionOverUnion(result.CandidateLayers[1], expected[1]);
+            float coverage = Coverage(result.CandidateLayers[1], expected[1]);
+            int expectedPixels = CountPainted(expected[1]);
+            int actualPixels = CountPainted(result.CandidateLayers[1]);
+            return islandCount >= 10 && expectedPixels > 0 && actualPixels > expectedPixels / 2
+                && iou >= 0.70f && coverage >= 0.80f
+                && !HasTransparentPaint(result.CandidateLayers, targetPixels);
+        }
+
+        private static bool LargeAmbiguousRegionRegression()
+        {
+            List<VisualMaskLayerRecord> source = EmptyLayers();
+            Color32[] sourcePixels = new Color32[Size * Size];
+            Color32 shared = new Color32(126, 116, 82, 255);
+            PaintRect(source[0], 32, 188, 8, 8, shared, sourcePixels);
+            PaintRect(source[1], 32, 188, 8, 8, shared, sourcePixels);
+            Color32[] targetPixels = new Color32[Size * Size];
+            const int expected = 40 * 40;
+            SetTopRect(targetPixels, 72, 72, 40, 40, shared);
+            MaskProjectionResult result = SemanticMaskProjection.Build(source, sourcePixels, EmptyLayers(), targetPixels);
+            return result.ArbitrationDomainPixels == expected
+                && result.UnresolvedConflictPixels == expected
+                && result.Conflicts == expected
+                && result.AmbiguousAssignments == expected
+                && result.Channels[0].Conflicts == expected
+                && result.Channels[1].Conflicts == expected
+                && CountPainted(result.UnresolvedConflictMask) == expected
+                && CountPainted(result.CandidateLayers[0]) == 0
+                && CountPainted(result.CandidateLayers[1]) == 0;
         }
 
         private static float AverageConfidence(MaskProjectionResult result)
@@ -228,6 +294,15 @@ namespace HorticultureNovelSeeds
                 if (actual.IsPainted(x, y)) coveredPixels++;
             }
             return coveredPixels / (float)System.Math.Max(1, expectedPixels);
+        }
+
+        private static int CountPainted(VisualMaskLayerRecord layer)
+        {
+            int count = 0;
+            if (layer == null) return count;
+            for (int y = 0; y < Size; y++) for (int x = 0; x < Size; x++)
+                if (layer.IsPainted(x, y)) count++;
+            return count;
         }
 
         private static float IntersectionOverUnion(VisualMaskLayerRecord first, VisualMaskLayerRecord second)

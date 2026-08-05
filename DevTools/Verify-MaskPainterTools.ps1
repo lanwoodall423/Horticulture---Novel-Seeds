@@ -11,6 +11,8 @@ $review = Get-Content -Raw (Join-Path $root 'Source\MaskReviewQueue.cs')
 $breeding = Get-Content -Raw (Join-Path $root 'Source\BreedingMixRegression.cs')
 $modern = Get-Content -Raw (Join-Path $root 'Source\ModernSettingsUI.cs')
 $patches = Get-Content -Raw (Join-Path $root 'Source\Patches.cs')
+$resource = Get-Content -Raw (Join-Path $root 'Source\ResourceNeed.cs')
+$traitRegression = Get-Content -Raw (Join-Path $root 'Source\TraitCatalogRegression.cs')
 
 $checks = [ordered]@{
     'grow and shrink support configurable distance' = $operations -match 'Grow\(' -and $operations -match 'Shrink\(' -and $editor -match 'selectionAmount'
@@ -53,8 +55,12 @@ $checks = [ordered]@{
     'manual edits invalidate shared identity indexes' = $editor -match 'SharedManualMaskCache\.Invalidate' -and $settings -match 'ReplaceMasks' -and $settings -match 'SharedManualMaskCache\.Invalidate'
     'perennial harvest transpiler selects the exact helper overload' = $patches -match 'AccessTools\.Method\([\s\S]*typeof\(bool\), typeof\(Plant\), typeof\(PlantDestructionMode\)'
     'projection confidence is bounded and penalizes ambiguity and coverage gaps' = $projection -match 'BoundedConfidence' -and $projection -match 'Mathf\.Clamp01' -and $projection -match 'ambiguityFree' -and (Get-Content -Raw (Join-Path $root 'Source\MaskProjectionRegression.cs')) -match 'ambiguousCannotImprove' -and (Get-Content -Raw (Join-Path $root 'Source\MaskProjectionRegression.cs')) -match 'missingCoveragePenalty'
+    'projection conflicts use the full arbitration domain without channel priority' = $projection -match 'ArbitrationDomainPixels' -and $projection -match 'UnresolvedConflictPixels' -and $projection -match 'CountPixels\(arbitrationDomain, ambiguousPixels\)' -and $projection -match 'MinimumArbitrationSeparation' -and $projection -match 'WinnerForPixel'
+    'projection confidence is channel-local and empty channels are zero' = $projection -match 'sourcePixelsForChannel' -and $projection -match 'channelResult\.SpatialAgreement' -and $projection -match 'channelResult\.SemanticAgreement' -and $projection -match 'hasSourcePixels' -and $projection -match 'if \(!hasSourcePixels\) return 0f' -and (Get-Content -Raw (Join-Path $root 'Source\MaskProjectionRegression.cs')) -match 'emptyIsZero' -and (Get-Content -Raw (Join-Path $root 'Source\MaskProjectionRegression.cs')) -match 'channelLocal'
+    'projection regression covers shaded multi-island and full ambiguous regions' = (Get-Content -Raw (Join-Path $root 'Source\MaskProjectionRegression.cs')) -match 'ShadedMultiIslandRegression' -and (Get-Content -Raw (Join-Path $root 'Source\MaskProjectionRegression.cs')) -match 'LargeAmbiguousRegionRegression' -and (Get-Content -Raw (Join-Path $root 'Source\MaskProjectionRegression.cs')) -match 'ArbitrationDomainPixels == expected'
     'breeding diagnostics reuse production donor and mix helpers' = $breeding -match 'MakeCrossPollinationDonor' -and $breeding -match 'AggregateCrossPollinationDonors' -and $breeding -match 'SelectWeightedCrossPollinationDonor' -and $breeding -match 'SelectBreedingMixVariety' -and $breeding -notmatch '397.*7919'
-    'resource payment diagnostics cover exact payment and growth gate' = (Get-Content -Raw (Join-Path $root 'Source\TraitCatalogRegression.cs')) -match 'ConsumedUnits' -and (Get-Content -Raw (Join-Path $root 'Source\TraitCatalogRegression.cs')) -match 'ApplyResourceGrowthGate' -and (Get-Content -Raw (Join-Path $root 'Source\ResourceNeed.cs')) -match 'CanReserveStack'
+    'resource production path covers work eligibility payment and retry behavior' = $resource -match 'CanStartJob' -and $resource -match 'EvaluatePayment' -and $resource -match 'TryMakePreToilReservations' -and $resource -match 'SatisfyResource' -and $traitRegression -match 'ResourceProductionRegression' -and $traitRegression -match 'noDoublePayment'
+    'resource payment diagnostics cover exact payment and growth gate' = $traitRegression -match 'ConsumedUnits' -and $traitRegression -match 'ApplyResourceGrowthGate' -and $resource -match 'CanReserveStack' -and $resource -match 'EvaluatePayment'
 }
 
 $failed = @($checks.GetEnumerator() | Where-Object { -not $_.Value })

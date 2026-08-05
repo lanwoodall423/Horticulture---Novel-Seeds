@@ -10,6 +10,8 @@ $regressionPath = Join-Path $root 'Source\TraitCatalogRegression.cs'
 $patchesPath = Join-Path $root 'Source\Patches.cs'
 $debugPath = Join-Path $root 'Source\DebugActions.cs'
 $bridgePath = Join-Path $root 'DevTools\BridgeAdapter\HorticultureBridgeAdapter.cs'
+$resourcePath = Join-Path $root 'Source\ResourceNeed.cs'
+$compsPath = Join-Path $root 'Source\CompsAndDialog.cs'
 $englishPath = Join-Path $root '1.6\Languages\English\Keyed\HorticultureNovelSeeds.xml'
 
 $xml = [xml](Get-Content -LiteralPath $xmlPath -Raw)
@@ -22,6 +24,8 @@ $regression = Get-Content -LiteralPath $regressionPath -Raw
 $patches = Get-Content -LiteralPath $patchesPath -Raw
 $debug = Get-Content -LiteralPath $debugPath -Raw
 $bridge = Get-Content -LiteralPath $bridgePath -Raw
+$resource = Get-Content -LiteralPath $resourcePath -Raw
+$comps = Get-Content -LiteralPath $compsPath -Raw
 $english = Get-Content -LiteralPath $englishPath -Raw
 
 $passed = 0
@@ -44,6 +48,8 @@ Check ($families -match 'synergyAbsentFactor' -and $families -match 'harvestWork
 Check ($validation -match 'no mechanical benefit' -and $validation -match 'no mechanical cost' -and $validation -match 'does not inherit') 'catalog validation coverage missing'
 Check ($validation -match 'requiredResourceCount != 1' -and (@($resourceDefs | Where-Object { [int]$_.requiredResourceCount -ne 1 })).Count -eq 0) 'resource traits are not validated as one-unit payments'
 Check ($regression -match 'GrowthYieldWorkRegression' -and $regression -match 'PerennialRegression' -and $regression -match 'SynergyRegression') 'focused regression coverage missing'
+Check ($regression -match 'ResourceProductionRegression' -and $resource -match 'CanStartJob' -and $resource -match 'EvaluatePayment' -and $resource -match 'TryMakePreToilReservations') 'resource production path regression coverage missing'
+Check ($comps -match 'resourceSatisfied' -and $comps -match 'Scribe_Values\.Look') 'resource fulfillment save state is not preserved'
 Check ($patches -match 'TraitCatalogValidation\.Run\(\)' -and $patches -match 'EffectiveHarvestDestroys\(bool baseValue, bool regularHarvest') 'runtime validation/perennial helper missing'
 Check ($debug -match 'TraitCatalogRegression' -and $bridge -match 'HNS_TRAIT_CATALOG_REGRESSIONS') 'runtime regression bridge missing'
 Check ($english -match 'HNS_StatGrowthRate' -and $english -match 'without the companion') 'growth/synergy stat localization missing'
