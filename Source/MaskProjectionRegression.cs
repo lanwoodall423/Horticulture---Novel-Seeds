@@ -174,6 +174,10 @@ namespace HorticultureNovelSeeds
             int actualPixels = CountPainted(result.CandidateLayers[1]);
             return islandCount >= 10 && expectedPixels > 0 && actualPixels > expectedPixels / 2
                 && iou >= 0.70f && coverage >= 0.80f
+                && CountComponents(result.CandidateLayers[1]) >= islandCount
+                && result.Channels[1].Conflicts == 0
+                && result.RemainingUnmaskedVisiblePixels == 0
+                && result.UnresolvedConflictPixels == 0
                 && !HasTransparentPaint(result.CandidateLayers, targetPixels);
         }
 
@@ -302,6 +306,36 @@ namespace HorticultureNovelSeeds
             if (layer == null) return count;
             for (int y = 0; y < Size; y++) for (int x = 0; x < Size; x++)
                 if (layer.IsPainted(x, y)) count++;
+            return count;
+        }
+
+        private static int CountComponents(VisualMaskLayerRecord layer)
+        {
+            if (layer == null) return 0;
+            bool[] visited = new bool[Size * Size];
+            int count = 0;
+            for (int y = 0; y < Size; y++) for (int x = 0; x < Size; x++)
+            {
+                int start = y * Size + x;
+                if (!layer.IsPainted(x, y) || visited[start]) continue;
+                count++;
+                Queue<int> queue = new Queue<int>();
+                queue.Enqueue(start); visited[start] = true;
+                while (queue.Count > 0)
+                {
+                    int current = queue.Dequeue();
+                    int cx = current % Size; int cy = current / Size;
+                    for (int dy = -1; dy <= 1; dy++) for (int dx = -1; dx <= 1; dx++)
+                    {
+                        if (Mathf.Abs(dx) + Mathf.Abs(dy) != 1) continue;
+                        int nx = cx + dx; int ny = cy + dy;
+                        if (nx < 0 || nx >= Size || ny < 0 || ny >= Size) continue;
+                        int next = ny * Size + nx;
+                        if (visited[next] || !layer.IsPainted(nx, ny)) continue;
+                        visited[next] = true; queue.Enqueue(next);
+                    }
+                }
+            }
             return count;
         }
 

@@ -49,6 +49,7 @@ namespace HorticultureNovelSeeds
             "HNS_CROSS_REGRESSIONS|R|Run deterministic cross-pollination regressions",
             "HNS_TRAIT_CATALOG_REGRESSIONS|R|Run trait specialization and balance regressions",
             "HNS_BREEDING_MIX_DIAGNOSTIC|R|Run deterministic Breeding Mix donor scenarios",
+            "HNS_RESOURCE_JOB_REGRESSION|R|Exercise Resource-Dependent WorkGiver and JobDriver payment",
             "HNS_GENERATE_AUTO_MASKS|W|Generate every missing automatic plant mask",
             "HNS_OPEN_MASK_EDITOR|W|Open the existing mask editor for a plant def",
             "HNS_MASK_EDITOR_STATE|R|Inspect the current mask editor source and confidence",
@@ -110,6 +111,7 @@ namespace HorticultureNovelSeeds
                 case "HNS_CROSS_REGRESSIONS": return CrossRegressions();
                 case "HNS_TRAIT_CATALOG_REGRESSIONS": return TraitCatalogRegressions();
                 case "HNS_BREEDING_MIX_DIAGNOSTIC": return BreedingMixDiagnostic();
+                case "HNS_RESOURCE_JOB_REGRESSION": return ResourceJobRegression(map);
                 case "HNS_GENERATE_AUTO_MASKS": return GenerateAutoMasks();
                 case "HNS_OPEN_MASK_EDITOR": return OpenMaskEditor(argument);
                 case "HNS_MASK_EDITOR_STATE": return MaskEditorState();
@@ -479,6 +481,156 @@ namespace HorticultureNovelSeeds
                     if (!thing.Destroyed) thing.Destroy(DestroyMode.Vanish);
                 }
             }
+        }
+
+        private static List<string> ResourceJobRegression(Map map)
+        {
+            if (map == null) return NoMap();
+            Pawn pawn = map.mapPawns?.FreeColonistsSpawned?.FirstOrDefault();
+            VarietyTraitDef trait = DefDatabase<VarietyTraitDef>.AllDefsListForReading.FirstOrDefault(def =>
+                def?.requiredResourceDef != null && def.requiredResourceCount == 1);
+            ThingDef crop = DefDatabase<ThingDef>.AllDefsListForReading
+                .Where(def => NovelSeedUtility.IsGrowableCrop(def) && def.comps?.Any(props =>
+                    props.compClass == typeof(CompPlantVariety)) == true)
+                .FirstOrDefault();
+            if (pawn == null || trait == null || crop == null)
+                return new List<string> { "error=resource fixture definitions or colonist unavailable" };
+
+            List<IntVec3> cells = map.AllCells.OrderBy(candidate => candidate.DistanceToSquared(pawn.Position))
+                .Where(candidate => candidate.GetPlant(map) == null && candidate.GetEdifice(map) == null
+                    && candidate.GetZone(map) == null && map.fertilityGrid.FertilityAt(candidate) > 0f)
+                .Take(5).ToList();
+            if (cells.Count < 5) return new List<string> { "error=not enough clear resource fixture cells" };
+
+            Plant plant = null;
+            Thing resource = null;
+            Plant unavailablePlant = null;
+            Plant removedPlant = null;
+            Thing removedResource = null;
+            try
+            {
+                plant = ThingMaker.MakeThing(crop) as Plant;
+                GenSpawn.Spawn(plant, cells[0], map);
+                plant.sown = true;
+                plant.Growth = 0.5f;
+                CompPlantVariety comp = plant.TryGetComp<CompPlantVariety>();
+                comp?.SetPendingTraits(new List<VarietyTraitDef> { trait });
+                resource = ThingMaker.MakeThing(trait.requiredResourceDef);
+                resource.stackCount = 3;
+                GenSpawn.Spawn(resource, cells[1], map);
+
+                WorkGiver_FertilizeNovelPlant workGiver = new WorkGiver_FertilizeNovelPlant();
+                bool eligible = workGiver.HasJobOnThing(pawn, plant, true);
+                Job job = eligible ? workGiver.JobOnThing(pawn, plant, true) : null;
+                JobDriver_FertilizeNovelPlant driver = job == null ? null
+                    : new JobDriver_FertilizeNovelPlant { pawn = pawn, job = job };
+                bool reservations = driver?.TryMakePreToilReservations(false) == true;
+                Toil apply = driver == null ? null : ResourceApplyToil(driver);
+                bool carried = apply != null && TryStartCarrying(pawn, resource);
+                int beforePayment = resource.stackCount;
+                apply?.initAction?.Invoke();
+                int afterPayment = resource.Destroyed ? 0 : resource.stackCount;
+                bool paid = comp != null && !comp.NeedsResource && beforePayment - afterPayment == 1;
+                apply?.initAction?.Invoke();
+                int afterRepeat = resource.Destroyed ? 0 : resource.stackCount;
+                bool noDoublePayment = afterRepeat == afterPayment;
+                if (!resource.Destroyed) resource.Destroy(DestroyMode.Vanish);
+
+                unavailablePlant = ThingMaker.MakeThing(crop) as Plant;
+                GenSpawn.Spawn(unavailablePlant, cells[2], map);
+                unavailablePlant.sown = true;
+                unavailablePlant.Growth = 0.5f;
+                unavailablePlant.TryGetComp<CompPlantVariety>()?.SetPendingTraits(new List<VarietyTraitDef> { trait });
+                bool unavailableRejected = !workGiver.HasJobOnThing(pawn, unavailablePlant, true);
+
+                removedPlant = ThingMaker.MakeThing(crop) as Plant;
+                GenSpawn.Spawn(removedPlant, cells[3], map);
+                removedPlant.sown = true;
+                removedPlant.Growth = 0.5f;
+                removedPlant.TryGetComp<CompPlantVariety>()?.SetPendingTraits(new List<VarietyTraitDef> { trait });
+                removedResource = ThingMaker.MakeThing(trait.requiredResourceDef);
+                removedResource.stackCount = 1;
+                GenSpawn.Spawn(removedResource, cells[4], map);
+                Job removedJob = workGiver.JobOnThing(pawn, removedPlant, true);
+                removedResource.Destroy(DestroyMode.Vanish);
+                JobDriver_FertilizeNovelPlant removedDriver = removedJob == null ? null
+                    : new JobDriver_FertilizeNovelPlant { pawn = pawn, job = removedJob };
+                bool removedResourceFails = removedDriver == null || !removedDriver.TryMakePreToilReservations(false);
+
+                return new List<string>
+                {
+                    "trait=" + trait.defName + " resource=" + trait.requiredResourceDef.defName + " count=" + trait.requiredResourceCount,
+                    "workGiverEligible=" + eligible + " job=" + (job != null) + " reservations=" + reservations,
+                    "carried=" + carried + " paid=" + paid + " stack:" + beforePayment + "->" + afterPayment,
+                    "noDoublePayment=" + noDoublePayment + " repeatStack=" + afterRepeat,
+                    "unavailableResourceRejected=" + unavailableRejected,
+                    "removedAfterJobCreationFails=" + removedResourceFails,
+                    "fulfilled=" + (comp != null && !comp.NeedsResource) + " growthFactor=" + (comp?.GrowthRateFactor ?? 0f).ToString("0.###"),
+                    "passed=" + (eligible && job != null && reservations && carried && paid && noDoublePayment
+                        && unavailableRejected && removedResourceFails)
+                };
+            }
+            finally
+            {
+                ReleaseReservations(pawn);
+                DestroyFixture(plant);
+                DestroyFixture(unavailablePlant);
+                DestroyFixture(removedPlant);
+                DestroyFixture(resource);
+                DestroyFixture(removedResource);
+            }
+        }
+
+        private static Toil ResourceApplyToil(JobDriver_FertilizeNovelPlant driver)
+        {
+            MethodInfo method = typeof(JobDriver_FertilizeNovelPlant).GetMethod("MakeNewToils",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            IEnumerable<Toil> toils = method?.Invoke(driver, null) as IEnumerable<Toil>;
+            return toils?.LastOrDefault(toil => toil?.initAction != null);
+        }
+
+        private static bool TryStartCarrying(Pawn pawn, Thing resource)
+        {
+            if (pawn?.carryTracker == null || resource == null) return false;
+            foreach (MethodInfo method in typeof(Pawn_CarryTracker).GetMethods(BindingFlags.Instance
+                | BindingFlags.Public | BindingFlags.NonPublic).Where(item => item.Name == "TryStartCarryThing"
+                    && item.ReturnType == typeof(bool)))
+            {
+                ParameterInfo[] parameters = method.GetParameters();
+                if (parameters.Length == 0 || parameters[0].ParameterType != typeof(Thing)) continue;
+                object[] arguments = new object[parameters.Length];
+                bool compatible = true;
+                for (int index = 0; index < parameters.Length; index++)
+                {
+                    Type parameterType = parameters[index].ParameterType;
+                    if (parameterType == typeof(Thing)) arguments[index] = resource;
+                    else if (parameterType == typeof(int)) arguments[index] = 1;
+                    else if (parameterType == typeof(bool)) arguments[index] = true;
+                    else if (parameters[index].HasDefaultValue) arguments[index] = parameters[index].DefaultValue;
+                    else { compatible = false; break; }
+                }
+                if (!compatible) continue;
+                try
+                {
+                    if ((bool)method.Invoke(pawn.carryTracker, arguments)) return true;
+                }
+                catch (TargetInvocationException) { }
+            }
+            return false;
+        }
+
+        private static void ReleaseReservations(Pawn pawn)
+        {
+            if (pawn?.Map?.reservationManager == null) return;
+            MethodInfo method = pawn.Map.reservationManager.GetType().GetMethods(BindingFlags.Instance
+                | BindingFlags.Public | BindingFlags.NonPublic).FirstOrDefault(item => item.Name == "ReleaseAllClaimedBy"
+                    && item.GetParameters().Length == 1 && item.GetParameters()[0].ParameterType == typeof(Pawn));
+            method?.Invoke(pawn.Map.reservationManager, new object[] { pawn });
+        }
+
+        private static void DestroyFixture(Thing thing)
+        {
+            if (thing?.Destroyed == false) thing.Destroy(DestroyMode.Vanish);
         }
 
         private static List<string> OpenGrowerMenu(Map map, string argument)

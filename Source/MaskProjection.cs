@@ -12,6 +12,7 @@ namespace HorticultureNovelSeeds
         public float TransformedSourceCoverage;
         public float SpatialAgreement;
         public float SemanticAgreement;
+        public float AssignmentAgreement;
         public float ConflictRatio;
         public int ArbitrationDomainPixels;
         public int ExpectedTargetPixels;
@@ -135,13 +136,8 @@ namespace HorticultureNovelSeeds
             bool[] arbitrationDomain = new bool[Resolution * Resolution];
             bool[][] channelDomains = EmptyChannelPixelSets();
             bool[][] ambiguousByChannel = EmptyChannelPixelSets();
-            for (int topPixel = 0; topPixel < targetPixels.Length; topPixel++)
-            {
-                if (targetPixels[topPixel].a < VisibleAlpha) continue;
-                arbitrationDomain[topPixel] = true;
-            }
             for (int channel = 0; channel < 3; channel++)
-                MarkLayerPixels(initialCandidates[channel], channelDomains[channel]);
+                MarkLayerPixels(initialCandidates[channel], channelDomains[channel], arbitrationDomain, targetPixels);
 
             bool[] ambiguousPixels = new bool[Resolution * Resolution];
             ResolveRegionProposals(result, proposals, arbitrationDomain, channelDomains, ambiguousPixels,
@@ -157,7 +153,7 @@ namespace HorticultureNovelSeeds
 
             result.ArbitrationDomainPixels = CountPixels(arbitrationDomain);
             result.UnresolvedConflictPixels = CountPixels(arbitrationDomain, ambiguousPixels);
-            result.RemainingUnmaskedVisiblePixels = RemainingVisible(targetPixels, result.CandidateLayers);
+            result.RemainingUnmaskedVisiblePixels = RemainingVisible(targetPixels, result.CandidateLayers, arbitrationDomain);
             for (int topPixel = 0; topPixel < ambiguousPixels.Length; topPixel++)
                 if (arbitrationDomain[topPixel] && ambiguousPixels[topPixel]) PaintTargetPixel(result.UnresolvedConflictMask,
                     topPixel, true);
@@ -168,7 +164,7 @@ namespace HorticultureNovelSeeds
                 channelResult.CandidateLayer = result.CandidateLayers[channel];
                 CountAmbiguity(channelResult, ambiguousByChannel[channel]);
                 channelResult.RemainingUnmaskedVisiblePixels = RemainingVisible(targetPixels,
-                    new List<VisualMaskLayerRecord> { channelResult.CandidateLayer });
+                    new List<VisualMaskLayerRecord> { channelResult.CandidateLayer }, channelDomains[channel]);
                 VisualMaskLayerRecord existing = targetLayers != null && channel < targetLayers.Count
                     ? targetLayers[channel] : new VisualMaskLayerRecord();
                 int initialPixels = CountPainted(initialCandidates[channel]);
@@ -184,13 +180,14 @@ namespace HorticultureNovelSeeds
                 channelResult.SpatialAgreement = LayerIoU(initialCandidates[channel], channelResult.CandidateLayer);
                 channelResult.SemanticAgreement = SemanticAgreement(channelResult.CandidateLayer, source, channel,
                     targets, targetRegionByPixel);
+                channelResult.AssignmentAgreement = AssignmentAgreement(initialCandidates[channel],
+                    channelResult.CandidateLayer);
                 channelResult.ConflictRatio = SafeRatio(channelResult.Conflicts, channelResult.ArbitrationDomainPixels);
-                float expectedCoverage = SafeRatio(retainedInitialPixels, initialPixels);
                 float ambiguityFree = 1f - SafeRatio(channelResult.AmbiguousAssignments,
                     channelResult.ArbitrationDomainPixels);
                 channelResult.Confidence = BoundedConfidence(channelResult.TransformedSourceCoverage,
                     channelResult.SpatialAgreement, channelResult.SemanticAgreement, 1f - channelResult.ConflictRatio,
-                    expectedCoverage, ambiguityFree, sourcePixelsForChannel > 0);
+                    channelResult.AssignmentAgreement, ambiguityFree, sourcePixelsForChannel > 0);
                 for (int y = 0; y < Resolution; y++) for (int x = 0; x < Resolution; x++)
                 {
                     bool before = existing.IsPainted(x, y);
@@ -399,15 +396,17 @@ namespace HorticultureNovelSeeds
         }
 
         private static float BoundedConfidence(float transformedCoverage, float spatialAgreement,
-            float semanticAgreement, float conflictFree, float expectedCoverage, float ambiguityFree,
+            float semanticAgreement, float conflictFree, float assignmentAgreement, float ambiguityFree,
             bool hasSourcePixels)
         {
             if (!hasSourcePixels) return 0f;
-            // Channel-local confidence: transformed coverage .20, spatial agreement .20,
-            // semantic agreement .25, conflict-free ratio .15, retained expected coverage .10,
-            // and ambiguity-free ratio .10. Empty source channels are explicitly zero.
-            float value = transformedCoverage * 0.20f + spatialAgreement * 0.20f + semanticAgreement * 0.25f
-                + conflictFree * 0.15f + expectedCoverage * 0.10f + ambiguityFree * 0.10f;
+            // Channel-local confidence: transformed coverage .15, spatial agreement .20,
+            // semantic agreement .20, conflict-free ratio .15, assignment agreement .20,
+            // and ambiguity-free ratio .10. Assignment agreement is the mean of expected
+            // coverage (recall) and assigned coverage (precision), so extra regions cannot
+            // inflate confidence. Empty source channels are explicitly zero.
+            float value = transformedCoverage * 0.15f + spatialAgreement * 0.20f + semanticAgreement * 0.20f
+                + conflictFree * 0.15f + assignmentAgreement * 0.20f + ambiguityFree * 0.10f;
             if (float.IsNaN(value) || float.IsInfinity(value)) return 0f;
             return Mathf.Clamp01(value);
         }
@@ -422,11 +421,19 @@ namespace HorticultureNovelSeeds
             };
         }
 
-        private static void MarkLayerPixels(VisualMaskLayerRecord layer, bool[] destination)
+        private static void MarkLayerPixels(VisualMaskLayerRecord layer, bool[] destination, bool[] domain,
+            Color32[] targetPixels)
         {
-            if (layer == null || destination == null) return;
+            if (layer == null || destination == null || domain == null || targetPixels == null) return;
             for (int maskY = 0; maskY < Resolution; maskY++) for (int x = 0; x < Resolution; x++)
-                if (layer.IsPainted(x, maskY)) destination[(Resolution - 1 - maskY) * Resolution + x] = true;
+            {
+                int topPixel = (Resolution - 1 - maskY) * Resolution + x;
+                if (layer.IsPainted(x, maskY) && targetPixels[topPixel].a >= VisibleAlpha)
+                {
+                    destination[topPixel] = true;
+                    domain[topPixel] = true;
+                }
+            }
         }
 
         private static int CountPixels(bool[] pixels)
@@ -450,6 +457,17 @@ namespace HorticultureNovelSeeds
             for (int y = 0; y < Resolution; y++) for (int x = 0; x < Resolution; x++)
                 if (first.IsPainted(x, y) && second.IsPainted(x, y)) count++;
             return count;
+        }
+
+        private static float AssignmentAgreement(VisualMaskLayerRecord expected, VisualMaskLayerRecord assigned)
+        {
+            int expectedPixels = CountPainted(expected);
+            int assignedPixels = CountPainted(assigned);
+            if (expectedPixels <= 0 || assignedPixels <= 0) return 0f;
+            int intersection = IntersectionCount(expected, assigned);
+            float recall = SafeRatio(intersection, expectedPixels);
+            float precision = SafeRatio(intersection, assignedPixels);
+            return Mathf.Clamp01((recall + precision) * 0.5f);
         }
 
         private static float SemanticAgreement(VisualMaskLayerRecord layer, List<Component> source, int channel,
@@ -506,13 +524,13 @@ namespace HorticultureNovelSeeds
             Color32[] sourcePixels, Color32[] targetPixels)
         {
             List<VisualMaskLayerRecord> candidates = EmptyLayers();
+            Bounds sourceBounds = MaskBounds(sourceLayers);
             Bounds targetBounds = VisibleBounds(targetPixels);
             for (int channel = 0; channel < 3; channel++)
             {
                 VisualMaskLayerRecord sourceLayer = sourceLayers != null && channel < sourceLayers.Count
                     ? sourceLayers[channel] : null;
                 if (sourceLayer == null) continue;
-                Bounds sourceBounds = MaskBounds(new[] { sourceLayer });
                 if (!sourceBounds.HasPixels || !targetBounds.HasPixels) continue;
                 for (int maskY = 0; maskY < Resolution; maskY++) for (int x = 0; x < Resolution; x++)
                 {
@@ -635,13 +653,8 @@ namespace HorticultureNovelSeeds
         private static void NormalizeFeatures(List<Component> components, Color32[] pixels, bool maskCoordinates)
         {
             if (components.Count == 0) return;
-            if (components.Select(component => component.Channel).Distinct().Count() > 1)
-            {
-                foreach (List<Component> channel in components.GroupBy(component => component.Channel)
-                    .OrderBy(group => group.Key).Select(group => group.ToList()))
-                    NormalizeFeatures(channel, pixels, maskCoordinates);
-                return;
-            }
+            // All source channels share one normalized source frame. This is the same
+            // frame used by InitialCandidates and prevents channel-specific affine drift.
             int minX = Resolution; int minY = Resolution; int maxX = 0; int maxY = 0; int visible = 0;
             bool[] occupied = new bool[Resolution * Resolution];
             foreach (Component component in components) foreach (int pixelIndex in component.Pixels) occupied[pixelIndex] = true;
@@ -658,6 +671,9 @@ namespace HorticultureNovelSeeds
                     minX = Mathf.Min(minX, x); minY = Mathf.Min(minY, y); maxX = Mathf.Max(maxX, x); maxY = Mathf.Max(maxY, y); visible++;
                 }
             float width = Mathf.Max(1, maxX - minX + 1); float height = Mathf.Max(1, maxY - minY + 1);
+            Dictionary<int, int> channelPixels = components.Where(component => component.Channel >= 0)
+                .GroupBy(component => component.Channel)
+                .ToDictionary(group => group.Key, group => group.Sum(component => component.Pixels.Count));
             foreach (Component component in components)
             {
                 int componentMinX = Resolution; int componentMinY = Resolution; int componentMaxX = 0; int componentMaxY = 0;
@@ -677,7 +693,9 @@ namespace HorticultureNovelSeeds
                 component.RelativeY = Mathf.Clamp01((component.CenterY - minY) / height);
                 component.RelativeWidth = (componentMaxX - componentMinX + 1) / width;
                 component.RelativeHeight = (componentMaxY - componentMinY + 1) / height;
-                component.AreaShare = component.Pixels.Count / (float)Mathf.Max(1, visible);
+                int normalizationPixels = maskCoordinates && channelPixels.ContainsKey(component.Channel)
+                    ? channelPixels[component.Channel] : visible;
+                component.AreaShare = component.Pixels.Count / (float)Mathf.Max(1, normalizationPixels);
                 float boxArea = Mathf.Max(1, (componentMaxX - componentMinX + 1) * (componentMaxY - componentMinY + 1));
                 component.Compactness = component.Pixels.Count / boxArea;
                 component.Aspect = Mathf.Min(componentMaxX - componentMinX + 1, componentMaxY - componentMinY + 1)
@@ -715,12 +733,14 @@ namespace HorticultureNovelSeeds
                 + adjacency * 0.10f + connectivity * 0.10f);
         }
 
-        private static int RemainingVisible(Color32[] pixels, List<VisualMaskLayerRecord> layers)
+        private static int RemainingVisible(Color32[] pixels, List<VisualMaskLayerRecord> layers,
+            bool[] domain = null)
         {
             int count = 0;
             for (int y = 0; y < Resolution; y++) for (int x = 0; x < Resolution; x++)
             {
-                if (pixels[y * Resolution + x].a < VisibleAlpha) continue;
+                int topPixel = y * Resolution + x;
+                if (pixels[topPixel].a < VisibleAlpha || domain != null && !domain[topPixel]) continue;
                 bool assigned = layers.Any(layer => layer.IsPainted(x, Resolution - 1 - y));
                 if (!assigned) count++;
             }

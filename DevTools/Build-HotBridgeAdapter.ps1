@@ -1,12 +1,13 @@
 param(
-    [string]$BridgeRoot = 'C:\Games\Steam\steamapps\common\RimWorld\Mods\RimWorldDevBridge'
+    [string]$Destination = (Join-Path $PSScriptRoot 'BridgeAdapters'),
+    [string]$PublisherPath = (Join-Path $PSScriptRoot '..\..\RimWorldDevBridge\DevTools\Publish-RimWorldBridgeAdapter.ps1')
 )
 
 $ErrorActionPreference = 'Stop'
 $project = Join-Path $PSScriptRoot 'BridgeAdapter\HorticultureNovelSeeds.BridgeAdapter.csproj'
 $build = Join-Path $PSScriptRoot 'BridgeAdapter\Build'
-$destination = Join-Path $BridgeRoot 'DevTools\HotAdapters'
-$publisher = Join-Path $BridgeRoot 'DevTools\Publish-RimWorldBridgeAdapter.ps1'
+$destination = [IO.Path]::GetFullPath($Destination)
+$publisher = [IO.Path]::GetFullPath($PublisherPath)
 $source = Join-Path $PSScriptRoot 'BridgeAdapter\HorticultureBridgeAdapter.cs'
 $stamp = Get-Date -Format 'yyyyMMddHHmmssfff'
 $assemblyName = "HorticultureNovelSeeds.BridgeAdapter.$stamp"
@@ -30,7 +31,7 @@ $specs = @([regex]::Matches($text, '"(?<spec>[A-Z][A-Z0-9_]*\|[RW]\|[^"\r\n]+)"'
         'HNS_NICE_FIXTURE_CLEANUP','HNS_DEV_MASK_GIZMO','HNS_DEV_RANDOM_GRID','HNS_DPA_START','HNS_DPA_SAMPLE') `
     -DestructiveCommands @('HNS_GENERATE_AUTO_MASKS','HNS_MASK_EDITOR_ACTION','HNS_LOAD_TEST_SAVE', `
         'HNS_DISABLE_PATCHES','HNS_DISABLE_GROWTH_OWNER') `
-    -ExpensiveCommands @('HNS_BALANCE_TEST','HNS_MASK_REGRESSIONS','HNS_CROSS_REGRESSIONS','HNS_TRAIT_CATALOG_REGRESSIONS','HNS_BREEDING_MIX_DIAGNOSTIC','HNS_EXPORT_MASK_DIAGNOSTIC', `
+    -ExpensiveCommands @('HNS_BALANCE_TEST','HNS_MASK_REGRESSIONS','HNS_CROSS_REGRESSIONS','HNS_TRAIT_CATALOG_REGRESSIONS','HNS_BREEDING_MIX_DIAGNOSTIC','HNS_RESOURCE_JOB_REGRESSION','HNS_EXPORT_MASK_DIAGNOSTIC', `
         'HNS_GENERATE_AUTO_MASKS','HNS_CAPTURE_UI','HNS_SAVE_TEST','HNS_PLANT_PATCHES','HNS_DPA_ENTRIES','HNS_DPA_SAMPLE') `
     -SimulationCommands @('HNS_IMMUTABLE_GAMEPLAY_TEST','HNS_DEV_RANDOM_GRID','HNS_LOAD_TEST_SAVE') `
     -ChangeSummary 'Transient perennial traits and immutable gameplay regression diagnostics.'
