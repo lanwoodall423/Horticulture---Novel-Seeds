@@ -11,29 +11,86 @@ namespace HorticultureNovelSeeds
         private const float ResourceGrowthFactor = 1.15f;
         private const float ResourceGrowthDelta = 0.15f;
 
+        private sealed class HarvestScenario
+        {
+            public string cultivar;
+            public float growth;
+            public float distanceSquared;
+            public bool harvested;
+            public bool healthy = true;
+            public bool blighted;
+            public bool dormant;
+            public bool ableToGrow = true;
+
+            public NovelSeedUtility.CrossPollinationDonorCandidate ProductionDonor()
+            {
+                return Donor(cultivar, growth, distanceSquared, spawned: !harvested,
+                    healthy: healthy, blighted: blighted, dormant: dormant, ableToGrow: ableToGrow);
+            }
+        }
+
         internal static bool Run()
         {
             List<VarietyRecord> mix = OrderedMix("cultivar-a", "cultivar-b");
-            VarietyRecord initial = GameComponent_NovelSeeds.SelectBreedingMixVariety(mix, new IntVec3(0, 0, 0));
-            VarietyRecord staggered = GameComponent_NovelSeeds.SelectBreedingMixVariety(mix, new IntVec3(0, 0, 0));
-            VarietyRecord complete = GameComponent_NovelSeeds.SelectBreedingMixVariety(mix, new IntVec3(1, 0, 0));
-
-            bool initialEmptyField = initial?.id == "cultivar-a" && Aggregate().Count == 0;
-            bool partialStaggeredHarvest = staggered?.id == "cultivar-a"
-                && Aggregate(Donor("cultivar-b", 1f, 1f)).Count == 1;
-            bool completeHarvestReplant = complete?.id == "cultivar-b" && Aggregate().Count == 0;
-            return initialEmptyField && partialStaggeredHarvest && completeHarvestReplant
-                && EligibilityBoundaries() && AggregationAndSelection() && ResourceEconomics();
+            VarietyRecord initialAssignment = GameComponent_NovelSeeds.SelectBreedingMixVariety(mix, new IntVec3(0, 0, 0));
+            VarietyRecord staggeredAssignment = GameComponent_NovelSeeds.SelectBreedingMixVariety(mix, new IntVec3(0, 0, 0));
+            VarietyRecord completeAssignment = GameComponent_NovelSeeds.SelectBreedingMixVariety(mix, new IntVec3(1, 0, 0));
+            return initialAssignment?.id == "cultivar-a"
+                && staggeredAssignment?.id == "cultivar-a"
+                && completeAssignment?.id == "cultivar-b"
+                && HarvestScenarios() && EligibilityBoundaries() && AggregationAndSelection()
+                && DeterministicAssignments(mix) && ResourceEconomics();
         }
 
         internal static string Report()
         {
             return "initial-empty-field=eligible-donor:false; partial-staggered-harvest-replant=eligible-donor:true; "
-                + "complete-harvest-replant=eligible-donor:false; resource-growth=15%; "
-                + "mulch=1 WoodLog, 13.0435% maturation-time saved, 6.6667 raw units per +1.0 growth factor; "
-                + "hay=1 Hay, 13.0435% maturation-time saved, 6.6667 raw units per +1.0 growth factor; "
-                + "fungus=1 RawFungus, 13.0435% maturation-time saved, 6.6667 raw units per +1.0 growth factor; "
-                + "market-value-competitive=undetermined-without-resource-prices";
+                + "complete-harvest-replant=eligible-donor:false; exact-donor-maturity=50%; "
+                + "resource-payment=one-unit; fulfilled-growth=1.15x";
+        }
+
+        private static bool HarvestScenarios()
+        {
+            List<HarvestScenario> empty = new List<HarvestScenario>();
+            List<HarvestScenario> staggered = new List<HarvestScenario>
+            {
+                new HarvestScenario { cultivar = "cultivar-a", growth = 1f, distanceSquared = 0f, harvested = true },
+                new HarvestScenario { cultivar = "cultivar-b", growth = 0.50f, distanceSquared = 1f }
+            };
+            List<HarvestScenario> complete = new List<HarvestScenario>
+            {
+                new HarvestScenario { cultivar = "cultivar-a", growth = 1f, harvested = true },
+                new HarvestScenario { cultivar = "cultivar-b", growth = 1f, harvested = true }
+            };
+            List<HarvestScenario> blocked = new List<HarvestScenario>
+            {
+                new HarvestScenario { cultivar = "blighted", growth = 1f, blighted = true },
+                new HarvestScenario { cultivar = "dormant", growth = 1f, dormant = true }
+            };
+            List<NovelSeedUtility.CrossPollinationDonorCandidate> emptyDonors = ProductionDonors(empty);
+            List<NovelSeedUtility.CrossPollinationDonorCandidate> staggeredDonors = ProductionDonors(staggered);
+            List<NovelSeedUtility.CrossPollinationDonorCandidate> completeDonors = ProductionDonors(complete);
+            List<NovelSeedUtility.CrossPollinationDonorCandidate> blockedDonors = ProductionDonors(blocked);
+            return emptyDonors.Count == 0
+                && staggeredDonors.Count == 1 && staggeredDonors[0].variety.id == "cultivar-b"
+                && Mathf.Approximately(staggeredDonors[0].weight, 0.25f)
+                && completeDonors.Count == 0 && blockedDonors.Count == 0;
+        }
+
+        private static List<NovelSeedUtility.CrossPollinationDonorCandidate> ProductionDonors(
+            IEnumerable<HarvestScenario> scenarios)
+        {
+            return (scenarios ?? Enumerable.Empty<HarvestScenario>())
+                .Select(scenario => scenario.ProductionDonor()).Where(donor => donor != null).ToList();
+        }
+
+        private static bool DeterministicAssignments(List<VarietyRecord> mix)
+        {
+            VarietyRecord first = GameComponent_NovelSeeds.SelectBreedingMixVariety(mix, new IntVec3(17, 0, 23));
+            VarietyRecord second = GameComponent_NovelSeeds.SelectBreedingMixVariety(mix, new IntVec3(17, 0, 23));
+            List<VarietyRecord> reversed = GameComponent_NovelSeeds.OrderBreedingMixVarieties(mix.AsEnumerable().Reverse());
+            VarietyRecord reordered = GameComponent_NovelSeeds.SelectBreedingMixVariety(reversed, new IntVec3(17, 0, 23));
+            return first?.id == second?.id && first?.id == reordered?.id;
         }
 
         private static List<VarietyRecord> OrderedMix(params string[] ids)

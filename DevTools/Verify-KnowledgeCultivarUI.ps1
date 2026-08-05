@@ -19,9 +19,9 @@ $core = Read-ModFile 'Horticulture - Novel Seeds\Source\ModCore.cs'
 
 $requirements = [ordered]@{
     'colony detail hides expertise' = $menu -match 'if \(!colony\)[\s\S]*?DrawProgressBar'
-    'colony navigation describes knowledge only' = $menu -match 'Shared subject knowledge across the colony\.'
+    'colony navigation describes knowledge only' = $menu -match 'KnowledgeFramework_ColonyDescription' -and $menu -match 'if \(state\.scope == KnowledgeMenuScope\.Colony\)[\s\S]*?return'
     'aquaculture branches before expertise aggregation' = $aquaculture -match 'return FishingKnowledgeModel\(colonyRecords, null, true\)' -and $aquaculture -match 'if \(colony\)[\s\S]*?title = "Colony Fishing Knowledge"'
-    'wildlife branches before expertise aggregation' = $wildlife -match 'if \(colony\)[\s\S]*?Colony Wildlife Knowledge'
+    'wildlife branches before expertise aggregation' = $wildlife -match 'WildlifeProficiencyCoverage' -and $wildlife -match 'WildlifeProficiencyLevel' -and $wildlife -match 'ModelFor\(Pawn pawn, bool colony\)'
     'horticulture delegates to a colony-safe framework provider' = $registry -match 'HorticultureKnowledgeAdapter\.Menu\(pawn, colony\)' -and $adapter -match 'colony \? "Colony Horticulture Knowledge"'
     'no knowledge mutation factor API' = $knowledge -notmatch 'MutationChanceFactor'
     'mutation does not query plant knowledge' = $mutation -notmatch 'PlantKnowledgeUtility\.(Mutation|Experience|Rank)'

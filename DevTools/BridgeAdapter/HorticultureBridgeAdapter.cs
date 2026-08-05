@@ -18,6 +18,41 @@ namespace HorticultureNovelSeeds
     {
         private const string NiceFixtureLabel = "HNS immutable UI fixture";
 
+        private sealed class ResourceJobLifecycle
+        {
+            public Map Map;
+            public Pawn Pawn;
+            public Pawn ContendingPawn;
+            public Plant Plant;
+            public Thing MapResource;
+            public Thing InventoryResource;
+            public VarietyTraitDef Trait;
+            public Plant RemovedPlant;
+            public Thing RemovedResource;
+            public Plant UnavailablePlant;
+            public Plant AlreadyFulfilledPlant;
+            public List<VarietyTraitDef> Traits;
+            public int TraitIndex;
+            public int BeforeQuantity;
+            public float GrowthBeforePayment;
+            public float GrowthAfterPayment;
+            public int PaidTraitCount;
+            public int LastPaidTraitIndex = -1;
+            public bool GrowthGatePassed;
+            public bool GrowthFactorChecksPassed = true;
+            public Job Job;
+            public Job RemovedJob;
+            public Thing CarriedResource;
+            public bool BeforePaymentInterrupted;
+            public bool AfterPaymentInterruptionSafe;
+            public bool UnavailableResourceRejected;
+            public bool RemovedJobFailed;
+            public bool ContentionRejected;
+            public bool AlreadyFulfilledRejected;
+        }
+
+        private static ResourceJobLifecycle resourceJobLifecycle;
+
         public static string[] BridgeCommandSpecs() => new[]
         {
             "HORTICULTURE|R|Compact Novel Seeds colony summary",
@@ -49,7 +84,11 @@ namespace HorticultureNovelSeeds
             "HNS_CROSS_REGRESSIONS|R|Run deterministic cross-pollination regressions",
             "HNS_TRAIT_CATALOG_REGRESSIONS|R|Run trait specialization and balance regressions",
             "HNS_BREEDING_MIX_DIAGNOSTIC|R|Run deterministic Breeding Mix donor scenarios",
-            "HNS_RESOURCE_JOB_REGRESSION|R|Exercise Resource-Dependent WorkGiver and JobDriver payment",
+            "HNS_RESOURCE_JOB_REGRESSION|W|Start the real Resource-Dependent WorkGiver and JobDriver lifecycle",
+            "HNS_RESOURCE_JOB_STATUS|R|Read the staged Resource-Dependent job lifecycle",
+            "HNS_RESOURCE_JOB_INTERRUPT|W|Interrupt the staged Resource-Dependent job before payment",
+            "HNS_RESOURCE_JOB_RETRY|W|Retry the staged Resource-Dependent job after interruption",
+            "HNS_RESOURCE_JOB_CLEANUP|W|Stop and remove the staged Resource-Dependent job fixture",
             "HNS_GENERATE_AUTO_MASKS|W|Generate every missing automatic plant mask",
             "HNS_OPEN_MASK_EDITOR|W|Open the existing mask editor for a plant def",
             "HNS_MASK_EDITOR_STATE|R|Inspect the current mask editor source and confidence",
@@ -111,7 +150,11 @@ namespace HorticultureNovelSeeds
                 case "HNS_CROSS_REGRESSIONS": return CrossRegressions();
                 case "HNS_TRAIT_CATALOG_REGRESSIONS": return TraitCatalogRegressions();
                 case "HNS_BREEDING_MIX_DIAGNOSTIC": return BreedingMixDiagnostic();
-                case "HNS_RESOURCE_JOB_REGRESSION": return ResourceJobRegression(map);
+                case "HNS_RESOURCE_JOB_REGRESSION": return ResourceJobRegression(map, "start");
+                case "HNS_RESOURCE_JOB_STATUS": return ResourceJobRegression(map, "status");
+                case "HNS_RESOURCE_JOB_INTERRUPT": return ResourceJobRegression(map, "interrupt");
+                case "HNS_RESOURCE_JOB_RETRY": return ResourceJobRegression(map, "retry");
+                case "HNS_RESOURCE_JOB_CLEANUP": return ResourceJobRegression(map, "cleanup");
                 case "HNS_GENERATE_AUTO_MASKS": return GenerateAutoMasks();
                 case "HNS_OPEN_MASK_EDITOR": return OpenMaskEditor(argument);
                 case "HNS_MASK_EDITOR_STATE": return MaskEditorState();
@@ -483,154 +526,449 @@ namespace HorticultureNovelSeeds
             }
         }
 
-        private static List<string> ResourceJobRegression(Map map)
+        private static List<string> ResourceJobRegression(Map map, string phase)
         {
+            try
+            {
+                return ResourceJobRegressionCore(map, phase);
+            }
+            catch (Exception exception)
+            {
+                try { ResourceJobCleanup(); } catch { }
+                return new List<string> { "error=resource lifecycle failed: " + exception.Message };
+            }
+        }
+
+        private static List<string> ResourceJobRegressionCore(Map map, string phase)
+        {
+            phase = (phase ?? string.Empty).Trim().ToLowerInvariant();
+            if (phase == "cleanup") return ResourceJobCleanup();
             if (map == null) return NoMap();
-            Pawn pawn = map.mapPawns?.FreeColonistsSpawned?.FirstOrDefault();
-            VarietyTraitDef trait = DefDatabase<VarietyTraitDef>.AllDefsListForReading.FirstOrDefault(def =>
-                def?.requiredResourceDef != null && def.requiredResourceCount == 1);
+            if (phase == "start" || resourceJobLifecycle == null || resourceJobLifecycle.Map != map)
+                return ResourceJobStart(map);
+            RebindResourceJobFixture(map);
+            if (phase == "interrupt") return ResourceJobInterrupt();
+            if (phase == "retry") return ResourceJobRetry();
+            return ResourceJobStatus();
+        }
+
+        private static List<string> ResourceJobStart(Map map)
+        {
+            ResourceJobCleanup();
+            List<Pawn> availablePawns = map.mapPawns?.FreeColonistsSpawned?
+                .Where(candidate => candidate.CurJob == null && candidate.carryTracker?.CarriedThing == null)
+                .ToList() ?? new List<Pawn>();
+            Pawn pawn = availablePawns.FirstOrDefault();
+            Pawn contendingPawn = availablePawns.Skip(1).FirstOrDefault();
+            List<VarietyTraitDef> traits = DefDatabase<VarietyTraitDef>.AllDefsListForReading
+                .Where(trait => trait?.requiredResourceDef != null && trait.requiredResourceCount == 1)
+                .OrderBy(trait => trait.defName, StringComparer.Ordinal).ToList();
             ThingDef crop = DefDatabase<ThingDef>.AllDefsListForReading
                 .Where(def => NovelSeedUtility.IsGrowableCrop(def) && def.comps?.Any(props =>
                     props.compClass == typeof(CompPlantVariety)) == true)
-                .FirstOrDefault();
-            if (pawn == null || trait == null || crop == null)
-                return new List<string> { "error=resource fixture definitions or colonist unavailable" };
+                .OrderBy(def => def.defName, StringComparer.Ordinal).FirstOrDefault();
+            if (pawn == null || contendingPawn == null || traits.Count == 0 || crop == null)
+                return new List<string> { "error=resource fixture definitions, traits, or two idle colonists unavailable" };
 
-            List<IntVec3> cells = map.AllCells.OrderBy(candidate => candidate.DistanceToSquared(pawn.Position))
-                .Where(candidate => candidate.GetPlant(map) == null && candidate.GetEdifice(map) == null
-                    && candidate.GetZone(map) == null && map.fertilityGrid.FertilityAt(candidate) > 0f)
-                .Take(5).ToList();
-            if (cells.Count < 5) return new List<string> { "error=not enough clear resource fixture cells" };
+            resourceJobLifecycle = new ResourceJobLifecycle
+            {
+                Map = map,
+                Pawn = pawn,
+                ContendingPawn = contendingPawn,
+                Traits = traits,
+                Trait = traits[0]
+            };
+            List<IntVec3> cells = ClearResourceCells(map, pawn, 8);
+            if (cells.Count < 8)
+            {
+                ResourceJobCleanup();
+                return new List<string> { "error=not enough clear resource fixture cells" };
+            }
+            resourceJobLifecycle.Plant = SpawnResourcePlant(map, crop, traits[0], cells[0]);
+            resourceJobLifecycle.MapResource = ThingMaker.MakeThing(traits[0].requiredResourceDef);
+            resourceJobLifecycle.MapResource.stackCount = 3;
+            GenSpawn.Spawn(resourceJobLifecycle.MapResource, cells[1], map);
+            resourceJobLifecycle.InventoryResource = ThingMaker.MakeThing(traits[0].requiredResourceDef);
+            resourceJobLifecycle.InventoryResource.stackCount = 2;
+            if (!(pawn.inventory?.innerContainer?.TryAdd(resourceJobLifecycle.InventoryResource,
+                canMergeWithExistingStacks: false) ?? false))
+            {
+                ResourceJobCleanup();
+                return new List<string> { "error=unable to add inventory resource fixture" };
+            }
+            resourceJobLifecycle.UnavailablePlant = SpawnResourcePlant(map, crop, traits[0], cells[2]);
+            VarietyTraitDef unavailableTrait = traits.FirstOrDefault(trait =>
+                trait.requiredResourceDef != traits[0].requiredResourceDef) ?? traits[0];
+            resourceJobLifecycle.UnavailablePlant.TryGetComp<CompPlantVariety>()?.SetPendingTraits(
+                new List<VarietyTraitDef> { unavailableTrait });
+            resourceJobLifecycle.AlreadyFulfilledPlant = SpawnResourcePlant(map, crop, traits[0], cells[5]);
+            resourceJobLifecycle.AlreadyFulfilledPlant.TryGetComp<CompPlantVariety>()?.SatisfyResource();
+            resourceJobLifecycle.RemovedPlant = SpawnResourcePlant(map, crop, traits[0], cells[3]);
+            resourceJobLifecycle.RemovedResource = ThingMaker.MakeThing(traits[0].requiredResourceDef);
+            resourceJobLifecycle.RemovedResource.stackCount = 1;
+            GenSpawn.Spawn(resourceJobLifecycle.RemovedResource, cells[4], map);
 
-            Plant plant = null;
-            Thing resource = null;
-            Plant unavailablePlant = null;
-            Plant removedPlant = null;
-            Thing removedResource = null;
+            WorkGiver_FertilizeNovelPlant workGiver = new WorkGiver_FertilizeNovelPlant();
+            bool eligible = workGiver.HasJobOnThing(pawn, resourceJobLifecycle.Plant, true);
+            Job job = eligible ? workGiver.JobOnThing(pawn, resourceJobLifecycle.Plant, true) : null;
+            bool started = job != null;
+            if (started)
+            {
+                // This is the production job tracker path. Reservations, hauling, toil waits,
+                // payment, interruption, and cleanup are advanced by RimWorld ticks.
+                started = pawn.jobs.TryTakeOrderedJob(job, JobTag.Misc);
+                resourceJobLifecycle.Job = started ? job : null;
+            }
+            bool unavailableRejected = !workGiver.HasJobOnThing(pawn, resourceJobLifecycle.UnavailablePlant, true);
+            bool contentionRejected = contendingPawn == null || !workGiver.HasJobOnThing(contendingPawn,
+                resourceJobLifecycle.Plant, true);
+            resourceJobLifecycle.ContentionRejected = contentionRejected;
+            resourceJobLifecycle.UnavailableResourceRejected = unavailableRejected;
+            resourceJobLifecycle.AlreadyFulfilledRejected = !workGiver.HasJobOnThing(pawn,
+                resourceJobLifecycle.AlreadyFulfilledPlant, true);
+
+            if (resourceJobLifecycle.RemovedResource != null)
+            {
+                Job removedJob = contendingPawn == null ? null
+                    : workGiver.JobOnThing(contendingPawn, resourceJobLifecycle.RemovedPlant, true);
+                resourceJobLifecycle.RemovedResource.Destroy(DestroyMode.Vanish);
+                resourceJobLifecycle.RemovedResource = null;
+                resourceJobLifecycle.RemovedJob = removedJob;
+                if (removedJob != null && !contendingPawn.jobs.TryTakeOrderedJob(removedJob, JobTag.Misc))
+                    resourceJobLifecycle.RemovedJob = null;
+            }
+            resourceJobLifecycle.BeforeQuantity = ResourceQuantity(map, traits[0].requiredResourceDef);
+            resourceJobLifecycle.GrowthBeforePayment = resourceJobLifecycle.Plant.GrowthRate;
+            resourceJobLifecycle.GrowthGatePassed = Mathf.Approximately(resourceJobLifecycle.GrowthBeforePayment, 0f);
+            return new List<string>
+            {
+                "phase=started",
+                "traitCount=" + traits.Count + " traits=" + string.Join(",", traits.Select(trait => trait.defName).ToArray()),
+                "trait=" + resourceJobLifecycle.Trait?.defName,
+                "workGiverEligible=" + eligible + " jobCreated=" + (job != null),
+                "targets=plant:" + (job?.targetA.Thing == resourceJobLifecycle.Plant)
+                    + " resource:" + (job?.targetB.Thing == resourceJobLifecycle.MapResource)
+                    + " count:" + (job?.count ?? 0),
+                "unavailableResourceRejected=" + unavailableRejected,
+                "contentionRejected=" + contentionRejected,
+                "alreadyFulfilledRejected=" + resourceJobLifecycle.AlreadyFulfilledRejected,
+                "accountingBefore=" + resourceJobLifecycle.BeforeQuantity,
+                "growthBeforePayment=" + resourceJobLifecycle.GrowthBeforePayment.ToString("0.###"),
+                "lifecycle=Pawn_JobTracker.TryTakeOrderedJob"
+            };
+        }
+
+        private static List<string> ResourceJobStatus()
+        {
+            if (resourceJobLifecycle == null) return new List<string> { "phase=none" };
+            CompPlantVariety comp = resourceJobLifecycle.Plant?.TryGetComp<CompPlantVariety>();
+            ThingDef resourceDef = resourceJobLifecycle.Trait?.requiredResourceDef;
+            int currentQuantity = ResourceQuantity(resourceJobLifecycle.Map, resourceDef);
+            bool carrying = resourceJobLifecycle.Pawn?.carryTracker?.CarriedThing?.def == resourceDef;
+            if (carrying && resourceJobLifecycle.Pawn.carryTracker.CarriedThing != resourceJobLifecycle.CarriedResource)
+                resourceJobLifecycle.CarriedResource = resourceJobLifecycle.Pawn.carryTracker.CarriedThing;
+            bool paid = comp != null && !comp.NeedsResource;
+            bool exactPayment = paid && resourceJobLifecycle.BeforeQuantity - currentQuantity == 1;
+            bool prePaymentStable = !paid && resourceJobLifecycle.BeforeQuantity == currentQuantity;
+            bool completed = paid && exactPayment && resourceJobLifecycle.TraitIndex >= resourceJobLifecycle.Traits.Count - 1;
+            if (paid)
+            {
+                if (resourceJobLifecycle.LastPaidTraitIndex != resourceJobLifecycle.TraitIndex)
+                {
+                    resourceJobLifecycle.PaidTraitCount++;
+                    resourceJobLifecycle.LastPaidTraitIndex = resourceJobLifecycle.TraitIndex;
+                }
+                resourceJobLifecycle.GrowthAfterPayment = resourceJobLifecycle.Plant?.GrowthRate ?? 0f;
+                resourceJobLifecycle.GrowthFactorChecksPassed &= resourceJobLifecycle.GrowthAfterPayment > 0f
+                    && Mathf.Approximately(comp?.GrowthRateFactor ?? 0f, 1.15f);
+            }
+            List<string> result = new List<string>
+            {
+                "phase=status",
+                "trait=" + resourceJobLifecycle.Trait?.defName + " index=" + resourceJobLifecycle.TraitIndex
+                    + "/" + resourceJobLifecycle.Traits.Count,
+                "job=" + (resourceJobLifecycle.Pawn?.CurJobDef?.defName ?? "none")
+                    + " plantTarget=" + (resourceJobLifecycle.Pawn?.CurJob?.targetA.Thing == resourceJobLifecycle.Plant)
+                    + " resourceTarget=" + (resourceJobLifecycle.Pawn?.CurJob?.targetB.Thing == resourceJobLifecycle.MapResource),
+                "carrying=" + carrying + " fulfilled=" + paid + " needsResource=" + (comp?.NeedsResource ?? true),
+                "accounting=" + resourceJobLifecycle.BeforeQuantity + "->" + currentQuantity
+                    + " map=" + ResourceQuantityOnMap(resourceJobLifecycle.Map, resourceDef)
+                    + " inventory=" + ResourceQuantityInPawns(resourceJobLifecycle.Map, resourceDef)
+                    + " carried=" + ResourceQuantityCarried(resourceJobLifecycle.Map, resourceDef),
+                "prePaymentStable=" + prePaymentStable + " exactOneUnit=" + exactPayment,
+                "beforePaymentInterrupted=" + resourceJobLifecycle.BeforePaymentInterrupted,
+                "growthBefore=" + resourceJobLifecycle.GrowthBeforePayment.ToString("0.###")
+                    + " growthAfter=" + resourceJobLifecycle.GrowthAfterPayment.ToString("0.###")
+                    + " growthFactor=" + (comp?.GrowthRateFactor ?? 0f).ToString("0.###")
+                    + " growthGatePassed=" + resourceJobLifecycle.GrowthGatePassed
+                    + " growthFactorChecksPassed=" + resourceJobLifecycle.GrowthFactorChecksPassed
+                    + " paidTraitCount=" + resourceJobLifecycle.PaidTraitCount
+                    + " unavailableResourceRejected=" + resourceJobLifecycle.UnavailableResourceRejected
+            };
+            if (paid && !completed)
+            {
+                resourceJobLifecycle.RemovedJobFailed = resourceJobLifecycle.RemovedJob != null
+                    && resourceJobLifecycle.RemovedPlant?.TryGetComp<CompPlantVariety>()?.NeedsResource == true
+                    && resourceJobLifecycle.ContendingPawn.CurJob == null;
+                result.AddRange(ResourceJobAdvanceTrait());
+            }
+            if (completed)
+            {
+                int afterFirstPayment = currentQuantity;
+                WorkGiver_FertilizeNovelPlant repeatWorkGiver = new WorkGiver_FertilizeNovelPlant();
+                bool repeatRejected = !repeatWorkGiver.HasJobOnThing(resourceJobLifecycle.Pawn,
+                    resourceJobLifecycle.Plant, true);
+                int afterRepeatedPaymentAttempt = ResourceQuantity(resourceJobLifecycle.Map, resourceDef);
+                bool noDoublePayment = repeatRejected && afterRepeatedPaymentAttempt == afterFirstPayment
+                    && !resourceJobLifecycle.Plant.TryGetComp<CompPlantVariety>().NeedsResource;
+                result.Add("afterPaymentInterruptionSafe=" + PaymentInterruptionCheck());
+                result.Add("repeatJobRejected=" + repeatRejected + " noDoublePayment=" + noDoublePayment);
+                result.Add("passed=" + (exactPayment && resourceJobLifecycle.ContentionRejected
+                    && resourceJobLifecycle.UnavailableResourceRejected && resourceJobLifecycle.RemovedJobFailed
+                    && resourceJobLifecycle.AlreadyFulfilledRejected && resourceJobLifecycle.AfterPaymentInterruptionSafe
+                    && resourceJobLifecycle.BeforePaymentInterrupted && resourceJobLifecycle.GrowthGatePassed
+                    && resourceJobLifecycle.GrowthFactorChecksPassed
+                    && resourceJobLifecycle.PaidTraitCount == resourceJobLifecycle.Traits.Count
+                    && noDoublePayment));
+            }
+            return result;
+        }
+
+        private static List<string> ResourceJobInterrupt()
+        {
+            if (resourceJobLifecycle?.Pawn == null) return new List<string> { "error=no active resource lifecycle" };
+            int before = ResourceQuantity(resourceJobLifecycle.Map, resourceJobLifecycle.Trait?.requiredResourceDef);
+            bool activeFixtureJob = resourceJobLifecycle.Job != null
+                && resourceJobLifecycle.Pawn.CurJob == resourceJobLifecycle.Job;
+            if (activeFixtureJob) resourceJobLifecycle.Pawn.jobs.EndCurrentJob(JobCondition.InterruptForced);
+            int after = ResourceQuantity(resourceJobLifecycle.Map, resourceJobLifecycle.Trait?.requiredResourceDef);
+            CompPlantVariety comp = resourceJobLifecycle.Plant?.TryGetComp<CompPlantVariety>();
+            resourceJobLifecycle.BeforePaymentInterrupted = activeFixtureJob && before == after
+                && (comp?.NeedsResource ?? false);
+            return new List<string>
+            {
+                "phase=interruptedBeforePayment",
+                "jobEnded=" + (activeFixtureJob && resourceJobLifecycle.Pawn.CurJob == null),
+                "accounting=" + before + "->" + after,
+                "paymentDecremented=" + (before != after),
+                "reservationsReleased=" + !resourceJobLifecycle.Map.reservationManager.ReservedBy(resourceJobLifecycle.Plant,
+                    resourceJobLifecycle.Pawn),
+                "passed=" + resourceJobLifecycle.BeforePaymentInterrupted
+            };
+        }
+
+        private static List<string> ResourceJobRetry()
+        {
+            if (resourceJobLifecycle?.Pawn == null) return new List<string> { "error=no interrupted resource lifecycle" };
+            WorkGiver_FertilizeNovelPlant workGiver = new WorkGiver_FertilizeNovelPlant();
+            bool eligible = workGiver.HasJobOnThing(resourceJobLifecycle.Pawn, resourceJobLifecycle.Plant, true);
+            Job job = eligible ? workGiver.JobOnThing(resourceJobLifecycle.Pawn, resourceJobLifecycle.Plant, true) : null;
+            if (job != null && resourceJobLifecycle.Pawn.jobs.TryTakeOrderedJob(job, JobTag.Misc))
+                resourceJobLifecycle.Job = job;
+            return new List<string>
+            {
+                "phase=retried",
+                "eligible=" + eligible + " jobCreated=" + (job != null) + " count=" + (job?.count ?? 0),
+                "paymentBeforeRetry=" + resourceJobLifecycle.BeforePaymentInterrupted
+            };
+        }
+
+        private static List<string> ResourceJobAdvanceTrait()
+        {
+            // Each resource subtype gets a fresh production job, not a helper-level payment.
+            ThingDef crop = resourceJobLifecycle.Plant?.def;
+            ResourceJobCleanupFixturesOnly();
+            resourceJobLifecycle.TraitIndex++;
+            if (resourceJobLifecycle.TraitIndex >= resourceJobLifecycle.Traits.Count)
+                return new List<string> { "allResourceSubtypesCompleted=true" };
+            List<IntVec3> cells = ClearResourceCells(resourceJobLifecycle.Map, resourceJobLifecycle.Pawn, 2);
+            if (cells.Count < 2) return new List<string> { "error=not enough cells for next resource subtype" };
+            resourceJobLifecycle.Plant = SpawnResourcePlant(resourceJobLifecycle.Map, crop,
+                resourceJobLifecycle.Traits[resourceJobLifecycle.TraitIndex], cells[0]);
+            resourceJobLifecycle.Trait = resourceJobLifecycle.Traits[resourceJobLifecycle.TraitIndex];
+            resourceJobLifecycle.MapResource = ThingMaker.MakeThing(resourceJobLifecycle.Trait.requiredResourceDef);
+            resourceJobLifecycle.MapResource.stackCount = 2;
+            GenSpawn.Spawn(resourceJobLifecycle.MapResource, cells[1], resourceJobLifecycle.Map);
+            resourceJobLifecycle.BeforeQuantity = ResourceQuantity(resourceJobLifecycle.Map, resourceJobLifecycle.Trait.requiredResourceDef);
+            resourceJobLifecycle.GrowthAfterPayment = 0f;
+            resourceJobLifecycle.GrowthBeforePayment = resourceJobLifecycle.Plant.GrowthRate;
+            resourceJobLifecycle.GrowthGatePassed &= Mathf.Approximately(resourceJobLifecycle.GrowthBeforePayment, 0f);
+            WorkGiver_FertilizeNovelPlant workGiver = new WorkGiver_FertilizeNovelPlant();
+            Job job = workGiver.HasJobOnThing(resourceJobLifecycle.Pawn, resourceJobLifecycle.Plant, true)
+                ? workGiver.JobOnThing(resourceJobLifecycle.Pawn, resourceJobLifecycle.Plant, true) : null;
+            resourceJobLifecycle.Job = null;
+            if (job != null && resourceJobLifecycle.Pawn.jobs.TryTakeOrderedJob(job, JobTag.Misc))
+                resourceJobLifecycle.Job = job;
+            return new List<string>
+            {
+                "nextTrait=" + resourceJobLifecycle.Trait.defName + " jobCreated=" + (job != null),
+                "growthBeforePayment=" + resourceJobLifecycle.Plant.GrowthRate.ToString("0.###")
+            };
+        }
+
+        private static List<string> ResourceJobCleanup()
+        {
             try
             {
-                plant = ThingMaker.MakeThing(crop) as Plant;
-                GenSpawn.Spawn(plant, cells[0], map);
-                plant.sown = true;
-                plant.Growth = 0.5f;
-                CompPlantVariety comp = plant.TryGetComp<CompPlantVariety>();
-                comp?.SetPendingTraits(new List<VarietyTraitDef> { trait });
-                resource = ThingMaker.MakeThing(trait.requiredResourceDef);
-                resource.stackCount = 3;
-                GenSpawn.Spawn(resource, cells[1], map);
-
-                WorkGiver_FertilizeNovelPlant workGiver = new WorkGiver_FertilizeNovelPlant();
-                bool eligible = workGiver.HasJobOnThing(pawn, plant, true);
-                Job job = eligible ? workGiver.JobOnThing(pawn, plant, true) : null;
-                JobDriver_FertilizeNovelPlant driver = job == null ? null
-                    : new JobDriver_FertilizeNovelPlant { pawn = pawn, job = job };
-                bool reservations = driver?.TryMakePreToilReservations(false) == true;
-                Toil apply = driver == null ? null : ResourceApplyToil(driver);
-                bool carried = apply != null && TryStartCarrying(pawn, resource);
-                int beforePayment = resource.stackCount;
-                apply?.initAction?.Invoke();
-                int afterPayment = resource.Destroyed ? 0 : resource.stackCount;
-                bool paid = comp != null && !comp.NeedsResource && beforePayment - afterPayment == 1;
-                apply?.initAction?.Invoke();
-                int afterRepeat = resource.Destroyed ? 0 : resource.stackCount;
-                bool noDoublePayment = afterRepeat == afterPayment;
-                if (!resource.Destroyed) resource.Destroy(DestroyMode.Vanish);
-
-                unavailablePlant = ThingMaker.MakeThing(crop) as Plant;
-                GenSpawn.Spawn(unavailablePlant, cells[2], map);
-                unavailablePlant.sown = true;
-                unavailablePlant.Growth = 0.5f;
-                unavailablePlant.TryGetComp<CompPlantVariety>()?.SetPendingTraits(new List<VarietyTraitDef> { trait });
-                bool unavailableRejected = !workGiver.HasJobOnThing(pawn, unavailablePlant, true);
-
-                removedPlant = ThingMaker.MakeThing(crop) as Plant;
-                GenSpawn.Spawn(removedPlant, cells[3], map);
-                removedPlant.sown = true;
-                removedPlant.Growth = 0.5f;
-                removedPlant.TryGetComp<CompPlantVariety>()?.SetPendingTraits(new List<VarietyTraitDef> { trait });
-                removedResource = ThingMaker.MakeThing(trait.requiredResourceDef);
-                removedResource.stackCount = 1;
-                GenSpawn.Spawn(removedResource, cells[4], map);
-                Job removedJob = workGiver.JobOnThing(pawn, removedPlant, true);
-                removedResource.Destroy(DestroyMode.Vanish);
-                JobDriver_FertilizeNovelPlant removedDriver = removedJob == null ? null
-                    : new JobDriver_FertilizeNovelPlant { pawn = pawn, job = removedJob };
-                bool removedResourceFails = removedDriver == null || !removedDriver.TryMakePreToilReservations(false);
-
-                return new List<string>
+                TrackResourceJobCarriedThing();
+                try
                 {
-                    "trait=" + trait.defName + " resource=" + trait.requiredResourceDef.defName + " count=" + trait.requiredResourceCount,
-                    "workGiverEligible=" + eligible + " job=" + (job != null) + " reservations=" + reservations,
-                    "carried=" + carried + " paid=" + paid + " stack:" + beforePayment + "->" + afterPayment,
-                    "noDoublePayment=" + noDoublePayment + " repeatStack=" + afterRepeat,
-                    "unavailableResourceRejected=" + unavailableRejected,
-                    "removedAfterJobCreationFails=" + removedResourceFails,
-                    "fulfilled=" + (comp != null && !comp.NeedsResource) + " growthFactor=" + (comp?.GrowthRateFactor ?? 0f).ToString("0.###"),
-                    "passed=" + (eligible && job != null && reservations && carried && paid && noDoublePayment
-                        && unavailableRejected && removedResourceFails)
-                };
+                    if (resourceJobLifecycle?.Pawn != null && resourceJobLifecycle.Job != null
+                        && resourceJobLifecycle.Pawn.CurJob == resourceJobLifecycle.Job)
+                        resourceJobLifecycle.Pawn.jobs.EndCurrentJob(JobCondition.InterruptForced);
+                }
+                catch { }
+                try
+                {
+                    if (resourceJobLifecycle?.ContendingPawn != null && resourceJobLifecycle.RemovedJob != null
+                        && resourceJobLifecycle.ContendingPawn.CurJob == resourceJobLifecycle.RemovedJob)
+                        resourceJobLifecycle.ContendingPawn.jobs.EndCurrentJob(JobCondition.InterruptForced);
+                }
+                catch { }
+                ResourceJobCleanupFixturesOnly();
             }
             finally
             {
-                ReleaseReservations(pawn);
-                DestroyFixture(plant);
-                DestroyFixture(unavailablePlant);
-                DestroyFixture(removedPlant);
-                DestroyFixture(resource);
-                DestroyFixture(removedResource);
+                resourceJobLifecycle = null;
             }
+            return new List<string> { "phase=cleaned" };
         }
 
-        private static Toil ResourceApplyToil(JobDriver_FertilizeNovelPlant driver)
+        private static void ResourceJobCleanupFixturesOnly()
         {
-            MethodInfo method = typeof(JobDriver_FertilizeNovelPlant).GetMethod("MakeNewToils",
-                BindingFlags.Instance | BindingFlags.NonPublic);
-            IEnumerable<Toil> toils = method?.Invoke(driver, null) as IEnumerable<Toil>;
-            return toils?.LastOrDefault(toil => toil?.initAction != null);
+            if (resourceJobLifecycle == null) return;
+            DestroyFixture(resourceJobLifecycle.Plant);
+            DestroyFixture(resourceJobLifecycle.MapResource);
+            DestroyFixture(resourceJobLifecycle.InventoryResource);
+            DestroyFixture(resourceJobLifecycle.CarriedResource);
+            DestroyFixture(resourceJobLifecycle.UnavailablePlant);
+            DestroyFixture(resourceJobLifecycle.AlreadyFulfilledPlant);
+            DestroyFixture(resourceJobLifecycle.RemovedPlant);
+            DestroyFixture(resourceJobLifecycle.RemovedResource);
+            resourceJobLifecycle.Plant = null;
+            resourceJobLifecycle.MapResource = null;
+            resourceJobLifecycle.InventoryResource = null;
+            resourceJobLifecycle.CarriedResource = null;
+            resourceJobLifecycle.Job = null;
+            resourceJobLifecycle.RemovedJob = null;
+            resourceJobLifecycle.UnavailablePlant = null;
+            resourceJobLifecycle.AlreadyFulfilledPlant = null;
+            resourceJobLifecycle.RemovedPlant = null;
+            resourceJobLifecycle.RemovedResource = null;
         }
 
-        private static bool TryStartCarrying(Pawn pawn, Thing resource)
+        private static Plant SpawnResourcePlant(Map map, ThingDef crop, VarietyTraitDef trait, IntVec3 cell)
         {
-            if (pawn?.carryTracker == null || resource == null) return false;
-            foreach (MethodInfo method in typeof(Pawn_CarryTracker).GetMethods(BindingFlags.Instance
-                | BindingFlags.Public | BindingFlags.NonPublic).Where(item => item.Name == "TryStartCarryThing"
-                    && item.ReturnType == typeof(bool)))
+            Plant plant = ThingMaker.MakeThing(crop) as Plant;
+            GenSpawn.Spawn(plant, cell, map);
+            plant.sown = true;
+            plant.Growth = 0.5f;
+            plant.TryGetComp<CompPlantVariety>()?.SetPendingTraits(new List<VarietyTraitDef> { trait });
+            return plant;
+        }
+
+        private static void RebindResourceJobFixture(Map map)
+        {
+            if (resourceJobLifecycle == null) return;
+            resourceJobLifecycle.Map = map;
+            if (resourceJobLifecycle.Plant?.Destroyed == true) resourceJobLifecycle.Plant = null;
+            if (resourceJobLifecycle.MapResource?.Destroyed == true) resourceJobLifecycle.MapResource = null;
+            if (resourceJobLifecycle.InventoryResource?.Destroyed == true) resourceJobLifecycle.InventoryResource = null;
+            if (resourceJobLifecycle.UnavailablePlant?.Destroyed == true) resourceJobLifecycle.UnavailablePlant = null;
+            if (resourceJobLifecycle.AlreadyFulfilledPlant?.Destroyed == true)
+                resourceJobLifecycle.AlreadyFulfilledPlant = null;
+            if (resourceJobLifecycle.RemovedPlant?.Destroyed == true) resourceJobLifecycle.RemovedPlant = null;
+        }
+
+        private static List<IntVec3> ClearResourceCells(Map map, Pawn pawn, int count)
+        {
+            return map.AllCells.OrderBy(candidate => candidate.DistanceToSquared(pawn.Position))
+                .Where(candidate => candidate.GetPlant(map) == null && candidate.GetEdifice(map) == null
+                    && candidate.GetZone(map) == null && map.thingGrid.ThingsListAt(candidate).Count == 0
+                    && map.fertilityGrid.FertilityAt(candidate) > 0f)
+                .Take(count).ToList();
+        }
+
+        private static bool PaymentInterruptionCheck()
+        {
+            bool activeFixtureJob = resourceJobLifecycle?.Pawn != null && resourceJobLifecycle.Job != null
+                && resourceJobLifecycle.Pawn.CurJob == resourceJobLifecycle.Job;
+            if (activeFixtureJob)
+                resourceJobLifecycle.Pawn.jobs.EndCurrentJob(JobCondition.InterruptForced);
+            resourceJobLifecycle.AfterPaymentInterruptionSafe = resourceJobLifecycle?.Plant?
+                .TryGetComp<CompPlantVariety>()?.NeedsResource == false
+                && (!activeFixtureJob || resourceJobLifecycle.Pawn.CurJob == null);
+            return resourceJobLifecycle.AfterPaymentInterruptionSafe;
+        }
+
+        private static void TrackResourceJobCarriedThing()
+        {
+            Thing carried = resourceJobLifecycle?.Pawn?.carryTracker?.CarriedThing;
+            if (carried != null && carried.def == resourceJobLifecycle?.Trait?.requiredResourceDef)
+                resourceJobLifecycle.CarriedResource = carried;
+        }
+
+        private static int ResourceQuantity(Map map, ThingDef def)
+        {
+            return ResourceQuantityOnMap(map, def) + ResourceQuantityInPawns(map, def)
+                + ResourceQuantityCarried(map, def);
+        }
+
+        private static int ResourceQuantityOnMap(Map map, ThingDef def)
+        {
+            HashSet<Thing> seen = new HashSet<Thing>();
+            int total = 0;
+            foreach (Thing thing in map?.listerThings?.AllThings ?? Enumerable.Empty<Thing>())
             {
-                ParameterInfo[] parameters = method.GetParameters();
-                if (parameters.Length == 0 || parameters[0].ParameterType != typeof(Thing)) continue;
-                object[] arguments = new object[parameters.Length];
-                bool compatible = true;
-                for (int index = 0; index < parameters.Length; index++)
-                {
-                    Type parameterType = parameters[index].ParameterType;
-                    if (parameterType == typeof(Thing)) arguments[index] = resource;
-                    else if (parameterType == typeof(int)) arguments[index] = 1;
-                    else if (parameterType == typeof(bool)) arguments[index] = true;
-                    else if (parameters[index].HasDefaultValue) arguments[index] = parameters[index].DefaultValue;
-                    else { compatible = false; break; }
-                }
-                if (!compatible) continue;
-                try
-                {
-                    if ((bool)method.Invoke(pawn.carryTracker, arguments)) return true;
-                }
-                catch (TargetInvocationException) { }
+                if (thing is Pawn) continue;
+                total += CountResourceThing(thing, def, seen);
             }
-            return false;
+            return total;
         }
 
-        private static void ReleaseReservations(Pawn pawn)
+        private static int ResourceQuantityInPawns(Map map, ThingDef def)
         {
-            if (pawn?.Map?.reservationManager == null) return;
-            MethodInfo method = pawn.Map.reservationManager.GetType().GetMethods(BindingFlags.Instance
-                | BindingFlags.Public | BindingFlags.NonPublic).FirstOrDefault(item => item.Name == "ReleaseAllClaimedBy"
-                    && item.GetParameters().Length == 1 && item.GetParameters()[0].ParameterType == typeof(Pawn));
-            method?.Invoke(pawn.Map.reservationManager, new object[] { pawn });
+            HashSet<Thing> seen = new HashSet<Thing>();
+            return map?.mapPawns?.AllPawns?.Sum(pawn => CountResourceOwner(pawn.inventory?.GetDirectlyHeldThings(), def, seen)) ?? 0;
+        }
+
+        private static int ResourceQuantityCarried(Map map, ThingDef def)
+        {
+            HashSet<Thing> seen = new HashSet<Thing>();
+            return map?.mapPawns?.AllPawns?.Sum(pawn => CountResourceOwner(pawn.carryTracker?.GetDirectlyHeldThings(), def, seen)) ?? 0;
+        }
+
+        private static int CountResourceOwner(ThingOwner owner, ThingDef def, HashSet<Thing> seen)
+        {
+            if (owner == null) return 0;
+            return owner.Sum(thing => CountResourceThing(thing, def, seen));
+        }
+
+        private static int CountResourceThing(Thing thing, ThingDef def, HashSet<Thing> seen)
+        {
+            if (thing == null || !seen.Add(thing)) return 0;
+            int total = thing.def == def ? thing.stackCount : 0;
+            foreach (ThingOwner child in DirectlyHeldThings(thing)) total += CountResourceOwner(child, def, seen);
+            return total;
+        }
+
+        private static IEnumerable<ThingOwner> DirectlyHeldThings(Thing thing)
+        {
+            if (thing is IThingHolder holder && holder.GetDirectlyHeldThings() != null)
+                yield return holder.GetDirectlyHeldThings();
+            ThingWithComps withComps = thing as ThingWithComps;
+            foreach (ThingComp comp in withComps?.AllComps ?? Enumerable.Empty<ThingComp>())
+                if (comp is IThingHolder child && child.GetDirectlyHeldThings() != null)
+                    yield return child.GetDirectlyHeldThings();
         }
 
         private static void DestroyFixture(Thing thing)
         {
-            if (thing?.Destroyed == false) thing.Destroy(DestroyMode.Vanish);
+            try
+            {
+                if (thing?.Destroyed == false) thing.Destroy(DestroyMode.Vanish);
+            }
+            catch { }
         }
 
         private static List<string> OpenGrowerMenu(Map map, string argument)

@@ -1,0 +1,7 @@
+**/*.dll
+!1.6/Assemblies/HorticultureNovelSeeds.dll
+**/obj/
+**/bin/
+DevTools/BridgeAdapter/Build/
+DevTools/BridgeAdapters/
+DevTools/Staged/

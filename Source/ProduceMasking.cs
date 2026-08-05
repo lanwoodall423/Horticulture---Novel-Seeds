@@ -1459,8 +1459,11 @@ namespace HorticultureNovelSeeds
             if (Widgets.ButtonText(new Rect(rect.x + half + 8f, y, half, 32f), "Cancel")) CancelProjectionPreview(true);
             y += 44f;
             GUI.color = Color.gray;
-            Widgets.Label(new Rect(rect.x, y, rect.width, 54f),
-                "Projection scores position 30%, color 20%, area 15%, shape 15%, adjacency 10%, and connectivity 10%.");
+            Widgets.Label(new Rect(rect.x, y, rect.width, 76f),
+                "Projection matching scores position 30%, color 20%, area 15%, shape 15%, adjacency 10%, "
+                + "and connectivity 10%. Confidence is channel-local: expected recall 25%, assigned precision 25%, "
+                + "spatial agreement 15%, semantic agreement 20%, conflict-free 7.5%, and ambiguity-free 7.5%. "
+                + "Absent, expected-empty, and zero-assignment channels are exactly zero; values are finite and clamped.");
             GUI.color = Color.white;
         }
 

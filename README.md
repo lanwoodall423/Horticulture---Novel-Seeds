@@ -199,6 +199,16 @@ island and hole cleanup, smart edge expansion, channel locks, original/mask/fina
 overlays, and copy or alpha-bounds projection between discovered texture variations. These tools use the
 existing mask records and undo history; old mask files and renderer behavior remain compatible.
 
+Projection confidence and area normalization
+---------------------------------------------
+Projection matching scores use position 30%, color 20%, area 15%, shape 15%, adjacency 10%, and connectivity
+10%. Channel confidence is `0.25*expectedRecall + 0.25*assignedPrecision + 0.15*spatialAgreement +
+0.20*semanticAgreement + 0.075*conflictFree + 0.075*ambiguityFree`. Every term and the result is finite and
+clamped to 0..1; absent channels, channels with no expected transformed pixels, and channels with zero final
+assignments are exactly zero. Global unmasked coverage is a displayed diagnostic only and never contributes to
+confidence. Component area shares use one union of all visible source mask pixels and one alpha-visible target
+domain, so split semantic regions do not stretch their own bounds or inflate confidence.
+
 With Dev mode enabled, **Horticulture - Novel Seeds > Plant 10x10 random varieties** activates a map
 tool that fills the clicked 10x10 footprint with mature plants. Species are shuffled without replacement,
 so every available species appears once before any base plant repeats; later passes remain balanced to within
@@ -220,19 +230,18 @@ Progression: Agriculture's seed unlock system is used and is required.
 It should be compatible with all plant mods. Existing manual masks always take priority; missing
 growth-stage, collection, and directional masks use the persistent automatic fallback.
 
-Deferred Reality dependency provenance
----------------------------------------
-The optional Deferred Reality Horticulture adapter is built from the external
-`DeferredRealityFramework/Source/Adapters/Horticulture/DeferredRealityHorticultureAdapter.cs`
-and `DeferredReality.Horticulture.csproj` sources. The adapter targets .NET Framework 4.8,
-RimWorld 1.6, and the Deferred Reality Framework API; it is included to provide the
-regional wild-flora provider and does not own Horticulture cultivar state.
+Deferred Reality integration
+----------------------------
+The optional Deferred Reality Horticulture adapter is temporarily unavailable. Its external
+source worktree was not cleanly reproducible at release review, so no adapter DLL or mandatory
+dependency declaration is shipped. Novel Seeds remains usable without Deferred Reality; the base
+mod project has no reference to that framework. Reintroduce the adapter only after documenting a
+clean source commit/release, dependency and RimWorld versions, project/build command, compiler
+runtime, redistribution license, reproducible hash, and compatibility evidence.
 
-The currently vendored `1.6/Assemblies/DeferredReality.Horticulture.dll` is expected to have
-SHA-256 `72404BD24D154C0760E59AAA35E43F326334541FB2F020AE331126331EBA736F`.
-Its assembly metadata version is `0.0.0.0`.
-The external source repository was observed at commit `1c8acdf2197bb440e053477457505fd50c0e7382`,
-but its worktree was dirty and the exact binary build provenance could not be independently
-reproduced. This remains a release blocker until the external source revision and build are
-pinned to the vendored hash. The main Horticulture project does not directly reference this
-adapter binary; the external adapter references HorticultureNovelSeeds and DeferredRealityFramework.
+Release artifact policy
+-----------------------
+The authoritative RimWorld 1.6 artifact is `1.6/Assemblies/HorticultureNovelSeeds.dll`, built with
+`dotnet build Source/HorticultureNovelSeeds.csproj --configuration Release`. `Source/obj`, validation DLLs,
+bridge `bin`/`obj`, staged snapshots, and bridge package output are disposable and ignored. The clean shipped
+artifact SHA-256 is `0E8E0C6717BCC4A26BF01515A5D73426EAC0115649E3B7BFC4B36805C6C0BE84`.

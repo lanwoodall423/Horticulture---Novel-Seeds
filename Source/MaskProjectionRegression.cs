@@ -103,12 +103,15 @@ namespace HorticultureNovelSeeds
                 && manualRecord.ManualPlantMaskLayersForVariation(2)[2].IsPainted(7, 9);
             bool confidence = ConfidenceRegression(sourceLayers, sourcePixels, targetPixels, projection, conflictPixels,
                 conflictSource);
+            bool combinedFixture = CombinedFixtureRegression();
+            bool areaNormalization = AreaNormalizationRegression();
             bool shadedFoliage = ShadedMultiIslandRegression();
             bool largeAmbiguousRegion = LargeAmbiguousRegionRegression();
             bool editorHistory = EditorHistoryRegression(projection);
             return translatedAndScaled && correctAssignment && transparentBoundary && conflictDetected && rejected && cancelWithoutMutation
                 && changed && undoRedo && sameIdentity && conflictingManual && legacyCache && manualLoading
-                && confidence && shadedFoliage && largeAmbiguousRegion && editorHistory;
+                && confidence && combinedFixture && areaNormalization && shadedFoliage
+                && largeAmbiguousRegion && editorHistory;
         }
 
         private static bool ConfidenceRegression(List<VisualMaskLayerRecord> sourceLayers, Color32[] sourcePixels,
@@ -135,16 +138,219 @@ namespace HorticultureNovelSeeds
             emptySource[0] = sourceLayers[0].Clone();
             MaskProjectionResult empty = SemanticMaskProjection.Build(emptySource, sourcePixels,
                 EmptyLayers(), targetPixels);
+            List<VisualMaskLayerRecord> zeroAssignmentSource = EmptyLayers();
+            Color32[] zeroAssignmentPixels = new Color32[Size * Size];
+            PaintTopSourceRect(zeroAssignmentSource[0], zeroAssignmentPixels, 30, 30, 12, 12,
+                new Color32(210, 70, 50, 255));
+            Color32[] unrelatedTarget = new Color32[Size * Size];
+            SetTopRect(unrelatedTarget, 130, 130, 18, 18, new Color32(20, 210, 220, 255));
+            MaskProjectionResult zeroAssignment = SemanticMaskProjection.Build(zeroAssignmentSource,
+                zeroAssignmentPixels, EmptyLayers(), unrelatedTarget);
             List<VisualMaskLayerRecord> changedLeaves = sourceLayers.Select(layer => layer.Clone()).ToList();
             Color32[] changedLeafPixels = (Color32[])sourcePixels.Clone();
-            PaintRect(changedLeaves[1], 122, 112, 4, 4, new Color32(180, 92, 64, 255), changedLeafPixels);
-            MaskProjectionResult changedLeafProjection = SemanticMaskProjection.Build(changedLeaves,
-                changedLeafPixels, EmptyLayers(), targetPixels);
             bool emptyIsZero = empty.Channels[1].Confidence == 0f && empty.Channels[2].Confidence == 0f;
+            bool presentZeroAssignmentIsZero = zeroAssignment.Channels[0].Confidence == 0f
+                && zeroAssignment.Channels[0].AssignedTargetPixels == 0;
+            MaskProjectionResult changedLeafProjection;
+            for (int maskY = 148; maskY < 166; maskY++) for (int x = 92; x < 118; x++)
+                changedLeafPixels[(Size - 1 - maskY) * Size + x] = new Color32(70, 130, 75, 255);
+            changedLeaves[1] = sourceLayers[1].Clone();
+            changedLeafProjection = SemanticMaskProjection.Build(changedLeaves, changedLeafPixels,
+                EmptyLayers(), targetPixels);
             bool channelLocal = Mathf.Abs(correct.Channels[0].Confidence - changedLeafProjection.Channels[0].Confidence) < 0.0001f
                 && Mathf.Abs(correct.Channels[2].Confidence - changedLeafProjection.Channels[2].Confidence) < 0.0001f;
-            return bounded && emptyIsZero && channelLocal && correctConfidence > incorrectConfidence
+            return bounded && emptyIsZero && presentZeroAssignmentIsZero && channelLocal && correctConfidence > incorrectConfidence
                 && ambiguousCannotImprove && conflictPenalty && missingCoveragePenalty;
+        }
+
+        private sealed class CombinedFixture
+        {
+            public List<VisualMaskLayerRecord> sourceLayers;
+            public Color32[] sourcePixels;
+            public Color32[] targetPixels;
+            public List<VisualMaskLayerRecord> expectedLayers;
+            public VisualMaskLayerRecord background;
+            public VisualMaskLayerRecord ambiguous;
+        }
+
+        private static bool CombinedFixtureRegression()
+        {
+            CombinedFixture original = BuildCombinedFixture(0, 0, 1f);
+            CombinedFixture translated = BuildCombinedFixture(8, 6, 1f);
+            CombinedFixture scaled = BuildCombinedFixture(30, 25, 0.8f);
+            MaskProjectionResult first = SemanticMaskProjection.Build(original.sourceLayers, original.sourcePixels,
+                EmptyLayers(), original.targetPixels);
+            MaskProjectionResult second = SemanticMaskProjection.Build(translated.sourceLayers, translated.sourcePixels,
+                EmptyLayers(), translated.targetPixels);
+            MaskProjectionResult third = SemanticMaskProjection.Build(scaled.sourceLayers, scaled.sourcePixels,
+                EmptyLayers(), scaled.targetPixels);
+            bool exactVariants = ExactCombinedProjection(first, original)
+                && ExactCombinedProjection(second, translated) && ExactCombinedProjection(third, scaled);
+            bool deterministic = first.CandidateLayers.Select(layer => layer.ContentHash).SequenceEqual(
+                SemanticMaskProjection.Build(original.sourceLayers, original.sourcePixels, EmptyLayers(),
+                    original.targetPixels).CandidateLayers.Select(layer => layer.ContentHash));
+            List<VisualMaskLayerRecord> reorderedSource = new List<VisualMaskLayerRecord>
+            {
+                original.sourceLayers[2].Clone(), original.sourceLayers[0].Clone(), original.sourceLayers[1].Clone()
+            };
+            MaskProjectionResult reordered = SemanticMaskProjection.Build(reorderedSource,
+                (Color32[])original.sourcePixels.Clone(), EmptyLayers(), (Color32[])original.targetPixels.Clone());
+            bool orderIndependent = first.CandidateLayers.Select(layer => layer.ContentHash).OrderBy(hash => hash)
+                .SequenceEqual(reordered.CandidateLayers.Select(layer => layer.ContentHash).OrderBy(hash => hash));
+            return exactVariants && deterministic && orderIndependent
+                && CountComponents(original.expectedLayers[1]) == 3
+                && first.Channels[0].Conflicts == CountPainted(original.ambiguous)
+                && first.Channels[1].Conflicts == CountPainted(original.ambiguous)
+                && first.Channels[2].Conflicts == 0
+                && first.UnresolvedConflictPixels == CountPainted(original.ambiguous)
+                && first.ArbitrationDomainPixels == CountPainted(original.expectedLayers[0])
+                    + CountPainted(original.expectedLayers[1]) + CountPainted(original.expectedLayers[2])
+                    + CountPainted(original.ambiguous);
+        }
+
+        private static bool AreaNormalizationRegression()
+        {
+            CombinedFixture original = BuildCombinedFixture(0, 0, 1f);
+            CombinedFixture translated = BuildCombinedFixture(12, 9, 1f);
+            CombinedFixture scaled = BuildCombinedFixture(36, 31, 0.7f);
+            MaskProjectionResult first = SemanticMaskProjection.Build(original.sourceLayers, original.sourcePixels,
+                EmptyLayers(), original.targetPixels);
+            MaskProjectionResult translatedResult = SemanticMaskProjection.Build(translated.sourceLayers,
+                translated.sourcePixels, EmptyLayers(), translated.targetPixels);
+            MaskProjectionResult scaledResult = SemanticMaskProjection.Build(scaled.sourceLayers, scaled.sourcePixels,
+                EmptyLayers(), scaled.targetPixels);
+            bool comparableSourceArea = first.Channels.Zip(translatedResult.Channels, (left, right) =>
+                    Mathf.Abs(left.SourceAreaShare - right.SourceAreaShare) < 0.0001f)
+                .All(value => value)
+                && first.Channels.Zip(scaledResult.Channels, (left, right) =>
+                    Mathf.Abs(left.SourceAreaShare - right.SourceAreaShare) < 0.0001f)
+                .All(value => value);
+            bool comparableTargetArea = first.Channels.Zip(translatedResult.Channels, (left, right) =>
+                    Mathf.Abs(left.TargetAreaShare - right.TargetAreaShare) < 0.08f)
+                .All(value => value)
+                && first.Channels.Zip(scaledResult.Channels, (left, right) =>
+                    Mathf.Abs(left.TargetAreaShare - right.TargetAreaShare) < 0.12f)
+                .All(value => value);
+            return comparableSourceArea && comparableTargetArea
+                && first.Channels.Zip(translatedResult.Channels, (left, right) =>
+                    Mathf.Abs(left.SemanticAgreement - right.SemanticAgreement) < 0.08f
+                    && Mathf.Abs(left.Confidence - right.Confidence) < 0.12f)
+                .All(value => value)
+                && first.Channels.Zip(scaledResult.Channels, (left, right) =>
+                    Mathf.Abs(left.SemanticAgreement - right.SemanticAgreement) < 0.12f
+                    && Mathf.Abs(left.Confidence - right.Confidence) < 0.18f)
+                .All(value => value);
+        }
+
+        private static bool ExactCombinedProjection(MaskProjectionResult result, CombinedFixture fixture)
+        {
+            if (result == null || fixture == null) return false;
+            bool layersExact = Enumerable.Range(0, 3).All(channel => SamePixels(result.CandidateLayers[channel],
+                fixture.expectedLayers[channel]));
+            bool noTransparent = !HasTransparentPaint(result.CandidateLayers, fixture.targetPixels);
+            bool backgroundExact = UnmaskedPixels(result, fixture.targetPixels).OrderBy(pixel => pixel).SequenceEqual(
+                PixelSet(fixture.background).Concat(PixelSet(fixture.ambiguous)).OrderBy(pixel => pixel));
+            bool conflictExact = PixelSet(result.UnresolvedConflictMask).SequenceEqual(PixelSet(fixture.ambiguous));
+            bool noBackgroundPaint = Enumerable.Range(0, 3).All(channel =>
+                !PixelSet(result.CandidateLayers[channel]).Intersect(PixelSet(fixture.background)).Any());
+            return layersExact && noTransparent && backgroundExact && conflictExact && noBackgroundPaint;
+        }
+
+        private static CombinedFixture BuildCombinedFixture(int offsetX, int offsetY, float scale)
+        {
+            CombinedFixture fixture = new CombinedFixture
+            {
+                sourceLayers = EmptyLayers(),
+                sourcePixels = new Color32[Size * Size],
+                targetPixels = new Color32[Size * Size],
+                expectedLayers = EmptyLayers(),
+                background = new VisualMaskLayerRecord { name = "background" },
+                ambiguous = new VisualMaskLayerRecord { name = "ambiguous" }
+            };
+            Color32 produce = new Color32(198, 78, 58, 255);
+            Color32 leaves = new Color32(70, 120, 70, 255);
+            Color32 stem = new Color32(55, 105, 65, 255);
+            Color32 ambiguous = new Color32(132, 92, 54, 255);
+            PaintTopSourceRect(fixture.sourceLayers[0], fixture.sourcePixels, 35, 40, 10, 10, produce);
+            PaintTopSourceRect(fixture.sourceLayers[0], fixture.sourcePixels, 90, 100, 12, 8, produce);
+            PaintTopSourceRect(fixture.sourceLayers[0], fixture.sourcePixels, 125, 140, 10, 10, ambiguous);
+            PaintTopSourceRect(fixture.sourceLayers[1], fixture.sourcePixels, 60, 70, 50, 30, leaves);
+            PaintTopSourceRect(fixture.sourceLayers[1], fixture.sourcePixels, 125, 140, 10, 10, ambiguous);
+            PaintTopSourceRect(fixture.sourceLayers[2], fixture.sourcePixels, 140, 50, 3, 100, stem);
+
+            Color32 unrelatedBackground = new Color32(20, 40, 210, 255);
+            PaintTopTransformed(fixture.targetPixels, fixture.background, null, 50, 45, 3, 3,
+                unrelatedBackground, offsetX, offsetY, scale);
+            PaintTopTransformed(fixture.targetPixels, fixture.background, null, 130, 45, 3, 3,
+                unrelatedBackground, offsetX, offsetY, scale);
+            PaintTopTransformed(fixture.targetPixels, fixture.background, null, 130, 120, 3, 3,
+                unrelatedBackground, offsetX, offsetY, scale);
+            PaintTopTransformed(fixture.targetPixels, fixture.background, null, 110, 120, 3, 3,
+                unrelatedBackground, offsetX, offsetY, scale);
+            PaintTopTransformed(fixture.targetPixels, fixture.expectedLayers[0], fixture.background, 35, 40,
+                10, 10, produce, offsetX, offsetY, scale);
+            PaintTopTransformed(fixture.targetPixels, fixture.expectedLayers[0], fixture.background, 90, 100,
+                12, 8, produce, offsetX, offsetY, scale);
+            PaintTopTransformed(fixture.targetPixels, fixture.expectedLayers[1], fixture.background, 60, 70,
+                14, 10, leaves, offsetX, offsetY, scale, shaded: true);
+            PaintTopTransformed(fixture.targetPixels, fixture.expectedLayers[1], fixture.background, 80, 80,
+                14, 10, leaves, offsetX, offsetY, scale, shaded: true);
+            PaintTopTransformed(fixture.targetPixels, fixture.expectedLayers[1], fixture.background, 100, 90,
+                10, 10, leaves, offsetX, offsetY, scale, shaded: true);
+            PaintTopTransformed(fixture.targetPixels, fixture.expectedLayers[2], fixture.background, 140, 50,
+                3, 100, stem, offsetX, offsetY, scale);
+            PaintTopTransformed(fixture.targetPixels, fixture.ambiguous, fixture.background, 125, 140,
+                10, 10, ambiguous, offsetX, offsetY, scale);
+            return fixture;
+        }
+
+        private static void PaintTopTransformed(Color32[] pixels, VisualMaskLayerRecord expected,
+            VisualMaskLayerRecord background, int x, int y, int width, int height, Color32 color,
+            int offsetX, int offsetY, float scale, bool shaded = false)
+        {
+            int targetX = Mathf.RoundToInt(x * scale) + offsetX;
+            int targetY = Mathf.RoundToInt(y * scale) + offsetY;
+            int targetWidth = Mathf.Max(1, Mathf.RoundToInt(width * scale));
+            int targetHeight = Mathf.Max(1, Mathf.RoundToInt(height * scale));
+            for (int row = 0; row < targetHeight; row++) for (int column = 0; column < targetWidth; column++)
+            {
+                int px = targetX + column; int py = targetY + row;
+                if (px < 0 || px >= Size || py < 0 || py >= Size) continue;
+                Color32 shade = shaded && column >= targetWidth / 2
+                    ? new Color32(78, 128, 78, 255) : color;
+                pixels[py * Size + px] = shade;
+                expected?.PaintPixel(px, Size - 1 - py, true);
+                background?.PaintPixel(px, Size - 1 - py, false);
+            }
+        }
+
+        private static void PaintTopSourceRect(VisualMaskLayerRecord layer, Color32[] pixels, int x, int y,
+            int width, int height, Color32 color)
+        {
+            for (int row = 0; row < height; row++) for (int column = 0; column < width; column++)
+            {
+                int px = x + column; int py = y + row;
+                layer.PaintPixel(px, Size - 1 - py, true);
+                pixels[py * Size + px] = color;
+            }
+        }
+
+        private static IEnumerable<int> PixelSet(VisualMaskLayerRecord layer)
+        {
+            for (int y = 0; y < Size; y++) for (int x = 0; x < Size; x++)
+                if (layer != null && layer.IsPainted(x, y)) yield return y * Size + x;
+        }
+
+        private static IEnumerable<int> UnmaskedPixels(MaskProjectionResult result, Color32[] pixels)
+        {
+            for (int y = 0; y < Size; y++) for (int x = 0; x < Size; x++)
+                if (pixels[y * Size + x].a >= 16 && !result.CandidateLayers.Any(layer => layer.IsPainted(x, Size - 1 - y)))
+                    yield return (Size - 1 - y) * Size + x;
+        }
+
+        private static bool SamePixels(VisualMaskLayerRecord first, VisualMaskLayerRecord second)
+        {
+            return PixelSet(first).SequenceEqual(PixelSet(second));
         }
 
         private static bool ShadedMultiIslandRegression()
