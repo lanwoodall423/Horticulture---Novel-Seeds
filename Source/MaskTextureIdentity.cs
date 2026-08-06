@@ -230,10 +230,12 @@ namespace HorticultureNovelSeeds
             return true;
         }
 
+#if HNS_VALIDATION
         internal static bool ConflictingForRegression(IReadOnlyList<VisualMaskLayerRecord> first,
             IReadOnlyList<VisualMaskLayerRecord> second)
         {
             return !LayersEqual(first, second);
         }
+#endif
     }
 }

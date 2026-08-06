@@ -11,6 +11,22 @@ using Verse.AI;
 
 namespace HorticultureNovelSeeds
 {
+    [HarmonyPatch]
+    public static class Plant_TickLong_Knowledge_Patch
+    {
+        public static IEnumerable<MethodBase> TargetMethods()
+        {
+            MethodBase method = AccessTools.Method(typeof(Plant), "TickLong");
+            if (method != null) yield return method;
+        }
+
+        public static void Postfix(Plant __instance)
+        {
+            if (__instance?.Spawned == true && HorticulturePlantPolicy.IsSupported(__instance.def))
+                HorticultureEventRouter.GrowthObserved(null, __instance);
+        }
+    }
+
     [HarmonyPatch(typeof(Plant), nameof(Plant.GetGizmos))]
     public static class Plant_GetGizmos_MaskEditor_Patch
     {
@@ -188,7 +204,9 @@ namespace HorticultureNovelSeeds
         public Plant plant;
         public int yield;
         public bool regularHarvest;
+        public bool cutting;
         public bool harvestable;
+        public string eventIdentity;
         public float perennialResetGrowth;
         public bool pendingDiscoveryHarvest;
         public bool shouldSaveSeeds;
@@ -237,8 +255,10 @@ namespace HorticultureNovelSeeds
             __state = null;
             CompPlantVariety comp = __instance.TryGetComp<CompPlantVariety>();
             bool regularHarvest = plantDestructionMode == HarvestMode;
-            bool seedCut = plantDestructionMode == CutMode && comp?.PendingDiscovery == true;
-            if (!regularHarvest && !seedCut)
+            bool supported = HorticulturePlantPolicy.IsSupported(__instance.def);
+            bool cutting = plantDestructionMode == CutMode && supported;
+            if (regularHarvest && !supported) return;
+            if (!regularHarvest && !cutting)
             {
                 return;
             }
@@ -246,6 +266,8 @@ namespace HorticultureNovelSeeds
             List<VarietyTraitDef> activeTraits = comp?.ActiveTraits?.ToList() ?? new List<VarietyTraitDef>();
             bool matureDiscovery = comp?.PendingDiscovery == true && __instance.Growth >= 0.999f && !__instance.Blighted;
             bool harvestable = regularHarvest && __instance.HarvestableNow && !__instance.Blighted;
+            int harvestCycle = comp?.BeginHarvestCycle() ?? 0;
+            bool repeated = regularHarvest && NovelSeedUtility.PerennialHarvestAfterGrowth(activeTraits) > 0f;
             __state = new HarvestState
             {
                 cropDef = __instance.def,
@@ -257,13 +279,17 @@ namespace HorticultureNovelSeeds
                 map = __instance.Map,
                 harvester = by,
                 plant = __instance,
-                yield = harvestable ? __instance.YieldNow() : 0,
+                yield = harvestable || cutting ? __instance.YieldNow() : 0,
                 regularHarvest = regularHarvest,
+                cutting = cutting,
                 harvestable = harvestable,
                 perennialResetGrowth = harvestable ? NovelSeedUtility.PerennialHarvestAfterGrowth(activeTraits) : 0f,
                 pendingDiscoveryHarvest = matureDiscovery,
                 shouldSaveSeeds = comp?.SaveSeedsRequested == true && matureDiscovery,
-                shouldApplyHarvestEffects = harvestable
+                shouldApplyHarvestEffects = harvestable,
+                eventIdentity = regularHarvest
+                    ? HorticultureKnowledgeEventIdentity.Harvest(__instance, harvestCycle, harvestable, repeated, repeated)
+                    : HorticultureKnowledgeEventIdentity.Cutting(__instance, harvestCycle)
             };
         }
 
@@ -271,9 +297,13 @@ namespace HorticultureNovelSeeds
         {
             if (__state?.regularHarvest == true)
             {
-                if (__state.harvestable) HorticultureEventRouter.GrowthObserved(by, __state.plant);
-                HorticultureEventRouter.HarvestCompleted(by, __state.plant, __state.yield, __state.harvestable,
-                    __state.perennialResetGrowth > 0f, __state.perennialResetGrowth > 0f);
+                if (!__state.pendingDiscoveryHarvest)
+                    HorticultureEventRouter.HarvestCompleted(by, __state.plant, __state.yield, __state.harvestable,
+                        __state.perennialResetGrowth > 0f, __state.perennialResetGrowth > 0f, __state.eventIdentity);
+            }
+            else if (__state?.cutting == true)
+            {
+                HorticultureEventRouter.CuttingCompleted(by, __state.plant, __state.yield, __state.eventIdentity);
             }
             if (__state?.shouldSaveSeeds == true)
             {
@@ -286,9 +316,10 @@ namespace HorticultureNovelSeeds
             {
                 string origin = __state.plant?.sown == false ? "wild" :
                     __state.lineageParentIds?.Count > 0 ? "cross-pollination" : "mutation";
-                HorticultureEventRouter.NovelSeedDiscovered(by, __state.cropDef, __state.traits, origin,
-                    __state.map, __state.lineageParentIds);
-                __state.comp?.ClearPendingDiscovery();
+                if (HorticultureEventRouter.NovelSeedDiscovered(by, __state.cropDef, __state.traits, origin,
+                    __state.map, __state.lineageParentIds, __state.eventIdentity, __state.yield,
+                    __state.perennialResetGrowth > 0f, __state.perennialResetGrowth > 0f))
+                    __state.comp?.ClearPendingDiscovery();
             }
             if (__state?.perennialResetGrowth > 0f && __instance?.Destroyed == false)
             {

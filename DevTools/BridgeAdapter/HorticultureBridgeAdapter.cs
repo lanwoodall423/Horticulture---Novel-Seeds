@@ -99,6 +99,10 @@ namespace HorticultureNovelSeeds
             "HNS_WILDLIFE_LAYOUT|R|Inspect Wildlife tab layout members for integration",
             "HNS_KNOWLEDGE_STATE|R|Inspect framework plant knowledge for one colonist and crop",
             "HNS_AWARD_PLANT_KNOWLEDGE|W|Award one completed sowing event through Horticulture",
+            "HNS_EVENT_ROUTING_DIAGNOSTIC|R|Report Knowledge Framework event routing, deduplication, and invalidation diagnostics",
+            "HNS_EVENT_ROUTING_REGRESSION|R|Run stable event identity and canonical plant-policy checks",
+            "HNS_EVENT_ROUTING_DUPLICATE_TEST|W|Submit one controlled duplicate event identity and report progression deltas",
+            "HNS_EVENT_INVALIDATION_PERF|W|Measure bounded targeted invalidation at 10, 100, 500, and 1000 requested subjects",
             "HNS_SAVE_TEST|W|Save the isolated test game under a named copy",
             "HNS_LOAD_TEST_SAVE|W|Load a named save in the isolated test process",
             "HNS_PERF_STATE|R|Report live map plant and Novel Seeds workload",
@@ -165,6 +169,10 @@ namespace HorticultureNovelSeeds
                 case "HNS_WILDLIFE_LAYOUT": return WildlifeLayout();
                 case "HNS_KNOWLEDGE_STATE": return KnowledgeState(map, argument);
                 case "HNS_AWARD_PLANT_KNOWLEDGE": return AwardPlantKnowledge(map, argument);
+                case "HNS_EVENT_ROUTING_DIAGNOSTIC": return EventRoutingDiagnostic();
+                case "HNS_EVENT_ROUTING_REGRESSION": return EventRoutingRegression(map);
+                case "HNS_EVENT_ROUTING_DUPLICATE_TEST": return EventRoutingDuplicateTest(map, argument);
+                case "HNS_EVENT_INVALIDATION_PERF": return EventInvalidationPerformance();
                 case "HNS_SAVE_TEST": return SaveTest(argument);
                 case "HNS_LOAD_TEST_SAVE": return LoadTestSave(argument);
                 case "HNS_PERF_STATE": return PerfState(map);
@@ -1418,10 +1426,22 @@ namespace HorticultureNovelSeeds
             List<string> result = new List<string>();
             foreach (string method in methods)
             {
-                try { result.Add(method + "=" + type.GetMethod(method, flags)?.Invoke(null, null)); }
+                try
+                {
+                    MethodInfo methodInfo = type.GetMethod(method, flags);
+                    result.Add(methodInfo == null
+                        ? method + "=unavailable:release-harness-excluded;run=DevTools/Verify-AutoPlantMasks.ps1"
+                        : method + "=" + methodInfo.Invoke(null, null));
+                }
                 catch (Exception exception) { result.Add(method + "=error:" + (exception.InnerException ?? exception).Message); }
             }
-            try { result.Add("MaskPainterOperationsRegression=" + typeof(MaskPainterOperations).GetMethod("MaskPainterOperationsRegression", flags)?.Invoke(null, null)); }
+            try
+            {
+                MethodInfo methodInfo = typeof(MaskPainterOperations).GetMethod("MaskPainterOperationsRegression", flags);
+                result.Add(methodInfo == null
+                    ? "MaskPainterOperationsRegression=unavailable:release-harness-excluded;run=DevTools/Verify-MaskPainterTools.ps1"
+                    : "MaskPainterOperationsRegression=" + methodInfo.Invoke(null, null));
+            }
             catch (Exception exception) { result.Add("MaskPainterOperationsRegression=error:" + (exception.InnerException ?? exception).Message); }
             return result;
         }
@@ -1432,7 +1452,9 @@ namespace HorticultureNovelSeeds
             {
                 MethodInfo method = typeof(NovelSeedsDebugActions).GetMethod("CrossPollinationRegression",
                     BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-                return new List<string> { "CrossPollinationRegression=" + method?.Invoke(null, null) };
+                return new List<string> { method == null
+                    ? "CrossPollinationRegression=unavailable:release-harness-excluded;run=DevTools/Verify-CrossPollination.ps1"
+                    : "CrossPollinationRegression=" + method.Invoke(null, null) };
             }
             catch (Exception exception)
             {
@@ -1446,7 +1468,9 @@ namespace HorticultureNovelSeeds
             {
                 MethodInfo method = typeof(NovelSeedsDebugActions).GetMethod("TraitCatalogRegression",
                     BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-                return new List<string> { "TraitCatalogRegression=" + method?.Invoke(null, null) };
+                return new List<string> { method == null
+                    ? "TraitCatalogRegression=unavailable:release-harness-excluded;run=DevTools/Verify-TraitCatalog.ps1"
+                    : "TraitCatalogRegression=" + method.Invoke(null, null) };
             }
             catch (Exception exception)
             {
@@ -1462,6 +1486,8 @@ namespace HorticultureNovelSeeds
                     BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
                 MethodInfo reportMethod = typeof(NovelSeedsDebugActions).GetMethod("BreedingMixDiagnosticReport",
                     BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+                if (resultMethod == null || reportMethod == null)
+                    return new List<string> { "BreedingMixDiagnostic=unavailable:release-harness-excluded;run=DevTools/Verify-CrossPollination.ps1 and DevTools/Verify-TraitCatalog.ps1" };
                 return new List<string>
                 {
                     "BreedingMixDiagnostic=" + resultMethod?.Invoke(null, null),
@@ -1924,7 +1950,8 @@ namespace HorticultureNovelSeeds
             float expertiseBefore = KnowledgeQuery.Expertise(HorticultureKnowledgeAdapter.DomainId, pawn,
                 HorticultureKnowledgeAdapter.ExpertiseTrack).amount;
             HorticultureKnowledgeAdapter.Observe(pawn, crop, HorticultureKnowledgeEvent.Sowing, map,
-                sourceInstanceId: "bridge-sowing:" + pawn.thingIDNumber + ":" + crop.defName + ":" + (Find.TickManager?.TicksGame ?? 0));
+                sourceInstanceId: HorticultureKnowledgeEventIdentity.Normalize("bridge-sowing",
+                    "pawn#" + pawn.thingIDNumber + "|" + crop.defName));
             return new List<string>
             {
                 "pawn=" + pawn.thingIDNumber + ":" + Clean(pawn.LabelShortCap),
@@ -1935,6 +1962,135 @@ namespace HorticultureNovelSeeds
                     HorticultureKnowledgeAdapter.ExpertiseTrack).amount.ToString("0.0"),
                 "sowingEvents=" + HorticultureKnowledgeAdapter.Facet(pawn, crop, HorticultureKnowledgeAdapter.FacetSowing).EventCount("sowing")
             };
+        }
+
+        private static List<string> EventRoutingDiagnostic()
+        {
+            HorticultureKnowledgeEventDiagnosticsSnapshot diagnostics = HorticultureKnowledgeAdapter.EventDiagnostics;
+            return new List<string>
+            {
+                "registrationState=" + HorticultureKnowledgeAdapter.RegistrationState,
+                "framework=" + HorticultureKnowledgeAdapter.Diagnostics.frameworkRelease,
+                "apiVersion=" + HorticultureKnowledgeAdapter.Diagnostics.frameworkApiVersion,
+                "capabilityVersions=" + HorticultureKnowledgeAdapter.Diagnostics.capabilityVersions,
+                "domain=" + HorticultureKnowledgeAdapter.DomainId,
+                "legacyDomain=" + HorticultureKnowledgeAdapter.LegacyDomainId,
+                "submitted=" + FormatCounts(diagnostics.submittedByEvent),
+                "deduplicated=" + FormatCounts(diagnostics.deduplicatedByEvent),
+                "unsupportedPlants=" + diagnostics.rejectedUnsupportedPlants,
+                "targetedInvalidations=" + diagnostics.targetedInvalidations,
+                "broadInvalidations=" + diagnostics.broadInvalidations,
+                "speciesSubjects=" + diagnostics.speciesSubjectCount,
+                "cultivarSubjects=" + diagnostics.cultivarSubjectCount
+            };
+        }
+
+        private static List<string> EventRoutingRegression(Map map)
+        {
+            List<ThingDef> supported = DefDatabase<ThingDef>.AllDefsListForReading
+                .Where(HorticulturePlantPolicy.IsSupported).ToList();
+            List<ThingDef> trees = supported.Where(HorticulturePlantPolicy.IsSowableTree).ToList();
+            string same = HorticultureKnowledgeEventIdentity.Normalize("regression", "semantic-action");
+            string different = HorticultureKnowledgeEventIdentity.Normalize("regression", "semantic-action-2");
+            return new List<string>
+            {
+                "supportedPlants=" + supported.Count,
+                "sowableTrees=" + trees.Count,
+                "sameIdentity=" + (same == HorticultureKnowledgeEventIdentity.Normalize("regression", "semantic-action")),
+                "distinctIdentity=" + (same != different),
+                "boundedIdentity=" + (same.Length <= 180 && different.Length <= 180),
+                "tickIndependent=" + (same.IndexOf("tick", StringComparison.OrdinalIgnoreCase) < 0),
+                "map=" + (map?.uniqueID.ToString() ?? "none")
+            };
+        }
+
+        private static List<string> EventRoutingDuplicateTest(Map map, string argument)
+        {
+            if (map == null) return NoMap();
+            Pawn pawn = ResolveKnowledgePawn(map, 0);
+            Plant plant = map.listerThings?.ThingsInGroup(ThingRequestGroup.Plant).OfType<Plant>()
+                .FirstOrDefault(value => HorticulturePlantPolicy.IsSupported(value.def));
+            if (pawn == null || plant == null) return new List<string> { "error=colonist or supported plant unavailable" };
+            Pawn witness = map.mapPawns?.FreeColonistsSpawned?.FirstOrDefault(value => value != pawn);
+            string identity = HorticultureKnowledgeEventIdentity.Normalize("bridge-duplicate",
+                "plant#" + plant.thingIDNumber + "|" + plant.def.defName + "|" + (argument ?? string.Empty));
+            KnowledgeFacetSnapshotV2 before = HorticultureKnowledgeAdapter.Facet(pawn, plant.def,
+                HorticultureKnowledgeAdapter.FacetGrowth);
+            KnowledgeSubjectSnapshotV2 beforeSubject = HorticultureKnowledgeAdapter.SubjectSnapshot(pawn, plant.def, false);
+            KnowledgeClaimSnapshot beforeClaim = HorticultureKnowledgeAdapter.Claim(pawn, plant.def,
+                HorticultureKnowledgeAdapter.FacetGrowth, "growth_duration");
+            KnowledgeExpertiseSnapshotV2 beforeExpertise = HorticultureKnowledgeAdapter.ExpertiseSnapshot(pawn);
+            KnowledgeFacetSnapshotV2 beforeWitness = HorticultureKnowledgeAdapter.Facet(witness, plant.def,
+                HorticultureKnowledgeAdapter.FacetGrowth);
+            IReadOnlyList<KnowledgeMilestoneState> beforeMilestones = HorticultureKnowledgeAdapter.Milestones(pawn, plant.def);
+            int beforeEvents = before?.EventCount("growth-stage") ?? 0;
+            bool first = HorticultureKnowledgeAdapter.Observe(pawn, plant.def, HorticultureKnowledgeEvent.GrowthStage,
+                map, true, 1f, "Controlled duplicate identity test.", identity);
+            bool second = HorticultureKnowledgeAdapter.Observe(pawn, plant.def, HorticultureKnowledgeEvent.GrowthStage,
+                map, true, 1f, "Controlled duplicate identity test.", identity);
+            KnowledgeFacetSnapshotV2 after = HorticultureKnowledgeAdapter.Facet(pawn, plant.def,
+                HorticultureKnowledgeAdapter.FacetGrowth);
+            KnowledgeSubjectSnapshotV2 afterSubject = HorticultureKnowledgeAdapter.SubjectSnapshot(pawn, plant.def, false);
+            KnowledgeClaimSnapshot afterClaim = HorticultureKnowledgeAdapter.Claim(pawn, plant.def,
+                HorticultureKnowledgeAdapter.FacetGrowth, "growth_duration");
+            KnowledgeExpertiseSnapshotV2 afterExpertise = HorticultureKnowledgeAdapter.ExpertiseSnapshot(pawn);
+            KnowledgeFacetSnapshotV2 afterWitness = HorticultureKnowledgeAdapter.Facet(witness, plant.def,
+                HorticultureKnowledgeAdapter.FacetGrowth);
+            IReadOnlyList<KnowledgeMilestoneState> afterMilestones = HorticultureKnowledgeAdapter.Milestones(pawn, plant.def);
+            int afterEvents = after?.EventCount("growth-stage") ?? 0;
+            return new List<string>
+            {
+                "plant=" + plant.thingIDNumber + ":" + plant.def.defName,
+                "identity=" + identity,
+                "firstSubmit=" + first,
+                "duplicateSubmit=" + second,
+                "events=" + beforeEvents + "->" + afterEvents,
+                "deltaAtMostOne=" + (afterEvents - beforeEvents <= 1),
+                "personal=" + (before?.amount ?? 0f) + "->" + (after?.amount ?? 0f),
+                "colony=" + (HorticultureKnowledgeAdapter.Facet(null, plant.def, HorticultureKnowledgeAdapter.FacetGrowth,
+                    map, true)?.amount ?? 0f),
+                "familiarity=" + (beforeSubject?.familiarity ?? 0f) + "->" + (afterSubject?.familiarity ?? 0f),
+                "stage=" + (beforeSubject?.stageId ?? HorticultureKnowledgeAdapter.StageUnknown) + "->" +
+                    (afterSubject?.stageId ?? HorticultureKnowledgeAdapter.StageUnknown),
+                "claimConfidence=" + (beforeClaim?.effectiveConfidence ?? 0f) + "->" +
+                    (afterClaim?.effectiveConfidence ?? 0f),
+                "expertise=" + (beforeExpertise?.amount ?? 0f) + "->" + (afterExpertise?.amount ?? 0f),
+                "witness=" + (beforeWitness?.amount ?? 0f) + "->" + (afterWitness?.amount ?? 0f),
+                "witnessEvidence=" + (beforeWitness?.evidenceCount ?? 0) + "->" + (afterWitness?.evidenceCount ?? 0),
+                "milestones=" + beforeMilestones.Count(value => value.completed) + "->" +
+                    afterMilestones.Count(value => value.completed) + ":" + string.Join(",", afterMilestones
+                        .Where(value => value.completed).Select(value => value.milestoneId).OrderBy(value => value))
+            };
+        }
+
+        private static List<string> EventInvalidationPerformance()
+        {
+            if (!HorticultureKnowledgeAdapter.Register()) return new List<string> { "error=knowledge integration unavailable" };
+            List<string> available = DefDatabase<ThingDef>.AllDefsListForReading.Where(HorticulturePlantPolicy.IsSupported)
+                .Select(HorticultureKnowledgeAdapter.SubjectId).Where(value => !value.NullOrEmpty())
+                .Concat(AllVarieties().Select(HorticultureKnowledgeAdapter.CultivarSubjectId).Where(value => !value.NullOrEmpty()))
+                .Distinct().ToList();
+            if (available.Count == 0) return new List<string> { "error=no registered subjects" };
+            List<string> output = new List<string> { "availableSubjects=" + available.Count };
+            foreach (int requested in new[] { 10, 100, 500, 1000 })
+            {
+                Stopwatch watch = Stopwatch.StartNew();
+                int invalidated = 0;
+                int calls = 0;
+                for (int offset = 0; offset < requested; offset += KnowledgeConsumerApi.MaxTargetedInvalidationSubjects)
+                {
+                    List<string> chunk = Enumerable.Range(offset,
+                        Math.Min(KnowledgeConsumerApi.MaxTargetedInvalidationSubjects, requested - offset))
+                        .Select(index => available[index % available.Count]).ToList();
+                    KnowledgeInvalidationResult result = HorticultureKnowledgeAdapter.InvalidateSubjects(chunk);
+                    if (result != null) invalidated += result.invalidatedCount;
+                    calls++;
+                }
+                watch.Stop();
+                output.Add("requested=" + requested + " calls=" + calls + " invalidated=" + invalidated +
+                    " elapsedMs=" + watch.Elapsed.TotalMilliseconds.ToString("0.000"));
+            }
+            return output;
         }
 
         private static void ParseKnowledgeArgument(string argument, out int pawnId, out string cropName)
@@ -2260,6 +2416,10 @@ namespace HorticultureNovelSeeds
 
         private static string TraitSummary(IEnumerable<VarietyTraitDef> traits) =>
             string.Join(",", traits?.Where(item => item != null).Select(item => item.label).ToArray() ?? new string[0]);
+
+        private static string FormatCounts(IReadOnlyDictionary<string, int> counts) =>
+            string.Join(",", (counts ?? new Dictionary<string, int>()).OrderBy(item => item.Key, StringComparer.Ordinal)
+                .Select(item => item.Key + ":" + item.Value));
 
         private static int Value(Dictionary<string, int> values, string key) => values.TryGetValue(key, out int value) ? value : 0;
         private static string Clean(string value) => (value ?? "none").Replace('\r', ' ').Replace('\n', ' ').Replace('|', '/');

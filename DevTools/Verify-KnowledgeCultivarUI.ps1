@@ -16,6 +16,8 @@ $adapter = Read-ModFile 'Horticulture - Novel Seeds\Source\HorticultureKnowledge
 $router = Read-ModFile 'Horticulture - Novel Seeds\Source\HorticultureEventRouter.cs'
 $mutation = Read-ModFile 'Horticulture - Novel Seeds\Source\NovelSeedUtility.cs'
 $core = Read-ModFile 'Horticulture - Novel Seeds\Source\ModCore.cs'
+$migration = Read-ModFile 'Horticulture - Novel Seeds\Source\HorticultureKnowledgeMigration.cs'
+$registration = Read-ModFile 'Horticulture - Novel Seeds\Source\HorticultureKnowledgeRegistration.cs'
 
 $requirements = [ordered]@{
     'colony detail hides expertise' = $menu -match 'if \(!colony\)[\s\S]*?DrawProgressBar'
@@ -34,8 +36,8 @@ $requirements = [ordered]@{
     'no breeding program page' = $registry -notmatch 'RightPage|DrawPrograms|Dialog_CreateBreedingProgram|RegistryPrograms|RegistryNewProgram'
     'variety save keys retained' = $core -match 'parentVarietyIds' -and $core -match 'firstDiscoveredTick'
     'breeding programs are load-only legacy data' = $core -match 'class BreedingProgramRecord' -and $core -match 'Scribe\.mode != LoadSaveMode\.Saving[\s\S]*?"breedingPrograms"' -and $core -notmatch 'NotifyMatchingBreedingPrograms'
-    'knowledge migrates from the legacy key without new writes' = $core -match 'Scribe\.mode != LoadSaveMode\.Saving[\s\S]*?"horticultureKnowledge"' -and $core -match 'KnowledgeService\.ImportMinimum'
-    'plants use the framework domain service' = $adapter -match 'KnowledgeRegistry\.RegisterDomain' -and $adapter -match 'KnowledgeEngine\.Submit' -and $registry -match 'HorticultureKnowledgeAdapter\.ColonyKnowledge'
+    'knowledge migrates from the legacy key without new writes' = $core -match 'Scribe\.mode != LoadSaveMode\.Saving[\s\S]*?"horticultureKnowledge"' -and $core -match 'TryMigrateLegacy' -and $migration -match 'KnowledgeMigrationService\.Import'
+    'plants use the framework domain service' = $registration -match 'KnowledgeConsumerApi\.RegisterDomain' -and $adapter -match 'KnowledgeEngine\.Submit' -and $registry -match 'HorticultureKnowledgeAdapter\.(Menu|Facet)'
     'colony and expertise remain isolated' = $adapter -match 'targetColony = true' -and $adapter -match 'directExpertise = expert' -and $registry -match 'HorticultureKnowledgeAdapter\.ExpertiseRank'
     'completed gameplay events use one observation router' = $router -match 'SowingCompleted' -and $router -match 'NovelSeedDiscovered' -and $router -match 'CultivarDocumented'
 }

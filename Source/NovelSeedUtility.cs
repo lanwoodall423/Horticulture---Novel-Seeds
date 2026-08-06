@@ -65,18 +65,6 @@ namespace HorticultureNovelSeeds
 
     public static class NovelSeedUtility
     {
-        private const string VanillaFlowersExpandedPackageId = "VanillaExpanded.VPEFlowers";
-        private static readonly HashSet<string> SupersededByFlowersExpanded = new HashSet<string>
-        {
-            "Plant_Rose",
-            "Plant_Daylily",
-            "VCE_Hyacinth",
-            "VCE_Lavender",
-            "VCE_Lily",
-            "VCE_Plumeria",
-            "VCE_Tulip"
-        };
-        private static bool? vanillaFlowersExpandedActive;
         public const float SpontaneousMutationChance = 0.08f;
         public const float DefaultCrossPollinationChance = 0.007f;
         public const float DefaultWildMutationChance = 0.005f;
@@ -85,13 +73,7 @@ namespace HorticultureNovelSeeds
         public const float DefaultLaterCrossPollinationTraitChance = 0.01f;
         private const float CrossPollinationRadius = 4.9f;
 
-        public static bool IsGrowableCrop(ThingDef def)
-        {
-            return def?.plant != null
-                && def.plant.Sowable
-                && !def.plant.IsTree
-                && !(VanillaFlowersExpandedActive && SupersededByFlowersExpanded.Contains(def.defName));
-        }
+        public static bool IsGrowableCrop(ThingDef def) => HorticulturePlantPolicy.IsSupported(def);
 
         public static bool IsFlowerPlant(ThingDef def)
         {
@@ -100,9 +82,7 @@ namespace HorticultureNovelSeeds
                 || def.plant.purpose == PlantPurpose.Beauty);
         }
 
-        public static bool VanillaFlowersExpandedActive => vanillaFlowersExpandedActive ??
-            (vanillaFlowersExpandedActive = ModsConfig.IsActive(VanillaFlowersExpandedPackageId)
-                || ModsConfig.IsActive(VanillaFlowersExpandedPackageId.ToLowerInvariant())).Value;
+        public static bool VanillaFlowersExpandedActive => HorticulturePlantPolicy.VanillaFlowersExpandedActive;
         public static void AssignMutationOnSow(Plant plant, Pawn sower = null)
         {
             if (plant == null || !IsGrowableCrop(plant.def))

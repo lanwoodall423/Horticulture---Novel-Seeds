@@ -16,6 +16,7 @@ namespace HorticultureNovelSeeds
         public static KnowledgeFacetSnapshotV2 Facet(string domainId, string subjectId, string facetId, Pawn pawn,
             KnowledgeScope scope, KnowledgeContextKey context, KnowledgeContextFallbackMode fallback)
         {
+            if (!HorticultureKnowledgeAdapter.IsFrameworkUsable) return null;
             EnsureRevision();
             string key = domainId + "|" + subjectId + "|" + facetId + "|" + PawnKey(pawn) + "|" + scope + "|" + context;
             if (Facets.TryGetValue(key, out KnowledgeFacetSnapshotV2 snapshot)) return snapshot;
@@ -27,6 +28,7 @@ namespace HorticultureNovelSeeds
 
         public static KnowledgeSubjectSnapshotV2 Subject(string domainId, string subjectId, Pawn pawn, KnowledgeScope scope)
         {
+            if (!HorticultureKnowledgeAdapter.IsFrameworkUsable) return null;
             EnsureRevision();
             string key = domainId + "|" + subjectId + "|" + PawnKey(pawn) + "|" + scope;
             if (Subjects.TryGetValue(key, out KnowledgeSubjectSnapshotV2 snapshot)) return snapshot;
@@ -46,8 +48,8 @@ namespace HorticultureNovelSeeds
 
         private static void EnsureRevision()
         {
-            int currentKnowledgeRevision = KnowledgeQuery.Revision;
-            int currentRegistryRevision = KnowledgeRegistry.Revision;
+            int currentKnowledgeRevision = HorticultureKnowledgeAdapter.KnowledgeRevision;
+            int currentRegistryRevision = HorticultureKnowledgeAdapter.RegistryRevision;
             if (currentKnowledgeRevision == knowledgeRevision && currentRegistryRevision == registryRevision) return;
             Facets.Clear();
             Subjects.Clear();

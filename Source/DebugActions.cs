@@ -189,6 +189,7 @@ namespace HorticultureNovelSeeds
                     yield return new IntVec3(minX + x, 0, minZ + z);
         }
 
+#if HNS_VALIDATION
         internal static bool RandomVarietyGridRegression()
         {
             ThingDef firstCrop = new ThingDef { defName = "HNS_GridRegressionA", plant = new PlantProperties { sowTags = new List<string> { "Ground" } } };
@@ -239,6 +240,7 @@ namespace HorticultureNovelSeeds
         {
             return HorticultureNovelSeeds.BreedingMixRegression.Report();
         }
+#endif
 
         [DebugAction(Category, "Spawn crossbred seed pack by generation", actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
         private static void ChooseCrossbredGenerationDepth()

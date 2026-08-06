@@ -18,7 +18,9 @@ namespace HorticultureNovelSeeds
         Fertilization,
         DiseaseSurvival,
         MatureObservation,
+        Cutting,
         Harvest,
+        HarvestDiscovery,
         FailedHarvest,
         RepeatedHarvest,
         ProduceProcessing,
@@ -44,7 +46,13 @@ namespace HorticultureNovelSeeds
     /// </summary>
     public static class HorticultureKnowledgeAdapter
     {
-        public const string DomainId = "plants";
+        public const string DomainId = HorticultureKnowledgeContract.DomainId;
+        public const string LegacyDomainId = HorticultureKnowledgeContract.LegacyDomainId;
+        public const string PackageId = HorticultureKnowledgeContract.PackageId;
+        public const string ConsumerId = HorticultureKnowledgeContract.ConsumerId;
+        public const string RegistrationSource = HorticultureKnowledgeContract.RegistrationSource;
+        public const string ProviderId = HorticultureKnowledgeContract.ProviderId;
+        public const string MigrationNamespace = HorticultureKnowledgeContract.MigrationNamespace;
         public const string SpeciesArchetype = "horticulture.plant-species";
         public const string CultivarArchetype = "horticulture.cultivar";
         public const string WildVariantArchetype = "horticulture.wild-variant";
@@ -81,10 +89,13 @@ namespace HorticultureNovelSeeds
         public const string ContextGlobal = "horticulture.global";
 
         public const string ExpertiseTrack = "horticulture-fieldcraft";
-        public const string ExpertiseNamespace = "horticulture.fieldcraft";
-        private const string MigrationId = "horticulture.v3.legacy";
-        private const int MigrationVersion = 1;
-        private static bool registered;
+        public const string ExpertiseNamespace = HorticultureKnowledgeContract.ExpertiseNamespace;
+        public static HorticultureKnowledgeRegistrationState RegistrationState => HorticultureKnowledgeRegistration.State;
+        public static HorticultureKnowledgeDiagnosticSnapshot Diagnostics => HorticultureKnowledgeRegistration.Diagnostics;
+        public static HorticultureKnowledgeEventDiagnosticsSnapshot EventDiagnostics => HorticultureKnowledgeEventDiagnostics.Snapshot();
+        internal static bool IsFrameworkUsable => HorticultureKnowledgeRegistration.IsRegistered;
+        internal static int KnowledgeRevision => IsFrameworkUsable ? KnowledgeQuery.Revision : -1;
+        internal static int RegistryRevision => IsFrameworkUsable ? KnowledgeRegistry.Revision : -1;
 
         private static readonly string[] Facets =
         {
@@ -93,32 +104,23 @@ namespace HorticultureNovelSeeds
             FacetResilience, FacetLineage, FacetEnvironment
         };
 
-        public static bool Register()
+        public static bool Register() => HorticultureKnowledgeRegistration.EnsureRegistered();
+
+        public static KnowledgeInvalidationResult InvalidateSubjects(IEnumerable<string> subjectIds)
         {
-            if (registered) return true;
-            try
+            if (!IsFrameworkUsable) return null;
+            List<string> ids = (subjectIds ?? Enumerable.Empty<string>()).Where(value => !value.NullOrEmpty())
+                .Distinct(StringComparer.Ordinal).ToList();
+            KnowledgeInvalidationResult last = null;
+            for (int offset = 0; offset < ids.Count; offset += KnowledgeConsumerApi.MaxTargetedInvalidationSubjects)
             {
-                KnowledgeRegistry.BuildDefSchemas();
-                RegisterContexts();
-                bool accepted = KnowledgeRegistry.RegisterDomain(BuildRegistration(), new KnowledgeRegistrationOptions
-                {
-                    source = "horticulture.v3",
-                    priority = int.MaxValue,
-                    conflict = KnowledgeRegistrationConflict.Replace
-                });
-                if (!accepted) return false;
-                RegisterRelationsAndComparisons();
-                KnowledgeV3Ui.Register(new HorticultureV3UiProvider(), true);
-                KnowledgeProviderRegistry.Register("horticulture", 30, BioEntry);
-                KnowledgeRegistry.InvalidateSubjects(DomainId);
-                registered = true;
-                return true;
+                KnowledgeInvalidationResult result = KnowledgeConsumerApi.InvalidateSubjects(DomainId,
+                    ids.Skip(offset).Take(KnowledgeConsumerApi.MaxTargetedInvalidationSubjects));
+                if (result == null || !result.Success) return result;
+                HorticultureKnowledgeEventDiagnostics.TargetedInvalidation(result.invalidatedCount);
+                last = result;
             }
-            catch (Exception exception)
-            {
-                Log.ErrorOnce("Horticulture V3 registration failed: " + exception.Message, 0x51A7A11);
-                return false;
-            }
+            return last;
         }
 
         public static string SubjectId(ThingDef plant) => plant?.defName;
@@ -163,7 +165,7 @@ namespace HorticultureNovelSeeds
         public static KnowledgeFacetSnapshotV2 Facet(Pawn pawn, ThingDef plant, string facetId = FacetIdentity,
             Map map = null, bool colony = false, KnowledgeContextKey context = default(KnowledgeContextKey))
         {
-            Register();
+            if (!Register()) return null;
             KnowledgeContextKey requested = context.IsEmpty ? (map == null ? KnowledgeContextKey.Empty : ContextFor(map)) : context;
             return HorticultureKnowledgeSnapshots.Facet(DomainId, SubjectId(plant), facetId, pawn,
                 colony ? KnowledgeScope.Colony : KnowledgeScope.Personal, requested,
@@ -173,29 +175,48 @@ namespace HorticultureNovelSeeds
         public static KnowledgeClaimSnapshot Claim(Pawn pawn, ThingDef plant, string facetId, string claimId,
             KnowledgeContextKey context = default(KnowledgeContextKey), bool colony = false)
         {
-            Register();
+            if (!Register()) return null;
             return KnowledgeClaimService.Snapshot(DomainId, SubjectId(plant), facetId, claimId, pawn,
                 colony ? KnowledgeScope.Colony : KnowledgeScope.Personal, context,
                 KnowledgeContextFallbackMode.ParentThenGlobal);
         }
 
+        public static KnowledgeSubjectSnapshotV2 SubjectSnapshot(Pawn pawn, ThingDef plant, bool colony)
+        {
+            if (plant == null || !Register()) return null;
+            return HorticultureKnowledgeSnapshots.Subject(DomainId, SubjectId(plant), pawn,
+                colony ? KnowledgeScope.Colony : KnowledgeScope.Personal);
+        }
+
+        public static KnowledgeExpertiseSnapshotV2 ExpertiseSnapshot(Pawn pawn)
+        {
+            if (!IsPlayerColonist(pawn) || !Register()) return null;
+            return KnowledgeQuery.Expertise(DomainId, pawn, ExpertiseTrack);
+        }
+
+        public static IReadOnlyList<KnowledgeMilestoneState> Milestones(Pawn pawn, ThingDef plant)
+        {
+            if (plant == null || !Register()) return Array.Empty<KnowledgeMilestoneState>();
+            return KnowledgeQuery.Milestones(DomainId, plant.defName, pawn);
+        }
+
         public static string StageFor(ThingDef plant, Pawn pawn, bool colony, KnowledgeContextKey context = default(KnowledgeContextKey))
         {
             if (plant == null) return StageUnknown;
-            Register();
+            if (!Register()) return StageUnknown;
             KnowledgeSubjectSnapshotV2 state = HorticultureKnowledgeSnapshots.Subject(DomainId, SubjectId(plant), pawn,
                 colony ? KnowledgeScope.Colony : KnowledgeScope.Personal);
-            return state.stageId.NullOrEmpty() ? StageUnknown : state.stageId;
+            return state?.stageId.NullOrEmpty() != false ? StageUnknown : state.stageId;
         }
 
         public static string CultivarStageFor(VarietyRecord variety, Pawn pawn, bool colony)
         {
             string subjectId = CultivarSubjectId(variety);
             if (subjectId.NullOrEmpty()) return StageUnknown;
-            Register();
+            if (!Register()) return StageUnknown;
             KnowledgeSubjectSnapshotV2 state = HorticultureKnowledgeSnapshots.Subject(DomainId, subjectId, pawn,
                 colony ? KnowledgeScope.Colony : KnowledgeScope.Personal);
-            return state.stageId.NullOrEmpty() ? StageUnknown : state.stageId;
+            return state?.stageId.NullOrEmpty() != false ? StageUnknown : state.stageId;
         }
 
         public static string StageLabel(string stageId)
@@ -238,21 +259,21 @@ namespace HorticultureNovelSeeds
                 order >= 2 ? KnowledgeRank.Adept : KnowledgeRank.Novice;
         }
 
-        public static KnowledgeRank ExpertiseRank(Pawn pawn) => IsPlayerColonist(pawn)
+        public static KnowledgeRank ExpertiseRank(Pawn pawn) => IsPlayerColonist(pawn) && Register()
             ? KnowledgeQuery.Expertise(DomainId, pawn, ExpertiseTrack).rank : KnowledgeRank.Novice;
 
-        public static float ExpertiseProgress(Pawn pawn) => IsPlayerColonist(pawn)
+        public static float ExpertiseProgress(Pawn pawn) => IsPlayerColonist(pawn) && Register()
             ? KnowledgeQuery.Expertise(DomainId, pawn, ExpertiseTrack).progress : 0f;
 
         public static float PersonalKnowledge(Pawn pawn, ThingDef plant, string facetId = FacetIdentity) =>
-            pawn == null || plant == null ? 0f : Facet(pawn, plant, facetId).amount;
+            pawn == null || plant == null ? 0f : Facet(pawn, plant, facetId)?.amount ?? 0f;
 
         public static float ColonyKnowledge(ThingDef plant, string facetId = FacetIdentity) =>
-            plant == null ? 0f : Facet(null, plant, facetId, null, true).amount;
+            plant == null ? 0f : Facet(null, plant, facetId, null, true)?.amount ?? 0f;
 
         public static float PlantWorkSpeedFactor(Pawn pawn, ThingDef plant)
         {
-            if (!IsPlayerColonist(pawn) || plant == null) return 1f;
+            if (!IsPlayerColonist(pawn) || plant == null || !Register()) return 1f;
             KnowledgeRank rank = ExpertiseRank(pawn);
             return 1f + Mathf.Clamp((int)rank * 0.03f, 0f, 0.12f);
         }
@@ -277,6 +298,20 @@ namespace HorticultureNovelSeeds
                 sourceInstanceId, role, measurements, context, witnesses, wild, directKnowledge);
         }
 
+        internal static bool RecordLegacyGain(Pawn observer, ThingDef plant, float amount, string reasonId)
+        {
+            HorticultureKnowledgeEvent eventKind = reasonId == "sowing" ? HorticultureKnowledgeEvent.Sowing :
+                reasonId == "harvesting" ? HorticultureKnowledgeEvent.Harvest :
+                reasonId == "cutting" ? HorticultureKnowledgeEvent.MatureObservation :
+                reasonId == "fertilizing" ? HorticultureKnowledgeEvent.Fertilization :
+                reasonId == "discovery" ? HorticultureKnowledgeEvent.WildDiscovery :
+                HorticultureKnowledgeEvent.ProduceProcessing;
+            return Observe(observer, plant, eventKind, success: true, quality: 1f,
+                summary: "Legacy Horticulture knowledge record", sourceInstanceId: HorticultureKnowledgeEventIdentity.LegacyGain(
+                    observer, plant, reasonId, 0),
+                directKnowledge: amount);
+        }
+
         public static bool ObserveCultivar(Pawn observer, VarietyRecord variety, HorticultureKnowledgeEvent eventKind,
             Map map = null, bool success = true, float quality = 1f, string summary = null,
             string sourceInstanceId = null, HorticultureKnowledgeRole role = HorticultureKnowledgeRole.Grower,
@@ -284,7 +319,8 @@ namespace HorticultureNovelSeeds
             IReadOnlyList<Pawn> witnesses = null, bool wild = false, float directKnowledge = 0f)
         {
             return variety?.cropDef == null ? false : ObserveSubject(observer, variety.cropDef, CultivarSubjectId(variety),
-                eventKind, map, success, quality, summary, sourceInstanceId, role, measurements, context, witnesses, wild,
+                eventKind, map, success, quality, summary, sourceInstanceId ?? HorticultureKnowledgeEventIdentity.Normalize(
+                    "cultivar", variety.id + ":" + RecipeId(eventKind)), role, measurements, context, witnesses, wild,
                 directKnowledge);
         }
 
@@ -293,11 +329,18 @@ namespace HorticultureNovelSeeds
             IReadOnlyList<KnowledgeMeasurement> measurements, KnowledgeContextKey context, IReadOnlyList<Pawn> witnesses,
             bool wild, float directKnowledge)
         {
-            if (plant == null || subjectId.NullOrEmpty() || !NovelSeedUtility.IsGrowableCrop(plant)) return false;
+            if (plant == null || subjectId.NullOrEmpty()) return false;
+            if (!HorticulturePlantPolicy.IsSupported(plant))
+            {
+                HorticultureKnowledgeEventDiagnostics.UnsupportedPlant();
+                return false;
+            }
             if (!Register()) return false;
             string recipe = RecipeId(eventKind);
             KnowledgeContextKey resolvedContext = context.IsEmpty ? ContextFor(map, IntVec3.Invalid, null, wild) : context;
-            string instance = sourceInstanceId ?? InstanceId(observer, plant, recipe);
+            string instance = HorticultureKnowledgeEventIdentity.Normalize(recipe,
+                sourceInstanceId ?? InstanceId(observer, plant, recipe));
+            if (!HorticultureKnowledgeEventDiagnostics.Accept(eventKind.ToString(), instance)) return true;
             Dictionary<string, float> facetWeights = FacetWeights(eventKind, role);
             KnowledgeTransaction transaction = new KnowledgeTransaction
             {
@@ -320,6 +363,7 @@ namespace HorticultureNovelSeeds
             }
             KnowledgeTransactionResult result = KnowledgeEngine.Submit(transaction);
             if (!result.success) return false;
+            HorticultureKnowledgeEventDiagnostics.SubmittedEvent(eventKind.ToString(), instance);
             ReportMilestones(observer, subjectId, eventKind, resolvedContext);
             return true;
         }
@@ -327,23 +371,40 @@ namespace HorticultureNovelSeeds
         public static void RegisterCultivar(VarietyRecord variety)
         {
             if (variety?.cropDef == null) return;
-            Register();
+            if (!HorticulturePlantPolicy.IsSupported(variety.cropDef))
+            {
+                HorticultureKnowledgeEventDiagnostics.UnsupportedPlant();
+                return;
+            }
+            if (!Register()) return;
             string subjectId = CultivarSubjectId(variety);
             if (subjectId.NullOrEmpty()) return;
-            KnowledgeRegistry.InvalidateSubjects(DomainId);
+            List<string> affectedSubjects = new List<string> { subjectId, SubjectId(variety.cropDef) };
+            if (variety.parentVarietyIds != null)
+                foreach (string parentId in variety.parentVarietyIds.Where(value => !value.NullOrEmpty()))
+                {
+                    VarietyRecord parent = GameComponent_NovelSeeds.Instance?.GetVariety(parentId);
+                    string parentSubject = CultivarSubjectId(parent);
+                    if (!parentSubject.NullOrEmpty()) affectedSubjects.Add(parentSubject);
+                }
+            KnowledgeInvalidationResult invalidation = InvalidateSubjects(affectedSubjects.Distinct().ToList());
+            if (invalidation == null || !invalidation.Success) return;
             string originType = variety.originKind.NullOrEmpty() ? "mutation" : variety.originKind;
             if (variety.parentVarietyIds != null)
                 foreach (string parentId in variety.parentVarietyIds.Where(value => !value.NullOrEmpty()))
-                    AddRelation(CultivarSubjectId(GameComponent_NovelSeeds.Instance?.GetVariety(parentId)), subjectId,
-                        parentId == variety.parentVarietyIds.FirstOrDefault() ? "seed-parent" : "pollen-parent", variety);
+                    if (!AddRelation(CultivarSubjectId(GameComponent_NovelSeeds.Instance?.GetVariety(parentId)), subjectId,
+                        parentId == variety.parentVarietyIds.FirstOrDefault() ? "seed-parent" : "pollen-parent", variety)) return;
             string originSubject = SubjectId(variety.cropDef);
             string relationType = originType == "wild" ? "wild-origin" : originType == "cross-pollination" ? "cross-origin" : "mutation-origin";
-            AddRelation(originSubject, subjectId, relationType, variety);
+            if (!AddRelation(originSubject, subjectId, relationType, variety)) return;
+            HorticultureKnowledgeEventDiagnostics.SubjectCounts(
+                DefDatabase<ThingDef>.AllDefsListForReading.Count(HorticulturePlantPolicy.IsSupported),
+                GameComponent_NovelSeeds.Instance?.AllVarieties?.Count() ?? 0);
         }
 
         public static KnowledgeStructuredComparisonSnapshot CompareCultivars(IEnumerable<VarietyRecord> varieties, Pawn pawn = null, bool colony = false)
         {
-            Register();
+            if (!Register() || !HorticultureKnowledgeCompatibility.HasOptional(KnowledgeFrameworkApi.StructuredComparisonCapability)) return null;
             List<string> ids = (varieties ?? Enumerable.Empty<VarietyRecord>()).Where(value => value != null)
                 .Select(CultivarSubjectId).Where(value => !value.NullOrEmpty()).Distinct().Take(8).ToList();
             return KnowledgeComparisonService.CompareMany(DomainId, ids, pawn,
@@ -352,10 +413,10 @@ namespace HorticultureNovelSeeds
 
         public static KnowledgeMenuModel Menu(Pawn pawn, bool colony)
         {
-            Register();
+            if (!Register()) return UnavailableMenu();
             KnowledgeMenuSection section = new KnowledgeMenuSection
             {
-                id = "plants",
+                id = DomainId,
                 label = "Plant knowledge",
                 emptyText = "No horticulture evidence yet. Sow, observe, harvest, and preserve a variety."
             };
@@ -364,19 +425,19 @@ namespace HorticultureNovelSeeds
             {
                 KnowledgeFacetSnapshotV2 identity = Facet(pawn, plant, FacetIdentity, null, colony);
                 string stage = StageFor(plant, pawn, colony);
-                if (identity.amount <= 0f && stage == StageUnknown) continue;
+                if (identity == null || identity.amount <= 0f && stage == StageUnknown) continue;
                 section.rows.Add(new KnowledgeMenuRow
                 {
                     label = plant.LabelCap.ToString(),
                     iconDef = plant,
                     subjectId = SubjectId(plant),
                     rank = TierFor(plant, pawn, colony),
-                    progress = Mathf.Clamp01(identity.completeness),
-                    confidence = identity.confidence,
+                    progress = Mathf.Clamp01(identity?.completeness ?? 0f),
+                    confidence = identity?.confidence ?? 0f,
                     stageId = stage,
-                    status = StageLabel(stage) + " - " + identity.confidence.ToStringPercent() + " confidence",
-                    tooltip = plant.LabelCap + "\n" + StageLabel(stage) + "\nEvidence: " + identity.evidenceCount +
-                        "\nContext: " + ContextDescription(identity),
+                    status = StageLabel(stage) + " - " + (identity?.confidence ?? 0f).ToStringPercent() + " confidence",
+                    tooltip = plant.LabelCap + "\n" + StageLabel(stage) + "\nEvidence: " + (identity?.evidenceCount ?? 0) +
+                        "\nContext: " + (identity == null ? "Unavailable" : ContextDescription(identity)),
                     select = () => MainTabWindow_CultivarRegistry.OpenPlant(plant)
                 });
             }
@@ -393,7 +454,7 @@ namespace HorticultureNovelSeeds
 
         public static KnowledgeEntry BioEntry(Pawn pawn)
         {
-            if (pawn == null) return null;
+            if (pawn == null || !Register()) return null;
             int known = KnowledgeQuery.PersonalFacets(DomainId, pawn).Count(value => value.amount > 0f);
             KnowledgeExpertiseSnapshotV2 expertise = KnowledgeQuery.Expertise(DomainId, pawn, ExpertiseTrack);
             if (known == 0 && expertise.amount <= 0f) return null;
@@ -409,69 +470,8 @@ namespace HorticultureNovelSeeds
             };
         }
 
-        public static void TryMigrateLegacy(IEnumerable<PlantKnowledgeRecord> records)
-        {
-            if (!Register() || GameComponent_KnowledgeFramework.Current == null ||
-                KnowledgeMigrationService.IsCommitted(MigrationId, MigrationVersion)) return;
-            List<PlantKnowledgeRecord> valid = (records ?? Enumerable.Empty<PlantKnowledgeRecord>())
-                .Where(value => value?.CropDef != null && value.experience >= 0f).ToList();
-            foreach (PlantKnowledgeRecord record in valid.Where(value => value.pawn != null))
-                MigrateRecord(record, record.pawn, record.experience, 0f,
-                    "pawn:" + record.pawn.thingIDNumber + ":" + record.CropDef.defName);
-            foreach (IGrouping<string, PlantKnowledgeRecord> group in valid.GroupBy(value => value.CropDef.defName))
-            {
-                ThingDef crop = group.First().CropDef;
-                Dictionary<string, int> counts = EventCounts(group);
-                float colony = group.Sum(value => value.experience);
-                MigrateRecord(null, null, 0f, colony, "colony:" + crop.defName, crop, counts);
-            }
-            KnowledgeMigrationService.Import(new KnowledgeConsumerMigration
-            {
-                consumerId = MigrationId,
-                version = MigrationVersion
-            });
-        }
-
-        private static void MigrateRecord(PlantKnowledgeRecord record, Pawn pawn, float personal, float colony,
-            string key, ThingDef crop = null, IDictionary<string, int> counts = null)
-        {
-            crop = crop ?? record?.CropDef;
-            if (crop == null || KnowledgeMigrationService.IsCommitted(MigrationId + ":" + key, MigrationVersion)) return;
-            KnowledgeMigrationService.Import(new KnowledgeConsumerMigration
-            {
-                consumerId = MigrationId + ":" + key,
-                version = MigrationVersion,
-                domainId = DomainId,
-                subjectId = SubjectId(crop),
-                pawn = pawn,
-                personalKnowledge = personal,
-                colonyKnowledge = colony,
-                expertise = pawn == null ? 0f : personal,
-                eventCounts = counts ?? EventCounts(record)
-            });
-        }
-
-        private static Dictionary<string, int> EventCounts(IEnumerable<PlantKnowledgeRecord> values)
-        {
-            List<PlantKnowledgeRecord> records = (values ?? Enumerable.Empty<PlantKnowledgeRecord>()).Where(value => value != null).ToList();
-            return new Dictionary<string, int>
-            {
-                { "sowing", records.Sum(value => value.plantsSown) },
-                { "harvesting", records.Sum(value => value.plantsHarvested) },
-                { "cutting", records.Sum(value => value.plantsCut) },
-                { "fertilizing", records.Sum(value => value.plantsFertilized) },
-                { "mutation-discovery", records.Sum(value => value.seedsDiscovered) },
-                { "produce-processing", records.Sum(value => value.recipesCompleted) }
-            };
-        }
-
-        private static Dictionary<string, int> EventCounts(PlantKnowledgeRecord value) => value == null
-            ? new Dictionary<string, int>()
-            : new Dictionary<string, int>
-            {
-                { "sowing", value.plantsSown }, { "harvesting", value.plantsHarvested }, { "cutting", value.plantsCut },
-                { "fertilizing", value.plantsFertilized }, { "mutation-discovery", value.seedsDiscovered }, { "produce-processing", value.recipesCompleted }
-            };
+        public static bool TryMigrateLegacy(IEnumerable<PlantKnowledgeRecord> records) =>
+            HorticultureKnowledgeMigration.TryMigrate(records);
 
         private static KnowledgeObservation NewObservation(Pawn observer, ThingDef plant, string subjectId, string recipe, string facet,
             string instance, float weight, bool success, float quality, string summary, KnowledgeContextKey context,
@@ -573,13 +573,15 @@ namespace HorticultureNovelSeeds
                 case HorticultureKnowledgeEvent.EnvironmentalStress: selected = new[] { FacetClimate, FacetResilience, FacetGrowth }; break;
                 case HorticultureKnowledgeEvent.Fertilization: selected = new[] { FacetSoil, FacetGrowth }; break;
                 case HorticultureKnowledgeEvent.DiseaseSurvival: selected = new[] { FacetResilience, FacetGrowth }; break;
-                case HorticultureKnowledgeEvent.MatureObservation: selected = new[] { FacetIdentity, FacetGrowth, FacetTraits, FacetClimate }; break;
+                case HorticultureKnowledgeEvent.MatureObservation:
+                case HorticultureKnowledgeEvent.Cutting: selected = new[] { FacetIdentity, FacetGrowth, FacetTraits, FacetClimate, FacetProduce }; break;
                 case HorticultureKnowledgeEvent.Harvest:
                 case HorticultureKnowledgeEvent.RepeatedHarvest: selected = new[] { FacetYield, FacetHarvesting, FacetProduce, FacetLifespan }; break;
+                case HorticultureKnowledgeEvent.HarvestDiscovery: selected = new[] { FacetIdentity, FacetYield, FacetHarvesting, FacetProduce, FacetLifespan, FacetTraits, FacetLineage }; break;
                 case HorticultureKnowledgeEvent.FailedHarvest: selected = new[] { FacetYield, FacetHarvesting, FacetResilience }; break;
                 case HorticultureKnowledgeEvent.ProduceProcessing: selected = new[] { FacetProduce, FacetTraits }; break;
                 case HorticultureKnowledgeEvent.WildDiscovery: selected = new[] { FacetIdentity, FacetEnvironment, FacetTraits, FacetLineage }; break;
-                case HorticultureKnowledgeEvent.MutationDiscovery: selected = new[] { FacetIdentity, FacetTraits, FacetProduce }; break;
+                case HorticultureKnowledgeEvent.MutationDiscovery: selected = new[] { FacetIdentity, FacetTraits, FacetProduce, FacetLineage }; break;
                 case HorticultureKnowledgeEvent.CrossPollination:
                 case HorticultureKnowledgeEvent.TraitInheritance: selected = new[] { FacetTraits, FacetLineage, FacetProduce }; break;
                 case HorticultureKnowledgeEvent.MultiSeasonStability: selected = new[] { FacetYield, FacetClimate, FacetResilience, FacetLifespan }; break;
@@ -596,6 +598,7 @@ namespace HorticultureNovelSeeds
             HorticultureKnowledgeEvent.Sowing => "sowing",
             HorticultureKnowledgeEvent.Fertilization => "fertilizing",
             HorticultureKnowledgeEvent.Harvest => "harvesting",
+            HorticultureKnowledgeEvent.HarvestDiscovery => "harvest-discovery",
             HorticultureKnowledgeEvent.ProduceProcessing => "produce-processing",
             HorticultureKnowledgeEvent.WildDiscovery => "wild-discovery",
             HorticultureKnowledgeEvent.MutationDiscovery => "mutation-discovery",
@@ -607,6 +610,7 @@ namespace HorticultureNovelSeeds
             HorticultureKnowledgeEvent.DiseaseSurvival => "disease-survival",
             HorticultureKnowledgeEvent.GrowthStage => "growth-stage",
             HorticultureKnowledgeEvent.MatureObservation => "mature-observation",
+            HorticultureKnowledgeEvent.Cutting => "cutting",
             HorticultureKnowledgeEvent.MultiSeasonStability => "multi-season-stability",
             HorticultureKnowledgeEvent.Documentation => "documentation",
             _ => value.ToString().ToLowerInvariant()
@@ -615,7 +619,7 @@ namespace HorticultureNovelSeeds
         private static void ReportMilestones(Pawn observer, string subjectId, HorticultureKnowledgeEvent eventKind, KnowledgeContextKey context)
         {
             string milestone = eventKind == HorticultureKnowledgeEvent.Germination ? "first-germination" :
-                eventKind == HorticultureKnowledgeEvent.Harvest ? "first-harvest" :
+                eventKind == HorticultureKnowledgeEvent.Harvest || eventKind == HorticultureKnowledgeEvent.HarvestDiscovery ? "first-harvest" :
                 eventKind == HorticultureKnowledgeEvent.RepeatedHarvest ? "stable-yield" :
                 eventKind == HorticultureKnowledgeEvent.Documentation ? "documented-record" : null;
             if (milestone.NullOrEmpty()) return;
@@ -623,10 +627,11 @@ namespace HorticultureNovelSeeds
                 IsPlayerColonist(observer) ? observer : null, context);
         }
 
-        private static void AddRelation(string from, string to, string role, VarietyRecord variety)
+        private static bool AddRelation(string from, string to, string role, VarietyRecord variety)
         {
-            if (from.NullOrEmpty() || to.NullOrEmpty() || from == to || GameComponent_KnowledgeFramework.Current == null) return;
-            KnowledgeRelationService.Add(new KnowledgeSubjectRelation
+            if (from.NullOrEmpty() || to.NullOrEmpty() || from == to) return true;
+            if (!IsFrameworkUsable) return false;
+            return KnowledgeRelationService.Add(new KnowledgeSubjectRelation
             {
                 domainId = DomainId,
                 fromSubjectId = from,
@@ -648,7 +653,7 @@ namespace HorticultureNovelSeeds
             });
         }
 
-        private static KnowledgeDomainRegistration BuildRegistration()
+        internal static KnowledgeDomainRegistration BuildRegistration()
         {
             List<KnowledgeFacetDef> facetDefs = Facets.Select((id, index) => new KnowledgeFacetDef
             {
@@ -699,7 +704,7 @@ namespace HorticultureNovelSeeds
                 } },
                 subjectResolver = ResolveSubject,
                 subjectSource = SubjectSource,
-                source = "horticulture.v3"
+                source = RegistrationSource
             };
         }
 
@@ -785,6 +790,11 @@ namespace HorticultureNovelSeeds
                     expertiseEfficiency = 0.45f,
                     confidenceEfficiency = 0.75f,
                     maximumRecipients = 8
+                },
+                accrualPolicy = new KnowledgeAccrualPolicy
+                {
+                    uniquePerSourceInstance = true,
+                    stateLimit = 4096
                 }
             }).Concat(new[] { new KnowledgeObservationDef
             {
@@ -807,6 +817,7 @@ namespace HorticultureNovelSeeds
             Claim("lifespan", "Lifespan", FacetLifespan, KnowledgeClaimValueType.EnumId, KnowledgeClaimAggregation.MostSupported, KnowledgeClaimStalenessPolicy.SlowlyStale),
             Claim("harvest_cycles", "Harvest cycles", FacetLifespan, KnowledgeClaimValueType.Integer, KnowledgeClaimAggregation.Highest, KnowledgeClaimStalenessPolicy.Permanent),
             Claim("seed_viability", "Seed viability", FacetLineage, KnowledgeClaimValueType.Percentage, KnowledgeClaimAggregation.WeightedMean, KnowledgeClaimStalenessPolicy.SlowlyStale),
+            Claim("parent_lineage", "Parent lineage", FacetLineage, KnowledgeClaimValueType.SetOfIds, KnowledgeClaimAggregation.Union, KnowledgeClaimStalenessPolicy.Permanent),
             Claim("trait_identity", "Trait identity", FacetTraits, KnowledgeClaimValueType.SetOfIds, KnowledgeClaimAggregation.Union, KnowledgeClaimStalenessPolicy.Permanent),
             Claim("trait_expression", "Observed trait expression", FacetTraits, KnowledgeClaimValueType.SetOfIds, KnowledgeClaimAggregation.Union, KnowledgeClaimStalenessPolicy.Contextual),
             Claim("produce_identity", "Produce identity", FacetProduce, KnowledgeClaimValueType.DefReference, KnowledgeClaimAggregation.MostSupported, KnowledgeClaimStalenessPolicy.Permanent),
@@ -849,7 +860,7 @@ namespace HorticultureNovelSeeds
             foreach (ThingDef plant in DefDatabase<ThingDef>.AllDefsListForReading.Where(NovelSeedUtility.IsGrowableCrop))
                 result.Add(Subject(SubjectId(plant), plant.LabelCap.ToString(), plant.description, plant, SpeciesArchetype));
             foreach (VarietyRecord variety in GameComponent_NovelSeeds.Instance?.AllVarieties ?? Enumerable.Empty<VarietyRecord>())
-                if (variety?.cropDef != null) result.Add(Subject(CultivarSubjectId(variety), variety.Label, variety.cropDef.description,
+                if (variety?.cropDef != null && HorticulturePlantPolicy.IsSupported(variety.cropDef)) result.Add(Subject(CultivarSubjectId(variety), variety.Label, variety.cropDef.description,
                     variety.cropDef, variety.originKind == "wild" ? WildVariantArchetype : CultivarArchetype));
             foreach (Map map in Find.Maps ?? Enumerable.Empty<Map>())
             {
@@ -868,7 +879,7 @@ namespace HorticultureNovelSeeds
             if (id.StartsWith("cultivar:", StringComparison.Ordinal))
             {
                 VarietyRecord variety = GameComponent_NovelSeeds.Instance?.GetVariety(id.Substring("cultivar:".Length));
-                return variety?.cropDef == null ? null : Subject(id, variety.Label, variety.cropDef.description, variety.cropDef,
+                return variety?.cropDef == null || !HorticulturePlantPolicy.IsSupported(variety.cropDef) ? null : Subject(id, variety.Label, variety.cropDef.description, variety.cropDef,
                     variety.originKind == "wild" ? WildVariantArchetype : CultivarArchetype);
             }
             if (id.StartsWith("field:", StringComparison.Ordinal))
@@ -896,38 +907,62 @@ namespace HorticultureNovelSeeds
             sourceDef = source,
             archetypeId = archetype,
             sortOrder = archetype == SpeciesArchetype ? 0 : archetype == CultivarArchetype || archetype == WildVariantArchetype ? 10 : 20,
-            source = "horticulture.v3"
+            source = RegistrationSource
         };
 
-        private static void RegisterContexts()
+        internal static bool RegisterUiProvider()
         {
-            KnowledgeContextRegistry.RegisterType(new KnowledgeContextTypeDef { defName = "HNS_ContextZone", stableId = ContextZone }, true);
-            KnowledgeContextRegistry.RegisterType(new KnowledgeContextTypeDef { defName = "HNS_ContextHydroponic", stableId = ContextHydroponic }, true);
-            KnowledgeContextRegistry.RegisterType(new KnowledgeContextTypeDef { defName = "HNS_ContextWildSite", stableId = ContextWildSite }, true);
-            KnowledgeContextRegistry.RegisterType(new KnowledgeContextTypeDef { defName = "HNS_ContextGreenhouse", stableId = ContextGreenhouse }, true);
-            KnowledgeContextRegistry.RegisterType(new KnowledgeContextTypeDef { defName = "HNS_ContextMap", stableId = ContextMap }, true);
-            KnowledgeContextRegistry.RegisterType(new KnowledgeContextTypeDef { defName = "HNS_ContextBiome", stableId = ContextBiome }, true);
-            KnowledgeContextRegistry.RegisterType(new KnowledgeContextTypeDef { defName = "HNS_ContextGlobal", stableId = ContextGlobal }, true);
-            HorticultureContextResolver resolver = new HorticultureContextResolver();
-            foreach (string type in new[] { ContextZone, ContextHydroponic, ContextWildSite, ContextGreenhouse, ContextMap, ContextBiome, ContextGlobal })
-                KnowledgeContextRegistry.RegisterResolver(type, resolver, true);
+            return KnowledgeV3Ui.Register(new HorticultureV3UiProvider(), false);
         }
 
-        private static void RegisterRelationsAndComparisons()
+        private static KnowledgeMenuModel UnavailableMenu() => new KnowledgeMenuModel
+        {
+            title = "Horticulture Knowledge Unavailable",
+            expertiseLabel = "Knowledge Framework unavailable",
+            expertiseRank = KnowledgeRank.Novice,
+            expertiseProgress = 0f,
+            sections = new List<KnowledgeMenuSection>
+            {
+                new KnowledgeMenuSection
+                {
+                    id = "horticulture-unavailable",
+                    label = "Plant knowledge unavailable",
+                    emptyText = "Knowledge Framework is not ready or is incompatible. Horticulture gameplay remains available."
+                }
+            }
+        };
+
+        internal static bool RegisterContexts()
+        {
+            if (!KnowledgeContextRegistry.RegisterType(new KnowledgeContextTypeDef { defName = "HNS_ContextZone", stableId = ContextZone })) return false;
+            if (!KnowledgeContextRegistry.RegisterType(new KnowledgeContextTypeDef { defName = "HNS_ContextHydroponic", stableId = ContextHydroponic })) return false;
+            if (!KnowledgeContextRegistry.RegisterType(new KnowledgeContextTypeDef { defName = "HNS_ContextWildSite", stableId = ContextWildSite })) return false;
+            if (!KnowledgeContextRegistry.RegisterType(new KnowledgeContextTypeDef { defName = "HNS_ContextGreenhouse", stableId = ContextGreenhouse })) return false;
+            if (!KnowledgeContextRegistry.RegisterType(new KnowledgeContextTypeDef { defName = "HNS_ContextMap", stableId = ContextMap })) return false;
+            if (!KnowledgeContextRegistry.RegisterType(new KnowledgeContextTypeDef { defName = "HNS_ContextBiome", stableId = ContextBiome })) return false;
+            if (!KnowledgeContextRegistry.RegisterType(new KnowledgeContextTypeDef { defName = "HNS_ContextGlobal", stableId = ContextGlobal })) return false;
+            HorticultureContextResolver resolver = new HorticultureContextResolver();
+            foreach (string type in new[] { ContextZone, ContextHydroponic, ContextWildSite, ContextGreenhouse, ContextMap, ContextBiome, ContextGlobal })
+                if (!KnowledgeContextRegistry.RegisterResolver(type, resolver)) return false;
+            return true;
+        }
+
+        internal static bool RegisterRelationsAndComparisons()
         {
             foreach (string type in new[] { "parent-of", "mutation-origin", "wild-origin", "cross-pollination" })
-                KnowledgeRelationService.RegisterType(new KnowledgeSubjectRelationTypeDef
+                if (!KnowledgeRelationService.RegisterType(new KnowledgeSubjectRelationTypeDef
                 {
                     defName = "HNS_Relation_" + type.Replace("-", "_"), stableId = type, parentage = true, metadataLimit = 8
-                }, true);
-            KnowledgeComparisonService.RegisterSchema(new KnowledgeComparisonSchema
+                })) return false;
+            if (!HorticultureKnowledgeCompatibility.HasOptional(KnowledgeFrameworkApi.StructuredComparisonCapability)) return true;
+            return KnowledgeComparisonService.RegisterSchema(new KnowledgeComparisonSchema
             {
                 id = "horticulture.cultivar-comparison",
                 label = "Cultivar comparison",
                 claimIds = BuildClaims().Select(value => value.StableId).ToList(),
                 facetIds = Facets.ToList(),
                 relationTypeIds = new List<string> { "parent-of", "mutation-origin", "wild-origin", "cross-pollination" }
-            }, true);
+            });
         }
 
         private sealed class HorticultureContextResolver : IKnowledgeContextResolver
@@ -997,8 +1032,9 @@ namespace HorticultureNovelSeeds
         private static string ContextDescription(KnowledgeFacetSnapshotV2 value) => value.usedContextFallback
             ? "Expected from " + value.context + "; not yet confirmed here." : value.context.IsEmpty ? "Global" : value.context.ToString();
 
-        private static string InstanceId(Pawn pawn, ThingDef plant, string recipe) => "horticulture:" + (pawn?.thingIDNumber ?? 0) + ":" +
-            plant.defName + ":" + recipe + ":" + (Find.TickManager?.TicksGame ?? 0);
+        private static string InstanceId(Pawn pawn, ThingDef plant, string recipe) =>
+            HorticultureKnowledgeEventIdentity.Normalize(recipe, (pawn?.thingIDNumber ?? 0) + ":" +
+                plant?.defName + ":" + recipe);
 
         private static string FacetLabel(string id) => id == FacetSoil ? "Soil compatibility" : id == FacetTraits ? "Trait expression" :
             id == FacetResilience ? "Disease and resilience" : id == FacetLifespan ? "Lifespan" : id.CapitalizeFirst();
