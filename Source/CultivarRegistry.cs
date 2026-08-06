@@ -301,7 +301,7 @@ namespace HorticultureNovelSeeds
         private void DrawCultivarDetail(Rect rect, GameComponent_NovelSeeds component)
         {
             VarietyRecord selected = component.GetVariety(selectedCultivarId);
-            if (selected == null)
+            if (selected == null || !HorticulturePlantPolicy.IsSupported(selected.cropDef))
             {
                 Widgets.Label(rect, "HNS_RegistrySelectVariety".Translate());
                 return;
@@ -506,7 +506,8 @@ namespace HorticultureNovelSeeds
 
         private bool MatchesCultivarFilter(VarietyRecord variety)
         {
-            if (variety?.cropDef == null || (!showArchived && variety.registryArchived)) return false;
+            if (variety?.cropDef == null || !HorticulturePlantPolicy.IsSupported(variety.cropDef) ||
+                (!showArchived && variety.registryArchived)) return false;
             if (!search.NullOrEmpty() && (variety.Label + " " + variety.cropDef.label + " " + NovelSeedUtility.TraitSummary(variety.traits))
                 .IndexOf(search, StringComparison.OrdinalIgnoreCase) < 0) return false;
             if (requireProduceEffect && !variety.traits.Any(trait =>
@@ -531,7 +532,8 @@ namespace HorticultureNovelSeeds
                 knowledgeState.selectedPawn = colonists.FirstOrDefault();
             if (selectedPlantDefName.NullOrEmpty() || DefDatabase<ThingDef>.GetNamedSilentFail(selectedPlantDefName) == null)
                 selectedPlantDefName = PlantDefs().FirstOrDefault(def => IsDiscovered(def, component))?.defName ?? PlantDefs().FirstOrDefault()?.defName;
-            if (component.GetVariety(selectedCultivarId) == null)
+            VarietyRecord selectedCultivar = component.GetVariety(selectedCultivarId);
+            if (selectedCultivar?.cropDef == null || !HorticulturePlantPolicy.IsSupported(selectedCultivar.cropDef))
                 selectedCultivarId = component.AllVarieties.OrderBy(value => value.cropDef?.label).ThenBy(value => value.Label).FirstOrDefault()?.id;
             comparisonIds.RemoveWhere(id => component.GetVariety(id) == null);
         }

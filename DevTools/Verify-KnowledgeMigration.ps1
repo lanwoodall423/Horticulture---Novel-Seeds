@@ -7,20 +7,33 @@ $snapshots = Get-Content -Raw (Join-Path $root 'Source\HorticultureKnowledgeSnap
 $router = Get-Content -Raw (Join-Path $root 'Source\HorticultureEventRouter.cs')
 $registry = Get-Content -Raw (Join-Path $root 'Source\CultivarRegistry.cs')
 $about = Get-Content -Raw (Join-Path $root 'About\About.xml')
+$contract = Get-Content -Raw (Join-Path $root 'Source\HorticultureKnowledgeContract.cs')
+$compatibility = Get-Content -Raw (Join-Path $root 'Source\HorticultureKnowledgeCompatibility.cs')
+$registration = Get-Content -Raw (Join-Path $root 'Source\HorticultureKnowledgeRegistration.cs')
+$migration = Get-Content -Raw (Join-Path $root 'Source\HorticultureKnowledgeMigration.cs')
+$policy = Get-Content -Raw (Join-Path $root 'Source\HorticulturePlantPolicy.cs')
+$identity = Get-Content -Raw (Join-Path $root 'Source\HorticultureKnowledgeEventIdentity.cs')
+$diagnostics = Get-Content -Raw (Join-Path $root 'Source\HorticultureKnowledgeEventDiagnostics.cs')
 
 $checks = [ordered]@{
-    'plants register as framework domain' = $adapter -match 'KnowledgeRegistry\.RegisterDomain' -and $adapter -match 'DomainId = "plants"'
+    'namespaced domain and permanent legacy ID are centralized' = $contract -match 'DomainId = PackageId \+ "\.plants"' -and $contract -match 'LegacyDomainId = "plants"'
+    'safe registration uses compatibility and non-replacing ownership checks' = $compatibility -match 'RequiredCapabilities' -and $registration -match 'InspectDomainRegistration' -and $registration -match 'KnowledgeRegistrationConflict\.Reject'
     'knowledge and expertise have separate gains' = ($knowledge -match 'pawnKnowledge = amount' -and $knowledge -match 'colonyKnowledge = amount' -and $knowledge -match 'expertise = amount') -or ($adapter -match 'directKnowledge' -and $adapter -match 'directExpertise' -and $adapter -match 'targetColony = true')
     'work effects are bounded and domain owned' = $knowledge -match 'PlantKnowledgeEffectProvider' -and $knowledge -match 'Mathf\.Clamp\(bonus, 0f, 0\.15f\)'
     'hot work query uses framework scalar path' = $knowledge -match 'HorticultureKnowledgeAdapter\.PlantWorkSpeedFactor' -and $adapter -match 'KnowledgeQuery\.Expertise'
-    'old knowledge imports by maximum merge' = $core -match 'ImportLegacyKnowledge' -and $core -match 'KnowledgeService\.ImportMinimum'
-    'legacy knowledge clears only after successful import' = $core -match 'if \(ImportLegacyKnowledge\(\)\) legacyHorticultureKnowledge\.Clear\(\)' -and $core -match 'GameComponent_KnowledgeFramework\.Current == null\) return false'
-    'legacy import waits for component finalization' = $core -match 'FinalizeInit\(\)[\s\S]*?ImportLegacyKnowledge\(\)' -and $core -notmatch 'PostLoadInit\)[\s\S]{0,900}?ImportLegacyKnowledge\(\)'
+    'legacy knowledge imports through versioned framework migration' = $migration -match 'KnowledgeMigrationService\.Import' -and $migration -match 'MigrationVersion'
+    'legacy alias is registered before migrated content' = $migration -match 'RegisterDomainAlias' -and $registration -match 'RegisterLegacyAlias'
+    'legacy knowledge clears only after successful migration' = $core -match '!HorticultureKnowledgeAdapter\.TryMigrateLegacy\(legacyHorticultureKnowledge\)' -and $core -match 'TryMigrateLegacy\(legacyHorticultureKnowledge\)[\s\S]{0,500}legacyHorticultureKnowledge\?\.Clear\(\)'
+    'legacy migration has guarded recovery retry' = $core -match 'knowledgeIntegrationRetryScheduled' -and $core -match 'ExecuteWhenFinished'
+    'Horticulture has no direct framework component or schema lifecycle dependency' = (($adapter + $core + $knowledge) -notmatch 'GameComponent_KnowledgeFramework\.Current|BuildDefSchemas\(\)|KnowledgeService\.|KnowledgeDomainRegistry\.')
     'obsolete knowledge is load only' = $core -match 'Scribe\.mode != LoadSaveMode\.Saving[\s\S]*?"horticultureKnowledge"'
     'obsolete breeding programs are load only' = $core -match 'Scribe\.mode != LoadSaveMode\.Saving[\s\S]*?"breedingPrograms"' -and $core -notmatch 'AddBreedingProgram'
     'controlled cultivar mixes remain' = $core -match 'breedingVarietyIdsByGrower' -and $core -match 'SetBreedingMix'
-    'registry queries framework snapshots' = $registry -match 'HorticultureKnowledgeAdapter\.Menu' -and $registry -match 'HorticultureKnowledgeAdapter\.TierFor' -and $snapshots -match 'KnowledgeQuery\.Facet'
-    'completed events route through the adapter' = $router -match 'SowingCompleted' -and $router -match 'HarvestCompleted' -and $router -match 'ProduceProcessed'
+    'registry queries framework snapshots through the adapter' = $registry -match 'HorticultureKnowledgeAdapter\.Menu' -and $registry -match 'HorticultureKnowledgeAdapter\.TierFor' -and $snapshots -match 'HorticultureKnowledgeAdapter\.KnowledgeRevision'
+    'completed events route through one semantic router' = $router -match 'SowingCompleted' -and $router -match 'HarvestCompleted' -and $router -match 'ProduceProcessed' -and $router -match 'CuttingCompleted' -and $router -notmatch 'CurrentTick\(|TicksGame'
+    'canonical policy includes sowable trees' = $policy -match 'plantDef\.plant\.Sowable' -and $policy -match 'IsSowableTree' -and $policy -notmatch '!plantDef\.plant\.IsTree'
+    'stable identities and bounded dedupe are present' = $identity -match 'StableHash' -and $identity -match 'MaxIdentityLength' -and $diagnostics -match 'MaxRecentEvents = 1024'
+    'normal cultivar registration invalidates affected subjects only' = $adapter -match 'InvalidateSubjects\(' -and $adapter -notmatch 'InvalidateDomain\(DomainId\)'
     'content packs are optional load ordering only' = $about -notmatch '<modDependencies>[\s\S]*?<packageId>VanillaExpanded\.VPlants' -and $about -match '<loadAfter>[\s\S]*?VanillaExpanded\.VPlantsE'
 }
 $failed = @($checks.GetEnumerator() | Where-Object { -not $_.Value })

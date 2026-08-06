@@ -112,9 +112,10 @@ namespace HorticultureNovelSeeds
                 ResourcePaymentUtility.PaymentResult payment = ResourcePaymentUtility.EvaluatePayment(true,
                     carried.stackCount, trait.requiredResourceCount);
                 if (payment.Consumed <= 0) return;
+                string eventIdentity = HorticultureKnowledgeEventIdentity.Fertilization(plant, comp.ResourceCycle);
                 carried.SplitOff(payment.Consumed).Destroy();
                 if (payment.FullyPaid) comp.SatisfyResource();
-                if (payment.FullyPaid) HorticultureEventRouter.FertilizationCompleted(pawn, plant);
+                if (payment.FullyPaid) HorticultureEventRouter.FertilizationCompleted(pawn, plant, eventIdentity);
             };
             apply.defaultCompleteMode = ToilCompleteMode.Instant;
             yield return apply;

@@ -316,6 +316,15 @@ namespace HorticultureNovelSeeds
         {
             if (inheritedTraitsCache != null) return;
             sourcePlantDefCache = sourcePlantDefName.NullOrEmpty() ? null : DefDatabase<ThingDef>.GetNamedSilentFail(sourcePlantDefName);
+            if (sourcePlantDefCache != null && !HorticulturePlantPolicy.IsSupported(sourcePlantDefCache))
+            {
+                sourcePlantDefCache = null;
+                inheritedTraitsCache = new List<VarietyTraitDef>();
+                effectiveTraitsCache = new List<VarietyTraitDef>();
+                effectiveTraitNamesCache = new HashSet<string>();
+                produceStyleKeyCache = string.Empty;
+                return;
+            }
             inheritedTraitsCache = ResolveTraits(traitDefNames);
             effectiveTraitsCache = ResolveTraits(effectiveTraitDefNames);
             effectiveTraitNamesCache = new HashSet<string>(effectiveTraitDefNames ?? Enumerable.Empty<string>());

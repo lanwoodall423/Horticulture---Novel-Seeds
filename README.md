@@ -230,6 +230,47 @@ Progression: Agriculture's seed unlock system is used and is required.
 It should be compatible with all plant mods. Existing manual masks always take priority; missing
 growth-stage, collection, and directional masks use the persistent automatic fallback.
 
+Knowledge Framework integration
+-------------------------------
+Novel Seeds consumes the additive Knowledge Framework API from
+`https://github.com/lanwoodall423/Knowledge-Framework` at API generation 3. The validated
+framework dependency is commit `d90fbccce98a4bdab59d3f2f84dbe7c15b22301dd`, with
+`KnowledgeFramework.dll` SHA-256 `33552DBEC78E0E777C3E074EA0EBA8F750629E879EA8A809B58D54AEFB1E71C0`.
+Required capabilities are typed measurements, evidence transactions, claims, contexts,
+witness learning, milestones, structural relations, consumer migration, domain aliases,
+readiness inspection, safe registration, registration ownership, and targeted invalidation.
+UI, structured comparison, and filtered transmission are optional; when absent, the
+integration keeps neutral UI/comparison behavior and continues core cultivation behavior.
+
+The integration registers `lan.horticulture.novelseeds.plants` only after framework readiness,
+uses non-replacing registration, rejects foreign ownership, and keeps gameplay framework calls
+behind `HorticultureKnowledgeAdapter`; internal registration and migration helpers use only the
+supported consumer and alias APIs. The legacy `plants` domain is a permanent canonical alias.
+Migration is versioned and retries incomplete imports without clearing serialized legacy data;
+save/reload is idempotent. Consumers never inspect a framework game component or build global
+schemas themselves.
+
+Plant knowledge event routing uses bounded semantic identities based on plant, cultivar,
+cycle, batch, parent, and documentation data rather than object references or ticks alone.
+Duplicate hooks are deduplicated at the integration boundary while legitimate harvest cycles
+remain distinct. The canonical supported-plant policy includes all sowable trees and excludes
+non-sowable decorative or wild-only plants. Cultivar registration invalidates the cultivar,
+species, parents, and directly related subjects instead of the whole domain during normal play.
+Developer diagnostics expose registration state, framework compatibility, submitted and
+deduplicated event counts, rejected plants, targeted/broad invalidations, and subject counts.
+The owner adapter provides `HNS_EVENT_ROUTING_DIAGNOSTIC`,
+`HNS_EVENT_ROUTING_REGRESSION`, `HNS_EVENT_ROUTING_DUPLICATE_TEST`, and
+`HNS_EVENT_INVALIDATION_PERF`. The duplicate scenario must increase the measured event count
+by no more than one for two submissions with the same identity; separate harvest cycles must
+use separate cycle identities. The invalidation scenario reports request sizes 10, 100, 500,
+and 1,000 in 256-subject chunks, including calls, invalidated counts, and elapsed milliseconds.
+These are measurements rather than progression guarantees: personal/colony amounts,
+familiarity, claim confidence, stage, expertise, and witness effects are reported before and
+after controlled submissions. No runtime values are claimed when the Dev Bridge is unavailable.
+The only intentional progression correction is collapsing discovery and its parent-lineage
+evidence into one Knowledge Framework transaction; event weights and cultivation modifiers are
+otherwise unchanged.
+
 Deferred Reality integration
 ----------------------------
 The optional Deferred Reality Horticulture adapter is temporarily unavailable. Its external
@@ -244,4 +285,4 @@ Release artifact policy
 The authoritative RimWorld 1.6 artifact is `1.6/Assemblies/HorticultureNovelSeeds.dll`, built with
 `dotnet build Source/HorticultureNovelSeeds.csproj --configuration Release`. `Source/obj`, validation DLLs,
 bridge `bin`/`obj`, staged snapshots, and bridge package output are disposable and ignored. The clean shipped
-artifact SHA-256 is `0E8E0C6717BCC4A26BF01515A5D73426EAC0115649E3B7BFC4B36805C6C0BE84`.
+artifact SHA-256 is `574CD28FCE488D9E4DB6F25AB089AEC5D03FCC88ABB926592C5264A05D5F98ED`.

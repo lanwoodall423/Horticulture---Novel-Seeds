@@ -183,7 +183,7 @@ namespace HorticultureNovelSeeds
             EnsureLoaded();
             AutoMaskBatchResult result = new AutoMaskBatchResult();
             IEnumerable<ThingDef> plants = DefDatabase<ThingDef>.AllDefsListForReading
-                .Where(def => def?.plant != null && def.graphicData != null).OrderBy(def => def.defName);
+                .Where(def => HorticulturePlantPolicy.IsSupported(def) && def.graphicData != null).OrderBy(def => def.defName);
             foreach (ThingDef plant in plants)
             {
                 int count = PlantMaskUtility.VariationCount(plant);
@@ -218,7 +218,7 @@ namespace HorticultureNovelSeeds
             bool allowIdentityGeneration = false)
         {
             EnsureLoaded();
-            if (plantDef == null) return null;
+            if (plantDef == null || !HorticulturePlantPolicy.IsSupported(plantDef)) return null;
             string key = RecordKey(plantDef.defName, variationIndex);
             if (!allowIdentityGeneration)
             {
@@ -269,7 +269,7 @@ namespace HorticultureNovelSeeds
         {
             EnsureLoaded();
             Texture texture = PlantMaskUtility.TextureForVariation(plantDef, variationIndex);
-            if (plantDef == null || texture == null) return null;
+            if (plantDef == null || !HorticulturePlantPolicy.IsSupported(plantDef) || texture == null) return null;
             ProduceSignature produce = ProduceColorFor(plantDef);
             string textureKey = TextureKey(plantDef, variationIndex, texture, produce);
             LayerEligibility eligibility = EligibilityFor(plantDef, variationIndex, texture, produce);

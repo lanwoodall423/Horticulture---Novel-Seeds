@@ -21,6 +21,8 @@ namespace HorticultureNovelSeeds
         private List<VarietyTraitDef> transientTraits;
         private bool pendingDiscovery;
         private bool resourceSatisfied;
+        private int harvestCycle;
+        private int resourceCycle;
         private bool saveSeedsRequested;
         private string crossPollinationParentVarietyId;
         [Unsaved(false)] private List<VarietyTraitDef> activeTraitsCache;
@@ -71,6 +73,13 @@ namespace HorticultureNovelSeeds
         public float ColdGrowthOffset { get { EnsureTraitCache(); return coldGrowthOffsetCache; } }
         public float HeatGrowthOffset { get { EnsureTraitCache(); return heatGrowthOffsetCache; } }
         public bool NeedsResource => RequiredResourceTrait != null && !resourceSatisfied;
+        public int HarvestCycle => harvestCycle;
+        public int ResourceCycle => resourceCycle;
+        public int BeginHarvestCycle()
+        {
+            if (harvestCycle < int.MaxValue) harvestCycle++;
+            return harvestCycle;
+        }
         public void SatisfyResource() { resourceSatisfied = true; }
         public bool TryMarkSelfSeededAtMaturity(bool mature)
         {
@@ -98,6 +107,7 @@ namespace HorticultureNovelSeeds
             transientTraits = null;
             pendingDiscovery = false;
             resourceSatisfied = false;
+            if (resourceCycle < int.MaxValue) resourceCycle++;
             saveSeedsRequested = false;
             crossPollinationParentVarietyId = null;
             InvalidateTraitCache();
@@ -115,6 +125,7 @@ namespace HorticultureNovelSeeds
             transientTraits = traits?.Where(t => t != null).Distinct().ToList();
             pendingDiscovery = transientTraits != null && transientTraits.Count > 0;
             resourceSatisfied = false;
+            if (resourceCycle < int.MaxValue) resourceCycle++;
             saveSeedsRequested = false;
             crossPollinationParentVarietyId = null;
             InvalidateTraitCache();
@@ -185,6 +196,8 @@ namespace HorticultureNovelSeeds
             Scribe_Collections.Look(ref transientTraits, "transientTraits", LookMode.Def);
             Scribe_Values.Look(ref pendingDiscovery, "pendingDiscovery", false);
             Scribe_Values.Look(ref resourceSatisfied, "resourceSatisfied", false);
+            Scribe_Values.Look(ref harvestCycle, "harvestCycle", 0);
+            Scribe_Values.Look(ref resourceCycle, "resourceCycle", 0);
             Scribe_Values.Look(ref saveSeedsRequested, "saveSeedsRequested", false);
             Scribe_Values.Look(ref crossPollinationParentVarietyId, "crossPollinationParentVarietyId");
             if (Scribe.mode == LoadSaveMode.PostLoadInit && transientTraits == null)

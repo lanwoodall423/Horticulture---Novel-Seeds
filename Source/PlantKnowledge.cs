@@ -45,7 +45,8 @@ namespace HorticultureNovelSeeds
 
     public static class PlantKnowledgeUtility
     {
-        public const string DomainId = "plants";
+        // Retained for save/consumer compatibility. New framework data uses the namespaced domain.
+        public const string DomainId = HorticultureKnowledgeContract.LegacyDomainId;
         public const float AdeptThreshold = 100f;
         public const float ExpertThreshold = 300f;
         public const float MasterThreshold = 700f;
@@ -104,17 +105,7 @@ namespace HorticultureNovelSeeds
         private static void Gain(Pawn pawn, ThingDef cropDef, float amount, string reasonId)
         {
             if (pawn?.Faction?.def?.isPlayer != true || cropDef == null || amount <= 0f) return;
-            KnowledgeService.Award(new KnowledgeAward
-            {
-                domainId = DomainId,
-                subjectId = cropDef.defName,
-                pawn = pawn,
-                pawnKnowledge = amount,
-                colonyKnowledge = amount,
-                expertise = amount,
-                reasonId = reasonId,
-                source = "HorticultureNovelSeeds"
-            });
+            HorticultureKnowledgeAdapter.RecordLegacyGain(pawn, cropDef, amount, reasonId);
         }
     }
 
@@ -149,44 +140,9 @@ namespace HorticultureNovelSeeds
 
     public static class HorticultureSharedKnowledgeIntegration
     {
-        private static readonly PlantKnowledgeUiProvider UiProvider = new PlantKnowledgeUiProvider();
+        public static void Register() => HorticultureKnowledgeAdapter.Register();
 
-        public static void Register()
-        {
-            KnowledgeDomainRegistry.RegisterDomain(new KnowledgeDomainDefinition(
-                PlantKnowledgeUtility.DomainId,
-                "Horticulture",
-                "Knowledge of plant species and practical horticulture expertise.",
-                expertiseEnabled: true,
-                knowledgeRanks: new KnowledgeRankThresholds(PlantKnowledgeUtility.AdeptThreshold,
-                    PlantKnowledgeUtility.ExpertThreshold, PlantKnowledgeUtility.MasterThreshold),
-                expertiseRanks: new KnowledgeRankThresholds(PlantKnowledgeUtility.AdeptThreshold,
-                    PlantKnowledgeUtility.ExpertThreshold, PlantKnowledgeUtility.MasterThreshold),
-                subjectResolver: ResolveSubject,
-                subjectSource: Subjects,
-                revealThresholds: new Dictionary<string, float>
-                {
-                    { "identity", 0f }, { "approximateTraits", PlantKnowledgeUtility.AdeptThreshold },
-                    { "exactTraits", PlantKnowledgeUtility.ExpertThreshold },
-                    { "inheritancePredictions", PlantKnowledgeUtility.MasterThreshold }
-                },
-                sortOrder: 30));
-            KnowledgeDomainRegistry.RegisterEffect(new PlantKnowledgeEffectProvider());
-            KnowledgeDomainRegistry.RegisterUi(UiProvider);
-        }
-
-        public static KnowledgeMenuModel Menu(Pawn pawn, bool colony) => UiProvider.Menu(pawn, colony);
-
-        private static KnowledgeSubjectDefinition ResolveSubject(string subjectId)
-        {
-            ThingDef crop = DefDatabase<ThingDef>.GetNamedSilentFail(subjectId);
-            return crop == null ? null : new KnowledgeSubjectDefinition(crop.defName, crop.LabelCap,
-                crop.description, crop);
-        }
-
-        private static IEnumerable<KnowledgeSubjectDefinition> Subjects() =>
-            DefDatabase<ThingDef>.AllDefsListForReading.Where(NovelSeedUtility.IsGrowableCrop)
-                .Select(crop => new KnowledgeSubjectDefinition(crop.defName, crop.LabelCap, crop.description, crop));
+        public static KnowledgeMenuModel Menu(Pawn pawn, bool colony) => HorticultureKnowledgeAdapter.Menu(pawn, colony);
     }
 
     public sealed class PlantKnowledgeUiProvider : IKnowledgeUiProvider
@@ -195,66 +151,12 @@ namespace HorticultureNovelSeeds
 
         public KnowledgeEntry BioEntry(Pawn pawn)
         {
-            IReadOnlyList<KnowledgeSnapshot> records = KnowledgeService.PawnKnowledge(DomainId, pawn);
-            if (records.Count == 0) return null;
-            KnowledgeSnapshot best = records.OrderByDescending(record => record.experience).First();
-            ExpertiseSnapshot expertise = KnowledgeService.GetPawnExpertise(DomainId, pawn);
-            ThingDef crop = DefDatabase<ThingDef>.GetNamedSilentFail(best.subjectId);
-            return new KnowledgeEntry
-            {
-                label = "Horticulture",
-                rank = expertise.rank,
-                progress = expertise.progress,
-                summary = records.Count + " crops / " + (crop?.LabelCap.ToString() ?? "missing definition"),
-                tooltip = "Horticulture - " + expertise.rank + "\n\nKnowledge grows through completed plant work, discoveries, and recipes using known produce." +
-                    "\n\nBest-known crop: " + (crop?.LabelCap.ToString() ?? best.subjectId) +
-                    "\n- Plant work speed: +" + (((int)best.rank * 0.03f) + ((int)expertise.rank * 0.02f)).ToStringPercent() +
-                    "\n\nKnown crops: " + records.Count +
-                    "\nBest crop XP: " + best.experience.ToString("0"),
-                openDetails = () => MainTabWindow_CultivarRegistry.OpenKnowledge(pawn)
-            };
+            return HorticultureKnowledgeAdapter.BioEntry(pawn);
         }
 
         public KnowledgeMenuModel Menu(Pawn pawn, bool colony)
         {
-            IReadOnlyList<KnowledgeSnapshot> records = colony
-                ? KnowledgeService.ColonyKnowledge(DomainId) : KnowledgeService.PawnKnowledge(DomainId, pawn);
-            var section = new KnowledgeMenuSection
-            {
-                id = "plants", label = "Plant Knowledge",
-                emptyText = "No horticulture knowledge yet. Complete plant work or discover and use novel plants."
-            };
-            foreach (KnowledgeSnapshot record in records.OrderBy(value =>
-                DefDatabase<ThingDef>.GetNamedSilentFail(value.subjectId)?.label ?? value.subjectId))
-            {
-                ThingDef crop = DefDatabase<ThingDef>.GetNamedSilentFail(record.subjectId);
-                section.rows.Add(new KnowledgeMenuRow
-                {
-                    label = crop?.LabelCap.ToString() ?? "Missing definition: " + record.subjectId,
-                    iconDef = crop,
-                    rank = record.rank,
-                    progress = record.progress,
-                    status = record.rank + " - " + record.experience.ToString("0") + " XP",
-                    tooltip = "Sown: " + record.EventCount("sowing") + "\nHarvested: " + record.EventCount("harvesting")
-                        + "\nCut: " + record.EventCount("cutting") + "\nFertilized: " + record.EventCount("fertilizing")
-                        + "\nDiscoveries: " + record.EventCount("discovery") + "\nProduce recipes: "
-                        + record.EventCount("produceRecipe")
-                });
-            }
-            if (colony) return new KnowledgeMenuModel
-            {
-                title = "Colony Horticulture Knowledge",
-                sections = new List<KnowledgeMenuSection> { section }
-            };
-            ExpertiseSnapshot expertise = KnowledgeService.GetPawnExpertise(DomainId, pawn);
-            return new KnowledgeMenuModel
-            {
-                title = (pawn?.LabelShortCap ?? "Colonist") + " - Horticulture",
-                expertiseLabel = "Horticulture expertise",
-                expertiseRank = expertise.rank,
-                expertiseProgress = expertise.progress,
-                sections = new List<KnowledgeMenuSection> { section }
-            };
+            return HorticultureKnowledgeAdapter.Menu(pawn, colony);
         }
     }
 }

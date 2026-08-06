@@ -11,7 +11,7 @@ namespace HorticultureNovelSeeds
     {
         public static void OpenVarietyMenu(List<IPlantToGrowSettable> settables, ThingDef plantDef, IEnumerable<VarietyRecord> varieties, Action<VarietyRecord> afterSelect = null, Action<List<IPlantToGrowSettable>, ThingDef> applyPlantDef = null)
         {
-            if (plantDef == null)
+            if (!HorticulturePlantPolicy.IsSupported(plantDef))
             {
                 return;
             }
@@ -66,7 +66,7 @@ namespace HorticultureNovelSeeds
 
         public static void SelectPlant(List<IPlantToGrowSettable> settables, ThingDef plantDef, VarietyRecord variety, Action<List<IPlantToGrowSettable>, ThingDef> applyPlantDef = null)
         {
-            if (plantDef == null || settables == null)
+            if (!HorticulturePlantPolicy.IsSupported(plantDef) || settables == null)
             {
                 return;
             }
@@ -94,7 +94,7 @@ namespace HorticultureNovelSeeds
 
         public static void SelectBreedingMix(List<IPlantToGrowSettable> settables, ThingDef plantDef, IEnumerable<VarietyRecord> varieties, Action<List<IPlantToGrowSettable>, ThingDef> applyPlantDef = null)
         {
-            if (plantDef == null || settables == null) return;
+            if (!HorticulturePlantPolicy.IsSupported(plantDef) || settables == null) return;
             List<IPlantToGrowSettable> validSettables = settables.Where(settable => settable != null).Distinct().ToList();
             List<VarietyRecord> mix = varieties?.Where(variety => variety?.cropDef == plantDef).Distinct().ToList() ?? new List<VarietyRecord>();
             if (mix.Count < 2) return;
