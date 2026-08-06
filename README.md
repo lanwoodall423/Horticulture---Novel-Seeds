@@ -234,7 +234,8 @@ Knowledge Framework integration
 -------------------------------
 Novel Seeds consumes the additive Knowledge Framework API from
 `https://github.com/lanwoodall423/Knowledge-Framework` at API generation 3. The validated
-framework dependency is commit `d90fbccce98a4bdab59d3f2f84dbe7c15b22301dd`, with
+framework dependency is commit `ebcfba7` (API implementation parent
+`d90fbccce98a4bdab59d3f2f84dbe7c15b22301dd`), with
 `KnowledgeFramework.dll` SHA-256 `33552DBEC78E0E777C3E074EA0EBA8F750629E879EA8A809B58D54AEFB1E71C0`.
 Required capabilities are typed measurements, evidence transactions, claims, contexts,
 witness learning, milestones, structural relations, consumer migration, domain aliases,
@@ -274,7 +275,8 @@ otherwise unchanged.
 Cross-repository release gate
 -----------------------------
 The validated compatibility pair is Knowledge Framework commit
-`d90fbccce98a4bdab59d3f2f84dbe7c15b22301dd` (`3.1.0-beta.1`, API generation 3) and the
+`ebcfba7` (API implementation parent `d90fbccce98a4bdab59d3f2f84dbe7c15b22301dd`,
+`3.1.0-beta.1`, API generation 3) and the
 Horticulture Release DLL listed below. The current shipped Framework DLL and the exact local
 Framework build have the same SHA-256, so the shipped-framework and exact-framework rows are
 the same tested binary. No tagged or released older Framework artifact exists in the repository;
