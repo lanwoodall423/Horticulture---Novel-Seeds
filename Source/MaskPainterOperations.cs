@@ -380,6 +380,7 @@ namespace HorticultureNovelSeeds
             return result;
         }
 
+#if HNS_VALIDATION
         internal static bool MaskPainterOperationsRegression()
         {
             int size = VisualMaskLayerRecord.Resolution;
@@ -458,6 +459,7 @@ namespace HorticultureNovelSeeds
                 && tinyCategory && categories.unmaskedVisibleComponents.Count == 2 && navigation && invalidated
                 && MaskProjectionRegression.Run();
         }
+#endif
 
         private static void RestoreMask(VisualMaskLayerRecord destination, VisualMaskLayerRecord source)
         {

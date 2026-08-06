@@ -1426,10 +1426,22 @@ namespace HorticultureNovelSeeds
             List<string> result = new List<string>();
             foreach (string method in methods)
             {
-                try { result.Add(method + "=" + type.GetMethod(method, flags)?.Invoke(null, null)); }
+                try
+                {
+                    MethodInfo methodInfo = type.GetMethod(method, flags);
+                    result.Add(methodInfo == null
+                        ? method + "=unavailable:release-harness-excluded;run=DevTools/Verify-AutoPlantMasks.ps1"
+                        : method + "=" + methodInfo.Invoke(null, null));
+                }
                 catch (Exception exception) { result.Add(method + "=error:" + (exception.InnerException ?? exception).Message); }
             }
-            try { result.Add("MaskPainterOperationsRegression=" + typeof(MaskPainterOperations).GetMethod("MaskPainterOperationsRegression", flags)?.Invoke(null, null)); }
+            try
+            {
+                MethodInfo methodInfo = typeof(MaskPainterOperations).GetMethod("MaskPainterOperationsRegression", flags);
+                result.Add(methodInfo == null
+                    ? "MaskPainterOperationsRegression=unavailable:release-harness-excluded;run=DevTools/Verify-MaskPainterTools.ps1"
+                    : "MaskPainterOperationsRegression=" + methodInfo.Invoke(null, null));
+            }
             catch (Exception exception) { result.Add("MaskPainterOperationsRegression=error:" + (exception.InnerException ?? exception).Message); }
             return result;
         }
@@ -1440,7 +1452,9 @@ namespace HorticultureNovelSeeds
             {
                 MethodInfo method = typeof(NovelSeedsDebugActions).GetMethod("CrossPollinationRegression",
                     BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-                return new List<string> { "CrossPollinationRegression=" + method?.Invoke(null, null) };
+                return new List<string> { method == null
+                    ? "CrossPollinationRegression=unavailable:release-harness-excluded;run=DevTools/Verify-CrossPollination.ps1"
+                    : "CrossPollinationRegression=" + method.Invoke(null, null) };
             }
             catch (Exception exception)
             {
@@ -1454,7 +1468,9 @@ namespace HorticultureNovelSeeds
             {
                 MethodInfo method = typeof(NovelSeedsDebugActions).GetMethod("TraitCatalogRegression",
                     BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-                return new List<string> { "TraitCatalogRegression=" + method?.Invoke(null, null) };
+                return new List<string> { method == null
+                    ? "TraitCatalogRegression=unavailable:release-harness-excluded;run=DevTools/Verify-TraitCatalog.ps1"
+                    : "TraitCatalogRegression=" + method.Invoke(null, null) };
             }
             catch (Exception exception)
             {
@@ -1470,6 +1486,8 @@ namespace HorticultureNovelSeeds
                     BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
                 MethodInfo reportMethod = typeof(NovelSeedsDebugActions).GetMethod("BreedingMixDiagnosticReport",
                     BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+                if (resultMethod == null || reportMethod == null)
+                    return new List<string> { "BreedingMixDiagnostic=unavailable:release-harness-excluded;run=DevTools/Verify-CrossPollination.ps1 and DevTools/Verify-TraitCatalog.ps1" };
                 return new List<string>
                 {
                     "BreedingMixDiagnostic=" + resultMethod?.Invoke(null, null),

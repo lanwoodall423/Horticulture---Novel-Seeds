@@ -981,6 +981,7 @@ namespace HorticultureNovelSeeds
                 + Mathf.Pow(cluster.brightness - brightness, 2f) * 0.55f));
         }
 
+#if HNS_VALIDATION
         internal static bool StemTopologyRegression()
         {
             Color32[] pixels = new Color32[AnalysisSize * AnalysisSize];
@@ -1234,5 +1235,6 @@ namespace HorticultureNovelSeeds
             return Mathf.Approximately(firstConfidence, secondConfidence)
                 && first.Select(layer => layer.ContentHash).SequenceEqual(second.Select(layer => layer.ContentHash));
         }
+#endif
     }
 }

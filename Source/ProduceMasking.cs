@@ -953,6 +953,7 @@ namespace HorticultureNovelSeeds
             absorbInputAroundWindow = true;
         }
 
+#if HNS_VALIDATION
         internal void BeginProjectionPreviewForRegression(MaskProjectionResult projection,
             IReadOnlyList<VisualMaskLayerRecord> targetLayers, int targetVariation, bool[] accepted)
         {
@@ -973,6 +974,7 @@ namespace HorticultureNovelSeeds
         internal List<VisualMaskLayerRecord> CurrentLayersForRegression() => CurrentLayers
             .Select(layer => layer?.Clone() ?? new VisualMaskLayerRecord()).ToList();
         internal int[] CurrentLayerHashesForRegression => CurrentLayers.Select(layer => layer.ContentHash).ToArray();
+#endif
 
         public override void DoWindowContents(Rect inRect)
         {

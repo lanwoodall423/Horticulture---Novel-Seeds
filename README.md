@@ -271,6 +271,25 @@ The only intentional progression correction is collapsing discovery and its pare
 evidence into one Knowledge Framework transaction; event weights and cultivation modifiers are
 otherwise unchanged.
 
+Cross-repository release gate
+-----------------------------
+The validated compatibility pair is Knowledge Framework commit
+`d90fbccce98a4bdab59d3f2f84dbe7c15b22301dd` (`3.1.0-beta.1`, API generation 3) and the
+Horticulture Release DLL listed below. The current shipped Framework DLL and the exact local
+Framework build have the same SHA-256, so the shipped-framework and exact-framework rows are
+the same tested binary. No tagged or released older Framework artifact exists in the repository;
+no older binary compatibility claim is made. Framework API/capability mismatch, unavailable
+readiness, and foreign-domain cases are tested as safe-failure paths: no partial registration,
+foreign replacement, or unsafe query is allowed. Legacy `plants` migration is versioned,
+retryable, and clears serialized input only after a complete successful import.
+
+The release assembly excludes the owner adapter, bridge implementation, test fixtures, and
+regression harness types; those remain in source/owner validation paths. The final read-only
+Dev Bridge checks returned `status_unavailable`, so gameplay, save/reload, migration, tree,
+mutation, processing, witness, and log-cleanliness scenarios were not claimed as runtime passes.
+Rollback requires restoring the preceding Horticulture commit and its paired Framework DLL;
+never mix release assemblies from different compatibility pairs.
+
 Deferred Reality integration
 ----------------------------
 The optional Deferred Reality Horticulture adapter is temporarily unavailable. Its external
@@ -285,4 +304,4 @@ Release artifact policy
 The authoritative RimWorld 1.6 artifact is `1.6/Assemblies/HorticultureNovelSeeds.dll`, built with
 `dotnet build Source/HorticultureNovelSeeds.csproj --configuration Release`. `Source/obj`, validation DLLs,
 bridge `bin`/`obj`, staged snapshots, and bridge package output are disposable and ignored. The clean shipped
-artifact SHA-256 is `574CD28FCE488D9E4DB6F25AB089AEC5D03FCC88ABB926592C5264A05D5F98ED`.
+artifact SHA-256 is `18703B9919DE74C4ADA4860EBE7231F961DABD787172DFC50426D57E66DC9626`.
