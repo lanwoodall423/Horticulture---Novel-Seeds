@@ -355,6 +355,11 @@ namespace HorticultureNovelSeeds
             EnsureSpeciesColorPalettes();
         }
 
+        public override void GameComponentTick()
+        {
+            HorticultureInGameTestRunner.Tick(60);
+        }
+
         private void InitializeKnowledgeIntegration()
         {
             HorticultureKnowledgeSnapshots.Clear();
