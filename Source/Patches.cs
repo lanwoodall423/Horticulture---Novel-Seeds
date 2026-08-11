@@ -11,6 +11,51 @@ using Verse.AI;
 
 namespace HorticultureNovelSeeds
 {
+    [HarmonyPatch(typeof(KnowledgeFramework.GameComponent_KnowledgeFramework), nameof(KnowledgeFramework.GameComponent_KnowledgeFramework.FinalizeInit))]
+    public static class KnowledgeFramework_FinalizeInit_HorticultureKnowledge_Patch
+    {
+        public static void Postfix()
+        {
+            GameComponent_NovelSeeds.Instance?.RetryKnowledgeIntegration();
+        }
+    }
+
+    [HarmonyPatch(typeof(Game), nameof(Game.FinalizeInit))]
+    public static class Game_FinalizeInit_HorticultureKnowledge_Patch
+    {
+        public static void Postfix(Game __instance)
+        {
+            __instance?.GetComponent<GameComponent_NovelSeeds>()?.RetryKnowledgeIntegration();
+        }
+    }
+
+    [HarmonyPatch(typeof(GameComponentUtility), nameof(GameComponentUtility.FinalizeInit))]
+    public static class GameComponentUtility_FinalizeInit_HorticultureKnowledge_Patch
+    {
+        public static void Postfix()
+        {
+            GameComponent_NovelSeeds.Instance?.RetryKnowledgeIntegration();
+        }
+    }
+
+    [HarmonyPatch(typeof(Game), nameof(Game.InitNewGame))]
+    public static class Game_InitNewGame_HorticultureKnowledge_Patch
+    {
+        public static void Postfix(Game __instance)
+        {
+            __instance?.GetComponent<GameComponent_NovelSeeds>()?.RetryKnowledgeIntegration();
+        }
+    }
+
+    [HarmonyPatch(typeof(Game), nameof(Game.LoadGame))]
+    public static class Game_LoadGame_HorticultureKnowledge_Patch
+    {
+        public static void Postfix(Game __instance)
+        {
+            __instance?.GetComponent<GameComponent_NovelSeeds>()?.RetryKnowledgeIntegration();
+        }
+    }
+
     [HarmonyPatch]
     public static class Plant_TickLong_Knowledge_Patch
     {

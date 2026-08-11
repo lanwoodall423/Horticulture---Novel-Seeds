@@ -812,16 +812,16 @@ namespace HorticultureNovelSeeds
             Claim("harvest_work", "Harvest work", FacetHarvesting, KnowledgeClaimValueType.Float, KnowledgeClaimAggregation.WeightedMean, KnowledgeClaimStalenessPolicy.SlowlyStale),
             Claim("yield_range", "Observed yield", FacetYield, KnowledgeClaimValueType.Float, KnowledgeClaimAggregation.ObservedRange, KnowledgeClaimStalenessPolicy.Seasonal),
             Claim("minimum_fertility", "Minimum fertility", FacetSoil, KnowledgeClaimValueType.Percentage, KnowledgeClaimAggregation.Highest, KnowledgeClaimStalenessPolicy.SlowlyStale),
-            Claim("preferred_soil", "Preferred soil", FacetSoil, KnowledgeClaimValueType.EnumId, KnowledgeClaimAggregation.MostSupported, KnowledgeClaimStalenessPolicy.Contextual),
+            Claim("preferred_soil", "Preferred soil", FacetSoil, KnowledgeClaimValueType.EnumId, KnowledgeClaimAggregation.MostSupported, KnowledgeClaimStalenessPolicy.Seasonal),
             Claim("temperature_range", "Observed temperature range", FacetClimate, KnowledgeClaimValueType.Float, KnowledgeClaimAggregation.ObservedRange, KnowledgeClaimStalenessPolicy.Seasonal),
             Claim("lifespan", "Lifespan", FacetLifespan, KnowledgeClaimValueType.EnumId, KnowledgeClaimAggregation.MostSupported, KnowledgeClaimStalenessPolicy.SlowlyStale),
             Claim("harvest_cycles", "Harvest cycles", FacetLifespan, KnowledgeClaimValueType.Integer, KnowledgeClaimAggregation.Highest, KnowledgeClaimStalenessPolicy.Permanent),
             Claim("seed_viability", "Seed viability", FacetLineage, KnowledgeClaimValueType.Percentage, KnowledgeClaimAggregation.WeightedMean, KnowledgeClaimStalenessPolicy.SlowlyStale),
             Claim("parent_lineage", "Parent lineage", FacetLineage, KnowledgeClaimValueType.SetOfIds, KnowledgeClaimAggregation.Union, KnowledgeClaimStalenessPolicy.Permanent),
             Claim("trait_identity", "Trait identity", FacetTraits, KnowledgeClaimValueType.SetOfIds, KnowledgeClaimAggregation.Union, KnowledgeClaimStalenessPolicy.Permanent),
-            Claim("trait_expression", "Observed trait expression", FacetTraits, KnowledgeClaimValueType.SetOfIds, KnowledgeClaimAggregation.Union, KnowledgeClaimStalenessPolicy.Contextual),
+            Claim("trait_expression", "Observed trait expression", FacetTraits, KnowledgeClaimValueType.SetOfIds, KnowledgeClaimAggregation.Union, KnowledgeClaimStalenessPolicy.SlowlyStale),
             Claim("produce_identity", "Produce identity", FacetProduce, KnowledgeClaimValueType.DefReference, KnowledgeClaimAggregation.MostSupported, KnowledgeClaimStalenessPolicy.Permanent),
-            Claim("environmental_response", "Environmental response", FacetClimate, KnowledgeClaimValueType.EnumId, KnowledgeClaimAggregation.MostSupported, KnowledgeClaimStalenessPolicy.Contextual),
+            Claim("environmental_response", "Environmental response", FacetClimate, KnowledgeClaimValueType.EnumId, KnowledgeClaimAggregation.MostSupported, KnowledgeClaimStalenessPolicy.Seasonal),
             Claim("cultivation_stability", "Cultivation stability", FacetYield, KnowledgeClaimValueType.Percentage, KnowledgeClaimAggregation.WeightedMean, KnowledgeClaimStalenessPolicy.Seasonal)
         };
 
@@ -846,11 +846,8 @@ namespace HorticultureNovelSeeds
         {
             defName = "HNS_Archetype_" + id.Replace(".", "_"),
             stableId = id,
-            categoryId = id,
             applicableFacetIds = facets.ToList(),
             applicableClaimIds = claims.Select(value => value.StableId).ToList(),
-            discoveryStageIds = new[] { StageUnknown, StageIdentified, StageTrialed, StageCultivated, StageEstablished, StageDocumented }.ToList(),
-            observationIds = BuildObservations().Select(value => value.StableId).ToList(),
             comparisonSchemaId = "horticulture.cultivar-comparison"
         };
 
@@ -912,7 +909,7 @@ namespace HorticultureNovelSeeds
 
         internal static bool RegisterUiProvider()
         {
-            return KnowledgeV3Ui.Register(new HorticultureV3UiProvider(), false);
+            return KnowledgeV3Ui.Register(new HorticultureV3UiProvider(), true);
         }
 
         private static KnowledgeMenuModel UnavailableMenu() => new KnowledgeMenuModel
@@ -934,16 +931,16 @@ namespace HorticultureNovelSeeds
 
         internal static bool RegisterContexts()
         {
-            if (!KnowledgeContextRegistry.RegisterType(new KnowledgeContextTypeDef { defName = "HNS_ContextZone", stableId = ContextZone })) return false;
-            if (!KnowledgeContextRegistry.RegisterType(new KnowledgeContextTypeDef { defName = "HNS_ContextHydroponic", stableId = ContextHydroponic })) return false;
-            if (!KnowledgeContextRegistry.RegisterType(new KnowledgeContextTypeDef { defName = "HNS_ContextWildSite", stableId = ContextWildSite })) return false;
-            if (!KnowledgeContextRegistry.RegisterType(new KnowledgeContextTypeDef { defName = "HNS_ContextGreenhouse", stableId = ContextGreenhouse })) return false;
-            if (!KnowledgeContextRegistry.RegisterType(new KnowledgeContextTypeDef { defName = "HNS_ContextMap", stableId = ContextMap })) return false;
-            if (!KnowledgeContextRegistry.RegisterType(new KnowledgeContextTypeDef { defName = "HNS_ContextBiome", stableId = ContextBiome })) return false;
-            if (!KnowledgeContextRegistry.RegisterType(new KnowledgeContextTypeDef { defName = "HNS_ContextGlobal", stableId = ContextGlobal })) return false;
+            if (!KnowledgeContextRegistry.RegisterType(new KnowledgeContextTypeDef { defName = "HNS_ContextZone", stableId = ContextZone }, true)) return false;
+            if (!KnowledgeContextRegistry.RegisterType(new KnowledgeContextTypeDef { defName = "HNS_ContextHydroponic", stableId = ContextHydroponic }, true)) return false;
+            if (!KnowledgeContextRegistry.RegisterType(new KnowledgeContextTypeDef { defName = "HNS_ContextWildSite", stableId = ContextWildSite }, true)) return false;
+            if (!KnowledgeContextRegistry.RegisterType(new KnowledgeContextTypeDef { defName = "HNS_ContextGreenhouse", stableId = ContextGreenhouse }, true)) return false;
+            if (!KnowledgeContextRegistry.RegisterType(new KnowledgeContextTypeDef { defName = "HNS_ContextMap", stableId = ContextMap }, true)) return false;
+            if (!KnowledgeContextRegistry.RegisterType(new KnowledgeContextTypeDef { defName = "HNS_ContextBiome", stableId = ContextBiome }, true)) return false;
+            if (!KnowledgeContextRegistry.RegisterType(new KnowledgeContextTypeDef { defName = "HNS_ContextGlobal", stableId = ContextGlobal }, true)) return false;
             HorticultureContextResolver resolver = new HorticultureContextResolver();
             foreach (string type in new[] { ContextZone, ContextHydroponic, ContextWildSite, ContextGreenhouse, ContextMap, ContextBiome, ContextGlobal })
-                if (!KnowledgeContextRegistry.RegisterResolver(type, resolver)) return false;
+                if (!KnowledgeContextRegistry.RegisterResolver(type, resolver, true)) return false;
             return true;
         }
 
@@ -953,16 +950,15 @@ namespace HorticultureNovelSeeds
                 if (!KnowledgeRelationService.RegisterType(new KnowledgeSubjectRelationTypeDef
                 {
                     defName = "HNS_Relation_" + type.Replace("-", "_"), stableId = type, parentage = true, metadataLimit = 8
-                })) return false;
+                }, true)) return false;
             if (!HorticultureKnowledgeCompatibility.HasOptional(KnowledgeFrameworkApi.StructuredComparisonCapability)) return true;
             return KnowledgeComparisonService.RegisterSchema(new KnowledgeComparisonSchema
             {
                 id = "horticulture.cultivar-comparison",
                 label = "Cultivar comparison",
                 claimIds = BuildClaims().Select(value => value.StableId).ToList(),
-                facetIds = Facets.ToList(),
-                relationTypeIds = new List<string> { "parent-of", "mutation-origin", "wild-origin", "cross-pollination" }
-            });
+                facetIds = Facets.ToList()
+            }, true);
         }
 
         private sealed class HorticultureContextResolver : IKnowledgeContextResolver

@@ -2,7 +2,11 @@
 !1.6/Assemblies/HorticultureNovelSeeds.dll
 **/obj/
 **/bin/
-DevTools/BridgeAdapter/Build/
-DevTools/BridgeAdapters/
 DevTools/Staged/
 DevTools/TestResults/
+DevTools/BridgeAdapter/Build/
+DevTools/BridgeAdapter/obj/
+DevTools/BridgeAdapters/
+DevTools/RuntimeTests/Build/
+DevTools/RuntimeTests/obj/
+DevTools/RuntimeTests/bin/

@@ -260,15 +260,14 @@ non-sowable decorative or wild-only plants. Cultivar registration invalidates th
 species, parents, and directly related subjects instead of the whole domain during normal play.
 Developer diagnostics expose registration state, framework compatibility, submitted and
 deduplicated event counts, rejected plants, targeted/broad invalidations, and subject counts.
-The owner adapter provides `HNS_EVENT_ROUTING_DIAGNOSTIC`,
-`HNS_EVENT_ROUTING_REGRESSION`, `HNS_EVENT_ROUTING_DUPLICATE_TEST`, and
-`HNS_EVENT_INVALIDATION_PERF`. The duplicate scenario must increase the measured event count
-by no more than one for two submissions with the same identity; separate harvest cycles must
-use separate cycle identities. The invalidation scenario reports request sizes 10, 100, 500,
-and 1,000 in 256-subject chunks, including calls, invalidated counts, and elapsed milliseconds.
+The repository-owned `knowledge` runtime scenario measures event identity, registration,
+personal/colony observations, witness-capable routing, and targeted invalidation from a real
+quicktest map. Duplicate submissions use the same semantic identity and separate harvest cycles
+use separate cycle identities.
 These are measurements rather than progression guarantees: personal/colony amounts,
 familiarity, claim confidence, stage, expertise, and witness effects are reported before and
-after controlled submissions. No runtime values are claimed when the Dev Bridge is unavailable.
+after controlled submissions. Horticulture's repository-owned runtime suite records these
+values from a real quicktest map.
 The only intentional progression correction is collapsing discovery and its parent-lineage
 evidence into one Knowledge Framework transaction; event weights and cultivation modifiers are
 otherwise unchanged.
@@ -288,25 +287,21 @@ readiness, and foreign-domain cases are tested as safe-failure paths: no partial
 foreign replacement, or unsafe query is allowed. Legacy `plants` migration is versioned,
 retryable, and clears serialized input only after a complete successful import.
 
-The release assembly excludes the owner adapter, bridge implementation, test fixtures, and
-regression harness types; those remain in source/owner validation paths. The final read-only
-Dev Bridge checks returned `status_unavailable`, so gameplay, save/reload, migration, tree,
-mutation, processing, witness, and log-cleanliness scenarios were not claimed as runtime passes.
+The release assembly excludes the runtime test assembly, synthetic test Defs, and all
+coordinator implementation code. Horticulture owns the runtime scenarios; DevBridge2 only
+coordinates RimWorld generations, readiness, and shared test leases. Runtime outcomes and
+exact result paths are recorded in `docs/RUNTIME_TESTS.md`.
 Rollback requires restoring the preceding Horticulture commit and its paired Framework DLL;
 never mix release assemblies from different compatibility pairs.
 
-Deferred Reality integration
-----------------------------
-The optional Deferred Reality Horticulture adapter is temporarily unavailable. Its external
-source worktree was not cleanly reproducible at release review, so no adapter DLL or mandatory
-dependency declaration is shipped. Novel Seeds remains usable without Deferred Reality; the base
-mod project has no reference to that framework. Reintroduce the adapter only after documenting a
-clean source commit/release, dependency and RimWorld versions, project/build command, compiler
-runtime, redistribution license, reproducible hash, and compatibility evidence.
+Optional integrations
+---------------------
+Novel Seeds remains usable when optional integrations are unavailable. The Horticulture runtime
+suite records the Knowledge Framework release/API/hash it actually observes and reports an
+incompatible framework as a release-blocking failure rather than claiming a pass.
 
 Release artifact policy
 -----------------------
 The authoritative RimWorld 1.6 artifact is `1.6/Assemblies/HorticultureNovelSeeds.dll`, built with
-`dotnet build Source/HorticultureNovelSeeds.csproj --configuration Release`. `Source/obj`, validation DLLs,
-bridge `bin`/`obj`, staged snapshots, and bridge package output are disposable and ignored. The clean shipped
-artifact SHA-256 is `18703B9919DE74C4ADA4860EBE7231F961DABD787172DFC50426D57E66DC9626`.
+`dotnet build Source/HorticultureNovelSeeds.csproj --configuration Release`. Runtime test builds are
+disposable and excluded from the release package. See [docs/TESTING.md](docs/TESTING.md) for validation.

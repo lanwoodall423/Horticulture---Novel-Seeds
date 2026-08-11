@@ -9,7 +9,6 @@ $validationPath = Join-Path $root 'Source\TraitCatalogValidation.cs'
 $regressionPath = Join-Path $root 'Source\TraitCatalogRegression.cs'
 $patchesPath = Join-Path $root 'Source\Patches.cs'
 $debugPath = Join-Path $root 'Source\DebugActions.cs'
-$bridgePath = Join-Path $root 'DevTools\BridgeAdapter\HorticultureBridgeAdapter.cs'
 $resourcePath = Join-Path $root 'Source\ResourceNeed.cs'
 $compsPath = Join-Path $root 'Source\CompsAndDialog.cs'
 $englishPath = Join-Path $root '1.6\Languages\English\Keyed\HorticultureNovelSeeds.xml'
@@ -23,7 +22,6 @@ $validation = Get-Content -LiteralPath $validationPath -Raw
 $regression = Get-Content -LiteralPath $regressionPath -Raw
 $patches = Get-Content -LiteralPath $patchesPath -Raw
 $debug = Get-Content -LiteralPath $debugPath -Raw
-$bridge = Get-Content -LiteralPath $bridgePath -Raw
 $resource = Get-Content -LiteralPath $resourcePath -Raw
 $comps = Get-Content -LiteralPath $compsPath -Raw
 $english = Get-Content -LiteralPath $englishPath -Raw
@@ -51,7 +49,7 @@ Check ($regression -match 'GrowthYieldWorkRegression' -and $regression -match 'P
 Check ($regression -match 'ResourceProductionRegression' -and $resource -match 'CanStartJob' -and $resource -match 'EvaluatePayment' -and $resource -match 'TryMakePreToilReservations') 'resource production path regression coverage missing'
 Check ($comps -match 'resourceSatisfied' -and $comps -match 'Scribe_Values\.Look') 'resource fulfillment save state is not preserved'
 Check ($patches -match 'TraitCatalogValidation\.Run\(\)' -and $patches -match 'EffectiveHarvestDestroys\(bool baseValue, bool regularHarvest') 'runtime validation/perennial helper missing'
-Check ($debug -match 'TraitCatalogRegression' -and $bridge -match 'HNS_TRAIT_CATALOG_REGRESSIONS') 'runtime regression bridge missing'
+Check ($debug -match 'TraitCatalogRegression') 'runtime regression hook missing'
 Check ($english -match 'HNS_StatGrowthRate' -and $english -match 'without the companion') 'growth/synergy stat localization missing'
 Check ($xml.OuterXml -match 'HNS_Perennial.*<perennial>true</perennial>' -and $xml.OuterXml -match 'HNS_Nutritious') 'perennial or nutrition catalog changes missing'
 Check ($xml.OuterXml -match '<defName>HNS_Burnresin</defName>.*<heatGrowthOffset>2</heatGrowthOffset>' -and $xml.OuterXml -match '<defName>HNS_Toxresin</defName>.*<blightChanceFactor>0.90</blightChanceFactor>') 'resin tradeoffs missing'

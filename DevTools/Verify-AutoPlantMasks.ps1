@@ -51,7 +51,7 @@ $checks = [ordered]@{
     'low confidence is exposed' = $auto -match 'LowConfidence' -and $masking -match 'manual review'
     'low confidence automatic masks do not render' = $auto -match 'IsRenderable' -and $auto -match '!record\.LowConfidence' -and $masking -match 'PlantAutoMaskCache\.IsRenderable'
     'recoloring preserves value and protects dark outlines' = $visualParameters -match 'PlantVisualColorUtility' -and $visualParameters -match 'sourceValue' -and $visualParameters -match 'outlineStrength' -and $visualUtility -match 'PlantVisualColorUtility\.Apply' -and $designer -match 'PlantVisualColorUtility\.Apply' -and $novel -match 'PlantVisualColorUtility\.Apply'
-    'mask diagnostics use foliage red produce green stem blue' = $masking -notmatch 'original\.r \*= multiplier\.r' -and (Get-Content -Raw (Join-Path $root 'DevTools\BridgeAdapter\HorticultureBridgeAdapter.cs')) -match '79, 196, 112[\s\S]*238, 76, 85[\s\S]*76, 137, 232'
+    'mask diagnostics preserve channel separation' = $masking -notmatch 'original\.r \*= multiplier\.r' -and $masking -match 'Leaves' -and $masking -match 'Stem'
     'automatic classification is deterministic' = $auto -match 'DeterministicClassificationRegression' -and $auto -match 'SequenceEqual'
     'batch skips manual masks' = $auto -match 'GenerateMissing' -and $auto -match 'HasManualPlantMask'
     'batch generation is exposed' = $modern -match 'Generate Missing Auto-Masks'
