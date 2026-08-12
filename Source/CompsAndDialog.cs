@@ -481,7 +481,7 @@ namespace HorticultureNovelSeeds
             doCloseX = true;
             closeOnAccept = false;
             forceCatchAcceptAndCancelEventEvenIfUnfocused = true;
-            varietyName = string.Empty;
+            varietyName = SuggestedName(comp);
         }
 
         public override void DoWindowContents(Rect inRect)
@@ -493,6 +493,7 @@ namespace HorticultureNovelSeeds
             Rect body = new Rect(inRect.x, inRect.y + 48f, inRect.width, inRect.height - 104f);
             Widgets.Label(new Rect(body.x, body.y, body.width, 24f), "HNS_NameDialogPrompt".Translate(comp.CropDef.label));
             Widgets.Label(new Rect(body.x, body.y + 32f, body.width, 48f), "HNS_Traits".Translate() + ": " + NovelSeedUtility.TraitSummary(comp.Traits));
+            Widgets.Label(new Rect(body.x, body.y + 66f, body.width, 42f), "HNS_NameDialogPreservationNote".Translate());
             varietyName = Widgets.TextField(new Rect(body.x, body.y + 92f, body.width, 32f), varietyName);
 
             Rect cancel = new Rect(inRect.xMax - 220f, inRect.yMax - 42f, 100f, 32f);

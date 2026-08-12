@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Xml.Linq;
 using HarmonyLib;
 using RimWorld;
 using UnityEngine;
@@ -56,6 +58,7 @@ namespace HorticultureNovelSeeds.RuntimeTests
                     switch ((request.scenario ?? "complete").Trim().ToLowerInvariant())
                     {
                         case "startup": Startup(report); break;
+                        case "clean-default": CleanDefault(report); break;
                         case "ordinary-crop": OrdinaryCrop(report); break;
                         case "sowable-tree": SowableTree(report); break;
                         case "cross-pollination": CrossPollination(report); break;
@@ -63,10 +66,17 @@ namespace HorticultureNovelSeeds.RuntimeTests
                         case "knowledge": Knowledge(report); break;
                         case "negative": Negative(report); break;
                         case "long-running": LongRunning(report); break;
+                        case "ux-discovery": UxDiscovery(report); break;
+                        case "registry-scale": RegistryScale(report); break;
+                        case "rc-performance": RcPerformance(report); break;
                         case "auto-mask-suite": AutoMaskSuite(report); break;
                         case "auto-mask-export": AutoMaskExport(report, request); break;
                         case "complete":
                             Startup(report);
+                            CleanDefault(report);
+                            UxDiscovery(report);
+                            RegistryScale(report);
+                            RcPerformance(report);
                             OrdinaryCrop(report);
                             SowableTree(report);
                             CrossPollination(report);
@@ -139,6 +149,146 @@ namespace HorticultureNovelSeeds.RuntimeTests
                 if (!diagnostics.IsUsable)
                     throw new InvalidOperationException("Knowledge Framework is not usable: " + diagnostics);
                 return diagnostics.ToString();
+            });
+        }
+
+        private static void CleanDefault(HorticultureRuntimeTestReport report)
+        {
+            Check(report, "clean-default-values", () =>
+            {
+                string defaultPath = SettingsProfileManager.BundledDefaultPath;
+                Require(!defaultPath.NullOrEmpty() && File.Exists(defaultPath), "the bundled default configuration is missing.");
+                XElement settings = XDocument.Load(defaultPath).Root?.Element("settings");
+                Require(settings != null, "the bundled default configuration has no settings node.");
+                float mutation = BundledDefaultFloat(settings, "globalMutationChance", NovelSeedUtility.SpontaneousMutationChance);
+                float crossPollination = BundledDefaultFloat(settings, "globalCrossPollinationChance", NovelSeedUtility.DefaultCrossPollinationChance);
+                float wildMutation = BundledDefaultFloat(settings, "wildMutationChance", NovelSeedUtility.DefaultWildMutationChance);
+                float donorGrowth = BundledDefaultFloat(settings, "minimumDonorGrowth", NovelSeedUtility.DefaultMinimumDonorGrowth);
+                float secondSlot = BundledDefaultFloat(settings, "secondCrossPollinationTraitChance", NovelSeedUtility.DefaultSecondCrossPollinationTraitChance);
+                float laterSlot = BundledDefaultFloat(settings, "laterCrossPollinationTraitChance", NovelSeedUtility.DefaultLaterCrossPollinationTraitChance);
+                bool produceVisuals = BundledDefaultBool(settings, "enableProduceVisuals", true);
+                Require(Mathf.Abs(mutation - NovelSeedUtility.SpontaneousMutationChance) < 0.00001f,
+                    "bundled mutation default is " + mutation + ", expected " + NovelSeedUtility.SpontaneousMutationChance + ".");
+                Require(Mathf.Abs(crossPollination - NovelSeedUtility.DefaultCrossPollinationChance) < 0.00001f,
+                    "bundled cross-pollination default is incorrect.");
+                Require(Mathf.Abs(wildMutation - NovelSeedUtility.DefaultWildMutationChance) < 0.00001f,
+                    "bundled wild mutation default is incorrect.");
+                Require(Mathf.Abs(donorGrowth - NovelSeedUtility.DefaultMinimumDonorGrowth) < 0.00001f,
+                    "bundled donor-growth default is incorrect.");
+                Require(Mathf.Abs(secondSlot - NovelSeedUtility.DefaultSecondCrossPollinationTraitChance) < 0.00001f
+                    && Mathf.Abs(laterSlot - NovelSeedUtility.DefaultLaterCrossPollinationTraitChance) < 0.00001f,
+                    "bundled additional cross-pollination slot defaults are incorrect.");
+                Require(produceVisuals, "produce visuals are disabled in the clean default.");
+                return "mutation=8%, cross=0.7%, wild=0.5%, donor=50%, produce visuals=on";
+            });
+        }
+
+        private static float BundledDefaultFloat(XElement settings, string name, float fallback)
+        {
+            XElement value = settings?.Element(name);
+            return value == null ? fallback : float.Parse(value.Value, CultureInfo.InvariantCulture);
+        }
+
+        private static bool BundledDefaultBool(XElement settings, string name, bool fallback)
+        {
+            XElement value = settings?.Element(name);
+            return value == null ? fallback : bool.Parse(value.Value);
+        }
+
+        private static void UxDiscovery(HorticultureRuntimeTestReport report)
+        {
+            Check(report, "ux-keyed-guidance", () =>
+            {
+                string[] keys =
+                {
+                    "HNS_SaveSeeds", "HNS_SaveSeedsDesc", "HNS_NameDialogPrompt", "HNS_NameDialogPreservationNote",
+                    "HNS_NameDialogConfirm", "HNS_RegistryPlantsTab", "HNS_RegistryCultivarsTab", "HNS_SettingsAdvancedShow"
+                };
+                foreach (string key in keys)
+                {
+                    string text = key.Translate("rice").ToString();
+                    Require(!text.NullOrEmpty() && !string.Equals(text, key, StringComparison.Ordinal),
+                        "missing player-facing keyed text: " + key);
+                }
+                return "first discovery, preservation, registry, and settings guidance is localized";
+            });
+            Check(report, "ux-progressive-settings", () =>
+            {
+                FieldInfo advanced = AccessTools.Field(typeof(NovelSeedsSettingsUI), "showAdvancedGeneralSettings");
+                Require(advanced != null && advanced.FieldType == typeof(bool), "progressive settings disclosure state is missing.");
+                Require(!(bool)advanced.GetValue(null), "general settings opened with advanced controls already exposed.");
+                MethodInfo comparisonGate = AccessTools.Method(typeof(MainTabWindow_CultivarRegistry), "CanCompareCount");
+                Require(comparisonGate != null && !(bool)comparisonGate.Invoke(null, new object[] { 1 })
+                    && (bool)comparisonGate.Invoke(null, new object[] { 2 }),
+                    "cultivar comparison discovery state is inconsistent.");
+                return "general settings start compact and comparison explains its two-cultivar requirement";
+            });
+        }
+
+        private static void RegistryScale(HorticultureRuntimeTestReport report)
+        {
+            Check(report, "registry-scale-ordering", () =>
+            {
+                ThingDef crop = FindCrop(false);
+                if (crop == null) throw new RuntimeScenarioBlockedException("No supported crop was loaded for registry scale testing.");
+                int[] sizes = { 100, 500, 1000 };
+                List<string> measurements = new List<string>();
+                foreach (int size in sizes)
+                {
+                    List<VarietyRecord> synthetic = Enumerable.Range(0, size).Select(index => new VarietyRecord
+                    {
+                        id = "runtime-scale-" + index,
+                        cropDef = crop,
+                        customName = "Synthetic cultivar " + (size - index).ToString("D4")
+                    }).ToList();
+                    Stopwatch timer = Stopwatch.StartNew();
+                    List<VarietyRecord> ordered = synthetic.OrderBy(value => value.cropDef?.label)
+                        .ThenBy(value => value.Label).ToList();
+                    timer.Stop();
+                    Require(ordered.Count == size && ordered[0].Label.StartsWith("Synthetic cultivar", StringComparison.Ordinal),
+                        "registry ordering lost entries at size " + size + ".");
+                    measurements.Add(size + " rows=" + timer.ElapsedMilliseconds + "ms");
+                }
+                report.performanceMeasurements.Add("registry-display-order: " + string.Join(", ", measurements));
+                return string.Join(", ", measurements);
+            });
+            Check(report, "registry-scale-lookups", () =>
+            {
+                List<VarietyRecord> actual = GameComponent_NovelSeeds.Instance?.AllVarieties.ToList() ?? new List<VarietyRecord>();
+                if (actual.Count == 0)
+                {
+                    report.performanceMeasurements.Add("registry-id-lookups: skipped with empty registry");
+                    return "empty registry handled without a lookup allocation";
+                }
+                Stopwatch timer = Stopwatch.StartNew();
+                for (int index = 0; index < 1000; index++)
+                {
+                    VarietyRecord selected = actual[index % actual.Count];
+                    Require(GameComponent_NovelSeeds.Instance.GetVariety(selected.id) == selected, "registry lookup returned a different record.");
+                }
+                timer.Stop();
+                Require(timer.ElapsedMilliseconds < 5000, "1000 registry lookups exceeded the 5 second safety budget.");
+                report.performanceMeasurements.Add("registry-id-lookups: 1000=" + timer.ElapsedMilliseconds + "ms, actual=" + actual.Count);
+                return "1000 ID lookups=" + timer.ElapsedMilliseconds + "ms, actual cultivars=" + actual.Count;
+            });
+        }
+
+        private static void RcPerformance(HorticultureRuntimeTestReport report)
+        {
+            Check(report, "rc-performance-mask-lookups", () =>
+            {
+                List<ThingDef> plants = SupportedMaskPlants().Take(1000).ToList();
+                if (plants.Count == 0) throw new RuntimeScenarioBlockedException("No supported graphic plants were loaded for mask lookup timing.");
+                Stopwatch timer = Stopwatch.StartNew();
+                for (int index = 0; index < 1000; index++)
+                {
+                    ThingDef plant = plants[index % plants.Count];
+                    PlantAutoMaskCache.GetRecord(plant, index % 2, generateIfMissing: false);
+                }
+                timer.Stop();
+                Require(timer.ElapsedMilliseconds < 5000, "1000 automatic-mask lookups exceeded the 5 second safety budget.");
+                report.performanceMeasurements.Add("automatic-mask-lookups: 1000=" + timer.ElapsedMilliseconds + "ms, plants=" + plants.Count);
+                return "1000 validated mask lookups=" + timer.ElapsedMilliseconds + "ms, plants=" + plants.Count;
             });
         }
 

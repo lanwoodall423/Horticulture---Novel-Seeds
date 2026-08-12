@@ -146,20 +146,20 @@ namespace HorticultureNovelSeeds
             int total = PlantDefs().Count;
             int discovered = PlantDefs().Count(def => IsDiscovered(def, component));
             Widgets.Label(new Rect(rect.x, rect.y + 36f, 500f, 28f),
-                "Plants " + discovered + " / " + total + "   Cultivars " + component.AllVarieties.Count());
+                "HNS_RegistryPlantCount".Translate(discovered, total, component.AllVarieties.Count()));
 
             const float tabWidth = 132f;
             const float tabGap = 8f;
             float start = rect.xMax - tabWidth * 4f - tabGap * 3f;
-            if (Widgets.ButtonText(new Rect(start, rect.y + 12f, tabWidth, 40f), "Discovered Plants",
+            if (Widgets.ButtonText(new Rect(start, rect.y + 12f, tabWidth, 40f), "HNS_RegistryPlantsTab".Translate(),
                     active: page != RegistryPage.Plants)) ChangePage(RegistryPage.Plants);
-            if (Widgets.ButtonText(new Rect(start + tabWidth + tabGap, rect.y + 12f, tabWidth, 40f), "Cultivars",
+            if (Widgets.ButtonText(new Rect(start + tabWidth + tabGap, rect.y + 12f, tabWidth, 40f), "HNS_RegistryCultivarsTab".Translate(),
                     active: page != RegistryPage.Cultivars)) ChangePage(RegistryPage.Cultivars);
-            if (Widgets.ButtonText(new Rect(start + (tabWidth + tabGap) * 2f, rect.y + 12f, tabWidth, 40f), "Knowledge",
+            if (Widgets.ButtonText(new Rect(start + (tabWidth + tabGap) * 2f, rect.y + 12f, tabWidth, 40f), "HNS_RegistryKnowledgeTab".Translate(),
                     active: page != RegistryPage.Knowledge)) ChangePage(RegistryPage.Knowledge);
             bool enabled = CanCompare;
             GUI.enabled = enabled;
-            if (Widgets.ButtonText(new Rect(start + (tabWidth + tabGap) * 3f, rect.y + 12f, tabWidth, 40f), "Compare",
+            if (Widgets.ButtonText(new Rect(start + (tabWidth + tabGap) * 3f, rect.y + 12f, tabWidth, 40f), "HNS_RegistryCompareTab".Translate(),
                     active: page != RegistryPage.Compare)) ChangePage(RegistryPage.Compare);
             GUI.enabled = true;
             TooltipHandler.TipRegion(new Rect(start + (tabWidth + tabGap) * 3f, rect.y + 12f, tabWidth, 40f),
@@ -176,10 +176,11 @@ namespace HorticultureNovelSeeds
         private void DrawPlantList(Rect rect, GameComponent_NovelSeeds component)
         {
             Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(rect.x, rect.y, rect.width, 32f), "Discovered Plants");
+            Widgets.Label(new Rect(rect.x, rect.y, rect.width, 32f), "HNS_RegistryPlantsTab".Translate());
             Text.Font = GameFont.Small;
             DrawSearch(new Rect(rect.x, rect.y + 38f, rect.width, 30f));
-            if (Widgets.ButtonText(new Rect(rect.x, rect.y + 76f, rect.width, 30f), "Show: " + discoveryFilter))
+            if (Widgets.ButtonText(new Rect(rect.x, rect.y + 76f, rect.width, 30f),
+                TranslatorFormattedStringExtensions.Translate("HNS_RegistryShowFilter", (int)discoveryFilter).ToString()))
             {
                 Find.WindowStack.Add(new FloatMenu(Enum.GetValues(typeof(DiscoveryFilter)).Cast<DiscoveryFilter>()
                     .Select(value => new FloatMenuOption(value.ToString(), () => discoveryFilter = value)).ToList()));
@@ -197,16 +198,16 @@ namespace HorticultureNovelSeeds
                 else Widgets.DrawHighlightIfMouseover(row);
                 if (discovered) Widgets.ThingIcon(new Rect(4f, row.y + 5f, 42f, 42f), plant);
                 Widgets.Label(new Rect(54f, row.y + 5f, row.width - 60f, 24f),
-                    discovered ? plant.LabelCap.ToString() : "Undiscovered plant");
+                    discovered ? plant.LabelCap.ToString() : "HNS_RegistryUndiscoveredPlant".Translate().ToString());
                 GUI.color = Color.gray;
                 Widgets.Label(new Rect(54f, row.y + 27f, row.width - 60f, 22f), discovered
                     ? component.VarietiesFor(plant).Count() + " cultivars   " + ColonyKnowledgeRank(plant)
-                    : "Learn about this species through plant work or seed discovery.");
+                    : "HNS_RegistryLearnPlant".Translate().ToString());
                 GUI.color = Color.white;
                 if (Widgets.ButtonInvisible(row)) selectedPlantDefName = plant.defName;
             }
             Widgets.EndScrollView();
-            if (plants.Count == 0) Widgets.Label(outer.ContractedBy(8f), "No plants match the current search and filter.");
+            if (plants.Count == 0) Widgets.Label(outer.ContractedBy(8f), "HNS_RegistryNoPlantMatches".Translate());
         }
 
         private void DrawPlantDetail(Rect rect, GameComponent_NovelSeeds component)
@@ -215,8 +216,8 @@ namespace HorticultureNovelSeeds
             bool discovered = IsDiscovered(plant, component);
             if (plant == null || !discovered)
             {
-                Widgets.Label(rect, plant == null ? "Select a plant to inspect it." :
-                    "Undiscovered plant\n\nPerform plant work or discover a cultivar to reveal this species.");
+                Widgets.Label(rect, plant == null ? "HNS_RegistrySelectPlant".Translate() :
+                    "HNS_RegistryUndiscoveredDetails".Translate());
                 return;
             }
             KnowledgeRank rank = VisibleKnowledgeRank(plant);
@@ -226,28 +227,29 @@ namespace HorticultureNovelSeeds
             Text.Font = GameFont.Medium;
             Widgets.Label(new Rect(84f, 5f, view.width - 84f, 34f), plant.LabelCap);
             Text.Font = GameFont.Small;
-            Widgets.Label(new Rect(84f, 42f, view.width - 84f, 28f), rank + " knowledge");
+            Widgets.Label(new Rect(84f, 42f, view.width - 84f, 28f),
+                TranslatorFormattedStringExtensions.Translate("HNS_RegistryKnowledgeRank", (int)rank).ToString());
             float y = 92f;
-            DrawSection(view, ref y, "Plant Knowledge");
-            DrawRecord(view, ref y, "Colony rank", ColonyKnowledgeRank(plant).ToString());
-            DrawRecord(view, ref y, "Known cultivars", component.VarietiesFor(plant).Count().ToString());
+            DrawSection(view, ref y, "HNS_RegistryPlantKnowledge".Translate());
+            DrawRecord(view, ref y, "HNS_RegistryColonyRank".Translate(), ColonyKnowledgeRank(plant).ToString());
+            DrawRecord(view, ref y, "HNS_RegistryKnownCultivars".Translate(), component.VarietiesFor(plant).Count().ToString());
             if (rank >= KnowledgeRank.Adept)
             {
-                DrawSection(view, ref y, "Growing");
+                DrawSection(view, ref y, "HNS_RegistryGrowing".Translate());
                 DrawRecord(view, ref y, "Grow time", plant.plant.growDays.ToString("0.##") + " days");
                 DrawRecord(view, ref y, "Sow work", plant.plant.sowWork.ToString("0") + " work");
                 DrawRecord(view, ref y, "Minimum fertility", plant.plant.fertilityMin.ToStringPercent());
             }
             if (rank >= KnowledgeRank.Expert)
             {
-                DrawSection(view, ref y, "Harvest");
+                DrawSection(view, ref y, "HNS_RegistryHarvest".Translate());
                 DrawRecord(view, ref y, "Harvest yield", plant.plant.harvestYield.ToString("0.##"));
                 DrawRecord(view, ref y, "Harvest product", plant.plant.harvestedThingDef?.LabelCap ?? "None");
                 DrawRecord(view, ref y, "Lifespan", plant.plant.LimitedLifespan ? "Limited" : "Persistent");
             }
             if (rank >= KnowledgeRank.Master)
             {
-                DrawSection(view, ref y, "Environment");
+                DrawSection(view, ref y, "HNS_RegistryEnvironment".Translate());
                 DrawRecord(view, ref y, "Growth temperature", plant.plant.minGrowthTemperature.ToString("0.#") + " to " +
                     plant.plant.maxGrowthTemperature.ToString("0.#") + " C");
                 DrawRecord(view, ref y, "Purpose", plant.plant.purpose.ToString());
@@ -258,17 +260,18 @@ namespace HorticultureNovelSeeds
         private void DrawCultivarList(Rect rect, GameComponent_NovelSeeds component)
         {
             Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(rect.x, rect.y, rect.width, 32f), "Cultivars");
+            Widgets.Label(new Rect(rect.x, rect.y, rect.width, 32f), "HNS_RegistryCultivarsTab".Translate());
             Text.Font = GameFont.Small;
             DrawSearch(new Rect(rect.x, rect.y + 38f, rect.width, 30f));
             float half = (rect.width - 8f) * 0.5f;
-            if (Widgets.ButtonText(new Rect(rect.x, rect.y + 76f, half, 30f), "Balance: " + balanceFilter))
+            if (Widgets.ButtonText(new Rect(rect.x, rect.y + 76f, half, 30f),
+                TranslatorFormattedStringExtensions.Translate("HNS_RegistryBalance", (int)balanceFilter).ToString()))
             {
                 Find.WindowStack.Add(new FloatMenu(Enum.GetValues(typeof(BalanceFilter)).Cast<BalanceFilter>()
                     .Select(value => new FloatMenuOption(value.ToString(), () => balanceFilter = value)).ToList()));
             }
-            Widgets.CheckboxLabeled(new Rect(rect.x + half + 8f, rect.y + 76f, half, 30f), "Archived", ref showArchived);
-            Widgets.CheckboxLabeled(new Rect(rect.x, rect.y + 110f, rect.width, 28f), "Inherited produce effects", ref requireProduceEffect);
+            Widgets.CheckboxLabeled(new Rect(rect.x + half + 8f, rect.y + 76f, half, 30f), "HNS_RegistryArchived".Translate(), ref showArchived);
+            Widgets.CheckboxLabeled(new Rect(rect.x, rect.y + 110f, rect.width, 28f), "HNS_RegistryProduceEffectFilter".Translate(), ref requireProduceEffect);
             List<VarietyRecord> varieties = component.AllVarieties.Where(MatchesCultivarFilter)
                 .OrderByDescending(value => value.registryFavorite).ThenBy(value => value.cropDef?.label)
                 .ThenBy(value => value.Label).ToList();
@@ -289,7 +292,7 @@ namespace HorticultureNovelSeeds
                     (variety.registryFavorite ? "* " : string.Empty) + variety.Label);
                 GUI.color = Color.gray;
                 Widgets.Label(new Rect(54f, row.y + 29f, row.width - 92f, 22f),
-                    variety.cropDef.LabelCap + "   Generation " + LineageDepth(variety));
+                    "HNS_RegistryGeneration".Translate(LineageDepth(variety)));
                 GUI.color = Color.white;
                 Rect selectRect = new Rect(row.x, row.y, row.width - 38f, row.height);
                 if (Widgets.ButtonInvisible(selectRect)) selectedCultivarId = variety.id;
@@ -316,10 +319,10 @@ namespace HorticultureNovelSeeds
             Widgets.Label(new Rect(84f, 42f, view.width - 84f, 28f), selected.cropDef.LabelCap + "   " + rank);
             float y = 92f;
             RegistryAvailability stock = AvailabilityFor(selected);
-            DrawRecord(view, ref y, "Origin", selected.originKind.NullOrEmpty() ? "mutation" : selected.originKind);
-            DrawRecord(view, ref y, "Generation", (selected.generation > 0 ? selected.generation : LineageDepth(selected)).ToString());
-            DrawRecord(view, ref y, "Availability", stock.Plants + " plants, " + stock.Produce + " produce, " + stock.SeedPacks + " seed packs");
-            if (!selected.FirstDiscoveredInfo.NullOrEmpty()) DrawRecord(view, ref y, "Discovered", selected.FirstDiscoveredInfo);
+            DrawRecord(view, ref y, "HNS_RegistrySource".Translate(), selected.originKind.NullOrEmpty() ? "mutation" : selected.originKind);
+            DrawRecord(view, ref y, "HNS_RegistryLineageDepth".Translate(), (selected.generation > 0 ? selected.generation : LineageDepth(selected)).ToString());
+            DrawRecord(view, ref y, "HNS_RegistryOnMaps".Translate(), "HNS_RegistryAvailability".Translate(stock.Plants, stock.Produce, stock.SeedPacks));
+            if (!selected.FirstDiscoveredInfo.NullOrEmpty()) DrawRecord(view, ref y, "HNS_RegistryDiscovered".Translate(), selected.FirstDiscoveredInfo);
 
             float buttonWidth = (view.width - 24f) / 4f;
             if (Widgets.ButtonText(new Rect(0f, y + 4f, buttonWidth, 30f), "HNS_RenameVariety".Translate()))
@@ -339,8 +342,8 @@ namespace HorticultureNovelSeeds
                 Find.WindowStack.Add(new Dialog_VarietyLineage(selected.Label, selected.traits, selected.parentVarietyIds));
             y += 44f;
 
-            DrawSection(view, ref y, "Traits");
-            if (rank < KnowledgeRank.Adept) DrawDetailLine(view, ref y, "Advance plant knowledge to reveal cultivar traits.");
+            DrawSection(view, ref y, "HNS_RegistryTraits".Translate());
+            if (rank < KnowledgeRank.Adept) DrawDetailLine(view, ref y, "HNS_RegistryNeedKnowledge".Translate());
             else foreach (VarietyTraitDef trait in selected.traits.Where(value => value != null))
             {
                 Rect row = new Rect(8f, y, view.width - 16f, Mathf.Max(30f, Text.CalcHeight(TraitColorUI.Label(trait), view.width - 24f) + 8f));
@@ -351,7 +354,7 @@ namespace HorticultureNovelSeeds
             }
             if (rank >= KnowledgeRank.Expert)
             {
-                DrawSection(view, ref y, "Cultivar Modifiers");
+                DrawSection(view, ref y, "HNS_RegistryModifiers".Translate());
                 DrawRecord(view, ref y, "Yield", NovelSeedUtility.YieldFactor(selected.traits).ToStringPercent());
                 DrawRecord(view, ref y, "Growth rate", NovelSeedUtility.GrowthRateFactor(selected.traits).ToStringPercent() + " of base");
                 DrawRecord(view, ref y, "Sow time", ExpandedTraitUtility.SowWorkFactor(selected.traits).ToStringPercent() + " of base");
@@ -372,11 +375,11 @@ namespace HorticultureNovelSeeds
                 .OrderBy(value => value.cropDef?.label).ThenBy(value => value.Label).ToList();
             if (selected.Count < 2)
             {
-                Widgets.Label(rect, "Select at least two discovered cultivars on the Cultivars page.");
+                Widgets.Label(rect, "HNS_RegistryComparePrompt".Translate());
                 return;
             }
             Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(rect.x, rect.y, rect.width, 34f), "Cultivar Comparison");
+            Widgets.Label(new Rect(rect.x, rect.y, rect.width, 34f), "HNS_RegistryComparisonTitle".Translate());
             Text.Font = GameFont.Small;
             float labelWidth = 150f;
             float columnWidth = Mathf.Max(150f, (rect.width - labelWidth - 16f) / selected.Count);
@@ -393,30 +396,30 @@ namespace HorticultureNovelSeeds
             KnowledgeStructuredComparisonSnapshot frameworkComparison = HorticultureKnowledgeAdapter.CompareCultivars(selected,
                 knowledgeState.scope == KnowledgeMenuScope.Colony ? null : knowledgeState.selectedPawn,
                 knowledgeState.scope == KnowledgeMenuScope.Colony);
-            DrawCompareRow(view, ref y, "Parent plant", selected, value => value.cropDef.LabelCap);
-            DrawCompareRow(view, ref y, "Generation", selected,
+            DrawCompareRow(view, ref y, "HNS_RegistryParentPlant".Translate(), selected, value => value.cropDef.LabelCap);
+            DrawCompareRow(view, ref y, "HNS_RegistryLineageDepth".Translate(), selected,
                 value => (value.generation > 0 ? value.generation : LineageDepth(value)).ToString());
-            DrawCompareRow(view, ref y, "Framework confidence", selected,
+            DrawCompareRow(view, ref y, "HNS_RegistryFrameworkEvidence".Translate(), selected,
                 value => FrameworkConfidence(frameworkComparison, selected, value));
             DrawCompareRow(view, ref y, "Traits", selected, value => VisibleKnowledgeRank(value.cropDef) >= KnowledgeRank.Adept
-                ? TraitColorUI.Summary(value.traits) : "Undiscovered information");
+                ? TraitColorUI.Summary(value.traits) : "HNS_RegistryUnknown".Translate());
             DrawCompareRow(view, ref y, "Yield", selected, value => VisibleKnowledgeRank(value.cropDef) >= KnowledgeRank.Expert
-                ? NovelSeedUtility.YieldFactor(value.traits).ToStringPercent() : "Undiscovered information");
+                ? NovelSeedUtility.YieldFactor(value.traits).ToStringPercent() : "HNS_RegistryUnknown".Translate());
             DrawCompareRow(view, ref y, "Growth rate", selected, value => VisibleKnowledgeRank(value.cropDef) >= KnowledgeRank.Expert
-                ? NovelSeedUtility.GrowthRateFactor(value.traits).ToStringPercent() + " of base" : "Undiscovered information");
+                ? NovelSeedUtility.GrowthRateFactor(value.traits).ToStringPercent() + " of base" : "HNS_RegistryUnknown".Translate());
             DrawCompareRow(view, ref y, "Sow time", selected, value => VisibleKnowledgeRank(value.cropDef) >= KnowledgeRank.Expert
-                ? ExpandedTraitUtility.SowWorkFactor(value.traits).ToStringPercent() + " of base" : "Undiscovered information");
+                ? ExpandedTraitUtility.SowWorkFactor(value.traits).ToStringPercent() + " of base" : "HNS_RegistryUnknown".Translate());
             DrawCompareRow(view, ref y, "Harvest time", selected, value => VisibleKnowledgeRank(value.cropDef) >= KnowledgeRank.Expert
-                ? ExpandedTraitUtility.HarvestWorkFactor(value.traits).ToStringPercent() + " of base" : "Undiscovered information");
+                ? ExpandedTraitUtility.HarvestWorkFactor(value.traits).ToStringPercent() + " of base" : "HNS_RegistryUnknown".Translate());
             DrawCompareRow(view, ref y, "Beauty", selected, value => VisibleKnowledgeRank(value.cropDef) >= KnowledgeRank.Expert
-                ? NovelSeedUtility.BeautyOffset(value.traits).ToStringWithSign() : "Undiscovered information");
+                ? NovelSeedUtility.BeautyOffset(value.traits).ToStringWithSign() : "HNS_RegistryUnknown".Translate());
             DrawCompareRow(view, ref y, "Nutrition", selected, value => VisibleKnowledgeRank(value.cropDef) >= KnowledgeRank.Expert
-                ? NovelSeedUtility.ProduceNutritionFactor(value.traits).ToStringPercent() : "Undiscovered information");
+                ? NovelSeedUtility.ProduceNutritionFactor(value.traits).ToStringPercent() : "HNS_RegistryUnknown".Translate());
             DrawCompareRow(view, ref y, "Lineage", selected, value => VisibleKnowledgeRank(value.cropDef) >= KnowledgeRank.Master
                 ? (value.parentVarietyIds.Count == 0 ? "Founder" : value.parentVarietyIds.Count + " recorded parents")
-                : "Undiscovered information");
+                : "HNS_RegistryUnknown".Translate());
             DrawCompareRow(view, ref y, "Products / byproducts", selected, value => VisibleKnowledgeRank(value.cropDef) >= KnowledgeRank.Master
-                ? ProductSummary(value) : "Undiscovered information");
+                ? ProductSummary(value) : "HNS_RegistryUnknown".Translate());
             Widgets.EndScrollView();
         }
 
@@ -483,7 +486,7 @@ namespace HorticultureNovelSeeds
 
         private void DrawSearch(Rect rect)
         {
-            Widgets.Label(new Rect(rect.x, rect.y + 3f, 52f, 24f), "Search");
+            Widgets.Label(new Rect(rect.x, rect.y + 3f, 52f, 24f), "HNS_RegistrySearch".Translate());
             search = Widgets.TextField(new Rect(rect.x + 56f, rect.y, rect.width - 92f, 30f), search ?? string.Empty);
             if (!search.NullOrEmpty() && Widgets.ButtonText(new Rect(rect.xMax - 30f, rect.y, 30f, 30f), "X")) search = string.Empty;
         }

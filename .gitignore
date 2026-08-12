@@ -4,9 +4,6 @@
 **/bin/
 DevTools/Staged/
 DevTools/TestResults/
-DevTools/BridgeAdapter/Build/
-DevTools/BridgeAdapter/obj/
-DevTools/BridgeAdapters/
 DevTools/RuntimeTests/Build/
 DevTools/RuntimeTests/obj/
 DevTools/RuntimeTests/bin/

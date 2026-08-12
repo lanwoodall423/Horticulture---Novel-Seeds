@@ -1,12 +1,13 @@
 param(
     [string]$DevBridgeRoot = (Join-Path $PSScriptRoot '..\..\DevBridge2'),
-    [ValidateSet('complete', 'startup', 'ordinary-crop', 'sowable-tree', 'cross-pollination', 'produce-processing', 'knowledge', 'save-reload', 'negative', 'long-running', 'auto-mask-suite', 'auto-mask-export')]
+    [ValidateSet('complete', 'startup', 'clean-default', 'ordinary-crop', 'sowable-tree', 'cross-pollination', 'produce-processing', 'knowledge', 'save-reload', 'negative', 'long-running', 'ux-discovery', 'registry-scale', 'rc-performance', 'auto-mask-suite', 'auto-mask-export')]
     [string]$Scenario = 'complete',
     [int]$TimeoutSeconds = 300,
     [switch]$SkipRestart,
     [switch]$SkipGameplayBuild,
     [string]$BundleOutputPath = '',
-    [switch]$RegenerateAutoMasks
+    [switch]$RegenerateAutoMasks,
+    [string]$ResultArchiveDirectory = (Join-Path $PSScriptRoot 'Staged\RuntimeResults')
 )
 
 $ErrorActionPreference = 'Stop'
@@ -140,10 +141,16 @@ try {
         if (Test-Path -LiteralPath $resultPath -PathType Leaf) {
             try {
                 $candidate = Get-Content -LiteralPath $resultPath -Raw | ConvertFrom-Json
-                if ($candidate.requestId -eq $requestId -and $candidate.status -in @('PASS', 'FAIL', 'BLOCKED')) {
-                    $report = $candidate
-                    break
-                }
+                 if ($candidate.requestId -eq $requestId -and $candidate.status -in @('PASS', 'FAIL', 'BLOCKED')) {
+                     $report = $candidate
+                    if (-not [string]::IsNullOrWhiteSpace($ResultArchiveDirectory)) {
+                        $archiveDirectory = [IO.Path]::GetFullPath($ResultArchiveDirectory)
+                        New-Item -ItemType Directory -Path $archiveDirectory -Force | Out-Null
+                        $archivePath = Join-Path $archiveDirectory ($Scenario + '.' + $requestId + '.json')
+                        $candidate | ConvertTo-Json -Depth 16 | Set-Content -LiteralPath $archivePath -Encoding UTF8
+                    }
+                     break
+                 }
             } catch { }
         }
         Start-Sleep -Milliseconds 500
