@@ -1,10 +1,12 @@
 param(
     [string]$DevBridgeRoot = (Join-Path $PSScriptRoot '..\..\DevBridge2'),
-    [ValidateSet('complete', 'startup', 'ordinary-crop', 'sowable-tree', 'cross-pollination', 'produce-processing', 'knowledge', 'save-reload', 'negative', 'long-running')]
+    [ValidateSet('complete', 'startup', 'ordinary-crop', 'sowable-tree', 'cross-pollination', 'produce-processing', 'knowledge', 'save-reload', 'negative', 'long-running', 'auto-mask-suite', 'auto-mask-export')]
     [string]$Scenario = 'complete',
     [int]$TimeoutSeconds = 300,
     [switch]$SkipRestart,
-    [switch]$SkipGameplayBuild
+    [switch]$SkipGameplayBuild,
+    [string]$BundleOutputPath = '',
+    [switch]$RegenerateAutoMasks
 )
 
 $ErrorActionPreference = 'Stop'
@@ -78,7 +80,7 @@ else {
 $requestId = [guid]::NewGuid().ToString('N')
 $resultPath = Join-Path $runtime ('Horticulture.RuntimeTest.' + $requestId + '.json')
 $knowledgeDll = Join-Path $root '..\KnowledgeFramework\1.6\Assemblies\KnowledgeFramework.dll'
-$warmupTicks = if ($Scenario -in @('complete', 'save-reload')) { 180 } else { 60 }
+$warmupTicks = if ($Scenario -in @('complete', 'save-reload', 'auto-mask-suite', 'auto-mask-export')) { 180 } else { 60 }
 $request = [ordered]@{
     schemaVersion = '1'
     requestId = $requestId
@@ -94,6 +96,8 @@ $request = [ordered]@{
     knowledgeFrameworkApiGeneration = 3
     playerLogPath = [IO.Path]::GetFullPath($playerLog)
     playerLogBaselineLines = $baselineLines
+    autoMaskBundleOutputPath = if ($BundleOutputPath) { [IO.Path]::GetFullPath($BundleOutputPath) } else { '' }
+    autoMaskRegenerate = [bool]$RegenerateAutoMasks
 }
 
 function Write-HorticultureRequest {

@@ -526,10 +526,12 @@ namespace HorticultureNovelSeeds
             if (Widgets.ButtonText(new Rect(322f, y, 100f, 32f), "Refresh")) PlantMaskFileManager.Refresh();
             if (Widgets.ButtonText(new Rect(432f, y, 230f, 32f), "Generate Missing Auto-Masks"))
             {
-                AutoMaskBatchResult result = PlantAutoMaskCache.GenerateMissing(false);
-                Messages.Message("Auto masks: " + result.generated + " generated, " + result.reused + " cached, "
-                    + result.manualSkipped + " manual skipped, " + result.lowConfidence + " flagged for review, " + result.failed + " failed.",
-                    result.failed > 0 ? MessageTypeDefOf.CautionInput : MessageTypeDefOf.TaskCompletion, false);
+                PlantAutoMaskCache.InitializeAndGenerateMissing();
+                AutoMaskBatchResult result = PlantAutoMaskCache.LastBatchResult;
+                Messages.Message(result.workItems > 0
+                    ? "Auto-mask generation queued for " + result.workItems + " plant variations."
+                    : "Auto masks are already current (" + result.reused + " cached, " + result.manualSkipped + " manual skipped).",
+                    MessageTypeDefOf.TaskCompletion, false);
             }
             if (Widgets.ButtonText(new Rect(432f, y + 36f, 230f, 32f), "Review Mask Queue"))
                 Find.WindowStack.Add(new Dialog_MaskReviewQueue());

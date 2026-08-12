@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using RimWorld;
@@ -254,6 +255,7 @@ namespace HorticultureNovelSeeds
         {
             public Texture texture;
             public string label;
+            public string sourcePath;
         }
 
         private const string BloomingExtensionType = "VEF.Plants.BloomingPlantExtension";
@@ -303,6 +305,30 @@ namespace HorticultureNovelSeeds
         {
             List<TextureVariation> variations = VariationsFor(plantDef);
             return variations[Mathf.Clamp(variationIndex, 0, variations.Count - 1)].label;
+        }
+
+        public static string TexturePathForVariation(ThingDef plantDef, int variationIndex)
+        {
+            List<TextureVariation> variations = VariationsFor(plantDef);
+            TextureVariation variation = variations[Mathf.Clamp(variationIndex, 0, variations.Count - 1)];
+            return variation.sourcePath.NullOrEmpty() ? plantDef?.graphicData?.texPath : variation.sourcePath;
+        }
+
+        public static string VariationIdentityFor(ThingDef plantDef, int variationIndex)
+        {
+            List<TextureVariation> variations = VariationsFor(plantDef);
+            TextureVariation variation = variations[Mathf.Clamp(variationIndex, 0, variations.Count - 1)];
+            return (variation.label ?? string.Empty) + "|path:" + (variation.sourcePath ?? string.Empty)
+                + "|texture:" + (variation.texture?.name ?? string.Empty);
+        }
+
+        public static string GraphicIdentityFor(ThingDef plantDef)
+        {
+            GraphicData data = plantDef?.graphicData;
+            if (data == null) return "none";
+            return (data.graphicClass?.FullName ?? string.Empty) + "|path:" + (data.texPath ?? string.Empty)
+                + "|size:" + data.drawSize.x.ToString("R", CultureInfo.InvariantCulture)
+                + "," + data.drawSize.y.ToString("R", CultureInfo.InvariantCulture);
         }
 
         public static Texture ReferenceTextureForVariation(ThingDef plantDef, int variationIndex, string stateLabel)
@@ -430,7 +456,12 @@ namespace HorticultureNovelSeeds
             AddPathVariations(result, PrivatePath(plantDef?.plant, "immatureGraphicPath"), "Immature", true);
             AddPathVariations(result, PrivatePath(plantDef?.plant, "leaflessImmatureGraphicPath"), "Leafless Immature", true);
             AddPathVariations(result, PrivatePath(plantDef?.plant, "pollutedGraphicPath"), "Polluted", true);
-            if (result.Count == 0) result.Add(new TextureVariation { texture = plantDef?.uiIcon, label = "Normal" });
+            if (result.Count == 0) result.Add(new TextureVariation
+            {
+                texture = plantDef?.uiIcon,
+                label = "Normal",
+                sourcePath = graphicData?.texPath
+            });
             if (plantDef != null) TextureVariations[plantDef] = result;
             return result;
         }
@@ -459,9 +490,21 @@ namespace HorticultureNovelSeeds
                 result.Add(new TextureVariation
                 {
                     texture = textures[i],
-                    label = total > 1 ? stateLabel + " " + (i + 1) + " of " + total : stateLabel
+                    label = total > 1 ? stateLabel + " " + (i + 1) + " of " + total : stateLabel,
+                    sourcePath = collection
+                        ? path + "/" + (textures[i]?.name ?? string.Empty)
+                        : SourcePathForDirectTexture(path, textures[i])
                 });
             }
+        }
+
+        private static string SourcePathForDirectTexture(string path, Texture texture)
+        {
+            if (path.NullOrEmpty() || texture == null) return path;
+            string name = texture.name ?? string.Empty;
+            foreach (string suffix in new[] { "_north", "_east", "_south", "_west" })
+                if (name.EndsWith(suffix, StringComparison.OrdinalIgnoreCase)) return path + suffix;
+            return path;
         }
 
         private static List<Texture2D> DirectTextures(string path)

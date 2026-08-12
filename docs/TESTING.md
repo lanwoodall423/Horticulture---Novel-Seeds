@@ -37,7 +37,22 @@ For a focused scenario, use one of `startup`, `ordinary-crop`, `sowable-tree`, `
 .\DevTools\Run-RuntimeTests.ps1 -Scenario ordinary-crop
 ```
 
-If a coordinator command is interrupted, run `DevBridge.cmd wait-ready` before obtaining a new lease. A new production DLL, Def, Harmony, serialized-type, or core change requires `DevBridge.cmd restart` before testing.
+Automatic mask coverage is owned by Horticulture and runs in-game through the same harness:
+
+```powershell
+.\DevTools\Run-RuntimeTests.ps1 -Scenario auto-mask-suite
+```
+
+To publish a real Unity/RimWorld-generated bundle, use the Horticulture publisher. It builds the
+Release DLL, asks DevBridge2 only to coordinate the launch/readiness lease, runs the Horticulture
+export scenario, validates every identity, and stages the XML plus manifest. Add `-InstallBundle`
+only after reviewing the staging report:
+
+```powershell
+.\DevTools\Publish-AutoMaskBundle.ps1 -InstallBundle
+```
+
+If a coordinator command is interrupted, run `DevBridge.cmd wait-ready` before obtaining a new lease. A new production DLL, Def, Harmony, serialized-type, or core change requires `DevBridge.cmd restart` before testing. DevBridge2 coordinates process state only; all mask generation, assertions, export, and validation belong to Horticulture.
 
 ## Cleanup
 

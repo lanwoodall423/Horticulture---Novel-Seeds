@@ -28,6 +28,8 @@ DevBridge2 coordinates process lifecycle only. It provides no Horticulture RPC, 
 | `save-reload` | Normal RimWorld save/load request with ordinary, tree, hybrid, trait, palette, and Knowledge state checks after reload. |
 | `negative` | Unsupported plant, missing cultivar, empty registry, missing/invalid mask cache, and safe rejection behavior. |
 | `long-running` | Repeated plant/event ticks, cache availability, and diagnostic/log growth checks. |
+| `auto-mask-suite` | No-work baseline and long-event suppression, manual/local/bundled precedence, new-plant render safety and explicit fallback generation, stale-bundle rejection, low-confidence safety/promotion behavior, tree morphology, growth/collection/directional variants, and ordinary lookup performance. |
+| `auto-mask-export` | Horticulture-owned in-game Unity texture analysis, complete identity validation, bundle export, and failure/low-confidence diagnostics for publishing. |
 | `complete` | Runs the release smoke journey and includes `save-reload` as an asynchronous final phase. |
 
 An assertion is `PASS`, `FAIL`, or `BLOCKED`. A blocked assertion means the required game state or capability was genuinely unavailable; the result never silently treats an unrun scenario as a pass.

@@ -22,11 +22,11 @@ $checks = [ordered]@{
     'cache is versioned and persistent' = $auto -match 'GeneratorVersion' -and $auto -match 'FormatVersion' -and $auto -match 'GenFilePaths.ConfigFolderPath'
     'cache fingerprints source produce and state references' = $auto -match 'TextureKey' -and $auto -match 'harvestedThingDef' -and $auto -match 'ReferenceFingerprint'
     'cache identity includes exact texture content dimensions state and orientation' = $auto -match 'MaskTextureIdentity\.TryGet' -and $identity -match 'texture\.width' -and $identity -match 'texture\.height' -and $identity -match 'PixelFingerprint' -and $identity -match 'OrientationFor' -and $identity -match 'NormalizeStateLabel'
-    'cache verifies identity and eligibility on each lookup' = $auto -match 'record\.TextureKey == textureKey' -and $auto -match 'record\.EligibilityKey == eligibilityKey' -and $auto -match 'SessionValidated'
+    'cache verifies complete identity and eligibility on each lookup' = $auto -match 'record\.Matches\(identity\)' -and $auto -match 'CanReuseFor' -and $auto -match 'SessionValidated'
     'transparency participates in classification' = $auto -match 'alpha' -and $auto -match 'TransparentAlpha'
     'HSV and color clustering participate' = $auto -match 'RGBToHSV' -and $auto -match 'Cluster'
     'connected regions participate' = $auto -match 'ConnectedRegion' -and $auto -match 'Queue<int>'
-    'layer presence is evidence-based and cache-invalidating' = $auto -match 'GeneratorVersion = 14' -and $auto -match 'EligibilityFor' -and $auto -match 'HasCredibleStem' -and $auto -match 'BuildProduceMap' -and $auto -match 'LayerAbsenceRegression' -and $auto -match 'paintFruit'
+    'layer presence is evidence-based and cache-invalidating' = $auto -match 'GeneratorVersion = 15' -and $auto -match 'EligibilityFor' -and $auto -match 'HasCredibleStem' -and $auto -match 'BuildProduceMap' -and $auto -match 'LayerAbsenceRegression' -and $auto -match 'paintFruit'
     'paired state references participate when available' = $auto -match 'immatureReference' -and $auto -match 'leaflessReference' -and $masking -match 'ReferenceTextureForVariation'
     'state differencing is alignment gated and palette masks are bounded' = $auto -match 'AlphaIntersectionOverUnion' -and $auto -match '>= 0\.88f' -and $auto -match 'selectedPixels > opaquePixels \* 0\.24f'
     'produce resolves declared asset instead of unsafe fallback' = $auto -match 'produce\.graphicData\.texPath' -and $auto -match 'produce\.HasValue' -and $auto -notmatch 'IsVisibleProduceRegion'
@@ -57,6 +57,10 @@ $checks = [ordered]@{
     'batch generation is exposed' = $modern -match 'Generate Missing Auto-Masks'
     'legacy cache records regenerate or reuse by identity' = $auto -match 'Loaded a legacy automatic plant-mask cache' -and $auto -match 'LoadedGeneratorVersion != GeneratorVersion' -and $auto -match 'reusable'
     'shared manual masks are cached and ambiguous conflicts are explicit' = $masking -match 'SharedManualMaskCache' -and $masking -match 'Ambiguous shared manual' -and $settings -match 'SharedManualMaskCache\.Invalidate'
+    'bundled masks have committed XML and manifest paths' = $auto -match 'BundledCachePath' -and $auto -match 'BundledManifestPath' -and (Test-Path (Join-Path $root '1.6\AutoMasks\BundledAutoMasks.xml')) -and (Test-Path (Join-Path $root '1.6\AutoMasks\BundledAutoMasks.manifest.json'))
+    'bundled precedence and promotion are explicit' = $auto -match 'BundledRecords' -and $auto -match 'PromoteBundledRecord' -and $auto -match 'runtimeTestBundleOverride != false'
+    'generation is finite visible and not renderer-triggered' = $auto -match 'BuildWorkList' -and $auto -match 'QueueLongEvent' -and $auto -match 'SetCurrentEventText' -and $auto -match 'work\.Count == 0' -and $masking -match 'LayersForVariation'
+    'developer bundle publishing tooling exists' = (Test-Path (Join-Path $root 'DevTools\Publish-AutoMaskBundle.ps1')) -and (Test-Path (Join-Path $root 'DevTools\Verify-AutoMaskBundle.ps1'))
 }
 
 $failed = @($checks.GetEnumerator() | Where-Object { -not $_.Value })

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
+  <HNS_GeneratingAutoMasks>Generating automatic plant masks...</HNS_GeneratingAutoMasks>
   <HNS_NameAndUnlockVariety>Name and unlock {0} variety</HNS_NameAndUnlockVariety>
   <HNS_AlreadyUnlocked>These traits are already unlocked as {0}.</HNS_AlreadyUnlocked>
   <HNS_InvalidSeedPack>Seed pack data is missing.</HNS_InvalidSeedPack>

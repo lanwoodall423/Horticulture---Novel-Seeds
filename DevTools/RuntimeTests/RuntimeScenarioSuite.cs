@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -62,6 +63,8 @@ namespace HorticultureNovelSeeds.RuntimeTests
                         case "knowledge": Knowledge(report); break;
                         case "negative": Negative(report); break;
                         case "long-running": LongRunning(report); break;
+                        case "auto-mask-suite": AutoMaskSuite(report); break;
+                        case "auto-mask-export": AutoMaskExport(report, request); break;
                         case "complete":
                             Startup(report);
                             OrdinaryCrop(report);
@@ -137,6 +140,206 @@ namespace HorticultureNovelSeeds.RuntimeTests
                     throw new InvalidOperationException("Knowledge Framework is not usable: " + diagnostics);
                 return diagnostics.ToString();
             });
+        }
+
+        private static void AutoMaskSuite(HorticultureRuntimeTestReport report)
+        {
+            PlantAutoMaskCache.ResetRuntimeTestState();
+            ThingDef plant = FindMaskPlant(false);
+            ThingDef tree = FindMaskPlant(true);
+            if (plant == null) { Block(report, "auto-mask-plant", "No supported graphic plant was loaded."); return; }
+
+            Check(report, "auto-mask-baseline-no-work", () =>
+            {
+                PlantAutoMaskCache.InitializeAndGenerateMissing();
+                AutoMaskBatchResult result = PlantAutoMaskCache.LastBatchResult;
+                Require(result.workItems == 0 && !PlantAutoMaskCache.GenerationQueued,
+                    "baseline queued missing-mask work: " + result.workItems);
+                Require(result.reused > 0 || PlantAutoMaskCache.BundledRecordCount > 0,
+                    "baseline had neither local nor bundled masks.");
+                return "no generation event; reused=" + result.reused + ", bundled=" + result.bundled
+                    + ", local=" + result.localReused;
+            });
+
+            Check(report, "auto-mask-manual-precedence", () =>
+            {
+                PlantSettingsRecord settings = HorticultureNovelSeedsMod.Settings?.GetPlantSettings(plant, true);
+                Require(settings != null, "plant settings were unavailable.");
+                bool hadManual = settings.HasManualPlantMask(0);
+                List<VisualMaskLayerRecord> previous = hadManual
+                    ? settings.ManualPlantMaskLayersForVariation(0).Select(layer => layer.Clone()).ToList() : null;
+                List<VisualMaskLayerRecord> manual = new List<VisualMaskLayerRecord>
+                {
+                    new VisualMaskLayerRecord { name = "Produce" },
+                    new VisualMaskLayerRecord { name = "Leaves" },
+                    new VisualMaskLayerRecord { name = "Stem" }
+                };
+                manual[0].PaintPixel(3, 4, true);
+                settings.SetManualPlantMask(0, manual);
+                try
+                {
+                    List<VisualMaskLayerRecord> resolved = PlantMaskUtility.LayersForVariation(plant, 0, false, false);
+                    Require(resolved != null && resolved[0].IsPainted(3, 4), "manual mask did not win precedence.");
+                    return "def-specific manual mask won over automatic sources";
+                }
+                finally
+                {
+                    if (hadManual) settings.SetManualPlantMask(0, previous);
+                    else settings.RemoveManualPlantMask(0);
+                }
+            });
+
+            Check(report, "auto-mask-local-bundled-precedence", () =>
+            {
+                PlantAutoMaskCache.ClearRuntimeTestLocalRecord(plant, 0);
+                Require(PlantAutoMaskCache.RecordSource(plant, 0) == "bundled",
+                    "selected plant has no valid bundled record after local removal.");
+                Require(PlantAutoMaskCache.PromoteBundledRecord(plant, 0, false), "could not promote a bundled record to local storage.");
+                Require(PlantAutoMaskCache.RecordSource(plant, 0) == "local", "local promoted record did not win over bundle.");
+                PlantAutoMaskCache.ClearRuntimeTestLocalRecord(plant, 0);
+                Require(PlantAutoMaskCache.RecordSource(plant, 0) == "bundled", "valid bundled record was not used after local removal.");
+                return "manual > local > bundled precedence verified";
+            });
+
+            Check(report, "auto-mask-new-plant-generation-fallback", () =>
+            {
+                PlantAutoMaskCache.ClearRuntimeTestLocalRecord(plant, 0);
+                PlantAutoMaskCache.SetRuntimeTestBundleEnabled(false);
+                try
+                {
+                    Require(PlantMaskUtility.LayersForVariation(plant, 0, false, false) == null,
+                        "rendering path generated or exposed a missing mask.");
+                    Require(PlantAutoMaskCache.GetRecord(plant, 0, true, true) != null,
+                        "explicit fallback generation did not produce a local record.");
+                    Require(PlantAutoMaskCache.RecordSource(plant, 0) == "local", "generated fallback was not local.");
+                    return "new-plant miss was safe on render and generated only through explicit work";
+                }
+                finally
+                {
+                    PlantAutoMaskCache.SetRuntimeTestBundleEnabled(true);
+                    PlantAutoMaskCache.ResetRuntimeTestState();
+                }
+            });
+
+            Check(report, "auto-mask-low-confidence-safety", () =>
+            {
+                Require(PlantAutoMaskCache.RuntimeTestLowConfidenceSafety(), "low-confidence masks were renderable in the safety regression.");
+                int lowConfidence = 0;
+                foreach (ThingDef candidate in SupportedMaskPlants())
+                    for (int variation = 0; variation < PlantMaskUtility.VariationCount(candidate); variation++)
+                    {
+                        AutoPlantMaskRecord record = PlantAutoMaskCache.GetRecord(candidate, variation, false, true);
+                        if (record?.LowConfidence == true)
+                        {
+                            lowConfidence++;
+                            Require(PlantAutoMaskCache.LayersFor(candidate, variation, false, false) == null,
+                                "low-confidence bundle/local mask rendered for " + candidate.defName + ".");
+                        }
+                    }
+                return "classifier safety regression passed; bundle low-confidence records=" + lowConfidence;
+            });
+
+            Check(report, "auto-mask-stale-bundle", () =>
+            {
+                string source = PlantAutoMaskCache.BundledCachePath;
+                Require(File.Exists(source), "committed bundled cache was not installed.");
+                string stale = Path.Combine(GenFilePaths.ConfigFolderPath, "HorticultureNovelSeedsRuntimeStaleBundle.xml");
+                string xml = File.ReadAllText(source);
+                xml = xml.Replace("<generatorVersion>" + PlantAutoMaskCache.GeneratorVersion + "</generatorVersion>",
+                    "<generatorVersion>" + (PlantAutoMaskCache.GeneratorVersion - 1) + "</generatorVersion>");
+                File.WriteAllText(stale, xml);
+                try
+                {
+                    AutoMaskBundleValidationResult result = PlantAutoMaskCache.ValidateBundle(stale, false);
+                    Require(!result.Valid && result.Error.Contains("stale"), "stale bundle was accepted: " + result);
+                    return "stale generator version rejected without modifying the committed bundle";
+                }
+                finally { try { if (File.Exists(stale)) File.Delete(stale); } catch { } }
+            });
+
+            Check(report, "auto-mask-tree-and-variants", () =>
+            {
+                Require(tree != null, "no sowable tree graphic was loaded.");
+                int totalVariations = 0; int multiVariationPlants = 0; int collectionOrDirectional = 0;
+                HashSet<string> labels = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                foreach (ThingDef candidate in SupportedMaskPlants())
+                {
+                    int count = PlantMaskUtility.VariationCount(candidate);
+                    totalVariations += count;
+                    if (count > 1) multiVariationPlants++;
+                    for (int variation = 0; variation < count; variation++)
+                    {
+                        string label = PlantMaskUtility.VariationLabel(candidate, variation) ?? string.Empty;
+                        if (label.IndexOf(" of ", StringComparison.OrdinalIgnoreCase) >= 0
+                            || label.IndexOf("Collection", StringComparison.OrdinalIgnoreCase) >= 0
+                            || label.IndexOf("north", StringComparison.OrdinalIgnoreCase) >= 0
+                            || label.IndexOf("south", StringComparison.OrdinalIgnoreCase) >= 0
+                            || label.IndexOf("east", StringComparison.OrdinalIgnoreCase) >= 0
+                            || label.IndexOf("west", StringComparison.OrdinalIgnoreCase) >= 0) collectionOrDirectional++;
+                        if (label.IndexOf("Bloom", StringComparison.OrdinalIgnoreCase) >= 0) labels.Add("growth");
+                        if (label.IndexOf("Immature", StringComparison.OrdinalIgnoreCase) >= 0) labels.Add("immature");
+                        if (label.IndexOf("Leafless", StringComparison.OrdinalIgnoreCase) >= 0) labels.Add("leafless");
+                        PlantAutoMaskCache.GetRecord(candidate, variation, false, true);
+                    }
+                }
+                AutoPlantMaskRecord treeRecord = PlantAutoMaskCache.GetRecord(tree, 0, false, true);
+                Require(treeRecord != null && treeRecord.MorphologyIdentity.Contains("tree:True"), "tree morphology identity was not recorded.");
+                Require(totalVariations > 0 && multiVariationPlants > 0, "growth or alternate variants were not discovered.");
+                Require(labels.Contains("growth") || labels.Contains("immature") || labels.Contains("leafless"),
+                    "growth-state variants were not discovered.");
+                Require(collectionOrDirectional > 0, "collection or directional variants were not discovered.");
+                return "tree morphology plus " + totalVariations + " variations across " + multiVariationPlants
+                    + " multi-variant plants; collection/directional=" + collectionOrDirectional;
+            });
+
+            Check(report, "auto-mask-performance", () =>
+            {
+                Stopwatch timer = Stopwatch.StartNew();
+                int hits = 0;
+                for (int i = 0; i < 100; i++)
+                    if (PlantMaskUtility.LayersForVariation(plant, 0, false, false) != null) hits++;
+                timer.Stop();
+                Require(hits > 0, "ordinary renderer lookup had no mask hits.");
+                Require(timer.ElapsedMilliseconds < 5000, "ordinary mask lookup exceeded 5 seconds: " + timer.ElapsedMilliseconds + "ms");
+                return "100 render-path lookups=" + timer.ElapsedMilliseconds + "ms; hits=" + hits;
+            });
+        }
+
+        private static void AutoMaskExport(HorticultureRuntimeTestReport report, HorticultureRuntimeTestRequest request)
+        {
+            Check(report, "auto-mask-export", () =>
+            {
+                Require(!request.autoMaskBundleOutputPath.NullOrEmpty(), "auto-mask bundle output path was not supplied.");
+                PlantAutoMaskCache.ResetRuntimeTestState();
+                PlantAutoMaskCache.SetRuntimeTestBundleEnabled(!request.autoMaskRegenerate);
+                AutoMaskBatchResult batch = PlantAutoMaskCache.GenerateMissing(request.autoMaskRegenerate);
+                Require(batch.failed == 0, "mask generation failed for " + batch.failed + " variation(s).");
+                Require(PlantAutoMaskCache.ExportBundle(request.autoMaskBundleOutputPath, out AutoMaskBundleValidationResult validation),
+                    "bundle export/validation failed: " + validation);
+                Require(validation.RecordCount > 0, "bundle export contained no records.");
+                Require(validation.LowConfidenceCount == 0,
+                    validation + "; low-confidence masks are incomplete for publishing.");
+                report.relevantDiagnostics.Add("auto-mask-export=" + validation + "; generated=" + batch.generated
+                    + "; elapsedMs=" + batch.elapsedMilliseconds);
+                return validation.ToString() + "; generated=" + batch.generated;
+            });
+        }
+
+        private static IEnumerable<ThingDef> SupportedMaskPlants()
+        {
+            return DefDatabase<ThingDef>.AllDefsListForReading
+                .Where(def => HorticulturePlantPolicy.IsSupported(def) && def.graphicData != null
+                    && PlantMaskUtility.TextureForVariation(def, 0) != null)
+                .OrderBy(def => def.defName);
+        }
+
+        private static ThingDef FindMaskPlant(bool tree)
+        {
+            return SupportedMaskPlants().FirstOrDefault(def => HorticulturePlantPolicy.IsTree(def) == tree
+                && HorticultureNovelSeedsMod.Settings?.GetPlantSettings(def, false)?.HasManualPlantMask(0) != true
+                && !PlantMaskUtility.HasSharedManualMask(def, 0, out _, false)
+                && (PlantAutoMaskCache.RecordSource(def, 0) == "local"
+                    || PlantAutoMaskCache.RecordSource(def, 0) == "bundled"));
         }
 
         private static void OrdinaryCrop(HorticultureRuntimeTestReport report)
@@ -641,7 +844,12 @@ namespace HorticultureNovelSeeds.RuntimeTests
 
         private static void DestroyFixture(Thing fixture)
         {
-            if (fixture != null && !fixture.Destroyed) fixture.Destroy(DestroyMode.Vanish);
+            if (fixture != null && !fixture.Destroyed && fixture.Spawned)
+            {
+                try { fixture.Destroy(DestroyMode.Vanish); }
+                catch (ArgumentOutOfRangeException) { }
+                catch (NullReferenceException) { }
+            }
             Fixtures.Remove(fixture);
         }
 

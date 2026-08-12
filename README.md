@@ -193,6 +193,12 @@ preview recoloring share an HSV/value-preserving transform that keeps sprite sha
 on very dark outline pixels. Diagnostic overlays use red for foliage, green for produce/flowers, and blue
 for stems/branches.
 
+The release also carries a validated `1.6/AutoMasks` bundle. Resolution order is authoritative manual,
+validated local generated/promoted, validated bundled, then explicit local generation. Missing-mask work is
+finite and visible in a long event; ordinary rendering never performs texture readbacks or generation. The
+developer publisher in `DevTools/Publish-AutoMaskBundle.ps1` regenerates and validates a real in-game bundle
+through DevBridge2 coordination, then emits the XML, manifest, low-confidence count, and failure report.
+
 The mask painter keeps the existing Plant/Produce pages and three semantic channels while adding a fast
 manual workflow: Add/Remove/Replace brushes, connected-region modifiers, grow/shrink/smooth/feather commands,
 island and hole cleanup, smart edge expansion, channel locks, original/mask/final previews, validation issue

@@ -233,6 +233,8 @@ namespace HorticultureNovelSeeds.RuntimeTests
         public int knowledgeFrameworkApiGeneration;
         public string playerLogPath;
         public int playerLogBaselineLines;
+        public string autoMaskBundleOutputPath;
+        public bool autoMaskRegenerate;
     }
 
     [Serializable]
@@ -346,7 +348,11 @@ namespace HorticultureNovelSeeds.RuntimeTests
 
         internal static void TickBeforeAutomaticSuites()
         {
-            RunTick(true);
+            if (request == null) LoadRequest();
+            bool maskScenario = request != null
+                && (string.Equals(request.scenario, "auto-mask-suite", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(request.scenario, "auto-mask-export", StringComparison.OrdinalIgnoreCase));
+            RunTick(!maskScenario);
         }
 
         private static void RunTick(bool forceExecution)
