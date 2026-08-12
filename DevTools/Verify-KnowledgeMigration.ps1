@@ -33,7 +33,8 @@ $checks = [ordered]@{
     'completed events route through one semantic router' = $router -match 'SowingCompleted' -and $router -match 'HarvestCompleted' -and $router -match 'ProduceProcessed' -and $router -match 'CuttingCompleted' -and $router -notmatch 'CurrentTick\(|TicksGame'
     'canonical policy includes sowable trees' = $policy -match 'plantDef\.plant\.Sowable' -and $policy -match 'IsSowableTree' -and $policy -notmatch '!plantDef\.plant\.IsTree'
     'stable identities and bounded dedupe are present' = $identity -match 'StableHash' -and $identity -match 'MaxIdentityLength' -and $diagnostics -match 'MaxRecentEvents = 1024'
-    'normal cultivar registration invalidates affected subjects only' = $adapter -match 'InvalidateSubjects\(' -and $adapter -notmatch 'InvalidateDomain\(DomainId\)'
+    'normal cultivar registration invalidates affected subjects with safe fallback' = $adapter -match 'InvalidateSubjects\(' -and
+        $adapter -match 'catch \(InvalidOperationException\)' -and $adapter -match 'InvalidateDomain\(DomainId\)'
     'content packs are optional load ordering only' = $about -notmatch '<modDependencies>[\s\S]*?<packageId>VanillaExpanded\.VPlants' -and $about -match '<loadAfter>[\s\S]*?VanillaExpanded\.VPlantsE'
 }
 $failed = @($checks.GetEnumerator() | Where-Object { -not $_.Value })

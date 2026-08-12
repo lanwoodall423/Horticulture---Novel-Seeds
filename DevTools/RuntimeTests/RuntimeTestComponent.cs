@@ -241,7 +241,7 @@ namespace HorticultureNovelSeeds.RuntimeTests
     public sealed class HorticultureRuntimeTestReport
     {
         public string schemaVersion = "2";
-        public string suiteVersion = "1.0";
+        public string suiteVersion = "1.1";
         public string suite = "Horticulture.RuntimeTests";
         public string requestId;
         public string launchId;
@@ -267,6 +267,7 @@ namespace HorticultureNovelSeeds.RuntimeTests
         public List<string> exceptionDetails = new List<string>();
         public List<string> relevantDiagnostics = new List<string>();
         public List<string> logFindings = new List<string>();
+        public List<string> performanceMeasurements = new List<string>();
         [NonSerialized]
         private readonly List<HorticultureRuntimeAssertion> assertionBuffer = new List<HorticultureRuntimeAssertion>();
 

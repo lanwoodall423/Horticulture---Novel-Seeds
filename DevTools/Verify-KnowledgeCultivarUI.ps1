@@ -29,7 +29,7 @@ $requirements = [ordered]@{
     'mutation does not query plant knowledge' = $mutation -notmatch 'PlantKnowledgeUtility\.(Mutation|Experience|Rank)'
     'personal plant work factor retained' = $knowledge -match 'PlantWorkSpeedFactor\(Pawn pawn, ThingDef cropDef\)'
     'registry field-journal pages' = $registry -match 'RegistryPage \{ Plants, Cultivars, Knowledge, Compare \}'
-    'discovered plants page' = $registry -match 'Discovered Plants'
+    'discovered plants page uses keyed text' = $registry -match 'HNS_RegistryPlantsTab'
     'undiscovered entries are masked' = $registry -match 'Undiscovered plant'
     'comparison requires two entries' = $registry -match 'CanCompareCount\(int count\) => count >= 2' -and $registry -match 'CanCompareCount\(comparisonIds\.Count\)'
     'side-by-side comparison' = $registry -match 'DrawComparisonTable'

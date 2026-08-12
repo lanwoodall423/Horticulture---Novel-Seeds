@@ -33,6 +33,6 @@
     <li>Andromeda.NicePlantsMenu</li>
     <li>ReGrowth.BOTR.Core</li>
   </loadAfter>
-  <description>Adds discoverable plant varieties, trait-bearing novel seed packs, and grow-zone variety selection.</description>
+  <description>Discover rare plant mutations, preserve their exact traits as named cultivars, and grow them from ordinary plant menus. Novel Seeds also supports wild discoveries, cross-pollination, inherited produce effects, and per-plant visual customization. Most conventional sowable plants, including sowable trees, work automatically; mods with custom planting, harvesting, graphics, or product systems may need compatibility work.</description>
 </ModMetaData>
 

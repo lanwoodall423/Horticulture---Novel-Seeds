@@ -27,7 +27,8 @@ Assert-Contract ($router -match 'traitList' -and $router -notmatch 'TraitInherit
 Assert-Contract ($diagnostics -match 'MaxRecentEvents = 1024' -and $diagnostics -match 'ResetForGameTransition') 'dedupe cache is bounded and game-scoped'
 Assert-Contract ($adapter -match 'HorticultureKnowledgeEventDiagnostics\.Accept' -and $adapter -match 'SubmittedEvent') 'adapter enforces integration-boundary deduplication'
 Assert-Contract ($adapter -match 'uniquePerSourceInstance = true' -and $adapter -match 'stateLimit = 4096') 'framework accrual enforces stable source idempotency'
-Assert-Contract ($adapter -match 'InvalidateSubjects\(' -and $adapter -notmatch 'InvalidateDomain\(DomainId\)' ) 'normal cultivar registration uses targeted invalidation'
+Assert-Contract ($adapter -match 'InvalidateSubjects\(' -and $adapter -match 'catch \(InvalidOperationException\)' -and
+    $adapter -match 'InvalidateDomain\(DomainId\)' ) 'normal cultivar registration uses targeted invalidation with safe fallback'
 Assert-Contract ($router -match 'HorticultureKnowledgeEventIdentity' -and $diagnostics -match 'Snapshot') 'runtime diagnostics expose executable routing state'
 Assert-Contract ($source | ForEach-Object { $files = Get-ChildItem $_ -Filter '*.cs' -Recurse; -not (($files | ForEach-Object { Get-Content $_.FullName -Raw }) -match 'GameComponent_KnowledgeFramework\.Current|KnowledgeRegistry\.BuildDefSchemas\(\)|KnowledgeService\.') }) 'gameplay source avoids direct framework implementation/lifecycle calls'
 

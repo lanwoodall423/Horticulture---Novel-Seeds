@@ -35,6 +35,7 @@ namespace HorticultureNovelSeeds
         private static string expandedGlobalTrait;
         private static string expandedWildTrait;
         private static string expandedPlantTrait;
+        private static bool showAdvancedGeneralSettings;
 
         public static ThingDef CurrentPlantPreview => selectedPlant
             ?? (selectedPage == SettingsPage.Group ? selectedGroup?.Plants.FirstOrDefault() : null);
@@ -54,7 +55,7 @@ namespace HorticultureNovelSeeds
             Widgets.DrawMenuSection(rect);
             Rect inner = rect.ContractedBy(6f);
             Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(inner.x + 6f, inner.y + 4f, inner.width - 12f, 30f), "Novel Seeds");
+            Widgets.Label(new Rect(inner.x + 6f, inner.y + 4f, inner.width - 12f, 30f), "HNS_SettingsTitle".Translate());
             Text.Font = GameFont.Small;
             float y = inner.y + 42f;
             DrawNavRow(new Rect(inner.x, y, inner.width, NavRowHeight), "General Settings", selectedPlant == null && selectedPage == SettingsPage.General, () => SelectPage(SettingsPage.General));
@@ -152,10 +153,12 @@ namespace HorticultureNovelSeeds
             List<VarietyTraitDef> allTraits = AllTraits();
             List<string> categories = settings.TraitGroupNames().ToList();
             List<VarietyTraitDef> shownTraits = FilterTraits(allTraits, globalTraitSearch, settings);
-            float contentHeight = 1160f + Mathf.CeilToInt(categories.Count / 2f) * 32f + TraitGroupsHeight(shownTraits, settings, OpenGlobalCategories, expandedGlobalTrait, ExpandedGlobalHeight, 124f, globalTraitSearch);
+            float contentHeight = showAdvancedGeneralSettings
+                ? 1160f + Mathf.CeilToInt(categories.Count / 2f) * 32f + TraitGroupsHeight(shownTraits, settings, OpenGlobalCategories, expandedGlobalTrait, ExpandedGlobalHeight, 124f, globalTraitSearch)
+                : 390f;
             BeginPage(rect, contentHeight, out Rect view);
             float y = 0f;
-            DrawPageTitle(view, ref y, "General Settings", "Defaults used by every growable plant unless overridden. Cross-pollination is checked when sowing.");
+            DrawPageTitle(view, ref y, "HNS_SettingsTitle".Translate(), "HNS_SettingsSubtitle".Translate());
             DrawSectionHeader(view, ref y, "Mutation And Cross-Pollination");
             float half = (view.width - 14f) / 2f;
             Rect mutationRateRect = new Rect(0f, y, half, 58f);
@@ -169,6 +172,20 @@ namespace HorticultureNovelSeeds
             DrawStepper(maxCrossRect, "Max Mechanical Traits Per Cross", ref settings.maxCrossPollinationTraits, 1, 10);
             TooltipHandler.TipRegion(maxCrossRect, "HNS_SettingsCrossPollinationColorTip".Translate());
             y += 94f;
+            Rect advancedButton = new Rect(0f, y, view.width, 32f);
+            if (Widgets.ButtonText(advancedButton, (showAdvancedGeneralSettings ? "HNS_SettingsAdvancedHide" : "HNS_SettingsAdvancedShow").Translate()))
+            {
+                showAdvancedGeneralSettings = !showAdvancedGeneralSettings;
+                contentScroll = Vector2.zero;
+            }
+            TooltipHandler.TipRegion(advancedButton, "HNS_SettingsAdvanced".Translate());
+            y += 46f;
+            if (!showAdvancedGeneralSettings)
+            {
+                DrawMutedLabel(new Rect(0f, y, view.width, 48f), "Advanced controls, trait groups, visual palettes, and resets are hidden until opened. Plant and group pages remain available in the sidebar.");
+                EndPage();
+                return;
+            }
             DrawSectionHeader(view, ref y, "Advanced Cross-Pollination");
             Rect growthRect = new Rect(0f, y, half, 58f);
             Rect secondSlotRect = new Rect(half + 14f, y, half, 58f);

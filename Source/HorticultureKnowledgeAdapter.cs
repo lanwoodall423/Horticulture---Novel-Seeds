@@ -114,8 +114,19 @@ namespace HorticultureNovelSeeds
             KnowledgeInvalidationResult last = null;
             for (int offset = 0; offset < ids.Count; offset += KnowledgeConsumerApi.MaxTargetedInvalidationSubjects)
             {
-                KnowledgeInvalidationResult result = KnowledgeConsumerApi.InvalidateSubjects(DomainId,
-                    ids.Skip(offset).Take(KnowledgeConsumerApi.MaxTargetedInvalidationSubjects));
+                KnowledgeInvalidationResult result;
+                try
+                {
+                    result = KnowledgeConsumerApi.InvalidateSubjects(DomainId,
+                        ids.Skip(offset).Take(KnowledgeConsumerApi.MaxTargetedInvalidationSubjects));
+                }
+                catch (InvalidOperationException)
+                {
+                    // Knowledge Framework 3.1 can observe its dynamic-subject cache while another
+                    // registration invalidates it. Cultivar registration is rare, so recover with
+                    // the framework's safe domain-wide invalidation instead of leaking the exception.
+                    result = KnowledgeConsumerApi.InvalidateDomain(DomainId);
+                }
                 if (result == null || !result.Success) return result;
                 HorticultureKnowledgeEventDiagnostics.TargetedInvalidation(result.invalidatedCount);
                 last = result;
