@@ -9,6 +9,7 @@ $auto = Get-Content -Raw (Join-Path $root 'Source\AutoPlantMasks.cs')
 $review = Get-Content -Raw (Join-Path $root 'Source\MaskReviewQueue.cs')
 $breeding = Get-Content -Raw (Join-Path $root 'Source\BreedingMixRegression.cs')
 $modern = Get-Content -Raw (Join-Path $root 'Source\ModernSettingsUI.cs')
+$ui = Get-Content -Raw (Join-Path $root 'Source\InsightSettingsUI.cs')
 $patches = Get-Content -Raw (Join-Path $root 'Source\Patches.cs')
 $resource = Get-Content -Raw (Join-Path $root 'Source\ResourceNeed.cs')
 $traitRegression = Get-Content -Raw (Join-Path $root 'Source\TraitCatalogRegression.cs')
@@ -45,7 +46,7 @@ $checks = [ordered]@{
     'normal rendering uses cached identity while startup/editor may precompute readbacks' = $identity -match 'TryGetCached' -and $identity -match 'allowRead' -and $identity -match 'PreloadPlantTextures' -and $auto -match 'allowIdentityGeneration'
     'shared manual conflicts are ambiguous and manual authority remains first' = $identity -match 'entry\.ambiguous' -and $editor -match 'CurrentUsesSharedManual' -and $editor -match 'PromoteAutoToManual'
     'batch review groups and sorts exact texture work' = $review -match 'MaskReviewQueueBuilder' -and $review -match 'IdentityKey' -and $review -match 'ThenBy\(row => row\.Confidence\)' -and $review -match 'ThenByDescending\(row => row\.IssueCount\)'
-    'batch review validates lazily by identity and mask hash' = $review -match 'ValidationCache' -and $review -match 'ValidationKey' -and $review -match 'MaskPainterOperations\.Validate' -and $modern -match 'Review Mask Queue'
+    'batch review validates lazily by identity and mask hash' = $review -match 'ValidationCache' -and $review -match 'ValidationKey' -and $review -match 'MaskPainterOperations\.Validate' -and $ui -match 'Review Mask Queue' -and $ui -match 'Dialog_MaskReviewQueue'
     'review opens existing painter and refreshes after close' = $review -match 'new Dialog_PlantMasks' -and $editor -match 'Action reviewRefresh' -and $editor -match 'reviewRefresh\?\.Invoke'
     'projection regression measures per-channel coverage and IoU' = (Test-Path (Join-Path $root 'Source\MaskProjectionRegression.cs')) -and (Get-Content -Raw (Join-Path $root 'Source\MaskProjectionRegression.cs')) -match 'IntersectionOverUnion' -and (Get-Content -Raw (Join-Path $root 'Source\MaskProjectionRegression.cs')) -match 'Coverage' -and (Get-Content -Raw (Join-Path $root 'Source\MaskProjectionRegression.cs')) -match 'ConfidenceRegression'
     'projection regression covers translation scale conflicts rejection cancel undo and identity' = $projection -match 'MaskProjectionRegression' -or (Test-Path (Join-Path $root 'Source\MaskProjectionRegression.cs'))

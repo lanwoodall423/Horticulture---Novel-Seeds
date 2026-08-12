@@ -13,6 +13,12 @@ dotnet build .\DevTools\RuntimeTests\HorticultureNovelSeeds.RuntimeTests.csproj 
 .\DevTools\Test-ReleasePackage.ps1
 ```
 
+The production settings UI has an additional contract check:
+
+```powershell
+.\DevTools\Verify-InsightCanvasUI.ps1
+```
+
 Run focused source/regression checks as needed:
 
 ```powershell
@@ -59,3 +65,5 @@ If a coordinator command is interrupted, run `DevBridge.cmd wait-ready` before o
 The harness removes its request, result-independent checkpoint, and test DLL in `finally`. If a shell is interrupted, remove only these explicit generated paths from `DevBridge2\Runtime` and `1.6\Assemblies`, then run `Test-ReleasePackage.ps1`. Never remove the whole runtime or assembly directory.
 
 See [RUNTIME_TESTS.md](RUNTIME_TESTS.md) for scenarios and the result schema.
+See [UI_ARCHITECTURE.md](UI_ARCHITECTURE.md) and [UI_TESTING.md](UI_TESTING.md) for the
+Insight Canvas ownership boundary and accessibility/responsive test matrix.

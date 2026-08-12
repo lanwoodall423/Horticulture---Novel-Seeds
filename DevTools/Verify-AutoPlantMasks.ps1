@@ -4,6 +4,7 @@ $auto = Get-Content -Raw (Join-Path $root 'Source\AutoPlantMasks.cs') -ErrorActi
 $masking = Get-Content -Raw (Join-Path $root 'Source\ProduceMasking.cs')
 $settings = Get-Content -Raw (Join-Path $root 'Source\Settings.cs')
 $modern = Get-Content -Raw (Join-Path $root 'Source\ModernSettingsUI.cs')
+$ui = Get-Content -Raw (Join-Path $root 'Source\InsightSettingsUI.cs')
 $traits = Get-Content -Raw (Join-Path $root 'Source\ExpandedTraitPatches.cs')
 $patches = Get-Content -Raw (Join-Path $root 'Source\Patches.cs')
 $visualParameters = Get-Content -Raw (Join-Path $root 'Source\PlantVisualParameters.cs')
@@ -54,7 +55,7 @@ $checks = [ordered]@{
     'mask diagnostics preserve channel separation' = $masking -notmatch 'original\.r \*= multiplier\.r' -and $masking -match 'Leaves' -and $masking -match 'Stem'
     'automatic classification is deterministic' = $auto -match 'DeterministicClassificationRegression' -and $auto -match 'SequenceEqual'
     'batch skips manual masks' = $auto -match 'GenerateMissing' -and $auto -match 'HasManualPlantMask'
-    'batch generation is exposed' = $modern -match 'Generate Missing Auto-Masks'
+    'batch generation is exposed' = $ui -match 'Generate Missing Auto-Masks' -and $ui -match 'InitializeAndGenerateMissing'
     'legacy cache records regenerate or reuse by identity' = $auto -match 'Loaded a legacy automatic plant-mask cache' -and $auto -match 'LoadedGeneratorVersion != GeneratorVersion' -and $auto -match 'reusable'
     'shared manual masks are cached and ambiguous conflicts are explicit' = $masking -match 'SharedManualMaskCache' -and $masking -match 'Ambiguous shared manual' -and $settings -match 'SharedManualMaskCache\.Invalidate'
     'bundled masks have committed XML and manifest paths' = $auto -match 'BundledCachePath' -and $auto -match 'BundledManifestPath' -and (Test-Path (Join-Path $root '1.6\AutoMasks\BundledAutoMasks.xml')) -and (Test-Path (Join-Path $root '1.6\AutoMasks\BundledAutoMasks.manifest.json'))

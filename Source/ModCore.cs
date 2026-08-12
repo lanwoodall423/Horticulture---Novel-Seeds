@@ -16,6 +16,7 @@ namespace HorticultureNovelSeeds
         public static Harmony HarmonyInstance;
         public static NovelSeedsSettings Settings;
         public static string ContentRootPath;
+        private InsightSettingsDocument settingsDocument;
 
         public HorticultureNovelSeedsMod(ModContentPack pack) : base(pack)
         {
@@ -54,7 +55,12 @@ namespace HorticultureNovelSeeds
 
         public override void DoSettingsWindowContents(Rect inRect)
         {
-            NovelSeedsSettingsUI.DoWindowContents(inRect, Settings);
+            if (settingsDocument == null || !ReferenceEquals(settingsDocument.Settings, Settings))
+            {
+                settingsDocument?.PostClose();
+                settingsDocument = new InsightSettingsDocument(Settings);
+            }
+            settingsDocument.Draw(inRect);
         }
 
         public override void WriteSettings()

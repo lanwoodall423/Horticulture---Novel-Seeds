@@ -223,6 +223,37 @@ namespace HorticultureNovelSeeds.RuntimeTests
                     "cultivar comparison discovery state is inconsistent.");
                 return "general settings start compact and comparison explains its two-cultivar requirement";
             });
+            Check(report, "ux-insight-document-isolation", () =>
+            {
+                Type documentType = AccessTools.TypeByName("HorticultureNovelSeeds.InsightSettingsDocument");
+                Require(documentType != null, "Insight Canvas settings document type is missing.");
+                NovelSeedsSettings firstSettings = new NovelSeedsSettings();
+                NovelSeedsSettings secondSettings = new NovelSeedsSettings();
+                object first = Activator.CreateInstance(documentType, new object[] { firstSettings });
+                object second = Activator.CreateInstance(documentType, new object[] { secondSettings });
+                MethodInfo isolated = AccessTools.Method(documentType, "HasIsolatedPresentationState");
+                Require(isolated != null && (bool)isolated.Invoke(first, new[] { second }),
+                    "settings documents share presentation state.");
+                PropertyInfo trackDuplicates = AccessTools.Property(documentType, "TrackDuplicateIds");
+                Require(trackDuplicates != null && (bool)trackDuplicates.GetValue(first, null),
+                    "duplicate-ID diagnostics are disabled for the settings document.");
+                return "two settings documents have isolated state, focus, feedback, and duplicate-ID diagnostics";
+            });
+            Check(report, "ux-insight-pages-and-virtualization", () =>
+            {
+                Type documentType = AccessTools.TypeByName("HorticultureNovelSeeds.InsightSettingsDocument");
+                object document = Activator.CreateInstance(documentType, new object[] { new NovelSeedsSettings() });
+                PropertyInfo pages = AccessTools.Property(documentType, "NavigationPageCount");
+                PropertyInfo plantLimit = AccessTools.Property(documentType, "PlantVirtualizationCacheLimit");
+                PropertyInfo traitLimit = AccessTools.Property(documentType, "TraitVirtualizationCacheLimit");
+                Require(pages != null && (int)pages.GetValue(document, null) == 5,
+                    "settings navigation does not expose all five pages.");
+                Require(plantLimit != null && (int)plantLimit.GetValue(document, null) <= 96,
+                    "plant virtualization cache is unbounded.");
+                Require(traitLimit != null && (int)traitLimit.GetValue(document, null) <= 96,
+                    "trait virtualization cache is unbounded.");
+                return "five pages and bounded plant/trait virtual-list caches are discoverable";
+            });
         }
 
         private static void RegistryScale(HorticultureRuntimeTestReport report)

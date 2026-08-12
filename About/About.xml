@@ -17,6 +17,10 @@
       <displayName>Knowledge Framework</displayName>
     </li>
     <li>
+      <packageId>lan.insightcanvas</packageId>
+      <displayName>Insight Canvas</displayName>
+    </li>
+    <li>
       <packageId>ferny.progressionagriculture</packageId>
       <displayName>Progression: Agriculture</displayName>
       <steamWorkshopUrl>steam://url/CommunityFilePage/3418017359</steamWorkshopUrl>
@@ -25,6 +29,7 @@
   <loadAfter>
     <li>brrainz.harmony</li>
     <li>lan.knowledgeframework</li>
+    <li>lan.insightcanvas</li>
     <li>ferny.progressionagriculture</li>
     <li>VanillaExpanded.VPlantsE</li>
     <li>VanillaExpanded.VPlantsEMore</li>
