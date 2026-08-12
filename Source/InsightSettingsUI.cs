@@ -124,6 +124,13 @@ namespace HorticultureNovelSeeds
         public int RenderErrorCount => uiDocument.Diagnostics.RenderErrors;
         public int PlantVirtualizationCacheLimit => plantList?.CacheLimit ?? 0;
         public int TraitVirtualizationCacheLimit => traitList?.CacheLimit ?? 0;
+        public bool HighContrast => highContrast;
+        public bool ReducedMotion => reducedMotion;
+        public InsightUiDensity Density => uiDocument.Density;
+        public string ActiveWorkspaceTab => activeWorkspaceTab;
+        public bool IsNarrowWorkspace => workspaceGroupsOrientation == InsightUiOrientation.Vertical;
+        public IReadOnlyList<string> NavigationPageIds => navigation.Pages.Select(page => page.Id).ToArray();
+        public IReadOnlyList<string> WorkspaceTabIds => workspaceTabs.Tabs.Select(tab => tab.Id).ToArray();
         public bool HasIsolatedPresentationState(InsightSettingsDocument other)
         {
             return other != null && !ReferenceEquals(uiDocument.State, other.uiDocument.State)
@@ -142,6 +149,7 @@ namespace HorticultureNovelSeeds
         {
             RefreshSnapshots();
             ApplyResponsiveLayout(rect.width);
+            UpdateDependentControlState();
             uiHost.Draw(rect, Time.deltaTime);
         }
 
@@ -183,12 +191,6 @@ namespace HorticultureNovelSeeds
                 FloatControl("gameplay.donor", "Minimum donor growth", () => settings.minimumDonorGrowth,
                     value => settings.minimumDonorGrowth = value, 0f, 1f,
                     "Minimum growth required before a plant can donate cross-pollination traits."),
-                FloatControl("gameplay.second-slot", "Second cross-pollination trait", () => settings.secondCrossPollinationTraitChance,
-                    value => settings.secondCrossPollinationTraitChance = value, 0f, 1f,
-                    "Chance of filling the second inherited trait slot."),
-                FloatControl("gameplay.later-slots", "Later cross-pollination traits", () => settings.laterCrossPollinationTraitChance,
-                    value => settings.laterCrossPollinationTraitChance = value, 0f, 1f,
-                    "Chance of filling later inherited trait slots."),
                 IntControl("gameplay.max-cross", "Maximum cross-pollination traits", () => settings.maxCrossPollinationTraits,
                     value => settings.maxCrossPollinationTraits = value, 1, 10,
                     "Caps how many traits may be inherited from cross-pollination."),
@@ -207,6 +209,16 @@ namespace HorticultureNovelSeeds
                 FloatControl("gameplay.exceptional", "Exceptional variety chance", () => settings.exceptionalVarietyChance,
                     value => settings.exceptionalVarietyChance = value, 0f, 1f,
                     "Chance that a generated variety receives an exceptional roll."));
+
+            InsightUiElement advancedInheritance = InsightUi.Expander("gameplay.advanced-inheritance",
+                "Advanced inheritance mechanics",
+                InsightUi.Column("gameplay.advanced-inheritance.body",
+                    FloatControl("gameplay.second-slot", "Second cross-pollination trait", () => settings.secondCrossPollinationTraitChance,
+                        value => settings.secondCrossPollinationTraitChance = value, 0f, 1f,
+                        "Chance of filling the second inherited trait slot."),
+                    FloatControl("gameplay.later-slots", "Later cross-pollination traits", () => settings.laterCrossPollinationTraitChance,
+                        value => settings.laterCrossPollinationTraitChance = value, 0f, 1f,
+                        "Chance of filling later inherited trait slots.")));
 
             InsightUiElement reset = Panel("gameplay.reset", InsightUi.SectionHeader("gameplay.reset.header", "Scoped resets",
                 "Reset only the selected part of the gameplay model; profiles and serialized keys remain compatible."),
@@ -230,7 +242,7 @@ namespace HorticultureNovelSeeds
                     "Maximum hue distance used when generating a produce palette."));
 
             return Page("gameplay.page", "Gameplay", "Tune the mutation and inheritance model with direct authoritative bindings.",
-                introduction, grid, reset, traitAndProduce);
+                introduction, grid, advancedInheritance, reset, traitAndProduce);
         }
 
         private InsightUiElement BuildWorkspacePage()
@@ -831,10 +843,22 @@ namespace HorticultureNovelSeeds
         private void ApplyResponsiveLayout(float width)
         {
             InsightUiOrientation orientation = width < 820f ? InsightUiOrientation.Vertical : InsightUiOrientation.Horizontal;
+            workspaceGroupsOrientation = orientation;
             SetSplitOrientation("workspace.groups.split", orientation);
             SetSplitOrientation("workspace.plants.split", orientation);
             SetSplitOrientation("workspace.traits.split", orientation);
             SetSplitOrientation("profiles.split", orientation);
+        }
+
+        private InsightUiOrientation workspaceGroupsOrientation = InsightUiOrientation.Horizontal;
+
+        private void UpdateDependentControlState()
+        {
+            bool enabled = settings.enableTraitBalancing;
+            InsightUiSlider balanceStrength = FindElement(uiDocument.Root, "gameplay.balance-strength.slider") as InsightUiSlider;
+            if (balanceStrength != null) balanceStrength.Enabled = enabled;
+            InsightUiSelect allowedImbalance = FindElement(uiDocument.Root, "gameplay.allowed-imbalance.select") as InsightUiSelect;
+            if (allowedImbalance != null) allowedImbalance.Enabled = enabled;
         }
 
         private void SetSplitOrientation(string id, InsightUiOrientation orientation)

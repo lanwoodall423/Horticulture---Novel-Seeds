@@ -34,7 +34,10 @@ The document has five navigation pages: Gameplay, Plants & Traits, Visuals, Prof
 Advanced. Navigation uses Insight Canvas responsive `Navigation`; it becomes a wrapped top
 navigation at narrow widths. Plants & Traits uses Groups, Plants, and Traits tabs with
 searchable bounded `VirtualList` registries and a responsive draggable `Split` inspector.
-Visuals provides high-level palette/mask actions and opens the existing focused mask and trait
+Gameplay keeps advanced inheritance-slot probabilities behind a document-owned expander;
+trait-balancing strength and allowed-imbalance controls follow the authoritative balancing
+toggle so dependent settings cannot be edited while balancing is disabled. Visuals provides
+high-level palette/mask actions and opens the existing focused mask and trait
 editors. Profiles provides a list/card workflow for apply, save, update, delete, reset, and
 publisher-default export. Advanced contains tags, accessibility, cache/mask diagnostics,
 framework metadata, compatibility text, and full reset.

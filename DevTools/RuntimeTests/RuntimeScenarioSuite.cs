@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
 using HarmonyLib;
+using InsightCanvas;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -254,6 +255,170 @@ namespace HorticultureNovelSeeds.RuntimeTests
                     "trait virtualization cache is unbounded.");
                 return "five pages and bounded plant/trait virtual-list caches are discoverable";
             });
+            Check(report, "ux-insight-navigation-and-search", () =>
+            {
+                InsightSettingsDocument document = NewSettingsDocument();
+                string[] expectedPages = { "gameplay", "workspace", "visuals", "profiles", "advanced" };
+                Require(expectedPages.SequenceEqual(document.NavigationPageIds), "settings navigation page IDs are incomplete or unstable.");
+                InsightUiNavigation navigation = InstanceField<InsightUiNavigation>(document, "navigation");
+                navigation.Select("workspace");
+                Require(document.ActivePageId == "workspace", "navigation selection did not update the document-owned page.");
+                InsightUiTabs tabs = InstanceField<InsightUiTabs>(document, "workspaceTabs");
+                Require(new[] { "groups", "plants", "traits" }.SequenceEqual(tabs.Tabs.Select(tab => tab.Id)),
+                    "workspace tabs are incomplete or unstable.");
+                tabs.Select("traits");
+                Require(tabs.ActiveTabId == "traits", "workspace tab selection did not update document state.");
+                InsightUiSearchField search = InstanceField<InsightUiSearchField>(document, "traitSearchField");
+                Require(search != null, "trait SearchField was not composed.");
+                search.SetText("runtime-query");
+                Require(search.Value == "runtime-query", "SearchField did not retain its document-owned query.");
+                InvokeInstance(document, "RefreshSnapshots");
+                search.Clear();
+                Require(search.Value.NullOrEmpty(), "SearchField clear did not clear the document-owned query.");
+                return "navigation, workspace tabs, and SearchField queries are document-owned";
+            });
+            Check(report, "ux-insight-selections-and-group-action", () =>
+            {
+                InsightSettingsDocument document = NewSettingsDocument();
+                Type documentType = document.GetType();
+                InsightUiNavigation navigation = InstanceField<InsightUiNavigation>(document, "navigation");
+                InsightUiTabs tabs = InstanceField<InsightUiTabs>(document, "workspaceTabs");
+                ThingDef plant = DefDatabase<ThingDef>.AllDefsListForReading.FirstOrDefault(NovelSeedUtility.IsGrowableCrop);
+                VarietyTraitDef trait = TraitConfigUtility.TopLevelTraits().FirstOrDefault(value => value != null);
+                if (plant == null || trait == null)
+                    throw new RuntimeScenarioBlockedException("No growable plant and top-level trait were available for UI selection coverage.");
+
+                InvokeInstance(document, "SelectPlant", plant);
+                Require(document.ActivePageId == "workspace" && tabs.ActiveTabId == "plants",
+                    "plant selection did not navigate to the Plants workspace.");
+                Require(ReferenceEquals(InstanceField<ThingDef>(document, "selectedPlant"), plant),
+                    "plant selection was not retained by the document.");
+                InvokeInstance(document, "SelectTrait", trait);
+                Require(document.ActivePageId == "workspace" && tabs.ActiveTabId == "traits",
+                    "trait selection did not navigate to the Traits workspace.");
+                Require(ReferenceEquals(InstanceField<VarietyTraitDef>(document, "selectedTrait"), trait),
+                    "trait selection was not retained by the document.");
+
+                string groupName = "Runtime UI Discovery Group";
+                AccessTools.Field(documentType, "groupName").SetValue(document, groupName);
+                InsightUiButton create = FindUiElement(InstanceField<InsightUiDocument>(document, "uiDocument").Root,
+                    "workspace.groups.create") as InsightUiButton;
+                Require(create?.OnClick != null, "plant-group create action was not composed.");
+                create.OnClick();
+                PlantGroupRecord created = document.Settings.PlantGroups.FirstOrDefault(group => group != null && group.Name == groupName);
+                Require(created != null, "plant-group creation action did not write through NovelSeedsSettings.");
+                Require(ReferenceEquals(InstanceField<PlantGroupRecord>(document, "selectedGroup"), created),
+                    "newly created plant group was not selected in the document.");
+                navigation.Select("workspace");
+                tabs.Select("groups");
+                return "plant, trait, and group selection plus group creation use document state and authoritative settings";
+            });
+            Check(report, "ux-insight-bindings-and-dependent-controls", () =>
+            {
+                InsightSettingsDocument document = NewSettingsDocument();
+                NovelSeedsSettings settings = document.Settings;
+                InsightUiDocument canvas = InstanceField<InsightUiDocument>(document, "uiDocument");
+                InsightUiSlider mutation = FindUiElement(canvas.Root, "gameplay.mutation.slider") as InsightUiSlider;
+                Require(mutation != null, "mutation slider was not composed.");
+                Action<float> mutationSetter = (Action<float>)AccessTools.Field(typeof(InsightUiSlider), "boundSetter").GetValue(mutation);
+                Require(mutationSetter != null, "mutation slider is not directly bound.");
+                mutationSetter(0.21f);
+                Require(Mathf.Abs(settings.globalMutationChance - 0.21f) < 0.0001f,
+                    "mutation binding did not write the authoritative settings field.");
+
+                InsightUiToggle balance = FindUiElement(canvas.Root, "gameplay.balance.toggle") as InsightUiToggle;
+                InsightUiSlider strength = FindUiElement(canvas.Root, "gameplay.balance-strength.slider") as InsightUiSlider;
+                InsightUiSelect imbalance = FindUiElement(canvas.Root, "gameplay.allowed-imbalance.select") as InsightUiSelect;
+                Require(balance != null && strength != null && imbalance != null, "dependent balance controls were not composed.");
+                Action<bool> balanceSetter = (Action<bool>)AccessTools.Field(typeof(InsightUiToggle), "boundSetter").GetValue(balance);
+                Require(balanceSetter != null, "trait-balance toggle is not directly bound.");
+                balanceSetter(false);
+                InvokeInstance(document, "UpdateDependentControlState");
+                Require(!settings.enableTraitBalancing && !strength.Enabled && !imbalance.Enabled,
+                    "dependent balance controls remained enabled when balancing was disabled.");
+                balanceSetter(true);
+                InvokeInstance(document, "UpdateDependentControlState");
+                Require(settings.enableTraitBalancing && strength.Enabled && imbalance.Enabled,
+                    "dependent balance controls did not re-enable with balancing.");
+                return "ordinary controls write authoritative settings and dependent controls follow enablement";
+            });
+            Check(report, "ux-insight-responsive-accessibility", () =>
+            {
+                InsightSettingsDocument document = NewSettingsDocument();
+                InsightUiDocument canvas = InstanceField<InsightUiDocument>(document, "uiDocument");
+                MethodInfo responsive = AccessTools.Method(document.GetType(), "ApplyResponsiveLayout");
+                Require(responsive != null, "responsive layout coordinator is missing.");
+                responsive.Invoke(document, new object[] { 1200f });
+                InsightUiSplit groups = FindUiElement(canvas.Root, "workspace.groups.split") as InsightUiSplit;
+                InsightUiSplit profiles = FindUiElement(canvas.Root, "profiles.split") as InsightUiSplit;
+                Require(groups != null && profiles != null && groups.Orientation == InsightUiOrientation.Horizontal
+                    && profiles.Orientation == InsightUiOrientation.Horizontal && !document.IsNarrowWorkspace,
+                    "wide workspace layout did not use horizontal splits.");
+                responsive.Invoke(document, new object[] { 640f });
+                Require(groups.Orientation == InsightUiOrientation.Vertical && profiles.Orientation == InsightUiOrientation.Vertical
+                    && document.IsNarrowWorkspace,
+                    "narrow workspace layout did not use vertical splits.");
+
+                InsightUiToggle contrast = FindUiElement(canvas.Root, "advanced.high-contrast.toggle") as InsightUiToggle;
+                InsightUiToggle motion = FindUiElement(canvas.Root, "advanced.reduced-motion.toggle") as InsightUiToggle;
+                InsightUiSelect density = FindUiElement(canvas.Root, "advanced.density.select") as InsightUiSelect;
+                Require(contrast != null && motion != null && density != null, "accessibility controls were not composed.");
+                Action<bool> contrastSetter = (Action<bool>)AccessTools.Field(typeof(InsightUiToggle), "boundSetter").GetValue(contrast);
+                Action<bool> motionSetter = (Action<bool>)AccessTools.Field(typeof(InsightUiToggle), "boundSetter").GetValue(motion);
+                Action<int> densitySetter = (Action<int>)AccessTools.Field(typeof(InsightUiSelect), "boundSetter").GetValue(density);
+                contrastSetter(true);
+                motionSetter(true);
+                densitySetter(2);
+                Require(document.HighContrast && document.ReducedMotion && document.Density == InsightUiDensity.Compact,
+                    "accessibility and density bindings did not remain document-scoped.");
+                return "wide/narrow splits and high-contrast, reduced-motion, and compact-density state are supported";
+            });
+            Check(report, "ux-insight-diagnostics", () =>
+            {
+                InsightSettingsDocument document = NewSettingsDocument();
+                Require(document.TrackDuplicateIds && document.HasUniqueComponentIds()
+                    && document.DuplicateIdCount == 0 && document.RenderErrorCount == 0,
+                    "settings document diagnostics reported duplicate IDs or render errors.");
+                Require(document.PlantVirtualizationCacheLimit <= 96 && document.TraitVirtualizationCacheLimit <= 96,
+                    "settings virtual-list cache bounds are not enforced.");
+                return "stable component IDs, duplicate diagnostics, render diagnostics, and cache bounds are clean";
+            });
+        }
+
+        private static InsightSettingsDocument NewSettingsDocument()
+        {
+            return new InsightSettingsDocument(new NovelSeedsSettings());
+        }
+
+        private static T InstanceField<T>(object target, string name) where T : class
+        {
+            return (T)AccessTools.Field(target.GetType(), name)?.GetValue(target);
+        }
+
+        private static object InstanceField(object target, string name)
+        {
+            return AccessTools.Field(target.GetType(), name)?.GetValue(target);
+        }
+
+        private static void InvokeInstance(object target, string name, params object[] arguments)
+        {
+            MethodInfo method = AccessTools.Method(target.GetType(), name);
+            Require(method != null, "Missing document method " + name + ".");
+            method.Invoke(target, arguments);
+        }
+
+        private static InsightUiElement FindUiElement(InsightUiElement root, string id)
+        {
+            if (root == null) return null;
+            if (string.Equals(root.Id, id, StringComparison.Ordinal)) return root;
+            IReadOnlyList<InsightUiElement> children = root.Children;
+            if (children == null) return null;
+            for (int index = 0; index < children.Count; index++)
+            {
+                InsightUiElement match = FindUiElement(children[index], id);
+                if (match != null) return match;
+            }
+            return null;
         }
 
         private static void RegistryScale(HorticultureRuntimeTestReport report)

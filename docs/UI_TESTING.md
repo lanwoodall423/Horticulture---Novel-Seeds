@@ -21,11 +21,13 @@ feedback/confirmation paths, and removal of legacy static Widgets layout state.
 
 ## Runtime discovery
 
-The `ux-discovery` scenario constructs two independent `InsightSettingsDocument` instances,
-checks their document state/focus/toast isolation, verifies duplicate-ID diagnostics are
-enabled, confirms all navigation pages and bounded virtual-list limits, and preserves the
-existing progressive-settings and cultivar-comparison checks. It is run through the normal
-Horticulture-owned harness:
+The `ux-discovery` scenario constructs independent `InsightSettingsDocument` instances,
+checks their document state/focus/toast isolation, verifies duplicate-ID diagnostics, confirms
+all navigation pages and bounded virtual-list limits, exercises workspace tabs/search,
+plant/trait selection, group creation, direct authoritative mutation bindings, dependent
+balance controls, wide/narrow split orientation, high-contrast/reduced-motion/compact-density
+state, and zero pre-render diagnostics. It also preserves the existing progressive-settings
+and cultivar-comparison checks. It is run through the normal Horticulture-owned harness:
 
 ```powershell
 .\DevTools\Run-RuntimeTests.ps1 -Scenario ux-discovery

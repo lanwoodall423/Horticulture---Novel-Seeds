@@ -36,6 +36,10 @@
       <HintPath>..\..\..\KnowledgeFramework\1.6\Assemblies\KnowledgeFramework.dll</HintPath>
       <Private>false</Private>
     </Reference>
+    <Reference Include="InsightCanvas">
+      <HintPath>..\..\..\InsightCanvas\1.6\Assemblies\InsightCanvas.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
     <Reference Include="HorticultureNovelSeeds">
       <HintPath>..\..\1.6\Assemblies\HorticultureNovelSeeds.dll</HintPath>
       <Private>false</Private>
