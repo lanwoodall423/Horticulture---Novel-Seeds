@@ -646,7 +646,10 @@ namespace HorticultureNovelSeeds
 
         private void EnsureSelections(GameComponent_NovelSeeds component)
         {
-            List<Pawn> colonists = (Find.Maps ?? new List<Map>()).SelectMany(map => map?.mapPawns?.FreeColonists ?? new List<Pawn>())
+            // FreeColonists traverses unspawned holders, which can be transiently
+            // incomplete while a map is loading or being replaced. The workspace
+            // only needs actionable player pawns, so use the safe spawned view.
+            List<Pawn> colonists = (Find.Maps ?? new List<Map>()).SelectMany(map => map?.mapPawns?.FreeColonistsSpawned ?? new List<Pawn>())
                 .Where(pawn => pawn?.Faction?.def?.isPlayer == true && !pawn.Dead).Distinct()
                 .OrderBy(pawn => pawn.LabelShort).ToList();
             if (selectedPawn == null || !colonists.Contains(selectedPawn)) selectedPawn = colonists.FirstOrDefault();

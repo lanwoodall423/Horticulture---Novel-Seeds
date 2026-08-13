@@ -35,7 +35,7 @@ Use the repository-owned harness:
 .\DevTools\Run-RuntimeTests.ps1 -Scenario complete
 ```
 
-The harness builds the production and test assemblies, places the test assembly in the local RimWorld assembly directory for the test generation, requests a DevBridge2 restart, waits for a playable quicktest map, writes one Horticulture request, acquires a lease, waits for the Horticulture result, prints it, releases the exact lease, and removes the request/test assembly. It never launches, kills, or restarts RimWorld directly.
+The harness builds the production and test assemblies, places the test assembly in the local RimWorld assembly directory for the test generation, requests a DevBridge2 restart, waits for a playable quicktest map, acquires the exact test lease, writes one Horticulture request, waits for the Horticulture result, prints it, releases that lease, and removes the request/checkpoint/test assembly. It never launches, kills, or restarts RimWorld directly.
 
 For a focused scenario, use one of `startup`, `clean-default`, `ordinary-crop`, `sowable-tree`, `cross-pollination`, `produce-processing`, `knowledge`, `save-reload`, `negative`, `long-running`, `ux-discovery`, `registry-scale`, or `rc-performance`:
 

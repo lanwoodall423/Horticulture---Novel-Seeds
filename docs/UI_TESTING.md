@@ -79,7 +79,8 @@ dialog, inspector, or mask-editor changes:
 
 Interactive Prompt 3 QA must also inspect a live cached plant preview, produce preview,
 Original/Mask/Final mask views, Add/Remove/Replace brush input, review queue filtering, naming
-validation, group/tag/trait reset actions, Plant/Produce inspector tabs, keyboard focus, high
+validation, group/tag/trait reset actions, Plant/Produce inspector tabs (both expose `Open in
+Horticulture`; Produce routes to a source cultivar or source plant), keyboard focus, high
 contrast, reduced motion, compact density, and 1,000-row collection behavior. A preview frame
 must not generate masks or rebuild textures; manual masks, semantic channels, inheritance, and
 save/load identities must remain unchanged.

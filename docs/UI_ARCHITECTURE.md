@@ -128,7 +128,9 @@ Naming, group, tag, trait, review, and embedded inspector surfaces use the share
 collection/naming documents. They retain existing callbacks and save keys, including
 `UnlockWithName`, `RenameVariety`, plant/tag normalization, trait reset, and lineage navigation.
 PlantVarietyTab and ProduceVarietyTab refresh immutable row summaries before drawing and keep
-their specialized gameplay actions explicit. `docs/VISUAL_EDITOR.md` records the channel and
+their specialized gameplay actions explicit. Both expose `Open in Horticulture`; Produce routes
+to a resolved source cultivar or source plant without moving authority into the inspector.
+`docs/VISUAL_EDITOR.md` records the channel and
 inheritance contract.
 
 The remaining focused player dialogs use the same Canvas boundary: mask import/export and

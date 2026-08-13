@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
@@ -42,6 +43,14 @@ namespace HorticultureNovelSeeds
             List<VarietyTraitDef> qualities = comp.InheritedTraits?.Where(trait => trait != null).ToList()
                 ?? new List<VarietyTraitDef>();
             ThingDef productDef = SelThing?.def;
+            ThingDef sourcePlant = comp.SourcePlantDef;
+            VarietyRecord sourceCultivar = (comp.SourceVarietyIds ?? new string[0])
+                .Where(id => !id.NullOrEmpty())
+                .Select(id => GameComponent_NovelSeeds.Instance?.GetVariety(id))
+                .FirstOrDefault(variety => variety != null);
+            Action openSource = sourceCultivar != null
+                ? (Action)(() => MainTabWindow_CultivarRegistry.OpenCultivar(sourceCultivar))
+                : sourcePlant == null ? null : (Action)(() => MainTabWindow_CultivarRegistry.OpenPlant(sourcePlant));
             document.Refresh(new HorticultureInspectorSnapshot
             {
                 Title = "Produce Cultivar",
@@ -61,7 +70,9 @@ namespace HorticultureNovelSeeds
                     Id = trait.defName ?? "quality-" + index,
                     Label = TraitColorUI.Label(trait),
                     Detail = ProduceEffectLine(comp, trait, productDef)
-                }).ToArray()
+                }).ToArray(),
+                ActionLabel = openSource == null ? null : "Open in Horticulture",
+                Action = openSource
             });
             document.Draw(ContentRect());
         }

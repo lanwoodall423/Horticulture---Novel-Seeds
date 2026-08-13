@@ -8,8 +8,8 @@ The harness uses this sequence:
 
 1. Build the production and test assemblies.
 2. Ask `C:\Games\Steam\steamapps\common\RimWorld\Mods\DevBridge2\DevBridge.cmd restart` to load the test generation.
-3. Read the ready generation and write `DevBridge2/Runtime/Horticulture.RuntimeTest.request.json`.
-4. Acquire a lease with `DevBridge.cmd test begin`.
+3. Read the ready generation and acquire a lease with `DevBridge.cmd test begin`.
+4. Write `DevBridge2/Runtime/Horticulture.RuntimeTest.request.json` only after the exact lease is held.
 5. Horticulture reads the request from the real game, executes the named scenario, and writes a result JSON atomically.
 6. The harness prints the result and releases the exact lease with `DevBridge.cmd test end <lease-id>`.
 

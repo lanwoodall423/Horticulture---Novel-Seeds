@@ -211,7 +211,10 @@ namespace HorticultureNovelSeeds.RuntimeTests
                 };
                 foreach (string key in keys)
                 {
-                    string text = key.Translate("rice").ToString();
+                    // Validate keyed text without forcing positional formatting on
+                    // entries that do not declare a format argument. Some RimWorld
+                    // versions throw from GenText when an unused argument is supplied.
+                    string text = key.Translate().ToString();
                     Require(!text.NullOrEmpty() && !string.Equals(text, key, StringComparison.Ordinal),
                         "missing player-facing keyed text: " + key);
                 }
@@ -617,10 +620,27 @@ namespace HorticultureNovelSeeds.RuntimeTests
                 {
                     Title = "Runtime inspector",
                     PrimaryRows = Enumerable.Range(0, 1000).Select(index => new HorticultureInspectorRow { Id = "trait-" + index, Label = "Trait " + index }).ToArray(),
-                    SecondaryRows = new HorticultureInspectorRow[0]
+                    SecondaryRows = new HorticultureInspectorRow[0],
+                    ActionLabel = "Open in Horticulture"
                 });
                 Require(inspector.MaximumVisibleRows == 1000 && inspector.PrimaryRowCount == 1000,
                     "embedded inspector rows are not safely bounded.");
+                bool actionExecuted = false;
+                inspector.Refresh(new HorticultureInspectorSnapshot
+                {
+                    Title = "Runtime inspector",
+                    PrimaryRows = new HorticultureInspectorRow[0],
+                    SecondaryRows = new HorticultureInspectorRow[0],
+                    ActionLabel = "Open in Horticulture",
+                    Action = () => actionExecuted = true
+                });
+                InsightUiButton inspectorAction = FindUiElement(
+                    InstanceField<InsightUiDocument>(inspector, "uiDocument").Root,
+                    "hns.runtime.inspector.action") as InsightUiButton;
+                Require(inspectorAction != null && inspectorAction.Visible && inspectorAction.OnClick != null,
+                    "embedded inspector did not expose its Horticulture navigation action.");
+                inspectorAction.OnClick();
+                Require(actionExecuted, "embedded inspector navigation action did not execute.");
                 RuntimeInputSurface inputSurface = new RuntimeInputSurface();
                 HorticultureInputDialogDocument input = new HorticultureInputDialogDocument(inputSurface, "hns.runtime.input");
                 RuntimePreviewSurface previewSurface = new RuntimePreviewSurface();

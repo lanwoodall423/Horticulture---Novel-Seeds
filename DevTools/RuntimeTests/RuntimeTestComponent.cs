@@ -431,6 +431,10 @@ namespace HorticultureNovelSeeds.RuntimeTests
             if (request == null || request.requestId.NullOrEmpty() || request.requestId == completedRequestId) return;
 
             bool resumingReload = false;
+            // Game save/load probes and the automatic-suite hook can both reach
+            // this runner during a synchronous reload. Do not execute the same
+            // scenario twice while its first invocation still owns the lease.
+            if (executing && !awaitingReload) return;
             if (awaitingReload)
             {
                 if (ReferenceEquals(Current.Game, gameBeforeReload)) return;
