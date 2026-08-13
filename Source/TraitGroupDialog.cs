@@ -10,8 +10,9 @@ namespace HorticultureNovelSeeds
     {
         private readonly NovelSeedsSettings settings;
         private readonly string groupName;
-        private Vector2 scrollPosition;
         private string search = string.Empty;
+        private HorticultureCollectionDialogDocument canvasDocument;
+        private HorticultureCollectionDialogSurfaceAdapter canvasSurface;
 
         public override Vector2 InitialSize => new Vector2(720f, 760f);
 
@@ -21,69 +22,61 @@ namespace HorticultureNovelSeeds
             this.groupName = groupName;
             doCloseX = true;
             absorbInputAroundWindow = true;
+            canvasSurface = new HorticultureCollectionDialogSurfaceAdapter
+            {
+                TitleProvider = () => "Manage Traits - " + groupName,
+                DescriptionProvider = () => groupName == "Ungrouped"
+                    ? "Select traits to move them here. Clearing a trait restores its default group."
+                    : "Select traits to move them into this group. Clearing a trait moves it to Ungrouped.",
+                SearchProvider = () => search,
+                SearchSetter = value => search = value,
+                RowsProvider = TraitRows,
+                EmptyProvider = () => "No traits match this search.",
+                PrimaryLabelProvider = () => "Restore All Defaults",
+                PrimaryActionCallback = RestoreAll,
+                CloseAction = () => Close()
+            };
+            canvasDocument = new HorticultureCollectionDialogDocument(canvasSurface, "hns.trait-group.members");
         }
 
-        public override void DoWindowContents(Rect inRect)
+        public override void DoWindowContents(Rect inRect) => canvasDocument?.Draw(inRect);
+
+        public override void PostClose()
         {
-            Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(inRect.x, inRect.y, inRect.width, 32f), "Manage Traits - " + groupName);
-            Text.Font = GameFont.Small;
-            Widgets.Label(new Rect(inRect.x, inRect.y + 40f, inRect.width, 24f),
-                groupName == "Ungrouped"
-                    ? "Select traits to move them here. Clearing a trait restores its default group."
-                    : "Select traits to move them into this group. Clearing a trait moves it to Ungrouped.");
-            search = Widgets.TextField(new Rect(inRect.x, inRect.y + 72f, inRect.width, 30f), search ?? string.Empty);
+            canvasDocument?.PostClose();
+            base.PostClose();
+        }
 
-            List<VarietyTraitDef> traits = TraitConfigUtility.TopLevelTraits()
-                .Where(trait => search.NullOrEmpty()
-                    || trait.LabelCap.ToString().IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0
-                    || trait.defName.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0
-                    || settings.TraitGroup(trait).IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0)
+        private IReadOnlyList<HorticultureDialogRow> TraitRows()
+        {
+            return TraitConfigUtility.TopLevelTraits()
                 .OrderBy(trait => trait.label)
-                .ToList();
-
-            Rect outer = new Rect(inRect.x, inRect.y + 114f, inRect.width, inRect.height - 164f);
-            Rect view = new Rect(0f, 0f, outer.width - 18f, Mathf.Max(outer.height, traits.Count * 42f));
-            Widgets.BeginScrollView(outer, ref scrollPosition, view);
-            float y = 0f;
-            foreach (VarietyTraitDef trait in traits)
-            {
-                Rect row = new Rect(0f, y, view.width, 40f);
-                Widgets.DrawHighlightIfMouseover(row);
-                string currentGroup = settings.TraitGroup(trait);
-                bool assigned = currentGroup.Equals(groupName, StringComparison.OrdinalIgnoreCase);
-                bool previous = assigned;
-                Widgets.CheckboxLabeled(new Rect(8f, y + 6f, view.width - 250f, 28f), TraitColorUI.Label(trait), ref assigned);
-
-                Color oldColor = GUI.color;
-                TextAnchor oldAnchor = Text.Anchor;
-                GUI.color = assigned ? new Color(0.45f, 0.82f, 0.54f) : new Color(0.72f, 0.72f, 0.72f);
-                Text.Anchor = TextAnchor.MiddleRight;
-                Widgets.Label(new Rect(view.width - 238f, y + 6f, 226f, 28f), assigned ? "In This Group" : currentGroup);
-                Text.Anchor = oldAnchor;
-                GUI.color = oldColor;
-
-                if (!trait.description.NullOrEmpty()) TooltipHandler.TipRegion(row, TraitColorUI.Tooltip(trait));
-                if (assigned != previous)
+                .Take(1000)
+                .Select((trait, index) =>
                 {
-                    if (assigned) settings.SetTraitGroup(trait, groupName);
-                    else if (groupName.Equals("Ungrouped", StringComparison.OrdinalIgnoreCase)) settings.ResetTraitGroup(trait);
-                    else settings.SetTraitGroup(trait, "Ungrouped");
-                }
-                y += 42f;
-            }
-            Widgets.EndScrollView();
-
-            if (Widgets.ButtonText(new Rect(inRect.x, inRect.yMax - 34f, 178f, 30f), "Restore All Defaults"))
-            {
-                Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation(
-                    "Restore every trait to its default XML-defined group? Other trait settings will be kept.",
-                    delegate
+                    string currentGroup = settings.TraitGroup(trait);
+                    bool assigned = string.Equals(currentGroup, groupName, StringComparison.OrdinalIgnoreCase);
+                    return new HorticultureDialogRow
                     {
-                        foreach (VarietyTraitDef trait in TraitConfigUtility.TopLevelTraits()) settings.ResetTraitGroup(trait);
-                    }, true));
-            }
-            if (Widgets.ButtonText(new Rect(inRect.xMax - 110f, inRect.yMax - 34f, 110f, 30f), "Done")) Close();
+                        Id = trait.defName ?? "trait-" + index,
+                        Label = TraitColorUI.Label(trait),
+                        Detail = assigned ? "In this group" : currentGroup,
+                        Status = assigned ? "Selected" : "Inherited/default",
+                        Selected = assigned,
+                        CanToggle = true,
+                        Toggle = value =>
+                        {
+                            if (value) settings.SetTraitGroup(trait, groupName);
+                            else if (string.Equals(groupName, "Ungrouped", StringComparison.OrdinalIgnoreCase)) settings.ResetTraitGroup(trait);
+                            else settings.SetTraitGroup(trait, "Ungrouped");
+                        }
+                    };
+                }).ToArray();
+        }
+
+        private void RestoreAll()
+        {
+            foreach (VarietyTraitDef trait in TraitConfigUtility.TopLevelTraits()) settings.ResetTraitGroup(trait);
         }
     }
 }

@@ -113,7 +113,9 @@ namespace HorticultureNovelSeeds
         private readonly HashSet<string> selected = new HashSet<string>();
         private readonly Action<VarietyRecord> afterSelect;
         private readonly Action<List<IPlantToGrowSettable>, ThingDef> applyPlantDef;
-        private Vector2 scroll;
+        private string search = string.Empty;
+        private HorticultureCollectionDialogDocument canvasDocument;
+        private HorticultureCollectionDialogSurfaceAdapter canvasSurface;
 
         public override Vector2 InitialSize => new Vector2(620f, 640f);
 
@@ -131,42 +133,65 @@ namespace HorticultureNovelSeeds
             doCloseX = true;
             absorbInputAroundWindow = true;
             closeOnClickedOutside = false;
+            canvasSurface = new HorticultureCollectionDialogSurfaceAdapter
+            {
+                TitleProvider = () => "Breeding mix - " + plantDef.LabelCap,
+                DescriptionProvider = () => "Choose at least two compatible cultivars. The existing breeding selection authority applies the mix when you save.",
+                SearchProvider = () => search,
+                SearchSetter = value => search = value,
+                RowsProvider = VarietyRows,
+                EmptyProvider = () => "No compatible cultivars match this search.",
+                PrimaryLabelProvider = () => "Apply mix",
+                PrimaryActionCallback = Apply,
+                SecondaryLabelProvider = () => "Clear selection",
+                SecondaryActionCallback = () => selected.Clear(),
+                CloseAction = () => Close()
+            };
+            canvasDocument = new HorticultureCollectionDialogDocument(canvasSurface, "hns.breeding-mix");
         }
 
-        public override void DoWindowContents(UnityEngine.Rect inRect)
+        public override void DoWindowContents(UnityEngine.Rect inRect) => canvasDocument?.Draw(inRect);
+
+        public override void PostClose()
         {
-            Text.Font = GameFont.Medium;
-            Widgets.Label(new UnityEngine.Rect(inRect.x, inRect.y, inRect.width, 34f), "HNS_BreedingMixTitle".Translate(plantDef.LabelCap));
-            Text.Font = GameFont.Small;
-            Widgets.Label(new UnityEngine.Rect(inRect.x, inRect.y + 42f, inRect.width, 48f), "HNS_BreedingMixDescription".Translate());
-            UnityEngine.Rect outRect = new UnityEngine.Rect(inRect.x, inRect.y + 96f, inRect.width, inRect.height - 148f);
-            UnityEngine.Rect viewRect = new UnityEngine.Rect(0f, 0f, outRect.width - 16f, varieties.Count * 54f);
-            Widgets.BeginScrollView(outRect, ref scroll, viewRect);
-            float y = 0f;
-            foreach (VarietyRecord variety in varieties)
-            {
-                bool enabled = selected.Contains(variety.id);
-                UnityEngine.Rect row = new UnityEngine.Rect(0f, y, viewRect.width, 50f);
-                Widgets.DrawHighlightIfMouseover(row);
-                Widgets.CheckboxLabeled(new UnityEngine.Rect(8f, y + 4f, row.width - 16f, 24f), variety.Label, ref enabled);
-                Widgets.Label(new UnityEngine.Rect(34f, y + 27f, row.width - 42f, 22f), NovelSeedUtility.TraitSummary(variety.traits));
-                if (enabled) selected.Add(variety.id); else selected.Remove(variety.id);
-                y += 54f;
-            }
-            Widgets.EndScrollView();
-            if (Widgets.ButtonText(new UnityEngine.Rect(inRect.xMax - 230f, inRect.yMax - 36f, 100f, 32f), "CancelButton".Translate())) Close();
-            if (Widgets.ButtonText(new UnityEngine.Rect(inRect.xMax - 120f, inRect.yMax - 36f, 120f, 32f), "HNS_ApplyMix".Translate()))
-            {
-                List<VarietyRecord> mix = varieties.Where(variety => selected.Contains(variety.id)).ToList();
-                if (mix.Count < 2)
+            canvasDocument?.PostClose();
+            base.PostClose();
+        }
+
+        private IReadOnlyList<HorticultureDialogRow> VarietyRows()
+        {
+            string query = search?.Trim();
+            return varieties
+                .Where(variety => variety != null)
+                .Where(variety => string.IsNullOrEmpty(query)
+                    || variety.Label.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0
+                    || NovelSeedUtility.TraitSummary(variety.traits).IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0)
+                .Select((variety, index) => new HorticultureDialogRow
                 {
-                    Messages.Message("HNS_BreedingMixRequiresTwo".Translate(), MessageTypeDefOf.RejectInput, false);
-                    return;
-                }
-                PlantVarietySelectionUtility.SelectBreedingMix(settables, plantDef, mix, applyPlantDef);
-                afterSelect?.Invoke(null);
-                Close();
+                    Id = "cultivar-" + index,
+                    Label = variety.Label,
+                    Detail = NovelSeedUtility.TraitSummary(variety.traits),
+                    Status = selected.Contains(variety.id) ? "Selected" : "Available",
+                    Selected = selected.Contains(variety.id),
+                    CanToggle = true,
+                    Toggle = value =>
+                    {
+                        if (value) selected.Add(variety.id); else selected.Remove(variety.id);
+                    }
+                }).ToArray();
+        }
+
+        private void Apply()
+        {
+            List<VarietyRecord> mix = varieties.Where(variety => variety != null && selected.Contains(variety.id)).ToList();
+            if (mix.Count < 2)
+            {
+                Messages.Message("HNS_BreedingMixRequiresTwo".Translate(), MessageTypeDefOf.RejectInput, false);
+                return;
             }
+            PlantVarietySelectionUtility.SelectBreedingMix(settables, plantDef, mix, applyPlantDef);
+            afterSelect?.Invoke(null);
+            Close();
         }
     }
 }

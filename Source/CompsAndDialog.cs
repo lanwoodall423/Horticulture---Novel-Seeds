@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
@@ -346,6 +347,7 @@ namespace HorticultureNovelSeeds
         public ThingDef CropDef => cropDef;
         public List<VarietyTraitDef> Traits => traits;
         public string OriginKind => originKind.NullOrEmpty() ? "mutation" : originKind;
+        public IReadOnlyList<string> ParentVarietyIds => parentVarietyIds ?? (IReadOnlyList<string>)new List<string>();
         public bool Valid => cropDef != null && traits != null && traits.Count > 0;
 
         public void Initialize(ThingDef crop, List<VarietyTraitDef> varietyTraits, IEnumerable<string> lineageParentIds = null,
@@ -463,11 +465,13 @@ namespace HorticultureNovelSeeds
         }
     }
 
-    public class Dialog_NameVariety : Window
+    public class Dialog_NameVariety : Window, IHorticultureNamingSurface
     {
         private readonly CompNovelSeedPack comp;
         private readonly Pawn discoverer;
         private string varietyName;
+        private string validationMessage;
+        private HorticultureNamingDocument canvasDocument;
 
         public override Vector2 InitialSize => new Vector2(560f, 360f);
 
@@ -482,30 +486,18 @@ namespace HorticultureNovelSeeds
             closeOnAccept = false;
             forceCatchAcceptAndCancelEventEvenIfUnfocused = true;
             varietyName = SuggestedName(comp);
+            canvasDocument = new HorticultureNamingDocument(this, "hns.naming.new-cultivar");
         }
 
         public override void DoWindowContents(Rect inRect)
         {
-            Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(inRect.x, inRect.y, inRect.width, 36f), "HNS_NameDialogTitle".Translate());
-            Text.Font = GameFont.Small;
+            canvasDocument?.Draw(inRect);
+        }
 
-            Rect body = new Rect(inRect.x, inRect.y + 48f, inRect.width, inRect.height - 104f);
-            Widgets.Label(new Rect(body.x, body.y, body.width, 24f), "HNS_NameDialogPrompt".Translate(comp.CropDef.label));
-            Widgets.Label(new Rect(body.x, body.y + 32f, body.width, 48f), "HNS_Traits".Translate() + ": " + NovelSeedUtility.TraitSummary(comp.Traits));
-            Widgets.Label(new Rect(body.x, body.y + 66f, body.width, 42f), "HNS_NameDialogPreservationNote".Translate());
-            varietyName = Widgets.TextField(new Rect(body.x, body.y + 92f, body.width, 32f), varietyName);
-
-            Rect cancel = new Rect(inRect.xMax - 220f, inRect.yMax - 42f, 100f, 32f);
-            Rect confirm = new Rect(inRect.xMax - 110f, inRect.yMax - 42f, 100f, 32f);
-            if (Widgets.ButtonText(cancel, "HNS_NameDialogCancel".Translate()))
-            {
-                Close();
-            }
-            if (Widgets.ButtonText(confirm, "HNS_NameDialogConfirm".Translate()))
-            {
-                TryConfirm();
-            }
+        public override void PostClose()
+        {
+            canvasDocument?.PostClose();
+            base.PostClose();
         }
 
         public override void OnAcceptKeyPressed()
@@ -515,13 +507,29 @@ namespace HorticultureNovelSeeds
 
         private void TryConfirm()
         {
-            string trimmed = varietyName.Trim();
-            if (!trimmed.NullOrEmpty())
+            string trimmed = varietyName?.Trim();
+            if (trimmed.NullOrEmpty())
             {
-                comp.UnlockWithName(trimmed, discoverer);
-                Close();
+                validationMessage = "Enter a cultivar name.";
+                return;
             }
+            validationMessage = string.Empty;
+            comp.UnlockWithName(trimmed, discoverer);
+            Close();
         }
+
+        string IHorticultureNamingSurface.Title => "New Cultivar";
+        string IHorticultureNamingSurface.SourceLabel => comp?.CropDef?.LabelCap.ToString() ?? "Unknown plant";
+        string IHorticultureNamingSurface.OriginLabel => "Origin: " + (comp?.OriginKind ?? "mutation");
+        string IHorticultureNamingSurface.LineageLabel => comp?.ParentVarietyIds?.Count > 0
+            ? "Lineage: " + comp.ParentVarietyIds.Count + " parent cultivars"
+            : "Lineage: original discovery";
+        IReadOnlyList<string> IHorticultureNamingSurface.TraitLabels =>
+            (comp?.Traits ?? new List<VarietyTraitDef>()).Select(TraitColorUI.Label).ToArray();
+        string IHorticultureNamingSurface.Name { get => varietyName; set => varietyName = value ?? string.Empty; }
+        string IHorticultureNamingSurface.ValidationMessage => validationMessage;
+        void IHorticultureNamingSurface.Save() => TryConfirm();
+        void IHorticultureNamingSurface.Cancel() => Close();
 
         private static string SuggestedName(CompNovelSeedPack comp)
         {
@@ -535,10 +543,12 @@ namespace HorticultureNovelSeeds
         }
     }
 
-    public class Dialog_RenameVariety : Window
+    public class Dialog_RenameVariety : Window, IHorticultureNamingSurface
     {
         private readonly VarietyRecord variety;
         private string varietyName;
+        private string validationMessage;
+        private HorticultureNamingDocument canvasDocument;
 
         public override Vector2 InitialSize => new Vector2(560f, 300f);
 
@@ -552,29 +562,18 @@ namespace HorticultureNovelSeeds
             closeOnAccept = false;
             forceCatchAcceptAndCancelEventEvenIfUnfocused = true;
             varietyName = variety?.Label ?? string.Empty;
+            canvasDocument = new HorticultureNamingDocument(this, "hns.naming.rename-cultivar");
         }
 
         public override void DoWindowContents(Rect inRect)
         {
-            Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(inRect.x, inRect.y, inRect.width, 36f), "HNS_RenameDialogTitle".Translate());
-            Text.Font = GameFont.Small;
+            canvasDocument?.Draw(inRect);
+        }
 
-            string cropLabel = variety?.cropDef?.label ?? "plant";
-            Rect body = new Rect(inRect.x, inRect.y + 48f, inRect.width, inRect.height - 104f);
-            Widgets.Label(new Rect(body.x, body.y, body.width, 24f), "HNS_RenameDialogPrompt".Translate(cropLabel));
-            varietyName = Widgets.TextField(new Rect(body.x, body.y + 42f, body.width, 32f), varietyName);
-
-            Rect cancel = new Rect(inRect.xMax - 220f, inRect.yMax - 42f, 100f, 32f);
-            Rect confirm = new Rect(inRect.xMax - 110f, inRect.yMax - 42f, 100f, 32f);
-            if (Widgets.ButtonText(cancel, "HNS_NameDialogCancel".Translate()))
-            {
-                Close();
-            }
-            if (Widgets.ButtonText(confirm, "HNS_RenameDialogConfirm".Translate()))
-            {
-                TryConfirm();
-            }
+        public override void PostClose()
+        {
+            canvasDocument?.PostClose();
+            base.PostClose();
         }
 
         public override void OnAcceptKeyPressed()
@@ -584,13 +583,28 @@ namespace HorticultureNovelSeeds
 
         private void TryConfirm()
         {
-            string trimmed = varietyName.Trim();
-            if (!trimmed.NullOrEmpty())
+            string trimmed = varietyName?.Trim();
+            if (trimmed.NullOrEmpty())
             {
-                GameComponent_NovelSeeds.Instance?.RenameVariety(variety, trimmed);
-                Close();
+                validationMessage = "Enter a cultivar name.";
+                return;
             }
+            validationMessage = string.Empty;
+            GameComponent_NovelSeeds.Instance?.RenameVariety(variety, trimmed);
+            Close();
         }
+
+        string IHorticultureNamingSurface.Title => "Rename Cultivar";
+        string IHorticultureNamingSurface.SourceLabel => variety?.cropDef?.LabelCap.ToString() ?? "Unknown plant";
+        string IHorticultureNamingSurface.OriginLabel => variety == null ? "Origin unavailable" : "Origin: " + variety.originKind;
+        string IHorticultureNamingSurface.LineageLabel => variety == null || variety.parentVarietyIds.Count == 0
+            ? "Lineage: original discovery" : "Lineage: " + variety.parentVarietyIds.Count + " parent cultivars";
+        IReadOnlyList<string> IHorticultureNamingSurface.TraitLabels =>
+            (variety?.traits ?? new List<VarietyTraitDef>()).Select(TraitColorUI.Label).ToArray();
+        string IHorticultureNamingSurface.Name { get => varietyName; set => varietyName = value ?? string.Empty; }
+        string IHorticultureNamingSurface.ValidationMessage => validationMessage;
+        void IHorticultureNamingSurface.Save() => TryConfirm();
+        void IHorticultureNamingSurface.Cancel() => Close();
     }
 }
 

@@ -157,10 +157,11 @@ namespace HorticultureNovelSeeds
         }
     }
 
-    public sealed class Dialog_MaskReviewQueue : Window
+    public sealed class Dialog_MaskReviewQueue : Window, IHorticultureCollectionDialogSurface
     {
         private List<MaskReviewQueueRow> rows;
-        private Vector2 scrollPosition;
+        private string search = string.Empty;
+        private HorticultureCollectionDialogDocument canvasDocument;
 
         public override Vector2 InitialSize => new Vector2(980f, 720f);
 
@@ -170,34 +171,18 @@ namespace HorticultureNovelSeeds
             closeOnClickedOutside = false;
             absorbInputAroundWindow = true;
             RefreshRows();
+            canvasDocument = new HorticultureCollectionDialogDocument(this, "hns.mask.review-queue");
         }
 
         public override void DoWindowContents(Rect inRect)
         {
-            Widgets.Label(new Rect(0f, 0f, inRect.width - 170f, 32f), "Mask Review Queue");
-            DrawMuted(new Rect(0f, 34f, inRect.width - 170f, 26f),
-                "Exact shared textures are grouped. Failed or missing masks appear first.");
-            if (Widgets.ButtonText(new Rect(inRect.width - 160f, 0f, 150f, 30f), "Refresh")) RefreshRows();
-            Rect listRect = new Rect(0f, 68f, inRect.width, inRect.height - 104f);
-            float rowHeight = 72f;
-            Rect view = new Rect(0f, 0f, listRect.width - 18f, Mathf.Max(listRect.height, rows.Count * rowHeight));
-            Widgets.BeginScrollView(listRect, ref scrollPosition, view);
-            for (int index = 0; index < rows.Count; index++) DrawRow(view, rows[index], index * rowHeight, rowHeight);
-            Widgets.EndScrollView();
-            DrawMuted(new Rect(0f, inRect.height - 30f, inRect.width, 24f), rows.Count + " exact texture groups");
+            canvasDocument?.Draw(inRect);
         }
 
-        private void DrawRow(Rect view, MaskReviewQueueRow row, float y, float height)
+        public override void PostClose()
         {
-            Rect rect = new Rect(0f, y, view.width, height - 4f);
-            Widgets.DrawHighlightIfMouseover(rect);
-            string status = row.Missing ? "Missing" : row.Ambiguous ? "Ambiguous" : row.Origin;
-            Widgets.Label(new Rect(rect.x + 8f, rect.y + 5f, rect.width - 250f, 22f), status + "  " + row.UsageSummary);
-            DrawMuted(new Rect(rect.x + 8f, rect.y + 29f, rect.width - 250f, 22f),
-                "Confidence " + row.Confidence.ToStringPercent("F0") + "  Issues " + row.IssueCount
-                + "  T " + row.TransparentCount + " O " + row.OverlapCount
-                + " F " + row.TinyCount + " U " + row.UnmaskedCount + "  Variation " + row.Variation);
-            if (Widgets.ButtonText(new Rect(rect.xMax - 112f, rect.y + 18f, 104f, 32f), "Open Painter")) Open(row);
+            canvasDocument?.PostClose();
+            base.PostClose();
         }
 
         private void Open(MaskReviewQueueRow row)
@@ -209,15 +194,34 @@ namespace HorticultureNovelSeeds
         {
             MaskReviewQueueBuilder.ClearValidationCache();
             rows = MaskReviewQueueBuilder.Build();
-            scrollPosition = Vector2.zero;
         }
 
-        private static void DrawMuted(Rect rect, string text)
-        {
-            Color old = GUI.color;
-            GUI.color = Color.gray;
-            Widgets.Label(rect, text);
-            GUI.color = old;
-        }
+        string IHorticultureCollectionDialogSurface.Title => "Mask Review Queue";
+        string IHorticultureCollectionDialogSurface.Description =>
+            "Exact shared textures are grouped. Failed or missing masks appear first. Open a row to edit its semantic channels.";
+        string IHorticultureCollectionDialogSurface.Search { get => search; set => search = value ?? string.Empty; }
+        IReadOnlyList<HorticultureDialogRow> IHorticultureCollectionDialogSurface.Rows =>
+            (rows ?? new List<MaskReviewQueueRow>()).Select((row, index) => new HorticultureDialogRow
+            {
+                Id = row.IdentityKey ?? "mask-" + index,
+                Label = row.UsageSummary ?? "Unknown mask group",
+                Detail = "Confidence " + row.Confidence.ToStringPercent("F0") + "  Issues " + row.IssueCount
+                    + "  Transparent " + row.TransparentCount + "  Overlap " + row.OverlapCount
+                    + "  Fragments " + row.TinyCount + "  Unmasked " + row.UnmaskedCount
+                    + "  Variation " + row.Variation,
+                Status = row.Missing ? "Missing" : row.Ambiguous ? "Ambiguous" : row.Origin,
+                Warning = row.Failed,
+                Activate = () => Open(row)
+            }).ToArray();
+        string IHorticultureCollectionDialogSurface.EmptyText => "No mask review items match this search.";
+        string IHorticultureCollectionDialogSurface.EntryLabel => string.Empty;
+        string IHorticultureCollectionDialogSurface.Entry { get => string.Empty; set { } }
+        Action IHorticultureCollectionDialogSurface.EntryAction => null;
+        string IHorticultureCollectionDialogSurface.PrimaryLabel => "Refresh";
+        Action IHorticultureCollectionDialogSurface.PrimaryAction => RefreshRows;
+        string IHorticultureCollectionDialogSurface.SecondaryLabel => string.Empty;
+        Action IHorticultureCollectionDialogSurface.SecondaryAction => null;
+        void IHorticultureCollectionDialogSurface.Close() => Close();
+
     }
 }

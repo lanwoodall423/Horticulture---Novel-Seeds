@@ -26,12 +26,18 @@ Mods with custom planting menus, custom harvest/cutting rules, custom graphics, 
 Required dependencies:
 
 - Harmony
+- Insight Canvas 2.1.0
 - Knowledge Framework
 - Progression: Agriculture
 
 Supported game version: RimWorld 1.6.
 
 ## Visuals and performance
+
+The Visual Designer uses the installed Insight Canvas dependency for editor chrome and keeps
+the specialized Horticulture plant/produce preview and mask painter authoritative. See
+[docs/VISUAL_EDITOR.md](docs/VISUAL_EDITOR.md) for the Plant/Produce channel and inheritance
+contract.
 
 Plant colors and masks are generated and cached per discovered texture variant. Manual masks take priority; validated local and bundled masks are used before a finite fallback generation pass. Normal rendering does not generate masks or perform texture readbacks.
 

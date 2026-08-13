@@ -107,3 +107,34 @@ mod's release package. RimWorld's normal dependency loader rejects a missing
 | Framework release | `2.1.0` |
 | Framework checkout | `93a09005fa15190009daee625352cf4004974472` |
 | Reference DLL SHA-256 | `E8D163B6A2B39EB80BBF8A5EA5AA0B8A80481D69A8CEE1D74526548D0A28C011` |
+
+## Visual Designer and player dialogs
+
+`HorticultureVisualDesignerDocument` applies the same lifecycle boundary to the remaining
+player-facing visual editor. It owns Plant/Produce mode, semantic mask-channel selection,
+Color/Shape/Effects tabs, sliders, toggles, expanders, callouts, badges, toasts, focus and
+accessibility state. Below 820px its preview/inspector `Split` becomes vertical. The
+compatibility `Dialog_TraitVisualDesigner` supplies the authority bridge and delegates its
+`Custom` preview surface to the existing cached plant/produce renderer.
+
+The bridge preserves inheritance, override, reset, normalization, cache invalidation, and
+`ProduceMaskRenderer` cleanup. It never performs mask generation from a repaint. The specialized
+`Dialog_PlantMasks` brush/editor remains the authoritative semantic three-layer editor; only
+its review/editor chrome is represented by Insight Canvas. Review rows are built and validated
+outside paint, capped at 1,000, and expose confidence/origin/status labels rather than raw
+internal mask data.
+
+Naming, group, tag, trait, review, and embedded inspector surfaces use the shared bounded
+collection/naming documents. They retain existing callbacks and save keys, including
+`UnlockWithName`, `RenameVariety`, plant/tag normalization, trait reset, and lineage navigation.
+PlantVarietyTab and ProduceVarietyTab refresh immutable row summaries before drawing and keep
+their specialized gameplay actions explicit. `docs/VISUAL_EDITOR.md` records the channel and
+inheritance contract.
+
+The remaining focused player dialogs use the same Canvas boundary: mask import/export and
+breeding-mix selection use bounded searchable collection documents, profile naming uses the
+input document, and mask-color preview uses a Canvas split with a custom Horticulture preview
+surface. The custom preview still owns texture readback, tint composition, and cleanup; opening
+it cannot mutate masks or settings. The developer-only unlock window remains a debug action with
+its existing selection workflow, and `Dialog_VarietyLineage` is an obsolete compatibility shim
+that immediately routes callers into the workspace. Neither is part of the normal player UI.

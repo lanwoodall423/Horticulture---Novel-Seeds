@@ -271,8 +271,9 @@ namespace HorticultureNovelSeeds
         public void Draw(Rect rect)
         {
             RefreshSnapshots();
-            ApplyResponsiveLayout(rect.width);
-            UpdatePresentationVisibility();
+            bool presentationChanged = ApplyResponsiveLayout(rect.width);
+            presentationChanged |= UpdatePresentationVisibility();
+            if (presentationChanged) uiDocument.Invalidate();
             uiHost.Draw(rect, Time.deltaTime);
         }
 
@@ -1259,19 +1260,40 @@ namespace HorticultureNovelSeeds
             return new InsightUiSize(Math.Max(1f, constraints.MaxWidth), 280f);
         }
 
-        private void ApplyResponsiveLayout(float width)
+        private bool ApplyResponsiveLayout(float width)
         {
-            splitOrientation = width < 820f ? InsightUiOrientation.Vertical : InsightUiOrientation.Horizontal;
+            InsightUiOrientation nextOrientation = width < 820f
+                ? InsightUiOrientation.Vertical
+                : InsightUiOrientation.Horizontal;
+            if (splitOrientation == nextOrientation) return false;
+            splitOrientation = nextOrientation;
             plantSplit.Orientation = splitOrientation;
             cultivarSplit.Orientation = splitOrientation;
             breedingSplit.Orientation = splitOrientation;
+            return true;
         }
 
-        private void UpdatePresentationVisibility()
+        private bool UpdatePresentationVisibility()
         {
-            cultivarCollectionSurface.Visible = !compareMode;
-            comparisonSurface.Visible = compareMode;
-            compareButton.Enabled = MainTabWindow_CultivarRegistry.CanCompareCount(comparisonIds.Count);
+            bool changed = false;
+            bool collectionVisible = !compareMode;
+            if (cultivarCollectionSurface.Visible != collectionVisible)
+            {
+                cultivarCollectionSurface.Visible = collectionVisible;
+                changed = true;
+            }
+            if (comparisonSurface.Visible == collectionVisible)
+            {
+                comparisonSurface.Visible = !collectionVisible;
+                changed = true;
+            }
+            bool compareEnabled = MainTabWindow_CultivarRegistry.CanCompareCount(comparisonIds.Count);
+            if (compareButton.Enabled != compareEnabled)
+            {
+                compareButton.Enabled = compareEnabled;
+                changed = true;
+            }
+            return changed;
         }
 
         private void SetSearch(ref string field, string value)

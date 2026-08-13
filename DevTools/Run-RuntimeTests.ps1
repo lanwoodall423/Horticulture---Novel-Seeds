@@ -1,6 +1,6 @@
 param(
     [string]$DevBridgeRoot = (Join-Path $PSScriptRoot '..\..\DevBridge2'),
-    [ValidateSet('complete', 'startup', 'clean-default', 'ordinary-crop', 'sowable-tree', 'cross-pollination', 'produce-processing', 'knowledge', 'save-reload', 'negative', 'long-running', 'ux-discovery', 'workspace', 'registry-scale', 'rc-performance', 'auto-mask-suite', 'auto-mask-export')]
+    [ValidateSet('complete', 'startup', 'clean-default', 'ordinary-crop', 'sowable-tree', 'cross-pollination', 'produce-processing', 'knowledge', 'save-reload', 'negative', 'long-running', 'ux-discovery', 'workspace', 'visual-designer', 'registry-scale', 'rc-performance', 'auto-mask-suite', 'auto-mask-export')]
     [string]$Scenario = 'complete',
     [int]$TimeoutSeconds = 300,
     [switch]$SkipRestart,

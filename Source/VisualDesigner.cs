@@ -364,7 +364,7 @@ namespace HorticultureNovelSeeds
         }
     }
     [StaticConstructorOnStartup]
-    public class Dialog_TraitVisualDesigner : Window
+    public class Dialog_TraitVisualDesigner : Window, IHorticultureVisualDesignerSurface
     {
         private static readonly string[] TabLabels = { "Color", "Shape", "Effects" };
         private static readonly string[] MaskLabels = { "Plant: Produce", "Plant: Leaves", "Plant: Stem", "Produce: Produce", "Produce: Leaves", "Produce: Container" };
@@ -385,9 +385,8 @@ namespace HorticultureNovelSeeds
         private readonly OptionWeightRecord subtypeRecord;
         private readonly List<VisualSettingsRecord> inheritedVisuals;
         private ThingDef previewPlant;
-        private Vector2 scrollPosition;
-        private int selectedTab;
         private bool editingProduce;
+        private string activeSection = "Color";
         private VisualSettingsRecord produceEditor;
         private int selectedMask;
         private VisualMaskLayerRecord previewMaskLayer;
@@ -396,6 +395,8 @@ namespace HorticultureNovelSeeds
         private int previewMaskSourceId;
         private readonly Dictionary<int, Texture2D> styledPreviewTextures = new Dictionary<int, Texture2D>();
         private int styledPreviewHash;
+        private readonly List<ThingDef> previewPlants = new List<ThingDef>();
+        private HorticultureVisualDesignerDocument canvasDocument;
 
         public override Vector2 InitialSize => new Vector2(920f, 760f);
 
@@ -410,6 +411,7 @@ namespace HorticultureNovelSeeds
             previewPlant = ResolvePreviewPlant(plant);
             doCloseX = true;
             absorbInputAroundWindow = true;
+            InitializeCanvas();
         }
 
         public Dialog_TraitVisualDesigner(NovelSeedsSettings settings, VarietyTraitDef trait, PlantGroupRecord group)
@@ -423,6 +425,7 @@ namespace HorticultureNovelSeeds
             previewPlant = ResolvePreviewPlant(plant);
             doCloseX = true;
             absorbInputAroundWindow = true;
+            InitializeCanvas();
         }
         public Dialog_TraitVisualDesigner(NovelSeedsSettings settings, VarietyTraitDef trait, ThingDef previewPlant, bool previewOnly)
         {
@@ -434,6 +437,7 @@ namespace HorticultureNovelSeeds
             this.previewPlant = ResolvePreviewPlant(previewPlant);
             doCloseX = true;
             absorbInputAroundWindow = true;
+            InitializeCanvas();
         }
 
         public Dialog_TraitVisualDesigner(NovelSeedsSettings settings, VarietyTraitDef trait, OptionWeightRecord subtypeRecord, ThingDef previewPlant = null)
@@ -448,6 +452,20 @@ namespace HorticultureNovelSeeds
             this.previewPlant = ResolvePreviewPlant(previewPlant);
             doCloseX = true;
             absorbInputAroundWindow = true;
+            InitializeCanvas();
+        }
+
+        private void InitializeCanvas()
+        {
+            previewPlants.Clear();
+            previewPlants.AddRange(DefDatabase<ThingDef>.AllDefsListForReading
+                .Where(NovelSeedUtility.IsGrowableCrop)
+                .GroupBy(def => def.defName)
+                .Select(group => group.First())
+                .OrderBy(def => def.label)
+                .Take(256));
+            if (previewPlant != null && !previewPlants.Contains(previewPlant)) previewPlants.Insert(0, previewPlant);
+            canvasDocument = new HorticultureVisualDesignerDocument(this);
         }
 
         private static ThingDef ResolvePreviewPlant(ThingDef requested)
@@ -475,168 +493,270 @@ namespace HorticultureNovelSeeds
         }
         public override void DoWindowContents(Rect inRect)
         {
-            bool showPreviewPlant = plantRecord == null;
-            Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(inRect.x, inRect.y, inRect.width - (showPreviewPlant ? 340f : 140f), 32f), "Visual Designer - " + TraitColorUI.Label(trait));
-            Text.Font = GameFont.Small;
-            if (showPreviewPlant && Widgets.ButtonText(new Rect(inRect.xMax - 326f, inRect.y, 190f, 30f), "Preview: " + previewPlant.LabelCap))
-                OpenPreviewPlantMenu();
-            Rect produceButtonRect = new Rect(inRect.xMax - 126f, inRect.y, 126f, 30f);
-            if (Widgets.ButtonText(produceButtonRect, editingProduce ? "Plant" : "Produce"))
-            {
-                if (editingProduce)
-                {
-                    CommitProduceEditor();
-                    editingProduce = false;
-                    selectedMask = 0;
-                    produceEditor = null;
-                }
-                else
-                {
-                    editingProduce = true;
-                    produceEditor = SharedVisual.CreateProduceVisualEditor();
-                    if (CurrentUsesPerMaskVisuals) selectedMask = 3;
-                }
-                scrollPosition = Vector2.zero;
-                ClearPreviewMaskTexture();
-            }
-            float top = inRect.y + 38f;
-            if (subtypeRecord != null)
-            {
-                Widgets.Label(new Rect(inRect.x, top, inRect.width, 28f), "Subtype-specific visual for " + TraitColorUI.Label(trait));
-            }
-            else if (plantRecord != null)
-            {
-                bool wasOverride = plantRecord.useCustomVisual;
-                string overrideLabel = plantGroup != null ? "Use Group-Specific Visual" : "Use Plant-Specific Visual";
-                Widgets.CheckboxLabeled(new Rect(inRect.x, top, inRect.width, 28f), overrideLabel, ref plantRecord.useCustomVisual);
-                if (!wasOverride && plantRecord.useCustomVisual) plantRecord.CopyVisualsFrom(inheritedVisuals);
-            }
-            else Widgets.Label(new Rect(inRect.x, top, inRect.width, 28f), "Global/default visual");
-            top += 34f;
-
-            bool controlsEnabled = plantRecord == null || plantRecord.useCustomVisual;
-            bool oldEnabled = GUI.enabled;
-            bool visualControlsEnabled = controlsEnabled;
-
-            if (CanUsePerMaskVisuals)
-            {
-                bool perMask = CurrentUsesPerMaskVisuals;
-                GUI.enabled = oldEnabled && visualControlsEnabled;
-                bool previousPerMask = perMask;
-                Widgets.CheckboxLabeled(new Rect(inRect.x, top, 220f, 28f), "Enable Per-Mask Visuals", ref perMask);
-                if (perMask != previousPerMask)
-                {
-                    SetPerMaskVisuals(perMask);
-                    selectedMask = editingProduce ? 3 : 0;
-                    scrollPosition = Vector2.zero;
-                }
-                if (perMask)
-                {
-                    int firstMask = editingProduce ? 3 : 0;
-                    int lastMask = firstMask + 2;
-                    selectedMask = Mathf.Clamp(selectedMask, firstMask, lastMask);
-                    Widgets.Label(new Rect(inRect.x + 238f, top + 5f, 112f, 24f), "Per-Mask Color");
-                    if (Widgets.ButtonText(new Rect(inRect.x + 350f, top, 220f, 30f), MaskLabels[selectedMask]))
-                    {
-                        List<FloatMenuOption> options = new List<FloatMenuOption>();
-                        for (int i = firstMask; i <= lastMask; i++)
-                        {
-                            int index = i;
-                            options.Add(new FloatMenuOption(MaskLabels[i], () =>
-                            {
-                                selectedMask = index;
-                                scrollPosition = Vector2.zero;
-                                ClearPreviewMaskTexture();
-                            }));
-                        }
-                        Find.WindowStack.Add(new FloatMenu(options));
-                    }
-                }
-                GUI.enabled = oldEnabled;
-                top += 40f;
-            }
-
-            VisualSettingsRecord visual = EditingVisual;
-            VisualSettingsRecord previewVisual = WholeVisual;
-            Rect previewRect = new Rect(inRect.x, top, 360f, 500f);
-            bool producePreview = editingProduce || CurrentUsesPerMaskVisuals && selectedMask >= 3;
-            if (producePreview) DrawProducePreview(previewRect, previewVisual);
-            else DrawPreview(previewRect, previewVisual);
-
-            Rect right = new Rect(previewRect.xMax + 18f, top, inRect.xMax - previewRect.xMax - 18f, 500f);
-            float tabsHeight = CurrentUsesPerMaskVisuals ? 58f : 32f;
-            GUI.enabled = oldEnabled && visualControlsEnabled;
-            DrawTabs(new Rect(right.x, right.y, right.width, tabsHeight));
-            GUI.enabled = oldEnabled;
-            Rect scrollOuter = new Rect(right.x, right.y + tabsHeight + 8f, right.width, right.height - tabsHeight - 8f);
-            float viewHeight = selectedTab == 0 ? 470f : selectedTab == 1 ? 600f : 760f;
-            Rect view = new Rect(0f, 0f, scrollOuter.width - 18f, viewHeight);
-            Widgets.BeginScrollView(scrollOuter, ref scrollPosition, view);
-            oldEnabled = GUI.enabled;
-            GUI.enabled = oldEnabled && visualControlsEnabled;
-            bool changed = selectedTab == 0 ? DrawColorControls(view, visual)
-                : selectedTab == 1 ? DrawShapeControls(view, visual)
-                : DrawEffectControls(view, visual);
-            GUI.enabled = oldEnabled;
-            Widgets.EndScrollView();
-
-            if (changed)
-            {
-                visual.Normalize();
-                if (ReferenceEquals(visual, ProduceEditor)) CommitProduceEditor();
-                MarkVisualCustomized();
-            }
-
-            float buttonY = inRect.yMax - 38f;
-            string status = controlsEnabled ? "Cached visuals update after the settings window closes." : "Enable the override to edit this " + (plantGroup != null ? "group" : "plant-specific") + " visual.";
-
-            float statusX = inRect.x;
-            if (plantRecord == null && Widgets.ButtonText(new Rect(inRect.x, buttonY, 165f, 30f), "Restore XML Default"))
-            {
-                if (subtypeRecord != null) subtypeRecord.ResetVisuals(trait);
-                else globalRecord.ResetVisuals(trait);
-                selectedMask = 0;
-                ClearPreviewMaskTexture();
-            }
-            if (plantRecord == null) statusX += 180f;
-            Widgets.Label(new Rect(statusX, buttonY + 5f, inRect.xMax - 125f - statusX, 26f), status);
-            if (Widgets.ButtonText(new Rect(inRect.xMax - 110f, buttonY, 110f, 30f), "Close")) Close();
+            canvasDocument?.Draw(inRect);
         }
 
         public override void PostClose()
         {
+            canvasDocument?.PostClose();
             base.PostClose();
             ClearPreviewMaskTexture();
             HorticultureNovelSeedsMod.Settings?.ClearVisualCache();
             ProduceMaskRenderer.ClearAll();
         }
 
-        private bool CanUsePerMaskVisuals => true;
+        string IHorticultureVisualDesignerSurface.ContextLabel =>
+            (previewPlant?.LabelCap.ToString() ?? "Plant") + " Visual Designer";
 
-        private void OpenPreviewPlantMenu()
+        string IHorticultureVisualDesignerSurface.TraitLabel => TraitColorUI.Label(trait);
+
+        string IHorticultureVisualDesignerSurface.OriginLabel
         {
-            List<FloatMenuOption> options = DefDatabase<ThingDef>.AllDefsListForReading
-                .Where(NovelSeedUtility.IsGrowableCrop)
-                .GroupBy(def => def.defName)
-                .Select(group => group.First())
-                .Select(def => new
-                {
-                    Def = def,
-                    HasMask = editingProduce
-                        ? HorticultureNovelSeedsMod.Settings?.GetPlantSettings(def, false)?.HasActiveProduceMasks == true
-                        : PlantMaskUtility.HasActiveMasks(def)
-                })
-                .OrderByDescending(item => item.HasMask)
-                .ThenBy(item => item.Def.label)
-                .Select(item => new FloatMenuOption(item.Def.LabelCap.ToString() + (item.HasMask ? "" : " (no " + (editingProduce ? "produce" : "plant") + " mask)"), delegate
-                {
-                    previewPlant = item.Def;
-                    ClearPreviewMaskTexture();
-                }))
-                .ToList();
-            Find.WindowStack.Add(new FloatMenu(options));
+            get
+            {
+                if (subtypeRecord != null) return "Subtype override";
+                if (plantRecord == null) return "Global/default visual";
+                if (plantRecord.useCustomVisual) return plantGroup != null ? "Group override" : "Plant-specific override";
+                return "Inherited from Global";
+            }
         }
+
+        string IHorticultureVisualDesignerSurface.InheritanceLabel
+        {
+            get
+            {
+                if (subtypeRecord != null) return "Subtype-specific visual is active.";
+                if (plantRecord == null) return "Global/default visual is active.";
+                return plantRecord.useCustomVisual
+                    ? (plantGroup != null ? "Group override is active." : "Plant-specific override is active.")
+                    : "Inherited from Global. Enable an override to edit.";
+            }
+        }
+
+        string IHorticultureVisualDesignerSurface.StatusLabel =>
+            (plantRecord == null || plantRecord.useCustomVisual || subtypeRecord != null)
+                ? "Changes are cached and applied through the existing visual pipeline."
+                : "Enable the override to edit this inherited visual.";
+
+        bool IHorticultureVisualDesignerSurface.EditingProduce => editingProduce;
+        string IHorticultureVisualDesignerSurface.ActiveSection
+        {
+            get => activeSection;
+            set => activeSection = string.IsNullOrEmpty(value) ? "Color" : value;
+        }
+
+        bool IHorticultureVisualDesignerSurface.CanEdit =>
+            plantRecord == null || plantRecord.useCustomVisual || subtypeRecord != null;
+
+        bool IHorticultureVisualDesignerSurface.OverrideEnabled
+        {
+            get => plantRecord?.useCustomVisual == true;
+            set
+            {
+                if (plantRecord == null || subtypeRecord != null) return;
+                bool changed = plantRecord.useCustomVisual != value;
+                plantRecord.useCustomVisual = value;
+                if (value && changed) plantRecord.CopyVisualsFrom(inheritedVisuals);
+                if (changed)
+                {
+                    HorticultureNovelSeedsMod.Settings?.ClearVisualCache();
+                    ProduceMaskRenderer.ClearAll();
+                    ClearPreviewMaskTexture();
+                }
+            }
+        }
+
+        bool IHorticultureVisualDesignerSurface.PerMaskEnabled
+        {
+            get => CurrentUsesPerMaskVisuals;
+            set
+            {
+                if (!((IHorticultureVisualDesignerSurface)this).CanEdit) return;
+                SetPerMaskVisuals(value);
+                selectedMask = editingProduce ? 3 : 0;
+                ClearPreviewMaskTexture();
+            }
+        }
+
+        int IHorticultureVisualDesignerSurface.SelectedMask
+        {
+            get => selectedMask;
+            set
+            {
+                int first = editingProduce ? 3 : 0;
+                selectedMask = Mathf.Clamp(value, first, first + 2);
+                ClearPreviewMaskTexture();
+            }
+        }
+
+        IReadOnlyList<string> IHorticultureVisualDesignerSurface.MaskOptions =>
+            editingProduce
+                ? new[] { "Produce", "Leaves", "Container" }
+                : new[] { "Produce", "Leaves", "Stem" };
+
+        IReadOnlyList<string> IHorticultureVisualDesignerSurface.PreviewPlantOptions =>
+            previewPlants.Select(def => def.LabelCap.ToString()).ToArray();
+
+        int IHorticultureVisualDesignerSurface.SelectedPreviewPlant
+        {
+            get
+            {
+                int index = previewPlants.IndexOf(previewPlant);
+                return index < 0 ? 0 : index;
+            }
+            set
+            {
+                if (previewPlants.Count == 0) return;
+                previewPlant = previewPlants[Mathf.Clamp(value, 0, previewPlants.Count - 1)];
+                ClearPreviewMaskTexture();
+            }
+        }
+
+        float IHorticultureVisualDesignerSurface.GetValue(string key)
+        {
+            VisualSettingsRecord value = EditingVisual;
+            switch (key)
+            {
+                case "color.red": return value.tintRed;
+                case "color.green": return value.tintGreen;
+                case "color.blue": return value.tintBlue;
+                case "color.saturation": return value.saturation;
+                case "color.brightness": return value.brightness;
+                case "color.hue": return value.hueShift;
+                case "color.contrast": return value.contrast;
+                case "color.opacity": return value.opacity;
+                case "shape.scale": return value.scale;
+                case "shape.width": return value.width;
+                case "shape.height": return value.height;
+                case "shape.density": return value.density;
+                case "shape.spread": return value.spread;
+                case "shape.rotation": return value.rotation;
+                case "shape.offsetX": return value.offsetX;
+                case "shape.offsetZ": return value.offsetZ;
+                case "effects.apply": return value.applyToProduce ? 1f : 0f;
+                case "effects.radiance": return value.radiance;
+                case "effects.gloom": return value.gloom;
+                case "effects.overlay": return value.overlayIntensity;
+                case "effects.radianceScale": return value.radianceScale;
+                case "effects.gloomScale": return value.gloomScale;
+                case "effects.spikes": return value.spikes ? 1f : 0f;
+                default: return 0f;
+            }
+        }
+
+        void IHorticultureVisualDesignerSurface.SetValue(string key, float value)
+        {
+            VisualSettingsRecord target = EditingVisual;
+            switch (key)
+            {
+                case "color.red": target.tintRed = value; break;
+                case "color.green": target.tintGreen = value; break;
+                case "color.blue": target.tintBlue = value; break;
+                case "color.saturation": target.saturation = value; break;
+                case "color.brightness": target.brightness = value; break;
+                case "color.hue": target.hueShift = value; break;
+                case "color.contrast": target.contrast = value; break;
+                case "color.opacity": target.opacity = value; break;
+                case "shape.scale": target.scale = value; break;
+                case "shape.width": target.width = value; break;
+                case "shape.height": target.height = value; break;
+                case "shape.density": target.density = value; break;
+                case "shape.spread": target.spread = value; break;
+                case "shape.rotation": target.rotation = value; break;
+                case "shape.offsetX": target.offsetX = value; break;
+                case "shape.offsetZ": target.offsetZ = value; break;
+                case "effects.apply": target.applyToProduce = value > 0.5f; break;
+                case "effects.radiance": target.radiance = value; break;
+                case "effects.gloom": target.gloom = value; break;
+                case "effects.overlay": target.overlayIntensity = value; break;
+                case "effects.radianceScale": target.radianceScale = value; break;
+                case "effects.gloomScale": target.gloomScale = value; break;
+                case "effects.spikes": target.spikes = value > 0.5f; break;
+                default: return;
+            }
+            MarkCustomized();
+            ClearPreviewMaskTexture();
+        }
+
+        void IHorticultureVisualDesignerSurface.SetEditingProduce(bool value)
+        {
+            if (editingProduce == value) return;
+            if (editingProduce) CommitProduceEditor();
+            editingProduce = value;
+            produceEditor = value ? SharedVisual.CreateProduceVisualEditor() : null;
+            selectedMask = value ? 3 : 0;
+            ClearPreviewMaskTexture();
+        }
+
+        void IHorticultureVisualDesignerSurface.ResetSection(string section)
+        {
+            VisualSettingsRecord target = EditingVisual;
+            if (string.Equals(section, "Color", StringComparison.OrdinalIgnoreCase)) ResetColorSection(target);
+            else if (string.Equals(section, "Shape", StringComparison.OrdinalIgnoreCase)) ResetShapeSection(target);
+            else ResetEffectsSection(target);
+            target.Normalize();
+            if (ReferenceEquals(target, ProduceEditor)) CommitProduceEditor();
+            MarkCustomized();
+            ClearPreviewMaskTexture();
+        }
+
+        void IHorticultureVisualDesignerSurface.ResetCurrentMask()
+        {
+            if (!((IHorticultureVisualDesignerSurface)this).CanEdit || !CurrentUsesPerMaskVisuals) return;
+            VisualSettingsRecord target = CurrentVisual;
+            VisualSettingsRecord inherited = selectedMask >= 0 && selectedMask < inheritedVisuals.Count
+                ? inheritedVisuals[selectedMask] : null;
+            target.CopyFrom(inherited ?? new VisualSettingsRecord(trait));
+            target.Normalize();
+            if (ReferenceEquals(target, ProduceEditor)) CommitProduceEditor();
+            MarkCustomized();
+            ClearPreviewMaskTexture();
+        }
+
+        void IHorticultureVisualDesignerSurface.RestoreInherited()
+        {
+            if (subtypeRecord != null) subtypeRecord.ResetVisuals(trait);
+            else if (plantRecord != null) plantRecord.useCustomVisual = false;
+            else globalRecord.ResetVisuals(trait);
+            HorticultureNovelSeedsMod.Settings?.ClearVisualCache();
+            ProduceMaskRenderer.ClearAll();
+            ClearPreviewMaskTexture();
+        }
+
+        void IHorticultureVisualDesignerSurface.RestoreXmlDefault()
+        {
+            if (plantRecord != null) plantRecord.useCustomVisual = false;
+            else if (subtypeRecord != null) subtypeRecord.ResetVisuals(trait);
+            else globalRecord.ResetVisuals(trait);
+            HorticultureNovelSeedsMod.Settings?.ClearVisualCache();
+            ProduceMaskRenderer.ClearAll();
+            ClearPreviewMaskTexture();
+        }
+
+        void IHorticultureVisualDesignerSurface.DrawPreview(Rect rect)
+        {
+            VisualSettingsRecord previewVisual = WholeVisual;
+            if (editingProduce || (CurrentUsesPerMaskVisuals && selectedMask >= 3))
+                DrawProducePreview(rect, previewVisual);
+            else DrawPreview(rect, previewVisual);
+        }
+
+        void IHorticultureVisualDesignerSurface.Close() => Close();
+
+        /*
+         * The old renderer below is intentionally retained only as the specialized preview
+         * implementation.  DoWindowContents is owned by HorticultureVisualDesignerDocument;
+         * no settings controls, scroll view, or navigation is painted here anymore.
+         */
+        private void LegacyChromeRemovedMarker()
+        {
+            // Kept as an explicit audit marker so future edits do not accidentally restore the
+            // superseded manual editor chrome around the authoritative preview renderer.
+        }
+
+        /*
+         * The following code is retained for the specialized preview/resource implementation.
+         */
         private bool CurrentUsesPerMaskVisuals => subtypeRecord != null
             ? subtypeRecord.usePerMaskVisuals
             : plantRecord == null
@@ -663,7 +783,8 @@ namespace HorticultureNovelSeeds
 
         private VisualSettingsRecord ColorVisual => editingProduce && !UsingProduceMaskVisual ? ProduceEditor : CurrentVisual;
         private VisualSettingsRecord WholeVisual => editingProduce ? ProduceEditor : SharedVisual;
-        private VisualSettingsRecord EditingVisual => selectedTab == 0 ? ColorVisual : WholeVisual;
+        private VisualSettingsRecord EditingVisual => string.Equals(activeSection, "Color", StringComparison.OrdinalIgnoreCase)
+            ? ColorVisual : WholeVisual;
 
         private VisualSettingsRecord CurrentVisual
         {
@@ -688,57 +809,6 @@ namespace HorticultureNovelSeeds
                 globalRecord.visualCustomized = true;
             }
             else plantRecord.SetPerMaskVisuals(enabled, inheritedVisuals);
-            HorticultureNovelSeedsMod.Settings?.ClearVisualCache();
-            ProduceMaskRenderer.ClearAll();
-            ClearPreviewMaskTexture();
-        }
-        private void DrawTabs(Rect rect)
-        {
-            const float resetWidth = 120f;
-            float tabsWidth = rect.width - resetWidth - 10f;
-            float width = tabsWidth / TabLabels.Length;
-            float buttonY = rect.y;
-            float buttonHeight = rect.height;
-
-            if (CurrentUsesPerMaskVisuals)
-            {
-                Text.Font = GameFont.Tiny;
-                Widgets.Label(new Rect(rect.x, rect.y, width, 20f), "PER-MASK COLOR");
-                Widgets.Label(new Rect(rect.x + width, rect.y, width * 2f, 20f), editingProduce ? "WHOLE PRODUCE" : "WHOLE PLANT");
-                Text.Font = GameFont.Small;
-                buttonY += 22f;
-                buttonHeight -= 22f;
-            }
-
-            for (int i = 0; i < TabLabels.Length; i++)
-            {
-                Rect tab = new Rect(rect.x + width * i, buttonY, width - 3f, buttonHeight);
-                if (i == selectedTab) Widgets.DrawHighlightSelected(tab);
-                if (Widgets.ButtonText(tab, TabLabels[i]))
-                {
-                    selectedTab = i;
-                    scrollPosition = Vector2.zero;
-                    ClearPreviewMaskTexture();
-                }
-            }
-
-            bool oldEnabled = GUI.enabled;
-            GUI.enabled = oldEnabled && (plantRecord == null || plantRecord.useCustomVisual);
-            string resetLabel = "Reset " + TabLabels[selectedTab];
-            if (Widgets.ButtonText(new Rect(rect.xMax - resetWidth, buttonY, resetWidth, buttonHeight), resetLabel)) ResetCurrentSection();
-            GUI.enabled = oldEnabled;
-        }
-        private void ResetCurrentSection()
-        {
-            VisualSettingsRecord target = EditingVisual;
-
-            if (selectedTab == 0) ResetColorSection(target);
-            else if (selectedTab == 1) ResetShapeSection(target);
-            else ResetEffectsSection(target);
-
-            target.Normalize();
-            if (ReferenceEquals(target, ProduceEditor)) CommitProduceEditor();
-            MarkVisualCustomized();
             HorticultureNovelSeedsMod.Settings?.ClearVisualCache();
             ProduceMaskRenderer.ClearAll();
             ClearPreviewMaskTexture();
@@ -792,77 +862,6 @@ namespace HorticultureNovelSeeds
             target.overlayBlue = 1f;
             target.spikes = false;
         }
-        private static bool DrawColorControls(Rect rect, VisualSettingsRecord v)
-        {
-            float y = 0f; bool changed = false;
-            DrawHeader(ref y, rect.width, "Tint And Tone");
-            changed |= Slider(ref y, rect.width, "Red Tint", ref v.tintRed, 0f, 2f);
-            changed |= Slider(ref y, rect.width, "Green Tint", ref v.tintGreen, 0f, 2f);
-            changed |= Slider(ref y, rect.width, "Blue Tint", ref v.tintBlue, 0f, 2f);
-            DrawColorSwatch(new Rect(rect.width - 54f, 3f, 48f, 20f), new Color(v.tintRed, v.tintGreen, v.tintBlue));
-            changed |= Slider(ref y, rect.width, "Hue Shift", ref v.hueShift, -0.5f, 0.5f, " turns");
-            changed |= Slider(ref y, rect.width, "Saturation", ref v.saturation, 0f, 2f);
-            changed |= Slider(ref y, rect.width, "Brightness", ref v.brightness, 0.25f, 2f);
-            changed |= Slider(ref y, rect.width, "Contrast", ref v.contrast, 0.25f, 2f);
-            changed |= Slider(ref y, rect.width, "Opacity", ref v.opacity, 0.1f, 1f);
-            changed |= Slider(ref y, rect.width, "Dullness", ref v.dullness, 0f, 1f);
-            return changed;
-        }
-
-        private static bool DrawShapeControls(Rect rect, VisualSettingsRecord v)
-        {
-            float y = 0f; bool changed = false;
-            DrawHeader(ref y, rect.width, "Size And Form");
-            changed |= Slider(ref y, rect.width, "Overall Scale", ref v.scale, 0.25f, 3f);
-            changed |= Slider(ref y, rect.width, "Width", ref v.width, 0.25f, 2f);
-            changed |= Slider(ref y, rect.width, "Height", ref v.height, 0.25f, 2f);
-            changed |= Slider(ref y, rect.width, "Density", ref v.density, 0.25f, 2f);
-            float tooltipY = y;
-            changed |= Slider(ref y, rect.width, "Mesh Spread", ref v.spread, 0.1f, 2f);
-            TooltipHandler.TipRegion(new Rect(0f, tooltipY, rect.width, 42f), "Changes the distance between repeated plant meshes without resizing their textures.");
-            changed |= Slider(ref y, rect.width, "Fixed Rotation", ref v.rotation, -180f, 180f, " deg");
-            tooltipY = y;
-            changed |= Slider(ref y, rect.width, "Rotation Variation", ref v.rotationVariation, 0f, 180f, " deg");
-            TooltipHandler.TipRegion(new Rect(0f, tooltipY, rect.width, 42f), "Adds a stable random rotation to each repeated mesh, up to the selected number of degrees.");
-            tooltipY = y;
-            changed |= Slider(ref y, rect.width, "Size Variation", ref v.scaleVariation, 0f, 0.75f);
-            TooltipHandler.TipRegion(new Rect(0f, tooltipY, rect.width, 42f), "Adds stable random size differences between repeated meshes. Zero keeps every mesh the same size.");
-            changed |= Slider(ref y, rect.width, "Horizontal Offset", ref v.offsetX, -0.5f, 0.5f, " cells");
-            changed |= Slider(ref y, rect.width, "Vertical Offset", ref v.offsetZ, -0.5f, 0.5f, " cells");
-            changed |= Slider(ref y, rect.width, "Shadow Scale", ref v.shadowScale, 0f, 2f);
-            return changed;
-        }
-
-        private bool DrawEffectControls(Rect rect, VisualSettingsRecord v)
-        {
-            float y = 0f; bool changed = false;
-            DrawHeader(ref y, rect.width, "Radiance");
-            changed |= Slider(ref y, rect.width, "Strength", ref v.radiance, 0f, 1f);
-            changed |= Slider(ref y, rect.width, "Size", ref v.radianceScale, 0.5f, 2.5f);
-            changed |= ColorControls(ref y, rect.width, "Color", ref v.radianceRed, ref v.radianceGreen, ref v.radianceBlue);
-            DrawHeader(ref y, rect.width, "Gloom");
-            changed |= Slider(ref y, rect.width, "Strength", ref v.gloom, 0f, 1f);
-            changed |= Slider(ref y, rect.width, "Size", ref v.gloomScale, 0.5f, 2.5f);
-            changed |= ColorControls(ref y, rect.width, "Color", ref v.gloomRed, ref v.gloomGreen, ref v.gloomBlue);
-            DrawHeader(ref y, rect.width, "Procedural Overlay");
-            Widgets.Label(new Rect(0f, y, 145f, 30f), "Pattern");
-            if (Widgets.ButtonText(new Rect(150f, y, rect.width - 150f, 30f), OverlayLabels[Mathf.Clamp(v.overlayPattern, 0, OverlayLabels.Length - 1)]))
-            {
-                List<FloatMenuOption> options = new List<FloatMenuOption>();
-                for (int i = 0; i < OverlayLabels.Length; i++)
-                {
-                    int value = i;
-                    options.Add(new FloatMenuOption(OverlayLabels[i], () => { v.overlayPattern = value; v.spikes = value == 1; MarkCustomized(); }));
-                }
-                Find.WindowStack.Add(new FloatMenu(options));
-            }
-            y += 38f;
-            changed |= Slider(ref y, rect.width, "Intensity", ref v.overlayIntensity, 0f, 1f);
-            changed |= Slider(ref y, rect.width, "Size", ref v.overlayScale, 0.5f, 2f);
-            changed |= ColorControls(ref y, rect.width, "Color", ref v.overlayRed, ref v.overlayGreen, ref v.overlayBlue);
-            return changed;
-        }
-
         private void MarkCustomized()
         {
             VisualSettingsRecord target = EditingVisual;
@@ -877,42 +876,6 @@ namespace HorticultureNovelSeeds
         {
             if (subtypeRecord != null) subtypeRecord.visualCustomized = true;
             else if (plantRecord == null) globalRecord.visualCustomized = true;
-        }
-
-        private static bool ColorControls(ref float y, float width, string label, ref float red, ref float green, ref float blue)
-        {
-            bool changed = false;
-            Widgets.Label(new Rect(0f, y, width - 60f, 24f), label);
-            DrawColorSwatch(new Rect(width - 54f, y, 48f, 20f), new Color(red, green, blue));
-            y += 25f;
-            changed |= Slider(ref y, width, "Red", ref red, 0f, 1f);
-            changed |= Slider(ref y, width, "Green", ref green, 0f, 1f);
-            changed |= Slider(ref y, width, "Blue", ref blue, 0f, 1f);
-            return changed;
-        }
-
-        private static void DrawHeader(ref float y, float width, string label)
-        {
-            Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(0f, y, width, 30f), label);
-            Text.Font = GameFont.Small;
-            Widgets.DrawLineHorizontal(0f, y + 27f, width);
-            y += 36f;
-        }
-
-        private static bool Slider(ref float y, float width, string label, ref float value, float min, float max, string suffix = "")
-        {
-            float previous = value;
-            Widgets.Label(new Rect(0f, y, width, 22f), label + ": " + value.ToString("0.00") + suffix);
-            value = Widgets.HorizontalSlider(new Rect(0f, y + 22f, width, 18f), value, min, max);
-            y += 48f;
-            return !Mathf.Approximately(previous, value);
-        }
-
-        private static void DrawColorSwatch(Rect rect, Color color)
-        {
-            Widgets.DrawBoxSolid(rect, new Color(Mathf.Clamp01(color.r), Mathf.Clamp01(color.g), Mathf.Clamp01(color.b)));
-            Widgets.DrawBox(rect);
         }
 
         private void DrawPreview(Rect rect, VisualSettingsRecord v)
@@ -938,7 +901,7 @@ namespace HorticultureNovelSeeds
                 GUI.color = old;
             }
             string note = PreviewUsesMask
-                ? selectedTab == 0
+                ? string.Equals(activeSection, "Color", StringComparison.OrdinalIgnoreCase)
                     ? maskShown ? "Color preview is limited to " + MaskLabels[selectedMask] + "." : "The selected mask has no painted area; its color is not shown."
                     : "Shape and Effects apply to the whole plant. Masks affect Color only."
                 : "Preview approximates map rendering. Texture styling is baked and cached in play.";
@@ -1178,7 +1141,7 @@ namespace HorticultureNovelSeeds
             string note = !SharedVisual.applyToProduce
                 ? "Produce inheritance is disabled for this trait."
                 : PreviewUsesMask
-                    ? selectedTab == 0
+                ? string.Equals(activeSection, "Color", StringComparison.OrdinalIgnoreCase)
                         ? maskShown ? "Color preview is limited to " + MaskLabels[selectedMask] + "." : "The selected mask has no painted area; its color is not shown."
                         : "Shape and Effects apply to the whole produce graphic. Masks affect Color only."
                     : "Produce has an independent Color, Shape, and Effects profile.";

@@ -41,6 +41,12 @@ namespace HorticultureNovelSeeds
         private InsightUiSearchField profileSearchField;
         private InsightUiTextField groupNameField;
         private InsightUiTextField profileNameField;
+        private InsightUiSplit workspaceGroupsSplit;
+        private InsightUiSplit workspacePlantsSplit;
+        private InsightUiSplit workspaceTraitsSplit;
+        private InsightUiSplit profilesSplit;
+        private InsightUiSlider balanceStrengthControl;
+        private InsightUiSelect allowedImbalanceControl;
 
         private readonly List<ThingDef> plants = new List<ThingDef>();
         private readonly List<ThingDef> filteredPlants = new List<ThingDef>();
@@ -153,8 +159,9 @@ namespace HorticultureNovelSeeds
         public void Draw(Rect rect)
         {
             RefreshSnapshots();
-            ApplyResponsiveLayout(rect.width);
-            UpdateDependentControlState();
+            bool presentationChanged = ApplyResponsiveLayout(rect.width);
+            presentationChanged |= UpdateDependentControlState();
+            if (presentationChanged) uiDocument.Invalidate();
             uiHost.Draw(rect, Time.deltaTime);
         }
 
@@ -301,10 +308,10 @@ namespace HorticultureNovelSeeds
                     uiDocument.Invalidate();
                 }));
             InsightUiElement inspector = BuildGroupInspector();
-            InsightUiSplit split = InsightUi.Split("workspace.groups.split", listPane, inspector, 0.38f);
-            split.Draggable = true;
-            split.Style.Flex = 1f;
-            return split;
+            workspaceGroupsSplit = InsightUi.Split("workspace.groups.split", listPane, inspector, 0.38f);
+            workspaceGroupsSplit.Draggable = true;
+            workspaceGroupsSplit.Style.Flex = 1f;
+            return workspaceGroupsSplit;
         }
 
         private InsightUiElement BuildGroupInspector()
@@ -374,10 +381,10 @@ namespace HorticultureNovelSeeds
             InsightUiElement listPane = Panel("workspace.plants.list-pane", InsightUi.SectionHeader("workspace.plants.list.header", "Plants",
                 "Growable plant definitions with bounded search."), plantSearchField, plantList);
             InsightUiElement inspector = BuildPlantInspector();
-            InsightUiSplit split = InsightUi.Split("workspace.plants.split", listPane, inspector, 0.38f);
-            split.Draggable = true;
-            split.Style.Flex = 1f;
-            return split;
+            workspacePlantsSplit = InsightUi.Split("workspace.plants.split", listPane, inspector, 0.38f);
+            workspacePlantsSplit.Draggable = true;
+            workspacePlantsSplit.Style.Flex = 1f;
+            return workspacePlantsSplit;
         }
 
         private InsightUiElement BuildPlantInspector()
@@ -427,10 +434,10 @@ namespace HorticultureNovelSeeds
             InsightUiElement listPane = Panel("workspace.traits.list-pane", InsightUi.SectionHeader("workspace.traits.list.header", "Traits",
                 "Mechanical, cosmetic, and produce behavior share one bounded trait registry."), traitSearchField, traitList);
             InsightUiElement inspector = BuildTraitInspector();
-            InsightUiSplit split = InsightUi.Split("workspace.traits.split", listPane, inspector, 0.38f);
-            split.Draggable = true;
-            split.Style.Flex = 1f;
-            return split;
+            workspaceTraitsSplit = InsightUi.Split("workspace.traits.split", listPane, inspector, 0.38f);
+            workspaceTraitsSplit.Draggable = true;
+            workspaceTraitsSplit.Style.Flex = 1f;
+            return workspaceTraitsSplit;
         }
 
         private InsightUiElement BuildTraitInspector()
@@ -540,12 +547,12 @@ namespace HorticultureNovelSeeds
                 ActionButton("profiles.delete", "Delete selected", DeleteProfile),
                 ActionButton("profiles.reset", "Reset active settings", ResetAllSettings),
                 ActionButton("profiles.publisher", "Export publisher default", ExportPublisherDefault));
-            InsightUiSplit split = InsightUi.Split("profiles.split", listPane, editor, 0.42f);
-            split.Draggable = true;
-            split.Style.Flex = 1f;
+            profilesSplit = InsightUi.Split("profiles.split", listPane, editor, 0.42f);
+            profilesSplit.Draggable = true;
+            profilesSplit.Style.Flex = 1f;
             return Page("profiles.page", "Profiles", "Keep named configurations separate from the live settings authority.",
                 InsightUi.Callout("profiles.guidance", InsightUiCalloutSeverity.Info, "Safe configuration workflow",
-                    "Apply and reset operations use document-local feedback and confirmation for destructive changes."), split);
+                    "Apply and reset operations use document-local feedback and confirmation for destructive changes."), profilesSplit);
         }
 
         private InsightUiElement BuildAdvancedPage()
@@ -626,6 +633,7 @@ namespace HorticultureNovelSeeds
             InsightUiSlider slider = InsightUi.Slider(id + ".slider", 0f, minimum, maximum)
                 .Bind(getter, value => Mutate(() => setter(value)));
             slider.Style.Flex = 1f;
+            if (id == "gameplay.balance-strength") balanceStrengthControl = slider;
             InsightUiStack row = InsightUi.Row(id + ".row", InsightUi.Label(id + ".label", label, InsightUiTextStyle.Label), slider,
                 DynamicLabel(id + ".value", () => FormatPercent(getter())));
             row.Style.Gap = 6f;
@@ -638,6 +646,7 @@ namespace HorticultureNovelSeeds
             string[] options = Enumerable.Range(minimum, maximum - minimum + 1).Select(value => value.ToString()).ToArray();
             InsightUiSelect select = InsightUi.Select(id + ".select", label, options, 0)
                 .Bind(() => Mathf.Clamp(getter() - minimum, 0, options.Length - 1), value => Mutate(() => setter(value + minimum)));
+            if (id == "gameplay.allowed-imbalance") allowedImbalanceControl = select;
             return Panel(id, select, InsightUi.Label(id + ".description", description, InsightUiTextStyle.Caption));
         }
 
@@ -845,44 +854,35 @@ namespace HorticultureNovelSeeds
             list.ItemCount = count;
         }
 
-        private void ApplyResponsiveLayout(float width)
+        private bool ApplyResponsiveLayout(float width)
         {
             InsightUiOrientation orientation = width < 820f ? InsightUiOrientation.Vertical : InsightUiOrientation.Horizontal;
+            if (workspaceGroupsOrientation == orientation) return false;
             workspaceGroupsOrientation = orientation;
-            SetSplitOrientation("workspace.groups.split", orientation);
-            SetSplitOrientation("workspace.plants.split", orientation);
-            SetSplitOrientation("workspace.traits.split", orientation);
-            SetSplitOrientation("profiles.split", orientation);
+            if (workspaceGroupsSplit != null) workspaceGroupsSplit.Orientation = orientation;
+            if (workspacePlantsSplit != null) workspacePlantsSplit.Orientation = orientation;
+            if (workspaceTraitsSplit != null) workspaceTraitsSplit.Orientation = orientation;
+            if (profilesSplit != null) profilesSplit.Orientation = orientation;
+            return true;
         }
 
         private InsightUiOrientation workspaceGroupsOrientation = InsightUiOrientation.Horizontal;
 
-        private void UpdateDependentControlState()
+        private bool UpdateDependentControlState()
         {
             bool enabled = settings.enableTraitBalancing;
-            InsightUiSlider balanceStrength = FindElement(uiDocument.Root, "gameplay.balance-strength.slider") as InsightUiSlider;
-            if (balanceStrength != null) balanceStrength.Enabled = enabled;
-            InsightUiSelect allowedImbalance = FindElement(uiDocument.Root, "gameplay.allowed-imbalance.select") as InsightUiSelect;
-            if (allowedImbalance != null) allowedImbalance.Enabled = enabled;
-        }
-
-        private void SetSplitOrientation(string id, InsightUiOrientation orientation)
-        {
-            InsightUiElement element = FindElement(uiDocument.Root, id);
-            InsightUiSplit split = element as InsightUiSplit;
-            if (split != null) split.Orientation = orientation;
-        }
-
-        private static InsightUiElement FindElement(InsightUiElement root, string id)
-        {
-            if (root == null) return null;
-            if (root.Id == id) return root;
-            foreach (InsightUiElement child in root.Children ?? new InsightUiElement[0])
+            bool changed = false;
+            if (balanceStrengthControl != null && balanceStrengthControl.Enabled != enabled)
             {
-                InsightUiElement result = FindElement(child, id);
-                if (result != null) return result;
+                balanceStrengthControl.Enabled = enabled;
+                changed = true;
             }
-            return null;
+            if (allowedImbalanceControl != null && allowedImbalanceControl.Enabled != enabled)
+            {
+                allowedImbalanceControl.Enabled = enabled;
+                changed = true;
+            }
+            return changed;
         }
 
         private void SelectGroup(PlantGroupRecord group)

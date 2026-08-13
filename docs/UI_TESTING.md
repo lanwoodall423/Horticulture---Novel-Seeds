@@ -66,3 +66,26 @@ Advanced diagnostics counters. Also inspect the field-guide Overview empty state
 known Plants, Cultivars filters and trait badges, contextual Compare, read-only Breeding, both
 Knowledge scopes/unavailable guidance, and lineage missing-parent/cycle states. A
 zero-render-error result and zero duplicate-ID paths are required for both documents.
+
+The `visual-designer` scenario adds the Prompt 3 player-surface contract: isolated Visual
+Designer documents, three section tabs, Plant/Produce modes, semantic mask channels,
+inheritance/reset controls, bounded dialog collections, naming chrome, embedded inspector
+documents, accessibility state, and duplicate/render diagnostics. Run it after visual,
+dialog, inspector, or mask-editor changes:
+
+```powershell
+.\DevTools\Run-RuntimeTests.ps1 -Scenario visual-designer
+```
+
+Interactive Prompt 3 QA must also inspect a live cached plant preview, produce preview,
+Original/Mask/Final mask views, Add/Remove/Replace brush input, review queue filtering, naming
+validation, group/tag/trait reset actions, Plant/Produce inspector tabs, keyboard focus, high
+contrast, reduced motion, compact density, and 1,000-row collection behavior. A preview frame
+must not generate masks or rebuild textures; manual masks, semantic channels, inheritance, and
+save/load identities must remain unchanged.
+
+Focused dialog QA also covers mask import/export selection and error states, breeding-mix search
+and minimum-two validation, profile-name validation and replacement confirmation, and the
+Canvas-hosted mask-color preview at wide and narrow widths. The developer-only unlock window is
+debug-only and is excluded from the normal player journey; the lineage compatibility shim is
+covered by workspace navigation instead of a second renderer.

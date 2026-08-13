@@ -69,6 +69,7 @@ namespace HorticultureNovelSeeds.RuntimeTests
                         case "long-running": LongRunning(report); break;
                         case "ux-discovery": UxDiscovery(report); break;
                         case "workspace": Workspace(report); break;
+                        case "visual-designer": VisualDesigner(report); break;
                         case "registry-scale": RegistryScale(report); break;
                         case "rc-performance": RcPerformance(report); break;
                         case "auto-mask-suite": AutoMaskSuite(report); break;
@@ -78,6 +79,7 @@ namespace HorticultureNovelSeeds.RuntimeTests
                             CleanDefault(report);
                             UxDiscovery(report);
                             Workspace(report);
+                            VisualDesigner(report);
                             RegistryScale(report);
                             RcPerformance(report);
                             OrdinaryCrop(report);
@@ -562,6 +564,100 @@ namespace HorticultureNovelSeeds.RuntimeTests
                     && first.EdgeCount <= HorticultureWorkspaceDocument.MaximumLineageEdges,
                     "lineage IDs or budgets were not deterministic and bounded.");
                 return "missing-parent rows, cycles, deterministic IDs, validation, and bounded graph traversal are covered";
+            });
+        }
+
+        private static void VisualDesigner(HorticultureRuntimeTestReport report)
+        {
+            Check(report, "visual-designer-documents-and-channels", () =>
+            {
+                RuntimeVisualSurface firstSurface = new RuntimeVisualSurface();
+                RuntimeVisualSurface secondSurface = new RuntimeVisualSurface();
+                HorticultureVisualDesignerDocument first = new HorticultureVisualDesignerDocument(firstSurface);
+                HorticultureVisualDesignerDocument second = new HorticultureVisualDesignerDocument(secondSurface);
+                Require(first.SectionCount == 3 && first.SectionIds.SequenceEqual(new[] { "color", "shape", "effects" }),
+                    "Visual Designer sections are incomplete or unstable.");
+                Require(first.ModeIds.SequenceEqual(new[] { "plant", "produce" })
+                    && first.SemanticMaskChannels.SequenceEqual(new[] { "Produce", "Leaves", "Stem" }),
+                    "Plant/Produce mode or semantic mask channels are incomplete.");
+                Require(first.HasIsolatedPresentationState(second) && first.TrackDuplicateIds,
+                    "Visual Designer documents share state or duplicate-ID diagnostics are disabled.");
+                Require(!firstSurface.OverrideEnabled,
+                    "opening the Visual Designer created an override before an explicit edit.");
+                first.SelectSection("shape");
+                Require(first.ActiveSectionId == "shape", "Visual Designer tab selection did not remain document-owned.");
+                firstSurface.SetEditingProduce(true);
+                Require(first.SemanticMaskChannels.SequenceEqual(new[] { "Produce", "Leaves", "Container" }),
+                    "Produce mode did not expose semantic Produce/Leaves/Container channels.");
+                first.SetAccessibility(true, true, InsightUiDensity.Compact);
+                Require(first.HighContrast && first.ReducedMotion && first.Density == InsightUiDensity.Compact,
+                    "Visual Designer accessibility state was not document-owned.");
+                first.PostClose();
+                second.PostClose();
+                return "isolated Visual Designer sections, modes, semantic channels, accessibility, and lifecycle cleanup are covered";
+            });
+            Check(report, "visual-designer-dialog-and-inspector-bounds", () =>
+            {
+                HorticultureCollectionDialogSurfaceAdapter surface = new HorticultureCollectionDialogSurfaceAdapter
+                {
+                    TitleProvider = () => "Runtime collection",
+                    RowsProvider = () => Enumerable.Range(0, 1000).Select(index => new HorticultureDialogRow
+                    {
+                        Id = "row-" + index,
+                        Label = "Row " + index,
+                        Selected = index == 0
+                    }).ToArray(),
+                    CloseAction = () => { }
+                };
+                HorticultureCollectionDialogDocument collection = new HorticultureCollectionDialogDocument(surface, "hns.runtime.collection");
+                Require(collection.VisibleRowBudget <= 96 && collection.TrackDuplicateIds,
+                    "migrated dialog collection chrome is not bounded or diagnostics are disabled.");
+                HorticultureInspectorDocument inspector = new HorticultureInspectorDocument("hns.runtime.inspector");
+                inspector.Refresh(new HorticultureInspectorSnapshot
+                {
+                    Title = "Runtime inspector",
+                    PrimaryRows = Enumerable.Range(0, 1000).Select(index => new HorticultureInspectorRow { Id = "trait-" + index, Label = "Trait " + index }).ToArray(),
+                    SecondaryRows = new HorticultureInspectorRow[0]
+                });
+                Require(inspector.MaximumVisibleRows == 1000 && inspector.PrimaryRowCount == 1000,
+                    "embedded inspector rows are not safely bounded.");
+                RuntimeInputSurface inputSurface = new RuntimeInputSurface();
+                HorticultureInputDialogDocument input = new HorticultureInputDialogDocument(inputSurface, "hns.runtime.input");
+                RuntimePreviewSurface previewSurface = new RuntimePreviewSurface();
+                HorticulturePreviewDialogDocument preview = new HorticulturePreviewDialogDocument(previewSurface, "hns.runtime.preview");
+                input.SetAccessibility(true, true, InsightUiDensity.Compact);
+                preview.SetAccessibility(true, true, InsightUiDensity.Compact);
+                Require(input.TrackDuplicateIds && input.RenderErrorCount == 0 && input.Density == InsightUiDensity.Compact
+                    && preview.TrackDuplicateIds && preview.RenderErrorCount == 0 && preview.Density == InsightUiDensity.Compact,
+                    "migrated form and specialized-preview chrome did not expose diagnostics/accessibility state.");
+                collection.PostClose();
+                inspector.PostClose();
+                input.PostClose();
+                preview.PostClose();
+                return "naming/collection chrome, inspector summaries, stable row budgets, and cleanup are covered";
+            });
+            Check(report, "mask-editor-document-and-channels", () =>
+            {
+                RuntimeMaskSurface surface = new RuntimeMaskSurface();
+                HorticultureMaskEditorDocument document = new HorticultureMaskEditorDocument(surface);
+                Require(document.TrackDuplicateIds && document.LayerCount == 3 && document.HasBoundedHistory,
+                    "mask editor document did not enable diagnostics or bounded history.");
+                Require(surface.LayerOptions.SequenceEqual(new[] { "Produce", "Leaves", "Stem" }),
+                    "plant mask channels are not semantic.");
+                surface.SelectedPage = 1;
+                Require(surface.LayerOptions.SequenceEqual(new[] { "Produce", "Leaves", "Container" }),
+                    "produce mask channels are not semantic.");
+                surface.ToolMode = 2;
+                surface.PaintSelectionMode = 1;
+                surface.BrushSize = 9f;
+                surface.Tolerance = 0.2f;
+                surface.GrowCount = 0;
+                document.SetAccessibility(true, true, InsightUiDensity.Compact);
+                Require(document.HighContrast && document.ReducedMotion && document.Density == InsightUiDensity.Compact
+                    && surface.ToolMode == 2 && surface.PaintSelectionMode == 1 && surface.BrushSize == 9f,
+                    "mask editor bindings or accessibility state did not remain document-safe.");
+                document.PostClose();
+                return "mask editor chrome, semantic channels, tool bindings, bounded history, accessibility, and cleanup are covered";
             });
         }
 
@@ -1424,6 +1520,130 @@ namespace HorticultureNovelSeeds.RuntimeTests
         private static void Require(bool condition, string message)
         {
             if (!condition) throw new InvalidOperationException(message);
+        }
+
+        private sealed class RuntimeVisualSurface : IHorticultureVisualDesignerSurface
+        {
+            private readonly Dictionary<string, float> values = new Dictionary<string, float>();
+            private bool editingProduce;
+            private bool overrideEnabled;
+            private bool perMaskEnabled;
+            private int selectedMask;
+            private int selectedPreviewPlant;
+
+            public string ContextLabel => "Runtime Visual Designer";
+            public string TraitLabel => "Runtime Trait";
+            public string OriginLabel => overrideEnabled ? "Override" : "Inherited";
+            public string InheritanceLabel => overrideEnabled ? "Editing explicit override" : "Using inherited visual";
+            public string StatusLabel => "Cached preview authority";
+            public bool EditingProduce => editingProduce;
+            public string ActiveSection { get; set; } = "Color";
+            public bool CanEdit => true;
+            public bool OverrideEnabled { get => overrideEnabled; set => overrideEnabled = value; }
+            public bool PerMaskEnabled { get => perMaskEnabled; set => perMaskEnabled = value; }
+            public int SelectedMask { get => selectedMask; set => selectedMask = value; }
+            public IReadOnlyList<string> MaskOptions => editingProduce
+                ? new[] { "Produce", "Leaves", "Container" }
+                : new[] { "Produce", "Leaves", "Stem" };
+            public IReadOnlyList<string> PreviewPlantOptions => new[] { "Rice" };
+            public int SelectedPreviewPlant { get => selectedPreviewPlant; set => selectedPreviewPlant = value; }
+            public float GetValue(string key) => values.TryGetValue(key, out float value) ? value : 0f;
+            public void SetValue(string key, float value) => values[key] = value;
+            public void SetEditingProduce(bool value) => editingProduce = value;
+            public void ResetSection(string section) { }
+            public void ResetCurrentMask() { }
+            public void RestoreInherited() => overrideEnabled = false;
+            public void RestoreXmlDefault() => values.Clear();
+            public void DrawPreview(Rect rect) { }
+            public void Close() { }
+        }
+
+        private sealed class RuntimeInputSurface : IHorticultureInputDialogSurface
+        {
+            public string Title => "Runtime input";
+            public string Description => "Input fixture";
+            public string FieldLabel => "Name";
+            public string Value { get; set; } = string.Empty;
+            public string ValidationMessage => string.Empty;
+            public string PrimaryLabel => "Save";
+            public Action PrimaryAction => () => { };
+            public string SecondaryLabel => string.Empty;
+            public Action SecondaryAction => null;
+            public void Close() { }
+        }
+
+        private sealed class RuntimePreviewSurface : IHorticulturePreviewDialogSurface
+        {
+            public string Title => "Runtime preview";
+            public string Description => "Preview fixture";
+            public IReadOnlyList<string> Legend => new[] { "Produce", "Leaves", "Stem" };
+            public void DrawPreview(Rect rect) { }
+            public void RefreshPreview() { }
+            public void Close() { }
+        }
+
+        private sealed class RuntimeMaskSurface : IHorticultureMaskEditorSurface
+        {
+            private int selectedPage;
+            private int selectedLayer;
+            private int previewMode = 1;
+            private int toolMode;
+            private int paintMode;
+            private float brushSize = 3f;
+            private float tolerance = 0.12f;
+            private float selectionRadius = 2f;
+            private float fragmentLimit = 12f;
+            public int GrowCount { get; set; }
+            public string Title => "Runtime Mask Editor";
+            public string PageLabel => selectedPage == 0 ? "Plant channels" : "Produce channels";
+            public string OriginLabel => "Manual";
+            public string LayerStatus => "Selected channel contains painted pixels.";
+            public string StatusLabel => "Runtime mask status";
+            public int SelectedPage { get => selectedPage; set => selectedPage = value; }
+            public IReadOnlyList<string> PageOptions => new[] { "Plant", "Produce" };
+            public int SelectedVariation { get; set; }
+            public IReadOnlyList<string> VariationOptions => new[] { "Base" };
+            public bool Enabled { get; set; } = true;
+            public int SelectedLayer { get => selectedLayer; set => selectedLayer = value; }
+            public IReadOnlyList<string> LayerOptions => selectedPage == 0
+                ? new[] { "Produce", "Leaves", "Stem" } : new[] { "Produce", "Leaves", "Container" };
+            public bool GetLayerLocked(int index) => false;
+            public void SetLayerLocked(int index, bool locked) { }
+            public int PreviewMode { get => previewMode; set => previewMode = value; }
+            public bool ProjectionPreviewActive => false;
+            public bool ValidationAvailable => false;
+            public string ValidationLabel => "No validation issues";
+            public int ToolMode { get => toolMode; set => toolMode = value; }
+            public int PaintSelectionMode { get => paintMode; set => paintMode = value; }
+            public float BrushSize { get => brushSize; set => brushSize = value; }
+            public float Tolerance { get => tolerance; set => tolerance = value; }
+            public float SelectionRadius { get => selectionRadius; set => selectionRadius = value; }
+            public float FragmentLimit { get => fragmentLimit; set => fragmentLimit = value; }
+            public bool CanUndo => false;
+            public bool CanRedo => false;
+            public void DrawCanvas(Rect rect) { }
+            public void GrowSelection() => GrowCount++;
+            public void ShrinkSelection() { }
+            public void SmoothSelection() { }
+            public void FeatherSelection() { }
+            public void RemoveTinyFragments() { }
+            public void FillSelectionHoles() { }
+            public void FillUnmaskedPixels() { }
+            public void KeepLargestSelection() { }
+            public void SmartExpandSelection() { }
+            public void ClearSelection() { }
+            public void Validate() { }
+            public void PreviousIssue() { }
+            public void NextIssue() { }
+            public void Undo() { }
+            public void Redo() { }
+            public void CopyToVariation() { }
+            public void ProjectToVariation() { }
+            public void RegenerateAutoMask() { }
+            public void ResetToAutoMask() { }
+            public void ApplyProjection() { }
+            public void CancelProjection() { }
+            public void Close() { }
         }
     }
 }
