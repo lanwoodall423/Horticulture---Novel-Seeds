@@ -518,7 +518,11 @@ namespace HorticultureNovelSeeds.RuntimeTests
             Check(report, "workspace-knowledge-and-external-navigation", () =>
             {
                 HorticultureWorkspaceDocument document = new HorticultureWorkspaceDocument();
-                Pawn pawn = Find.CurrentMap?.mapPawns?.FreeColonists?.FirstOrDefault();
+                // FreeColonists also walks unspawned holders, which can be transiently absent
+                // during the complete suite's clean/default transition. The shared observer
+                // fixture only reads the spawned colonist collection and is used by the
+                // gameplay/Knowledge scenarios as well.
+                Pawn pawn = Observer();
                 ThingDef plant = DefDatabase<ThingDef>.AllDefsListForReading.FirstOrDefault(NovelSeedUtility.IsGrowableCrop);
                 Require(plant != null, "no growable plant was available for workspace navigation.");
                 document.PreparePlant(plant);
