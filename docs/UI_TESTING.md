@@ -40,9 +40,29 @@ mask, and save/reload coverage:
 .\DevTools\Run-RuntimeTests.ps1 -Scenario complete
 ```
 
+The `workspace` scenario covers the Cultivar Registry replacement independently. It constructs
+isolated `HorticultureWorkspaceDocument` instances, verifies the five field-guide pages and
+`PostClose` lifecycle, exercises navigation/search and external plant/Knowledge entry points,
+checks wide/narrow splits and document-local accessibility state, verifies empty and safe 1,000
+item virtual-list bounds, comparison limits, semantic trait chips, Knowledge availability
+guidance, and deterministic bounded lineage handling for missing parents and cycles:
+
+```powershell
+.\DevTools\Run-RuntimeTests.ps1 -Scenario workspace
+```
+
+The existing `registry-scale` scenario remains the gameplay-data stress test for 100, 500, and
+1,000 cultivar records and 1,000 stable `GetVariety` identity lookups. `knowledge` and
+`save-reload` continue to validate adapter authority, event observation, legacy migration, and
+serialized variety/breeding compatibility. Run the workspace scenario after a DevBridge2 restart
+when production gameplay or serialized types have changed; use DevBridge2 only for status,
+restart, readiness, test leases, and lease release.
+
 During interactive QA, inspect wide and narrow settings windows, normal and compact density,
 high contrast, reduced motion, navigation wrapping, the Groups/Plants/Traits split layout,
 search filtering, virtualized selections, keyboard Tab/Shift+Tab and Enter/Space activation,
 text-field ownership, Escape, tooltips, focus rings, confirmation dialogs, toasts, and the
-Advanced diagnostics counters. A zero-render-error result and zero duplicate-ID paths are
-required.
+Advanced diagnostics counters. Also inspect the field-guide Overview empty state, masked and
+known Plants, Cultivars filters and trait badges, contextual Compare, read-only Breeding, both
+Knowledge scopes/unavailable guidance, and lineage missing-parent/cycle states. A
+zero-render-error result and zero duplicate-ID paths are required for both documents.

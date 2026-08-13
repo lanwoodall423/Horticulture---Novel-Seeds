@@ -458,6 +458,13 @@ namespace HorticultureNovelSeeds
         public IEnumerable<VarietyRecord> AllVarieties => allVisibleVarieties.Where(value =>
             value?.cropDef != null && HorticulturePlantPolicy.IsSupported(value.cropDef));
 
+        /// <summary>
+        /// Read-only access for the field-guide presentation. Breeding programs remain legacy
+        /// serialized records; this property deliberately exposes no create, delete, or mutation API.
+        /// </summary>
+        public IReadOnlyList<BreedingProgramRecord> BreedingPrograms =>
+            (legacyBreedingPrograms ?? new List<BreedingProgramRecord>()).AsReadOnly();
+
         public VarietyRecord GetVariety(string id)
         {
             if (id.NullOrEmpty())

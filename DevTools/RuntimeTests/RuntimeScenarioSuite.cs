@@ -68,6 +68,7 @@ namespace HorticultureNovelSeeds.RuntimeTests
                         case "negative": Negative(report); break;
                         case "long-running": LongRunning(report); break;
                         case "ux-discovery": UxDiscovery(report); break;
+                        case "workspace": Workspace(report); break;
                         case "registry-scale": RegistryScale(report); break;
                         case "rc-performance": RcPerformance(report); break;
                         case "auto-mask-suite": AutoMaskSuite(report); break;
@@ -76,6 +77,7 @@ namespace HorticultureNovelSeeds.RuntimeTests
                             Startup(report);
                             CleanDefault(report);
                             UxDiscovery(report);
+                            Workspace(report);
                             RegistryScale(report);
                             RcPerformance(report);
                             OrdinaryCrop(report);
@@ -382,6 +384,180 @@ namespace HorticultureNovelSeeds.RuntimeTests
                 Require(document.PlantVirtualizationCacheLimit <= 96 && document.TraitVirtualizationCacheLimit <= 96,
                     "settings virtual-list cache bounds are not enforced.");
                 return "stable component IDs, duplicate diagnostics, render diagnostics, and cache bounds are clean";
+            });
+        }
+
+        private static void Workspace(HorticultureRuntimeTestReport report)
+        {
+            Check(report, "workspace-pages-and-isolation", () =>
+            {
+                HorticultureWorkspaceDocument first = new HorticultureWorkspaceDocument();
+                HorticultureWorkspaceDocument second = new HorticultureWorkspaceDocument();
+                string[] expected = { "overview", "plants", "cultivars", "breeding", "knowledge" };
+                Require(expected.SequenceEqual(first.NavigationPageIds) && first.NavigationPageCount == 5,
+                    "Horticulture workspace pages are incomplete or unstable.");
+                Require(first.HasIsolatedPresentationState(second) && first.TrackDuplicateIds && first.HasUniqueComponentIds(),
+                    "workspace presentation state or duplicate-ID diagnostics are not isolated.");
+                Require(first.RenderErrorCount == 0, "workspace reported render errors before drawing.");
+                return "five field-guide pages, isolated document state, and stable IDs are available";
+            });
+            Check(report, "workspace-navigation-search-and-accessibility", () =>
+            {
+                HorticultureWorkspaceDocument document = new HorticultureWorkspaceDocument();
+                InsightUiNavigation navigation = InstanceField<InsightUiNavigation>(document, "navigation");
+                navigation.Select("cultivars");
+                Require(document.ActivePageId == "cultivars", "workspace navigation did not update document state.");
+                InsightUiSearchField search = InstanceField<InsightUiSearchField>(document, "cultivarSearchField");
+                Require(search != null, "cultivar SearchField was not composed.");
+                search.SetText("runtime cultivar");
+                Require(search.Value == "runtime cultivar", "workspace SearchField did not retain its query.");
+                search.Clear();
+                Require(search.Value.NullOrEmpty(), "workspace SearchField did not clear its query.");
+
+                MethodInfo responsive = AccessTools.Method(typeof(HorticultureWorkspaceDocument), "ApplyResponsiveLayout");
+                Require(responsive != null, "workspace responsive layout coordinator is missing.");
+                responsive.Invoke(document, new object[] { 1200f });
+                Require(!document.IsNarrowWorkspace, "wide workspace did not remain horizontal.");
+                responsive.Invoke(document, new object[] { 640f });
+                Require(document.IsNarrowWorkspace, "narrow workspace did not switch to vertical splits.");
+                document.SetAccessibility(true, true, InsightUiDensity.Compact);
+                Require(document.HighContrast && document.ReducedMotion && document.Density == InsightUiDensity.Compact,
+                    "workspace accessibility state was not document-owned.");
+                return "navigation, search, responsive splits, high contrast, reduced motion, and compact density are bound";
+            });
+            Check(report, "workspace-empty-large-and-compare-bounds", () =>
+            {
+                HorticultureWorkspaceDocument document = new HorticultureWorkspaceDocument();
+                document.PreOpen();
+                InsightUiVirtualList plantList = InstanceField<InsightUiVirtualList>(document, "plantList");
+                InsightUiVirtualList cultivarList = InstanceField<InsightUiVirtualList>(document, "cultivarList");
+                Require(plantList != null && cultivarList != null && plantList.CacheLimit <= 96 && cultivarList.CacheLimit <= 96,
+                    "workspace virtual-list cache limits are not bounded.");
+                plantList.ItemCount = 1000;
+                cultivarList.ItemCount = 1000;
+                plantList.Refresh();
+                cultivarList.Refresh();
+                Require(plantList.ItemCount == 1000 && cultivarList.ItemCount == 1000
+                    && plantList.CacheLimit <= 96 && cultivarList.CacheLimit <= 96,
+                    "workspace did not accept the safe 1,000-entry collection bound.");
+                MethodInfo comparisonGate = AccessTools.Method(typeof(MainTabWindow_CultivarRegistry), "CanCompareCount");
+                Require(comparisonGate != null
+                    && !(bool)comparisonGate.Invoke(null, new object[] { 1 })
+                    && (bool)comparisonGate.Invoke(null, new object[] { 2 })
+                    && (bool)comparisonGate.Invoke(null, new object[] { HorticultureWorkspaceDocument.MaximumComparisonCount })
+                    && !(bool)comparisonGate.Invoke(null, new object[] { HorticultureWorkspaceDocument.MaximumComparisonCount + 1 }),
+                    "workspace comparison bounds are inconsistent.");
+                InsightUiBadge chip = FindUiElement(InstanceField<InsightUiDocument>(document, "uiDocument").Root,
+                    "hns.cultivars.inspector.trait-chip.0") as InsightUiBadge;
+                Require(chip != null, "reusable semantic trait chips were not composed.");
+                document.PostClose();
+                return "empty-safe snapshots, 1,000-entry list bounds, comparison limits, and trait chips are covered";
+            });
+            Check(report, "workspace-filters-actions-and-breeding", () =>
+            {
+                HorticultureWorkspaceDocument document = new HorticultureWorkspaceDocument();
+                InsightUiDocument canvas = InstanceField<InsightUiDocument>(document, "uiDocument");
+                InsightUiSegmented plantFilter = InstanceField<InsightUiSegmented>(document, "plantFilterField");
+                InsightUiSegmented balanceFilter = InstanceField<InsightUiSegmented>(document, "balanceFilterField");
+                InsightUiToggle archived = InstanceField<InsightUiToggle>(document, "archivedField");
+                InsightUiToggle produce = InstanceField<InsightUiToggle>(document, "produceEffectField");
+                Require(plantFilter != null && balanceFilter != null && archived != null && produce != null,
+                    "workspace filters were not composed.");
+                ((Action<int>)AccessTools.Field(typeof(InsightUiSegmented), "boundSetter").GetValue(plantFilter))(2);
+                ((Action<int>)AccessTools.Field(typeof(InsightUiSegmented), "boundSetter").GetValue(balanceFilter))(1);
+                ((Action<bool>)AccessTools.Field(typeof(InsightUiToggle), "boundSetter").GetValue(archived))(true);
+                ((Action<bool>)AccessTools.Field(typeof(InsightUiToggle), "boundSetter").GetValue(produce))(true);
+                InsightUiSegmented scope = FindUiElement(canvas.Root, "hns.knowledge.scope") as InsightUiSegmented;
+                Require(scope != null, "Knowledge scope control was not composed.");
+                ((Action<int>)AccessTools.Field(typeof(InsightUiSegmented), "boundSetter").GetValue(scope))(1);
+                document.PreOpen();
+                Require(FindUiElement(canvas.Root, "hns.cultivars.favorite") is InsightUiButton
+                    && FindUiElement(canvas.Root, "hns.cultivars.archive") is InsightUiButton
+                    && FindUiElement(canvas.Root, "hns.cultivars.locate") is InsightUiButton,
+                    "cultivar actions were not composed.");
+
+                GameComponent_NovelSeeds component = GameComponent_NovelSeeds.Instance;
+                VarietyRecord first = component?.AllVarieties.FirstOrDefault();
+                VarietyRecord second = component?.AllVarieties.Skip(1).FirstOrDefault();
+                if (first != null)
+                {
+                    bool oldFavorite = first.registryFavorite;
+                    bool oldArchived = first.registryArchived;
+                    try
+                    {
+                        document.PrepareCultivar(first);
+                        InvokeInstance(document, "ToggleFavorite");
+                        InvokeInstance(document, "ToggleArchived");
+                        Require(first.registryFavorite != oldFavorite && first.registryArchived != oldArchived,
+                            "favorite/archive actions did not write through the selected record.");
+                        if (second != null)
+                        {
+                            InvokeInstance(document, "ToggleComparison", first.id, true);
+                            InvokeInstance(document, "ToggleComparison", second.id, true);
+                            Require(document.ComparisonCount == 2, "comparison selection did not retain two cultivars.");
+                            document.OpenCompare();
+                            Require(document.ActivePageId == "cultivars", "contextual Compare left the Cultivars page.");
+                        }
+                    }
+                    finally
+                    {
+                        first.registryFavorite = oldFavorite;
+                        first.registryArchived = oldArchived;
+                        InvokeInstance(document, "ClearComparison");
+                    }
+                }
+                BreedingProgramRecord program = component?.BreedingPrograms?.FirstOrDefault();
+                if (program != null)
+                {
+                    InvokeInstance(document, "SelectBreeding", program.id);
+                    Require(document.ActivePageId == "breeding", "breeding selection did not open the Breeding page.");
+                }
+                document.PostClose();
+                return "discovery, balance, archive, produce, Knowledge scope, cultivar actions, comparison, and read-only breeding selection are covered";
+            });
+            Check(report, "workspace-knowledge-and-external-navigation", () =>
+            {
+                HorticultureWorkspaceDocument document = new HorticultureWorkspaceDocument();
+                Pawn pawn = Find.CurrentMap?.mapPawns?.FreeColonists?.FirstOrDefault();
+                ThingDef plant = DefDatabase<ThingDef>.AllDefsListForReading.FirstOrDefault(NovelSeedUtility.IsGrowableCrop);
+                Require(plant != null, "no growable plant was available for workspace navigation.");
+                document.PreparePlant(plant);
+                Require(document.ActivePageId == "plants", "plant navigation did not open the Plants page.");
+                document.PrepareKnowledge(pawn);
+                Require(document.ActivePageId == "knowledge", "Knowledge navigation did not open the Knowledge page.");
+                document.PreOpen();
+                Require(HorticultureKnowledgeAdapter.Diagnostics != null
+                    && document.KnowledgeAvailable == HorticultureKnowledgeAdapter.Diagnostics.IsUsable,
+                    "Knowledge availability guidance did not reflect the authoritative adapter diagnostic.");
+                MainTabWindow_CultivarRegistry.OpenPlant(plant);
+                MainTabWindow_CultivarRegistry.OpenKnowledge(pawn);
+                document.PostClose();
+                return "Knowledge scope/guidance and plant/pawn external entry points route through the workspace";
+            });
+            Check(report, "workspace-malformed-lineage", () =>
+            {
+                VarietyRecord root = new VarietyRecord
+                {
+                    id = "runtime-lineage-root",
+                    customName = "Runtime lineage root",
+                    parentVarietyIds = new List<string> { "runtime-lineage-parent", "runtime-lineage-missing" }
+                };
+                VarietyRecord parent = new VarietyRecord
+                {
+                    id = "runtime-lineage-parent",
+                    customName = "Runtime lineage parent",
+                    parentVarietyIds = new List<string> { root.id }
+                };
+                HorticultureLineageInspection first = HorticultureWorkspaceDocument.AnalyzeLineage(
+                    new[] { root, parent }, root.id);
+                HorticultureLineageInspection second = HorticultureWorkspaceDocument.AnalyzeLineage(
+                    new[] { root, parent }, root.id);
+                Require(first.NodeCount == 3 && first.EdgeCount == 3 && first.Complete && first.Validation.NullOrEmpty(),
+                    "bounded lineage did not handle a missing parent and cycle safely.");
+                Require(first.NodeIds.SequenceEqual(second.NodeIds) && first.NodeCount <= HorticultureWorkspaceDocument.MaximumLineageNodes
+                    && first.EdgeCount <= HorticultureWorkspaceDocument.MaximumLineageEdges,
+                    "lineage IDs or budgets were not deterministic and bounded.");
+                return "missing-parent rows, cycles, deterministic IDs, validation, and bounded graph traversal are covered";
             });
         }
 

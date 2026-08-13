@@ -46,6 +46,42 @@ Repeated rows use `Scope` with deterministic IDs. Virtual lists use explicit ove
 cache limits; no list callback scans the map or rebuilds the settings model. Page content is
 composed once and dynamic labels/bindings reread authoritative values on later frames.
 
+## Horticulture field-guide workspace
+
+`MainTabWindow_CultivarRegistry` is a lifecycle shell only. It creates one
+`HorticultureWorkspaceDocument` for the lifetime of the MainTab window, forwards `PreOpen`,
+`DoWindowContents`, and `PostClose`, and preserves `OpenPlant`, `OpenCultivar`, `OpenLineage`,
+and `OpenKnowledge` for external integrations. `PostClose` always reaches
+`InsightUiHost.PostClose`, so focus, popovers, toasts, and overlay ownership cannot leak into a
+later window.
+
+The workspace has five persistent pages: Overview, Plants, Cultivars, Breeding, and Knowledge.
+Compare is a contextual Cultivars surface and is never a permanent navigation page. Plants and
+Cultivars use searchable bounded `VirtualList` collections with responsive draggable `Split`
+inspectors. Overview remains actionable when every collection is empty. Cultivars expose
+semantic trait badges, favorite/archive/origin/balance/produce filters, locate/rename actions,
+and a bounded comparison selection of two to eight records. Breeding presents the existing
+`BreedingProgramRecord` values read-only; it does not invent create/delete mechanics. Knowledge
+uses `HorticultureKnowledgeAdapter` and `HorticultureKnowledgeSnapshots` for personal versus
+colony scope, with explicit unavailable/incompatible guidance and no framework internals in the
+normal UI.
+
+All map scans, Knowledge queries, comparison requests, graph traversal, and selection repair
+occur during the document's pre-frame refresh, never inside paint callbacks. User-initiated
+rename/favorite/archive/locate actions remain explicit controls that write through the existing
+gameplay authority; ordinary painting only reads immutable presentation summaries and stable
+`Scope` IDs. Lineage uses
+existing `parentVarietyIds`, deterministic `InsightIds.Stable` node IDs, explicit missing-parent
+entities, cycle protection, a 128-node/256-edge/12-level budget, model validation, and bounded
+`InsightGraphLayout`. Selecting a known graph node returns to its cultivar inspector; missing
+nodes remain informational and cannot mutate game state.
+
+The document tracks Knowledge revision changes, repairs stale selections and comparison IDs, and
+keeps per-document accessibility state (normal/compact density, high contrast, reduced motion)
+and responsive split orientation. `HasIsolatedPresentationState`, duplicate-ID diagnostics, and
+the `workspace` runtime scenario cover lifecycle isolation and rendering contracts separately
+from settings.
+
 ## Theme, accessibility, and diagnostics
 
 The document clones `InsightTheme.Default` into a charcoal botanical theme with a restrained

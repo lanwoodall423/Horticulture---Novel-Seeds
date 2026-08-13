@@ -48,10 +48,8 @@ namespace HorticultureNovelSeeds
             if (Widgets.ButtonText(new Rect(rect.xMax - 138f, rect.y, 104f, 30f), "HNS_Lineage".Translate()))
             {
                 VarietyRecord variety = comp.Variety;
-                List<string> parentIds = comp.CrossPollinated
-                    ? comp.CrossPollinationParentIds
-                    : variety?.parentVarietyIds?.ToList() ?? new List<string>();
-                Find.WindowStack.Add(new Dialog_VarietyLineage(varietyName, traits, parentIds));
+                if (variety != null) MainTabWindow_CultivarRegistry.OpenLineage(variety);
+                else MainTabWindow_CultivarRegistry.OpenPlant(SelThing?.def);
             }
             Text.Font = GameFont.Small;
 
