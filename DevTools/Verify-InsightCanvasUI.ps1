@@ -12,7 +12,7 @@ $architecture = Get-Content -Raw (Join-Path $root 'docs\UI_ARCHITECTURE.md')
 $checks = [ordered]@{
     'Insight Canvas dependency and load order' = $about -match 'lan\.insightcanvas' -and $about -match '<loadAfter>'
     'portable framework reference' = $project -match 'InsightCanvas\.dll' -and $project -match '<Private>false</Private>'
-    'framework provenance recorded' = $project -match 'InsightCanvasVersion>2\.0\.0' -and $project -match '93a09005fa15190009daee625352cf4004974472' -and $project -match 'DFEC9DB76B6ABD7442E82A5029005CE09DECC281CC34FB37C080FD015458A613'
+    'framework provenance recorded' = $project -match 'InsightCanvasVersion>2\.1\.0' -and $project -match '93a09005fa15190009daee625352cf4004974472' -and $project -match 'E8D163B6A2B39EB80BBF8A5EA5AA0B8A80481D69A8CEE1D74526548D0A28C011'
     'framework DLL is not bundled' = -not (Test-Path (Join-Path $root '1.6\Assemblies\InsightCanvas.dll'))
     'runtime UI tests reference framework without copying' = $runtimeProject -match '<Reference Include="InsightCanvas">' -and $runtimeProject -match '<Private>false</Private>'
     'mod owns document lifecycle' = $mod -match 'InsightSettingsDocument' -and $mod -match 'settingsDocument\.Draw'
@@ -28,7 +28,7 @@ $checks = [ordered]@{
     'document feedback and destructive confirmation' = $ui -match 'uiDocument\.Toasts\.Show' -and $ui -match 'Dialog_MessageBox\.CreateConfirmation'
     'visual generation and review actions' = $ui -match 'Generate Missing Auto-Masks' -and $ui -match 'Review Mask Queue' -and $ui -match 'InitializeAndGenerateMissing'
     'runtime UI assertions' = @('ux-insight-navigation-and-search', 'ux-insight-selections-and-group-action', 'ux-insight-bindings-and-dependent-controls', 'ux-insight-responsive-accessibility', 'ux-insight-diagnostics' | ForEach-Object { $runtime -match $_ }) -notcontains $false
-    'provenance documentation' = $architecture -match 'DFEC9DB76B6ABD7442E82A5029005CE09DECC281CC34FB37C080FD015458A613' -and $architecture -match 'no fallback'
+    'provenance documentation' = $architecture -match 'E8D163B6A2B39EB80BBF8A5EA5AA0B8A80481D69A8CEE1D74526548D0A28C011' -and $architecture -match 'no fallback'
 }
 
 $failed = @($checks.GetEnumerator() | Where-Object { -not $_.Value })

@@ -82,7 +82,12 @@ namespace HorticultureNovelSeeds
         private bool reducedMotion;
         private int densityIndex = 1;
 
-        public InsightSettingsDocument(NovelSeedsSettings settings, Action settingsChanged = null)
+        public InsightSettingsDocument(NovelSeedsSettings settings)
+            : this(settings, null)
+        {
+        }
+
+        public InsightSettingsDocument(NovelSeedsSettings settings, Action settingsChanged)
         {
             this.settings = settings ?? throw new ArgumentNullException(nameof(settings));
             this.settingsChanged = settingsChanged;
@@ -582,7 +587,7 @@ namespace HorticultureNovelSeeds
                 DynamicLabel("advanced.diagnostics.ids", () => "Duplicate IDs: " + uiDocument.Diagnostics.DuplicateIds),
                 DynamicLabel("advanced.diagnostics.errors", () => "Render errors: " + uiDocument.Diagnostics.RenderErrors),
                 DynamicLabel("advanced.diagnostics.virtualization", () => "Virtualized caches: plants " + (plantList?.CachedItemCount ?? 0) + ", traits " + (traitList?.CachedItemCount ?? 0)),
-                InsightUi.Label("advanced.diagnostics.framework", "Insight Canvas 2.0.0 | commit 93a09005fa15190009daee625352cf4004974472 | DLL SHA-256 DFEC9DB76B6ABD7442E82A5029005CE09DECC281CC34FB37C080FD015458A613", InsightUiTextStyle.Caption),
+                InsightUi.Label("advanced.diagnostics.framework", "Insight Canvas 2.1.0 | commit 93a09005fa15190009daee625352cf4004974472 | DLL SHA-256 E8D163B6A2B39EB80BBF8A5EA5AA0B8A80481D69A8CEE1D74526548D0A28C011", InsightUiTextStyle.Caption),
                 InsightUi.Label("advanced.diagnostics.compatibility", "Requires lan.insightcanvas. Missing dependencies are rejected by RimWorld's normal mod loader.", InsightUiTextStyle.Caption));
 
             InsightUiElement reset = Panel("advanced.reset", InsightUi.SectionHeader("advanced.reset.header", "Full reset",
@@ -884,24 +889,24 @@ namespace HorticultureNovelSeeds
         {
             selectedGroup = group;
             groupName = group?.Name ?? string.Empty;
-            activePageId = "workspace";
-            activeWorkspaceTab = "groups";
+            navigation.Select("workspace");
+            workspaceTabs.Select("groups");
             uiDocument.Invalidate();
         }
 
         private void SelectPlant(ThingDef plant)
         {
             selectedPlant = plant;
-            activePageId = "workspace";
-            activeWorkspaceTab = "plants";
+            navigation.Select("workspace");
+            workspaceTabs.Select("plants");
             uiDocument.Invalidate();
         }
 
         private void SelectTrait(VarietyTraitDef trait)
         {
             selectedTrait = trait;
-            activePageId = "workspace";
-            activeWorkspaceTab = "traits";
+            navigation.Select("workspace");
+            workspaceTabs.Select("traits");
             uiDocument.Invalidate();
         }
 

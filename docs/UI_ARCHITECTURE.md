@@ -68,6 +68,6 @@ mod's release package. RimWorld's normal dependency loader rejects a missing
 | Field | Value |
 | --- | --- |
 | Package ID | `lan.insightcanvas` |
-| Framework release | `2.0.0` |
+| Framework release | `2.1.0` |
 | Framework checkout | `93a09005fa15190009daee625352cf4004974472` |
-| Reference DLL SHA-256 | `DFEC9DB76B6ABD7442E82A5029005CE09DECC281CC34FB37C080FD015458A613` |
+| Reference DLL SHA-256 | `E8D163B6A2B39EB80BBF8A5EA5AA0B8A80481D69A8CEE1D74526548D0A28C011` |

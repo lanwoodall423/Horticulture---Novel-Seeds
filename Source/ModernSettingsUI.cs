@@ -12,7 +12,9 @@ namespace HorticultureNovelSeeds
     {
         // Kept for the existing runtime discovery contract. The production document owns the
         // actual disclosure state and does not read this compatibility field.
+#pragma warning disable CS0414
         private static bool showAdvancedGeneralSettings = false;
+#pragma warning restore CS0414
 
         public static ThingDef CurrentPlantPreview => DefDatabase<ThingDef>.AllDefsListForReading
             .Where(NovelSeedUtility.IsGrowableCrop)
