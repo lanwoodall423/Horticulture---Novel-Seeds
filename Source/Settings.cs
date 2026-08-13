@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
@@ -1791,9 +1792,9 @@ namespace HorticultureNovelSeeds
         private readonly VarietyTraitDef root;
         private readonly FamilyOptionMode mode;
         private readonly ThingDef previewPlant;
-        private Vector2 scroll;
         private string search = string.Empty;
-        private string expandedOption;
+        private HorticultureCollectionDialogDocument canvasDocument;
+        private HorticultureCollectionDialogSurfaceAdapter canvasSurface;
         public override Vector2 InitialSize => new Vector2(700f, 720f);
 
         public Dialog_TraitFamilyOptions(VarietyTraitDef root, FamilyOptionMode mode, ThingDef previewPlant = null)
@@ -1804,101 +1805,96 @@ namespace HorticultureNovelSeeds
             doCloseX = true;
             closeOnClickedOutside = false;
             absorbInputAroundWindow = true;
+            canvasSurface = new HorticultureCollectionDialogSurfaceAdapter
+            {
+                TitleProvider = () => root.LabelCap + " - " + (mode == FamilyOptionMode.Types ? "Subtypes" : mode == FamilyOptionMode.Plants ? "Plants" : "Stats"),
+                DescriptionProvider = () => "Weighted family selection. Toggle options to preserve the existing settings records; visual editing remains in the Visual Designer.",
+                SearchProvider = () => search,
+                SearchSetter = value => search = value,
+                RowsProvider = OptionRows,
+                EmptyProvider = () => "No matching options.",
+                PrimaryLabelProvider = () => "Close",
+                PrimaryActionCallback = () => Close(),
+                CloseAction = () => Close()
+            };
+            canvasDocument = new HorticultureCollectionDialogDocument(canvasSurface, "hns.family-options");
         }
 
         private ThingDef PreviewPlant => previewPlant ?? NovelSeedsSettingsUI.CurrentPlantPreview;
 
-        public override void DoWindowContents(Rect inRect)
+        public override void DoWindowContents(Rect inRect) => canvasDocument?.Draw(inRect);
+
+        public override void PostClose()
+        {
+            canvasDocument?.PostClose();
+            base.PostClose();
+        }
+
+        private IReadOnlyList<HorticultureDialogRow> OptionRows()
         {
             FamilySettingsRecord family = HorticultureNovelSeedsMod.Settings.GetFamilySettings(root.configFamily);
-            string suffix = mode == FamilyOptionMode.Types ? "Subtypes" : mode == FamilyOptionMode.Plants ? "Plants" : "Stats";
-            Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(inRect.x, inRect.y, inRect.width, 32f), root.LabelCap + " - " + suffix);
-            Text.Font = GameFont.Small;
-            Color oldColor = GUI.color;
-            GUI.color = new Color(0.70f, 0.72f, 0.73f);
-            Widgets.Label(new Rect(inRect.x, inRect.y + 32f, inRect.width, 24f), "Weighted subtype selection");
-            GUI.color = oldColor;
-            Widgets.DrawLineHorizontal(inRect.x, inRect.y + 62f, inRect.width);
-            Widgets.CheckboxLabeled(new Rect(inRect.x, inRect.y + 74f, 220f, 28f), "Enable Family", ref family.enabled);
+            List<HorticultureDialogRow> rows = new List<HorticultureDialogRow>
+            {
+                new HorticultureDialogRow
+                {
+                    Id = "family-enabled",
+                    Label = "Enable Family",
+                    Detail = family.enabled ? "Family is active" : "Family is disabled",
+                    Status = family.enabled ? "Enabled" : "Disabled",
+                    Selected = family.enabled,
+                    CanToggle = true,
+                    Toggle = value => family.enabled = value
+                }
+            };
             if (mode == FamilyOptionMode.Types)
             {
-                bool previous = family.useTypeSpecificVisuals;
-                Rect typeVisualRect = new Rect(inRect.x, inRect.y + 110f, 280f, 28f);
-                Widgets.CheckboxLabeled(typeVisualRect, "Use Subtype-Specific Visuals", ref family.useTypeSpecificVisuals);
-                TooltipHandler.TipRegion(typeVisualRect, "When enabled, each subtype can use its own visual instead of the shared subtype visual.");
-                if (previous != family.useTypeSpecificVisuals)
+                rows.Add(new HorticultureDialogRow
                 {
-                    HorticultureNovelSeedsMod.Settings.ClearVisualCache();
-                    ProduceMaskRenderer.ClearAll();
-                }
-                if (!family.useTypeSpecificVisuals)
+                    Id = "family-type-specific-visuals",
+                    Label = "Use subtype-specific visuals",
+                    Detail = family.useTypeSpecificVisuals
+                        ? "Each subtype can override the shared family visual."
+                        : "All subtypes use the shared family visual.",
+                    Status = family.useTypeSpecificVisuals ? "Overrides enabled" : "Shared visual",
+                    Selected = family.useTypeSpecificVisuals,
+                    CanToggle = true,
+                    Toggle = value =>
+                    {
+                        if (family.useTypeSpecificVisuals == value) return;
+                        family.useTypeSpecificVisuals = value;
+                        HorticultureNovelSeedsMod.Settings.ClearVisualCache();
+                        ProduceMaskRenderer.ClearAll();
+                    },
+                    ActionLabel = "Edit shared visual",
+                    Activate = () => Find.WindowStack.Add(new Dialog_TraitVisualDesigner(
+                        HorticultureNovelSeedsMod.Settings, root, PreviewPlant, true))
+                });
+            }
+            rows.AddRange(BuildOptions(family).Take(1000).Select((option, index) => new HorticultureDialogRow
+            {
+                Id = option.label ?? "option-" + index,
+                Label = option.label,
+                Detail = "Weight " + option.record.weight.ToString("0.##"),
+                Status = option.record.enabled ? "Enabled" : "Disabled",
+                Selected = option.record.enabled,
+                CanToggle = true,
+                Toggle = value => option.record.enabled = value,
+                ActionLabel = option.trait == null ? null : "Edit visual",
+                HasValue = true,
+                Value = option.record.weight,
+                Minimum = 0f,
+                Maximum = 20f,
+                ValueChanged = value =>
                 {
-                    GlobalTraitSettingsRecord sharedVisual = HorticultureNovelSeedsMod.Settings.GetGlobalTraitSettings(root);
-                    if (Widgets.ButtonText(new Rect(inRect.x + 300f, inRect.y + 108f, 110f, 30f), sharedVisual.visualCustomized ? "Visual *" : "Visual"))
-                        Find.WindowStack.Add(new Dialog_TraitVisualDesigner(HorticultureNovelSeedsMod.Settings, root, PreviewPlant, true));
-                    TooltipHandler.TipRegion(new Rect(inRect.x + 300f, inRect.y + 108f, 110f, 30f), "Edit the visual shared by every subtype in this family.");
-                }
-            }
-
-            if (!family.enabled)
-            {
-                Text.Anchor = TextAnchor.MiddleCenter;
-                GUI.color = new Color(0.70f, 0.72f, 0.73f);
-                Widgets.Label(new Rect(inRect.x + 40f, inRect.y + 150f, inRect.width - 80f, 60f), "This trait family is disabled.");
-                GUI.color = oldColor;
-                Text.Anchor = TextAnchor.UpperLeft;
-            }
-            else
-            {
-                Widgets.Label(new Rect(inRect.xMax - 310f, inRect.y + 78f, 52f, 24f), "Search");
-                search = Widgets.TextField(new Rect(inRect.xMax - 254f, inRect.y + 72f, 220f, 30f), search);
-                if (!search.NullOrEmpty() && Widgets.ButtonText(new Rect(inRect.xMax - 30f, inRect.y + 72f, 30f, 30f), "X")) search = string.Empty;
-                float listTop = mode == FamilyOptionMode.Types ? 150f : 116f;
-                DrawOptions(new Rect(inRect.x, inRect.y + listTop, inRect.width, inRect.height - listTop - 48f), family);
-            }
-
-            if (Widgets.ButtonText(new Rect(inRect.xMax - 100f, inRect.yMax - 34f, 100f, 30f), "Close")) Close();
+                    option.record.weight = value;
+                    option.record.Normalize();
+                },
+                Activate = option.trait == null || mode != FamilyOptionMode.Types ? null : () =>
+                    Find.WindowStack.Add(new Dialog_TraitVisualDesigner(HorticultureNovelSeedsMod.Settings, option.trait, option.record, PreviewPlant))
+            }));
+            return rows;
         }
 
-        private void DrawOptions(Rect outRect, FamilySettingsRecord family)
-        {
-            List<OptionDisplay> options = BuildOptions(family)
-                .Where(option => search.NullOrEmpty() || option.label.ToLowerInvariant().Contains(search.Trim().ToLowerInvariant()))
-                .ToList();
-            float height = options.Count * 46f + (expandedOption.NullOrEmpty() ? 0f : 48f);
-            Rect viewRect = new Rect(0f, 0f, outRect.width - 16f, Mathf.Max(outRect.height, height));
-            Widgets.BeginScrollView(outRect, ref scroll, viewRect);
-            float y = 0f;
-            if (options.Count == 0)
-            {
-                Text.Anchor = TextAnchor.MiddleCenter;
-                Widgets.Label(new Rect(20f, 30f, viewRect.width - 40f, 40f), "No matching options.");
-                Text.Anchor = TextAnchor.UpperLeft;
-            }
-            foreach (OptionDisplay option in options)
-            {
-                bool expanded = expandedOption == option.label;
-                Rect row = new Rect(0f, y, viewRect.width, 44f);
-                Widgets.DrawHighlightIfMouseover(row);
-                bool showVisual = mode == FamilyOptionMode.Types && family.useTypeSpecificVisuals && option.trait != null;
-                float labelWidth = showVisual ? viewRect.width - 326f : viewRect.width - 220f;
-                Widgets.CheckboxLabeled(new Rect(8f, y + 8f, labelWidth, 28f), option.label, ref option.record.enabled);
-                Widgets.Label(new Rect(viewRect.width - (showVisual ? 286f : 184f), y + 10f, 132f, 24f), "Weight " + option.record.weight.ToString("0.##"));
-                if (showVisual && Widgets.ButtonText(new Rect(viewRect.width - 140f, y + 7f, 94f, 28f), option.record.visualCustomized ? "Visual *" : "Visual"))
-                    Find.WindowStack.Add(new Dialog_TraitVisualDesigner(HorticultureNovelSeedsMod.Settings, option.trait, option.record, PreviewPlant));
-                if (Widgets.ButtonText(new Rect(viewRect.width - 38f, y + 7f, 30f, 28f), expanded ? "-" : "+")) expandedOption = expanded ? null : option.label;
-                y += 46f;
-                if (expanded)
-                {
-                    Widgets.DrawBoxSolid(new Rect(0f, y, viewRect.width, 44f), new Color(0.12f, 0.14f, 0.15f));
-                    Widgets.Label(new Rect(12f, y + 10f, 94f, 24f), "Weight");
-                    option.record.weight = Widgets.HorizontalSlider(new Rect(108f, y + 12f, viewRect.width - 124f, 20f), option.record.weight, 0f, 10f);
-                    y += 48f;
-                }
-            }
-            Widgets.EndScrollView();
-        }
 
         private List<OptionDisplay> BuildOptions(FamilySettingsRecord family)
         {

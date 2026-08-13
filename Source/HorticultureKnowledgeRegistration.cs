@@ -61,6 +61,17 @@ namespace HorticultureNovelSeeds
                     conflict = KnowledgeRegistrationConflict.Reject
                 };
                 KnowledgeDomainRegistrationInspection inspection = KnowledgeConsumerApi.InspectDomainRegistration(registration, options);
+                if (inspection != null && inspection.state == KnowledgeDomainRegistrationState.Incompatible &&
+                    inspection.ownerRelation == KnowledgeDomainOwnerRelation.SameOwner)
+                {
+                    if (!KnowledgeRegistry.UnregisterDomain(inspection.domainId, HorticultureKnowledgeContract.RegistrationSource))
+                    {
+                        state = HorticultureKnowledgeRegistrationState.Failed;
+                        SetFailure(state, "schema-migration", "The previous Horticulture-owned domain schema could not be replaced.", null, readiness);
+                        return false;
+                    }
+                    inspection = KnowledgeConsumerApi.InspectDomainRegistration(registration, options);
+                }
                 if (inspection == null || inspection.state == KnowledgeDomainRegistrationState.RegisteredByOtherOwner ||
                     inspection.state == KnowledgeDomainRegistrationState.Incompatible)
                 {

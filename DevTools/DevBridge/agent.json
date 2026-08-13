@@ -1,9 +1,0 @@
-{
-  "schemaVersion": 1,
-  "packageId": "lan.horticulture.novelseeds",
-  "adapterDirectory": "DevTools/BridgeAdapters",
-  "adapterSource": "DevTools/BridgeAdapter/HorticultureBridgeAdapter.cs",
-  "buildEntrypoint": "DevTools/Build-HotBridgeAdapter.ps1",
-  "validateEntrypoint": "DevTools/Test-BridgeAdapter.ps1",
-  "runtimeGuide": "DevTools/DEVBRIDGE_AGENT.md"
-}

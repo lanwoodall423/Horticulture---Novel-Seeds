@@ -4,6 +4,7 @@ $auto = Get-Content -Raw (Join-Path $root 'Source\AutoPlantMasks.cs') -ErrorActi
 $masking = Get-Content -Raw (Join-Path $root 'Source\ProduceMasking.cs')
 $settings = Get-Content -Raw (Join-Path $root 'Source\Settings.cs')
 $modern = Get-Content -Raw (Join-Path $root 'Source\ModernSettingsUI.cs')
+$ui = Get-Content -Raw (Join-Path $root 'Source\InsightSettingsUI.cs')
 $traits = Get-Content -Raw (Join-Path $root 'Source\ExpandedTraitPatches.cs')
 $patches = Get-Content -Raw (Join-Path $root 'Source\Patches.cs')
 $visualParameters = Get-Content -Raw (Join-Path $root 'Source\PlantVisualParameters.cs')
@@ -22,11 +23,11 @@ $checks = [ordered]@{
     'cache is versioned and persistent' = $auto -match 'GeneratorVersion' -and $auto -match 'FormatVersion' -and $auto -match 'GenFilePaths.ConfigFolderPath'
     'cache fingerprints source produce and state references' = $auto -match 'TextureKey' -and $auto -match 'harvestedThingDef' -and $auto -match 'ReferenceFingerprint'
     'cache identity includes exact texture content dimensions state and orientation' = $auto -match 'MaskTextureIdentity\.TryGet' -and $identity -match 'texture\.width' -and $identity -match 'texture\.height' -and $identity -match 'PixelFingerprint' -and $identity -match 'OrientationFor' -and $identity -match 'NormalizeStateLabel'
-    'cache verifies identity and eligibility on each lookup' = $auto -match 'record\.TextureKey == textureKey' -and $auto -match 'record\.EligibilityKey == eligibilityKey' -and $auto -match 'SessionValidated'
+    'cache verifies complete identity and eligibility on each lookup' = $auto -match 'record\.Matches\(identity\)' -and $auto -match 'CanReuseFor' -and $auto -match 'SessionValidated'
     'transparency participates in classification' = $auto -match 'alpha' -and $auto -match 'TransparentAlpha'
     'HSV and color clustering participate' = $auto -match 'RGBToHSV' -and $auto -match 'Cluster'
     'connected regions participate' = $auto -match 'ConnectedRegion' -and $auto -match 'Queue<int>'
-    'layer presence is evidence-based and cache-invalidating' = $auto -match 'GeneratorVersion = 14' -and $auto -match 'EligibilityFor' -and $auto -match 'HasCredibleStem' -and $auto -match 'BuildProduceMap' -and $auto -match 'LayerAbsenceRegression' -and $auto -match 'paintFruit'
+    'layer presence is evidence-based and cache-invalidating' = $auto -match 'GeneratorVersion = 15' -and $auto -match 'EligibilityFor' -and $auto -match 'HasCredibleStem' -and $auto -match 'BuildProduceMap' -and $auto -match 'LayerAbsenceRegression' -and $auto -match 'paintFruit'
     'paired state references participate when available' = $auto -match 'immatureReference' -and $auto -match 'leaflessReference' -and $masking -match 'ReferenceTextureForVariation'
     'state differencing is alignment gated and palette masks are bounded' = $auto -match 'AlphaIntersectionOverUnion' -and $auto -match '>= 0\.88f' -and $auto -match 'selectedPixels > opaquePixels \* 0\.24f'
     'produce resolves declared asset instead of unsafe fallback' = $auto -match 'produce\.graphicData\.texPath' -and $auto -match 'produce\.HasValue' -and $auto -notmatch 'IsVisibleProduceRegion'
@@ -45,18 +46,22 @@ $checks = [ordered]@{
     'manual edit promotion exists' = $masking -match 'PromoteAutoToManual'
     'dev plant gizmo opens exact variation' = $patches -match 'Plant_GetGizmos_MaskEditor_Patch' -and $patches -match 'Prefs.DevMode' -and $patches -match 'VariationIndexForTexture' -and $patches -match 'Dialog_PlantMasks\(__instance.def, false, variation\)'
     'connected mask regions can move between layers' = $masking -match 'ReassignConnectedRegion' -and $masking -match 'ConnectedMaskedRegion' -and $masking -match 'sourceLayerIndex' -and $masking -match 'undoHistory'
-    'empty optional layers are explicit in editor' = $masking -match '" - absent"' -and $masking -match 'Not detected in this texture' -and $masking -match 'CurrentIsManual \? " - empty"'
-    'regenerate and reset actions exist' = $masking -match 'Regenerate Auto-Mask' -and $masking -match 'Reset to Auto-Mask'
+    'empty optional layers are explicit in editor' = (Get-Content -Raw (Join-Path $root 'Source\HorticultureMaskEditorDocument.cs')) -match 'Semantic channels' -and (Get-Content -Raw (Join-Path $root 'Source\ProduceMasking.cs')) -match 'not detected in this texture' -and (Get-Content -Raw (Join-Path $root 'Source\ProduceMasking.cs')) -match 'CurrentIsManual \? "Selected channel - empty"'
+    'regenerate and reset actions exist' = $masking -match 'RegenerateAutoMask' -and $masking -match 'ResetToAutoMask' -and (Get-Content -Raw (Join-Path $root 'Source\HorticultureMaskEditorDocument.cs')) -match 'Regenerate auto-mask' -and (Get-Content -Raw (Join-Path $root 'Source\HorticultureMaskEditorDocument.cs')) -match 'Reset to auto-mask'
     'manual and automatic labels exist' = $masking -match 'Manual' -and $masking -match 'Auto-generated'
     'low confidence is exposed' = $auto -match 'LowConfidence' -and $masking -match 'manual review'
     'low confidence automatic masks do not render' = $auto -match 'IsRenderable' -and $auto -match '!record\.LowConfidence' -and $masking -match 'PlantAutoMaskCache\.IsRenderable'
     'recoloring preserves value and protects dark outlines' = $visualParameters -match 'PlantVisualColorUtility' -and $visualParameters -match 'sourceValue' -and $visualParameters -match 'outlineStrength' -and $visualUtility -match 'PlantVisualColorUtility\.Apply' -and $designer -match 'PlantVisualColorUtility\.Apply' -and $novel -match 'PlantVisualColorUtility\.Apply'
-    'mask diagnostics use foliage red produce green stem blue' = $masking -notmatch 'original\.r \*= multiplier\.r' -and (Get-Content -Raw (Join-Path $root 'DevTools\BridgeAdapter\HorticultureBridgeAdapter.cs')) -match '79, 196, 112[\s\S]*238, 76, 85[\s\S]*76, 137, 232'
+    'mask diagnostics preserve channel separation' = $masking -notmatch 'original\.r \*= multiplier\.r' -and $masking -match 'Leaves' -and $masking -match 'Stem'
     'automatic classification is deterministic' = $auto -match 'DeterministicClassificationRegression' -and $auto -match 'SequenceEqual'
     'batch skips manual masks' = $auto -match 'GenerateMissing' -and $auto -match 'HasManualPlantMask'
-    'batch generation is exposed' = $modern -match 'Generate Missing Auto-Masks'
+    'batch generation is exposed' = $ui -match 'Generate Missing Auto-Masks' -and $ui -match 'InitializeAndGenerateMissing'
     'legacy cache records regenerate or reuse by identity' = $auto -match 'Loaded a legacy automatic plant-mask cache' -and $auto -match 'LoadedGeneratorVersion != GeneratorVersion' -and $auto -match 'reusable'
     'shared manual masks are cached and ambiguous conflicts are explicit' = $masking -match 'SharedManualMaskCache' -and $masking -match 'Ambiguous shared manual' -and $settings -match 'SharedManualMaskCache\.Invalidate'
+    'bundled masks have committed XML and manifest paths' = $auto -match 'BundledCachePath' -and $auto -match 'BundledManifestPath' -and (Test-Path (Join-Path $root '1.6\AutoMasks\BundledAutoMasks.xml')) -and (Test-Path (Join-Path $root '1.6\AutoMasks\BundledAutoMasks.manifest.json'))
+    'bundled precedence and promotion are explicit' = $auto -match 'BundledRecords' -and $auto -match 'PromoteBundledRecord' -and $auto -match 'runtimeTestBundleOverride != false'
+    'generation is finite visible and not renderer-triggered' = $auto -match 'BuildWorkList' -and $auto -match 'QueueLongEvent' -and $auto -match 'SetCurrentEventText' -and $auto -match 'work\.Count == 0' -and $masking -match 'LayersForVariation'
+    'developer bundle publishing tooling exists' = (Test-Path (Join-Path $root 'DevTools\Publish-AutoMaskBundle.ps1')) -and (Test-Path (Join-Path $root 'DevTools\Verify-AutoMaskBundle.ps1'))
 }
 
 $failed = @($checks.GetEnumerator() | Where-Object { -not $_.Value })

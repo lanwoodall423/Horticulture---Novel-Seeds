@@ -1,0 +1,1637 @@
+{
+  "schemaVersion": 1,
+  "packageId": "lan.horticulture.novelseeds",
+  "modName": "Horticulture - Novel Seeds",
+  "formatVersion": 2,
+  "generatorVersion": 15,
+  "bundleId": "generated-20260811145520",
+  "sourcePackageId": "mixed",
+  "sourceModName": "Horticulture - Novel Seeds",
+  "generatedUtc": "2026-08-11T14:55:20.8006388Z",
+  "xmlSha256": "53527850CD3BE9DABE23900848B279DAB7A5E5A769B403D089CD6B9981477477",
+  "recordCount": 162,
+  "lowConfidenceCount": 0,
+  "failureCount": 0,
+  "records": [
+    {
+      "plantDef": "Plant_Cotton",
+      "variation": 0,
+      "texturePath": "Things/Plant/CottonPlant/CottonPlantA",
+      "textureContentHash": "9B9623BC5802C9E44D8E4039E08EEBA977959AF423760D19B56097795C2A6417",
+      "textureKey": "v1|CottonPlantA|64x64|state:Normal|orientation:default|pixels:9B9623BC5802C9E44D8E4039E08EEBA977959AF423760D19B56097795C2A6417",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Dandelion",
+      "variation": 0,
+      "texturePath": "Things/Plant/Dandelion/Dandelion",
+      "textureContentHash": "EA4E0D0D440B1B6634C494522D5D81841B9BDEC8F65CBB600840ABF762F9C7C8",
+      "textureKey": "v1|Dandelion|32x32|state:Normal|orientation:default|pixels:EA4E0D0D440B1B6634C494522D5D81841B9BDEC8F65CBB600840ABF762F9C7C8",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Dandelion",
+      "variation": 1,
+      "texturePath": "Things/Plant/Dandelion/DandelionB",
+      "textureContentHash": "857FF4F4F21626B813B4931D818954525A0CC5FD7EB12F1466CE0C1B83B1BFDA",
+      "textureKey": "v1|DandelionB|32x32|state:Normal|orientation:default|pixels:857FF4F4F21626B813B4931D818954525A0CC5FD7EB12F1466CE0C1B83B1BFDA",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Dandelion",
+      "variation": 2,
+      "texturePath": "Things/Plant/Dandelion/DandelionC",
+      "textureContentHash": "FDBAE6923F3A59B0EF443D366E7ABCA13557896297EBC29A73CC8703B8162786",
+      "textureKey": "v1|DandelionC|32x32|state:Normal|orientation:default|pixels:FDBAE6923F3A59B0EF443D366E7ABCA13557896297EBC29A73CC8703B8162786",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Daylily",
+      "variation": 0,
+      "texturePath": "Things/Plant/Daylily/DaylilyA",
+      "textureContentHash": "45E6E4332D57FF2719EAD222CB758F53B097AC89F4B7E6B92F07D2A7D2EAB222",
+      "textureKey": "v1|DaylilyA|64x64|state:Normal|orientation:default|pixels:45E6E4332D57FF2719EAD222CB758F53B097AC89F4B7E6B92F07D2A7D2EAB222",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Daylily",
+      "variation": 1,
+      "texturePath": "Things/Plant/Daylily/DaylilyB",
+      "textureContentHash": "50662B7D27FE1C5431031F10568E1AFD8DB7B5C8A899CD6770DB50EDBF3E4684",
+      "textureKey": "v1|DaylilyB|64x64|state:Normal|orientation:default|pixels:50662B7D27FE1C5431031F10568E1AFD8DB7B5C8A899CD6770DB50EDBF3E4684",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Devilstrand",
+      "variation": 0,
+      "texturePath": "Things/Plant/Devilstrand/DevilstrandA",
+      "textureContentHash": "44B414E4739D2D36DE6772E95BC0C47FDCF833E0367CC2A55336CF52A1678490",
+      "textureKey": "v1|DevilstrandA|64x64|state:Normal|orientation:default|pixels:44B414E4739D2D36DE6772E95BC0C47FDCF833E0367CC2A55336CF52A1678490",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Devilstrand",
+      "variation": 1,
+      "texturePath": "Things/Plant/Devilstrand/DevilstrandB",
+      "textureContentHash": "4842178018206764AE00B2D035F52E17792A4F3D71412FC65173779C1E127F1C",
+      "textureKey": "v1|DevilstrandB|64x64|state:Normal|orientation:default|pixels:4842178018206764AE00B2D035F52E17792A4F3D71412FC65173779C1E127F1C",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Devilstrand",
+      "variation": 2,
+      "texturePath": "Things/Plant/Devilstrand_Immature/DevilstrandImmature",
+      "textureContentHash": "1C23F9F1EE2866E679C971017C28AE370D6FCF218E9B96BBB28AFE9CDDAE6F5B",
+      "textureKey": "v1|DevilstrandImmature|64x64|state:Immature|orientation:default|pixels:1C23F9F1EE2866E679C971017C28AE370D6FCF218E9B96BBB28AFE9CDDAE6F5B",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Fibercorn",
+      "variation": 0,
+      "texturePath": "Things/Plant/Fibercorn/FibercornA",
+      "textureContentHash": "B33F13D59E9CF10C527D73D9BFEE8E9C457BF7B1F17F6199CE0306D166C8D417",
+      "textureKey": "v1|FibercornA|64x64|state:Normal|orientation:default|pixels:B33F13D59E9CF10C527D73D9BFEE8E9C457BF7B1F17F6199CE0306D166C8D417",
+      "sourcePackageId": "ludeon.rimworld.ideology",
+      "sourceModName": "Ideology",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Fibercorn",
+      "variation": 1,
+      "texturePath": "Things/Plant/Fibercorn/FibercornB",
+      "textureContentHash": "D9FD58A9EA412B31121A9DB2C69D97C5155F1889DB39784F7631B156743EA583",
+      "textureKey": "v1|FibercornB|64x64|state:Normal|orientation:default|pixels:D9FD58A9EA412B31121A9DB2C69D97C5155F1889DB39784F7631B156743EA583",
+      "sourcePackageId": "ludeon.rimworld.ideology",
+      "sourceModName": "Ideology",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Fibercorn",
+      "variation": 2,
+      "texturePath": "Things/Plant/Fibercorn/FibercornC",
+      "textureContentHash": "5028CB871984A78FB856C5FB734AA935F0BBBA184048AF33C739932F7CFCF9AB",
+      "textureKey": "v1|FibercornC|64x64|state:Normal|orientation:default|pixels:5028CB871984A78FB856C5FB734AA935F0BBBA184048AF33C739932F7CFCF9AB",
+      "sourcePackageId": "ludeon.rimworld.ideology",
+      "sourceModName": "Ideology",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Haygrass",
+      "variation": 0,
+      "texturePath": "Things/Plant/Haygrass/HaygrassA",
+      "textureContentHash": "E63D8DFCAC99160A5185FC1C91DC70768E8FBFF376C5D0A3B2ACBEB38698D374",
+      "textureKey": "v1|HaygrassA|64x64|state:Normal|orientation:default|pixels:E63D8DFCAC99160A5185FC1C91DC70768E8FBFF376C5D0A3B2ACBEB38698D374",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Haygrass",
+      "variation": 1,
+      "texturePath": "Things/Plant/Haygrass_Immature/HaygrassImmature",
+      "textureContentHash": "EE81DFAD89448B674A3F7A6AE44A58D75ED56F3E83FAF50E2C433B07A082C0FA",
+      "textureKey": "v1|HaygrassImmature|64x64|state:Immature|orientation:default|pixels:EE81DFAD89448B674A3F7A6AE44A58D75ED56F3E83FAF50E2C433B07A082C0FA",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Healroot",
+      "variation": 0,
+      "texturePath": "Things/Plant/Healroot/HealrootA",
+      "textureContentHash": "D2E39F5304115AC786D29D77FF504DC7C9C44185FEA709C3783B81D3DFDADDA4",
+      "textureKey": "v1|HealrootA|64x64|state:Normal|orientation:default|pixels:D2E39F5304115AC786D29D77FF504DC7C9C44185FEA709C3783B81D3DFDADDA4",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Healroot",
+      "variation": 1,
+      "texturePath": "Things/Plant/Healroot_Immature/HealrootImmature",
+      "textureContentHash": "F1FF6A3B0DFB625C588BE4F338E0154AAF53ADECA87657656FE828820972EADF",
+      "textureKey": "v1|HealrootImmature|64x64|state:Immature|orientation:default|pixels:F1FF6A3B0DFB625C588BE4F338E0154AAF53ADECA87657656FE828820972EADF",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Hops",
+      "variation": 0,
+      "texturePath": "Things/Plant/HopsPlant/HopsPlantA",
+      "textureContentHash": "C40274E61737341876AFAA42FF12ED671BC51861508D6C3ABD8A3883502AF5B6",
+      "textureKey": "v1|HopsPlantA|64x64|state:Normal|orientation:default|pixels:C40274E61737341876AFAA42FF12ED671BC51861508D6C3ABD8A3883502AF5B6",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Nutrifungus",
+      "variation": 0,
+      "texturePath": "Things/Plant/Nutrifungus/NutrifungusA",
+      "textureContentHash": "2CFB7625926002FD9E2752BDB10299373AB2702279B4665E985C6C6517EF8AFE",
+      "textureKey": "v1|NutrifungusA|64x64|state:Normal|orientation:default|pixels:2CFB7625926002FD9E2752BDB10299373AB2702279B4665E985C6C6517EF8AFE",
+      "sourcePackageId": "ludeon.rimworld.ideology",
+      "sourceModName": "Ideology",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Nutrifungus",
+      "variation": 1,
+      "texturePath": "Things/Plant/Nutrifungus/NutrifungusB",
+      "textureContentHash": "D5F2396DDE666D8111CAE5BF6A088A52D5698D4028726604C991313733E1BF86",
+      "textureKey": "v1|NutrifungusB|64x64|state:Normal|orientation:default|pixels:D5F2396DDE666D8111CAE5BF6A088A52D5698D4028726604C991313733E1BF86",
+      "sourcePackageId": "ludeon.rimworld.ideology",
+      "sourceModName": "Ideology",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Nutrifungus",
+      "variation": 2,
+      "texturePath": "Things/Plant/Nutrifungus/NutrifungusC",
+      "textureContentHash": "395E39F54ED7B67A6F36CA80D8FB8B6AE143B56333259F5393FF8F5D4D1E0A5D",
+      "textureKey": "v1|NutrifungusC|64x64|state:Normal|orientation:default|pixels:395E39F54ED7B67A6F36CA80D8FB8B6AE143B56333259F5393FF8F5D4D1E0A5D",
+      "sourcePackageId": "ludeon.rimworld.ideology",
+      "sourceModName": "Ideology",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_PebbleCactus",
+      "variation": 0,
+      "texturePath": "Things/Plant/PebbleCactus/PebbleCactusA",
+      "textureContentHash": "48799ADE45A345E5EC4F790784CAC2ABE89F5DF2F5A7C9F992B649E4AA9DE6C3",
+      "textureKey": "v1|PebbleCactusA|64x64|state:Normal|orientation:default|pixels:48799ADE45A345E5EC4F790784CAC2ABE89F5DF2F5A7C9F992B649E4AA9DE6C3",
+      "sourcePackageId": "ludeon.rimworld.biotech",
+      "sourceModName": "Biotech",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_PebbleCactus",
+      "variation": 1,
+      "texturePath": "Things/Plant/PebbleCactus/PebbleCactusB",
+      "textureContentHash": "7CF2C143E92808EDCB43A29071B4650AE0AC142748263C560144C41234D3A067",
+      "textureKey": "v1|PebbleCactusB|64x64|state:Normal|orientation:default|pixels:7CF2C143E92808EDCB43A29071B4650AE0AC142748263C560144C41234D3A067",
+      "sourcePackageId": "ludeon.rimworld.biotech",
+      "sourceModName": "Biotech",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_PebbleCactus",
+      "variation": 2,
+      "texturePath": "Things/Plant/PebbleCactus/PebbleCactusC",
+      "textureContentHash": "3F66D08519F4A403B12943BC13F5E8851189BE3772908AC24E88E08E7D7270ED",
+      "textureKey": "v1|PebbleCactusC|64x64|state:Normal|orientation:default|pixels:3F66D08519F4A403B12943BC13F5E8851189BE3772908AC24E88E08E7D7270ED",
+      "sourcePackageId": "ludeon.rimworld.biotech",
+      "sourceModName": "Biotech",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Potato",
+      "variation": 0,
+      "texturePath": "Things/Plant/PotatoPlant/PotatoPlant",
+      "textureContentHash": "CD0306AA91EFF8DD6B2B1EFE94A59242DE70628B3CA5C072FE0361AAAC697EAE",
+      "textureKey": "v1|PotatoPlant|64x64|state:Normal|orientation:default|pixels:CD0306AA91EFF8DD6B2B1EFE94A59242DE70628B3CA5C072FE0361AAAC697EAE",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Potato",
+      "variation": 1,
+      "texturePath": "Things/Plant/PotatoPlant_Immature/PotatoPlantImmature",
+      "textureContentHash": "A2F34D081A0BE28F62C1B720E0226E23AEE9B859A5D76CD4C220C489D8540112",
+      "textureKey": "v1|PotatoPlantImmature|64x64|state:Immature|orientation:default|pixels:A2F34D081A0BE28F62C1B720E0226E23AEE9B859A5D76CD4C220C489D8540112",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Psychoid",
+      "variation": 0,
+      "texturePath": "Things/Plant/PsychoidPlant/PsychoidPlantA",
+      "textureContentHash": "2CB8DE9A12E174D8A3700D6A2522754957BDFA886BAE1193C8DE92FA4F4BE834",
+      "textureKey": "v1|PsychoidPlantA|64x64|state:Normal|orientation:default|pixels:2CB8DE9A12E174D8A3700D6A2522754957BDFA886BAE1193C8DE92FA4F4BE834",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Psychoid",
+      "variation": 1,
+      "texturePath": "Things/Plant/PsychoidPlant_Immature/PsychoidPlantImmature",
+      "textureContentHash": "8966BCCA2812718C3D397CE9805712105BA1E4AEF5B375B9488BC7D000519B1D",
+      "textureKey": "v1|PsychoidPlantImmature|64x64|state:Immature|orientation:default|pixels:8966BCCA2812718C3D397CE9805712105BA1E4AEF5B375B9488BC7D000519B1D",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_RatPalm",
+      "variation": 0,
+      "texturePath": "Things/Plant/RatPalm/RatPalmA",
+      "textureContentHash": "6FBD03D384DF31F4214A5545A68A36DB842A4C628D01CFFF257F699218F891D7",
+      "textureKey": "v1|RatPalmA|128x128|state:Normal|orientation:default|pixels:6FBD03D384DF31F4214A5545A68A36DB842A4C628D01CFFF257F699218F891D7",
+      "sourcePackageId": "ludeon.rimworld.biotech",
+      "sourceModName": "Biotech",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_RatPalm",
+      "variation": 1,
+      "texturePath": "Things/Plant/RatPalm/RatPalmB",
+      "textureContentHash": "107923C8B8751166B58CC8EAE67873827AB430C8EC5BF08E597C97F88AA40CB8",
+      "textureKey": "v1|RatPalmB|128x128|state:Normal|orientation:default|pixels:107923C8B8751166B58CC8EAE67873827AB430C8EC5BF08E597C97F88AA40CB8",
+      "sourcePackageId": "ludeon.rimworld.biotech",
+      "sourceModName": "Biotech",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_RatPalm",
+      "variation": 2,
+      "texturePath": "Things/Plant/RatPalm/RatPalmC",
+      "textureContentHash": "0B4F04DADCF73398AE9BCA685AE045D95FBF964628A99B2EB58B10FC244C05FE",
+      "textureKey": "v1|RatPalmC|128x128|state:Normal|orientation:default|pixels:0B4F04DADCF73398AE9BCA685AE045D95FBF964628A99B2EB58B10FC244C05FE",
+      "sourcePackageId": "ludeon.rimworld.biotech",
+      "sourceModName": "Biotech",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Rose",
+      "variation": 0,
+      "texturePath": "Things/Plant/Rose/RoseA",
+      "textureContentHash": "84005BED0010B800EFBA4A8DD426B96E7B7F6386483CBDB23FCBAEE91EDF3798",
+      "textureKey": "v1|RoseA|64x64|state:Normal|orientation:default|pixels:84005BED0010B800EFBA4A8DD426B96E7B7F6386483CBDB23FCBAEE91EDF3798",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_SaguaroCactus",
+      "variation": 0,
+      "texturePath": "Things/Plant/SaguaroCactus/SaguaroCactus",
+      "textureContentHash": "20CC72A9AE2543B680EDCE4C5579D05FA03918ABEC931C35DD231C81B0874FEA",
+      "textureKey": "v1|SaguaroCactus|64x64|state:Normal|orientation:default|pixels:20CC72A9AE2543B680EDCE4C5579D05FA03918ABEC931C35DD231C81B0874FEA",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_SaguaroCactus",
+      "variation": 1,
+      "texturePath": "Things/Plant/SaguaroCactus_Leafless/SaguaroCactus_Leafless",
+      "textureContentHash": "B3227CFCEE0EBCC4ED87FB1D1096CAA4328BB43D610A4AF7B0B676CF60B109B9",
+      "textureKey": "v1|SaguaroCactus_Leafless|64x64|state:Leafless|orientation:default|pixels:B3227CFCEE0EBCC4ED87FB1D1096CAA4328BB43D610A4AF7B0B676CF60B109B9",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Smokeleaf",
+      "variation": 0,
+      "texturePath": "Things/Plant/SmokeleafPlant/SmokeleafPlantA",
+      "textureContentHash": "27B71BF62AD0F37EEF48D5BCD0139921CEDFED8996E37F68D03052A7D4FA8CA8",
+      "textureKey": "v1|SmokeleafPlantA|64x64|state:Normal|orientation:default|pixels:27B71BF62AD0F37EEF48D5BCD0139921CEDFED8996E37F68D03052A7D4FA8CA8",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Strawberry",
+      "variation": 0,
+      "texturePath": "Things/Plant/StrawberryPlant/StrawberryPlant",
+      "textureContentHash": "FBD44E6DD75292B9D91854CE393C30CF780371081D6A2FA6BA68FAD874FBDBDD",
+      "textureKey": "v1|StrawberryPlant|64x64|state:Normal|orientation:default|pixels:FBD44E6DD75292B9D91854CE393C30CF780371081D6A2FA6BA68FAD874FBDBDD",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Strawberry",
+      "variation": 1,
+      "texturePath": "Things/Plant/StrawberryPlant_Immature/StrawberryPlant",
+      "textureContentHash": "0D58B37839FA821A269C20604B13B80793070F6CD5C4C653D22240C0A55B04F6",
+      "textureKey": "v1|StrawberryPlant|64x64|state:Immature|orientation:default|pixels:0D58B37839FA821A269C20604B13B80793070F6CD5C4C653D22240C0A55B04F6",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Timbershroom",
+      "variation": 0,
+      "texturePath": "Things/Plant/Timbershroom/TimbershroomA",
+      "textureContentHash": "4F55C2DA8572FD7846B758319FB8B6BBF6F123D5E9412A743A48B029CFA55641",
+      "textureKey": "v1|TimbershroomA|128x128|state:Normal|orientation:default|pixels:4F55C2DA8572FD7846B758319FB8B6BBF6F123D5E9412A743A48B029CFA55641",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Timbershroom",
+      "variation": 1,
+      "texturePath": "Things/Plant/Timbershroom/TimbershroomB",
+      "textureContentHash": "CF494C7277981CCD6ED851D32DECD67DE401F954E4472EC43D03C44DC2701198",
+      "textureKey": "v1|TimbershroomB|128x128|state:Normal|orientation:default|pixels:CF494C7277981CCD6ED851D32DECD67DE401F954E4472EC43D03C44DC2701198",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Timbershroom",
+      "variation": 2,
+      "texturePath": "Things/Plant/Timbershroom/TimbershroomC",
+      "textureContentHash": "5D7AD3BE2A276B93F4E1F6FB041CD867233373C93DC8AEAC11EB0A632274EE06",
+      "textureKey": "v1|TimbershroomC|128x128|state:Normal|orientation:default|pixels:5D7AD3BE2A276B93F4E1F6FB041CD867233373C93DC8AEAC11EB0A632274EE06",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Tinctoria",
+      "variation": 0,
+      "texturePath": "Things/Plant/Tinctoria/TinctoriaA",
+      "textureContentHash": "45FF3373D71595549A25B58CA28C4A44772DF9E9B8F1CCA3F9790E47EB99D36E",
+      "textureKey": "v1|TinctoriaA|64x64|state:Normal|orientation:default|pixels:45FF3373D71595549A25B58CA28C4A44772DF9E9B8F1CCA3F9790E47EB99D36E",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Tinctoria",
+      "variation": 1,
+      "texturePath": "Things/Plant/Tinctoria/TinctoriaB",
+      "textureContentHash": "3A1709DFC8CA73A040A6D72A6BB5AD952B6CBDF14B10445B22A27D1DB4F5E312",
+      "textureKey": "v1|TinctoriaB|64x64|state:Normal|orientation:default|pixels:3A1709DFC8CA73A040A6D72A6BB5AD952B6CBDF14B10445B22A27D1DB4F5E312",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Tinctoria",
+      "variation": 2,
+      "texturePath": "Things/Plant/Tinctoria/TinctoriaC",
+      "textureContentHash": "D6785828367EB8825AED0CC08A7DF7957A969B550575709DE7EC5714B484C0F9",
+      "textureKey": "v1|TinctoriaC|64x64|state:Normal|orientation:default|pixels:D6785828367EB8825AED0CC08A7DF7957A969B550575709DE7EC5714B484C0F9",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Tinctoria",
+      "variation": 3,
+      "texturePath": "Things/Plant/Tinctoria/TinctoriaD",
+      "textureContentHash": "DB7E598106EB7BFECBB4C704D5743C3FBCD9C9708AD6786701F17D1C49CBE25F",
+      "textureKey": "v1|TinctoriaD|64x64|state:Normal|orientation:default|pixels:DB7E598106EB7BFECBB4C704D5743C3FBCD9C9708AD6786701F17D1C49CBE25F",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Toxipotato",
+      "variation": 0,
+      "texturePath": "Things/Plant/Toxipotato/ToxipotatoA",
+      "textureContentHash": "9B17CB4E004A6874AAB3F0591EEAE2A28083FA7A458FF4B455F73B4469BF23B5",
+      "textureKey": "v1|ToxipotatoA|64x64|state:Normal|orientation:default|pixels:9B17CB4E004A6874AAB3F0591EEAE2A28083FA7A458FF4B455F73B4469BF23B5",
+      "sourcePackageId": "ludeon.rimworld.biotech",
+      "sourceModName": "Biotech",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Toxipotato",
+      "variation": 1,
+      "texturePath": "Things/Plant/Toxipotato/ToxipotatoB",
+      "textureContentHash": "EC6DE1A716E22E3003DCD94370DDA38395E4BA3D08D75CD0FC9B5A1FD3C0A725",
+      "textureKey": "v1|ToxipotatoB|64x64|state:Normal|orientation:default|pixels:EC6DE1A716E22E3003DCD94370DDA38395E4BA3D08D75CD0FC9B5A1FD3C0A725",
+      "sourcePackageId": "ludeon.rimworld.biotech",
+      "sourceModName": "Biotech",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Toxipotato",
+      "variation": 2,
+      "texturePath": "Things/Plant/Toxipotato/ToxipotatoC",
+      "textureContentHash": "5BB8F5BAB97717E5A380A544D528F55CCF6AEF97E6BC0B60C3397E44B1E5371A",
+      "textureKey": "v1|ToxipotatoC|64x64|state:Normal|orientation:default|pixels:5BB8F5BAB97717E5A380A544D528F55CCF6AEF97E6BC0B60C3397E44B1E5371A",
+      "sourcePackageId": "ludeon.rimworld.biotech",
+      "sourceModName": "Biotech",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Toxipotato",
+      "variation": 3,
+      "texturePath": "Things/Plant/Toxipotato_Immature/ToxipotatoA",
+      "textureContentHash": "080DE548F47BF7A5DE8C4CFABE115E8595D1BD6BA07502B946888674BACDB49E",
+      "textureKey": "v1|ToxipotatoA|64x64|state:Immature|orientation:default|pixels:080DE548F47BF7A5DE8C4CFABE115E8595D1BD6BA07502B946888674BACDB49E",
+      "sourcePackageId": "ludeon.rimworld.biotech",
+      "sourceModName": "Biotech",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeBamboo",
+      "variation": 0,
+      "texturePath": "Things/Plant/TreeBamboo/TreeBambooA",
+      "textureContentHash": "0534DC12E53F1DBDF158017BB8C198F76EBB40A1F495A6E0148B734B20503924",
+      "textureKey": "v1|TreeBambooA|128x128|state:Normal|orientation:default|pixels:0534DC12E53F1DBDF158017BB8C198F76EBB40A1F495A6E0148B734B20503924",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeBamboo",
+      "variation": 1,
+      "texturePath": "Things/Plant/TreeBamboo_Leafless/TreeBamboo_Leafless",
+      "textureContentHash": "90FA81C90FB091D6F504AAA9DD65419514398139ABD34979FF149BA2474234FD",
+      "textureKey": "v1|TreeBamboo_Leafless|128x128|state:Leafless|orientation:default|pixels:90FA81C90FB091D6F504AAA9DD65419514398139ABD34979FF149BA2474234FD",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeBirch",
+      "variation": 0,
+      "texturePath": "Things/Plant/TreeBirch/TreeBirchA",
+      "textureContentHash": "4F5CA36A295FC58144B76E1A83C06F3D68BFA80B5A63434A335F78AA99081B23",
+      "textureKey": "v1|TreeBirchA|128x128|state:Normal|orientation:default|pixels:4F5CA36A295FC58144B76E1A83C06F3D68BFA80B5A63434A335F78AA99081B23",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeBirch",
+      "variation": 1,
+      "texturePath": "Things/Plant/TreeBirch_Leafless/TreeBirchA_Leafless",
+      "textureContentHash": "7D1386DFD80134CC47846A8ACBC193BE9C21E3A059C1CF5F479E561B9909A3B8",
+      "textureKey": "v1|TreeBirchA_Leafless|128x128|state:Leafless|orientation:default|pixels:7D1386DFD80134CC47846A8ACBC193BE9C21E3A059C1CF5F479E561B9909A3B8",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeBirch",
+      "variation": 2,
+      "texturePath": "Things/Plant/TreeBirch_Immature/TreeBirchImmature",
+      "textureContentHash": "EC3139B0EB22A8289BEBA4073C717600734AA81658F38BC7B3EAF351F7F8F6EA",
+      "textureKey": "v1|TreeBirchImmature|128x128|state:Immature|orientation:default|pixels:EC3139B0EB22A8289BEBA4073C717600734AA81658F38BC7B3EAF351F7F8F6EA",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeBirch",
+      "variation": 3,
+      "texturePath": "Things/Plant/TreeBirch_LeaflessImmature/TreeBirchLeaflessImmature",
+      "textureContentHash": "A3F6BC300A6F64814AA83A0CF4B63CF0CEB9078A9C931A19922EB5B886C9B068",
+      "textureKey": "v1|TreeBirchLeaflessImmature|128x128|state:Leafless Immature|orientation:default|pixels:A3F6BC300A6F64814AA83A0CF4B63CF0CEB9078A9C931A19922EB5B886C9B068",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeBonsai",
+      "variation": 0,
+      "texturePath": "Things/Plant/BonsaiTree/BonsaiTreeA",
+      "textureContentHash": "189ACB976538279A9080BADD5B8C1B64210335C9B213205130414F3E3BC472F2",
+      "textureKey": "v1|BonsaiTreeA|64x64|state:Normal|orientation:default|pixels:189ACB976538279A9080BADD5B8C1B64210335C9B213205130414F3E3BC472F2",
+      "sourcePackageId": "ludeon.rimworld.ideology",
+      "sourceModName": "Ideology",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeBonsai",
+      "variation": 1,
+      "texturePath": "Things/Plant/BonsaiTree/BonsaiTreeB",
+      "textureContentHash": "2F25D3ABC75EA50DB0CD818B19916B4030D43DCC350DD8BE162A24D512DF0198",
+      "textureKey": "v1|BonsaiTreeB|64x64|state:Normal|orientation:default|pixels:2F25D3ABC75EA50DB0CD818B19916B4030D43DCC350DD8BE162A24D512DF0198",
+      "sourcePackageId": "ludeon.rimworld.ideology",
+      "sourceModName": "Ideology",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeBonsai",
+      "variation": 2,
+      "texturePath": "Things/Plant/BonsaiTree/BonsaiTreeC",
+      "textureContentHash": "12B206B8CAF11ED7C12CB1CD4578502D10C7448208D028799B7E42BACEF20557",
+      "textureKey": "v1|BonsaiTreeC|64x64|state:Normal|orientation:default|pixels:12B206B8CAF11ED7C12CB1CD4578502D10C7448208D028799B7E42BACEF20557",
+      "sourcePackageId": "ludeon.rimworld.ideology",
+      "sourceModName": "Ideology",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeCecropia",
+      "variation": 0,
+      "texturePath": "Things/Plant/TreeCecropia/TreeCecropiaA",
+      "textureContentHash": "1F63DAA818FF20F36CB55C2B974FD8E31B4A5F2FB8F207D5DFC37B8B585E6BB0",
+      "textureKey": "v1|TreeCecropiaA|128x128|state:Normal|orientation:default|pixels:1F63DAA818FF20F36CB55C2B974FD8E31B4A5F2FB8F207D5DFC37B8B585E6BB0",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeCecropia",
+      "variation": 1,
+      "texturePath": "Things/Plant/TreeCecropia_Leafless/TreeCecropiaA_Leafless",
+      "textureContentHash": "1872700203959FA93DF5FAC38418C7D370C043666FA5ED313535D6ED5D13DD82",
+      "textureKey": "v1|TreeCecropiaA_Leafless|128x128|state:Leafless|orientation:default|pixels:1872700203959FA93DF5FAC38418C7D370C043666FA5ED313535D6ED5D13DD82",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeCecropia",
+      "variation": 2,
+      "texturePath": "Things/Plant/TreeCecropia_Immature/TreeCecropiaImmature",
+      "textureContentHash": "4B82289EF0319A9D19136874F102079D8B918335AAF024BE64EB1FD573AACB8B",
+      "textureKey": "v1|TreeCecropiaImmature|128x128|state:Immature|orientation:default|pixels:4B82289EF0319A9D19136874F102079D8B918335AAF024BE64EB1FD573AACB8B",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeCecropia",
+      "variation": 3,
+      "texturePath": "Things/Plant/TreeCecropia_LeaflessImmature/TreeCecropiaLeaflessImmature",
+      "textureContentHash": "24B8CAF92D27729DAFC1E14389CE4EAB404271670FFD6E3EA1AF2F7726056383",
+      "textureKey": "v1|TreeCecropiaLeaflessImmature|128x128|state:Leafless Immature|orientation:default|pixels:24B8CAF92D27729DAFC1E14389CE4EAB404271670FFD6E3EA1AF2F7726056383",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeCocoa",
+      "variation": 0,
+      "texturePath": "Things/Plant/TreeCocoa/TreeCocoaA",
+      "textureContentHash": "E59DA1FACEF6B931F37B2FE7666CE1D4D302F88551ACE7B0777B6BAE6BE9FF4D",
+      "textureKey": "v1|TreeCocoaA|128x128|state:Normal|orientation:default|pixels:E59DA1FACEF6B931F37B2FE7666CE1D4D302F88551ACE7B0777B6BAE6BE9FF4D",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeCocoa",
+      "variation": 1,
+      "texturePath": "Things/Plant/TreeCocoa_Immature/TreeCocoaImmature",
+      "textureContentHash": "750D9EA8EC71A2F696236A9FBBE68D484B7EDC15BC3B6FB25F2631E35E3E2D8E",
+      "textureKey": "v1|TreeCocoaImmature|128x128|state:Immature|orientation:default|pixels:750D9EA8EC71A2F696236A9FBBE68D484B7EDC15BC3B6FB25F2631E35E3E2D8E",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeCypress",
+      "variation": 0,
+      "texturePath": "Things/Plant/TreeCypress/TreeCypressA",
+      "textureContentHash": "793C1BC10B3C9F6C8FA5A5287585439B4826E6B246EA62862D5009796D9C0421",
+      "textureKey": "v1|TreeCypressA|128x128|state:Normal|orientation:default|pixels:793C1BC10B3C9F6C8FA5A5287585439B4826E6B246EA62862D5009796D9C0421",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeCypress",
+      "variation": 1,
+      "texturePath": "Things/Plant/TreeCypress/TreeCypressB",
+      "textureContentHash": "5E9E092F0EC6A0B3678A5DDB2031D428B78746211BCBF58B0A951177EEE6ADD8",
+      "textureKey": "v1|TreeCypressB|128x128|state:Normal|orientation:default|pixels:5E9E092F0EC6A0B3678A5DDB2031D428B78746211BCBF58B0A951177EEE6ADD8",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeCypress",
+      "variation": 2,
+      "texturePath": "Things/Plant/TreeCypress_Leafless/TreeCypress_LeaflessA",
+      "textureContentHash": "6F2D17DD5F421CB2D58E64CBB35257983ED0A67EF0AB579E60EE9A3BCC4ECF44",
+      "textureKey": "v1|TreeCypress_LeaflessA|128x128|state:Leafless|orientation:default|pixels:6F2D17DD5F421CB2D58E64CBB35257983ED0A67EF0AB579E60EE9A3BCC4ECF44",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeCypress",
+      "variation": 3,
+      "texturePath": "Things/Plant/TreeCypress_Immature/TreeCypressImmature",
+      "textureContentHash": "67DBBE655CA89134BAD4F399F62C003725E0872E7D7257BB6AB3A393DBAF3EB9",
+      "textureKey": "v1|TreeCypressImmature|128x128|state:Immature|orientation:default|pixels:67DBBE655CA89134BAD4F399F62C003725E0872E7D7257BB6AB3A393DBAF3EB9",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeCypress",
+      "variation": 4,
+      "texturePath": "Things/Plant/TreeCypress_LeaflessImmature/TreeCypressLeaflessImmature",
+      "textureContentHash": "E10996B837005FF0D1038782E28C8EBDB55979F5CBBE8C3711713028D705CF04",
+      "textureKey": "v1|TreeCypressLeaflessImmature|128x128|state:Leafless Immature|orientation:default|pixels:E10996B837005FF0D1038782E28C8EBDB55979F5CBBE8C3711713028D705CF04",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeDrago",
+      "variation": 0,
+      "texturePath": "Things/Plant/TreeDrago/TreeDragoA",
+      "textureContentHash": "6F57F38C342F0F1431C57933D0DD7D37E186915223F17350B0721BAEAB43EC39",
+      "textureKey": "v1|TreeDragoA|128x128|state:Normal|orientation:default|pixels:6F57F38C342F0F1431C57933D0DD7D37E186915223F17350B0721BAEAB43EC39",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeDrago",
+      "variation": 1,
+      "texturePath": "Things/Plant/TreeDrago_Immature/TreeDragoImmature",
+      "textureContentHash": "D67181BAD095D061CE53CAD87E30C0AD47BB157608A932339A92EA1B330F8BD8",
+      "textureKey": "v1|TreeDragoImmature|128x128|state:Immature|orientation:default|pixels:D67181BAD095D061CE53CAD87E30C0AD47BB157608A932339A92EA1B330F8BD8",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeGrayPine",
+      "variation": 0,
+      "texturePath": "Things/Plant/TreeGrayPine/TreeGrayPineA",
+      "textureContentHash": "338352E10F4A9B5AAA2933F4138F6AF44E4E459EC16C4325F48C3E4992D00550",
+      "textureKey": "v1|TreeGrayPineA|128x128|state:Normal|orientation:default|pixels:338352E10F4A9B5AAA2933F4138F6AF44E4E459EC16C4325F48C3E4992D00550",
+      "sourcePackageId": "ludeon.rimworld.biotech",
+      "sourceModName": "Biotech",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeGrayPine",
+      "variation": 1,
+      "texturePath": "Things/Plant/TreeGrayPine/TreeGrayPineB",
+      "textureContentHash": "2ED6143D6C8D29CE5A36BA8F8DB1547C567B16E49FFDDE1D4B54AF161FCD2CB1",
+      "textureKey": "v1|TreeGrayPineB|128x128|state:Normal|orientation:default|pixels:2ED6143D6C8D29CE5A36BA8F8DB1547C567B16E49FFDDE1D4B54AF161FCD2CB1",
+      "sourcePackageId": "ludeon.rimworld.biotech",
+      "sourceModName": "Biotech",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeGrayPine",
+      "variation": 2,
+      "texturePath": "Things/Plant/TreeGrayPine/TreeGrayPineC",
+      "textureContentHash": "174BE3559E677356BD598D5712C091C18A3B480594D08093584B2371575FB81E",
+      "textureKey": "v1|TreeGrayPineC|128x128|state:Normal|orientation:default|pixels:174BE3559E677356BD598D5712C091C18A3B480594D08093584B2371575FB81E",
+      "sourcePackageId": "ludeon.rimworld.biotech",
+      "sourceModName": "Biotech",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeMaple",
+      "variation": 0,
+      "texturePath": "Things/Plant/TreeMaple/TreeMapleA",
+      "textureContentHash": "E852A79AC070E8132C635CC3F1DB87AE535937192E8F7B53594F6D415586C8D7",
+      "textureKey": "v1|TreeMapleA|128x128|state:Normal|orientation:default|pixels:E852A79AC070E8132C635CC3F1DB87AE535937192E8F7B53594F6D415586C8D7",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeMaple",
+      "variation": 1,
+      "texturePath": "Things/Plant/TreeMaple/TreeMapleB",
+      "textureContentHash": "994C2CD764495017C5134038DFCFDD8A12583731EA2C644D5B64A3FB53E9007E",
+      "textureKey": "v1|TreeMapleB|128x128|state:Normal|orientation:default|pixels:994C2CD764495017C5134038DFCFDD8A12583731EA2C644D5B64A3FB53E9007E",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeMaple",
+      "variation": 2,
+      "texturePath": "Things/Plant/TreeMaple_Leafless/TreeMaple_LeaflessA",
+      "textureContentHash": "28B20D9399AB379A9226DD37F9E01CBE3E5C21C814E3A8A5208A6273BEE1FF33",
+      "textureKey": "v1|TreeMaple_LeaflessA|128x128|state:Leafless|orientation:default|pixels:28B20D9399AB379A9226DD37F9E01CBE3E5C21C814E3A8A5208A6273BEE1FF33",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeMaple",
+      "variation": 3,
+      "texturePath": "Things/Plant/TreeMaple_Immature/TreeMapleImmature",
+      "textureContentHash": "5C37820E1CBF6B2083F7C751516F1012AE896B0C28B3B57478FD3A79A43896F8",
+      "textureKey": "v1|TreeMapleImmature|128x128|state:Immature|orientation:default|pixels:5C37820E1CBF6B2083F7C751516F1012AE896B0C28B3B57478FD3A79A43896F8",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeMaple",
+      "variation": 4,
+      "texturePath": "Things/Plant/TreeMaple_LeaflessImmature/TreeMapleLeaflessImmature",
+      "textureContentHash": "991EE63127A8D9E9A9CD2B8655528C3D37B5466B97480673952D476D9C8F409F",
+      "textureKey": "v1|TreeMapleLeaflessImmature|128x128|state:Leafless Immature|orientation:default|pixels:991EE63127A8D9E9A9CD2B8655528C3D37B5466B97480673952D476D9C8F409F",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeOak",
+      "variation": 0,
+      "texturePath": "Things/Plant/TreeOak/TreeOakA",
+      "textureContentHash": "E62E1D57D920CC4CB2097B200CC932A4D9166785CDE58715A91A53789BC1DB63",
+      "textureKey": "v1|TreeOakA|128x128|state:Normal|orientation:default|pixels:E62E1D57D920CC4CB2097B200CC932A4D9166785CDE58715A91A53789BC1DB63",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeOak",
+      "variation": 1,
+      "texturePath": "Things/Plant/TreeOak/TreeOakB",
+      "textureContentHash": "799C75CF20FF2ED081297638E00F9F591CDE89D7F0701CB28EAC8E2B1A4442C8",
+      "textureKey": "v1|TreeOakB|128x128|state:Normal|orientation:default|pixels:799C75CF20FF2ED081297638E00F9F591CDE89D7F0701CB28EAC8E2B1A4442C8",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeOak",
+      "variation": 2,
+      "texturePath": "Things/Plant/TreeOak_Leafless/TreeOak_LeaflessA",
+      "textureContentHash": "0B0EEC2050F70891991D5F7D847B7A1D34D7F2A2168CE077467C473C0391AC1C",
+      "textureKey": "v1|TreeOak_LeaflessA|128x128|state:Leafless|orientation:default|pixels:0B0EEC2050F70891991D5F7D847B7A1D34D7F2A2168CE077467C473C0391AC1C",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeOak",
+      "variation": 3,
+      "texturePath": "Things/Plant/TreeOak_Leafless/TreeOak_LeaflessB",
+      "textureContentHash": "5D1C974ABAEC5903E42C981CC22143D1688F5F56D714D9F79FE27B7320EB8E94",
+      "textureKey": "v1|TreeOak_LeaflessB|128x128|state:Leafless|orientation:default|pixels:5D1C974ABAEC5903E42C981CC22143D1688F5F56D714D9F79FE27B7320EB8E94",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeOak",
+      "variation": 4,
+      "texturePath": "Things/Plant/TreeOak_Immature/TreeOakImmature",
+      "textureContentHash": "6BF4EE974EE34289FAE59806D399866B730F9549B56B5D46B1EBFE3AD9222286",
+      "textureKey": "v1|TreeOakImmature|128x128|state:Immature|orientation:default|pixels:6BF4EE974EE34289FAE59806D399866B730F9549B56B5D46B1EBFE3AD9222286",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeOak",
+      "variation": 5,
+      "texturePath": "Things/Plant/TreeOak_LeaflessImmature/TreeOakLeaflessImmature",
+      "textureContentHash": "15DA50F8A984C5178FAA78A5B7F4604C9326CCD1EEFB8A28F5B68CB45FEF58EF",
+      "textureKey": "v1|TreeOakLeaflessImmature|128x128|state:Leafless Immature|orientation:default|pixels:15DA50F8A984C5178FAA78A5B7F4604C9326CCD1EEFB8A28F5B68CB45FEF58EF",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreePalm",
+      "variation": 0,
+      "texturePath": "Things/Plant/TreePalm/TreePalmA",
+      "textureContentHash": "3536CAFFEDD5471C7F395CB933481D9222FB3F26A07D2D2CC5D92D21C7AB29CC",
+      "textureKey": "v1|TreePalmA|128x128|state:Normal|orientation:default|pixels:3536CAFFEDD5471C7F395CB933481D9222FB3F26A07D2D2CC5D92D21C7AB29CC",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreePalm",
+      "variation": 1,
+      "texturePath": "Things/Plant/TreePalm_Immature/TreePalmImmature",
+      "textureContentHash": "EB2CFE3AF09B61299345FEFE107061F5A81F66AE196CD724A125DC3D5BD915C2",
+      "textureKey": "v1|TreePalmImmature|128x128|state:Immature|orientation:default|pixels:EB2CFE3AF09B61299345FEFE107061F5A81F66AE196CD724A125DC3D5BD915C2",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreePine",
+      "variation": 0,
+      "texturePath": "Things/Plant/TreePine/TreePineA",
+      "textureContentHash": "229FC7D4D813BB87BD0440799E63682F003E00626E7BE0A952165AE154806950",
+      "textureKey": "v1|TreePineA|128x128|state:Normal|orientation:default|pixels:229FC7D4D813BB87BD0440799E63682F003E00626E7BE0A952165AE154806950",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreePine",
+      "variation": 1,
+      "texturePath": "Things/Plant/TreePine_Immature/TreePineImmature",
+      "textureContentHash": "29597B6116D6C33FDFA23E5065A9FB1DA2481F316A200D1A09E943A55CD4D6BA",
+      "textureKey": "v1|TreePineImmature|128x128|state:Immature|orientation:default|pixels:29597B6116D6C33FDFA23E5065A9FB1DA2481F316A200D1A09E943A55CD4D6BA",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreePine",
+      "variation": 2,
+      "texturePath": "Things/Plant/TreePine_Polluted/TreePineA",
+      "textureContentHash": "0E0E4250524398B9F749A27C7D6904461F58F7B79661E4AEEA1B54BD72711661",
+      "textureKey": "v1|TreePineA|128x128|state:Polluted|orientation:default|pixels:0E0E4250524398B9F749A27C7D6904461F58F7B79661E4AEEA1B54BD72711661",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreePoplar",
+      "variation": 0,
+      "texturePath": "Things/Plant/TreePoplar/TreePoplarA",
+      "textureContentHash": "A1E283154E07A2D68143380EE755F9E5F0ED2FCA1FA69D1B9562F3E4771E8584",
+      "textureKey": "v1|TreePoplarA|128x128|state:Normal|orientation:default|pixels:A1E283154E07A2D68143380EE755F9E5F0ED2FCA1FA69D1B9562F3E4771E8584",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreePoplar",
+      "variation": 1,
+      "texturePath": "Things/Plant/TreePoplar_Leafless/TreePoplar_LeaflessA",
+      "textureContentHash": "7B8890AE1237AC5627A599C31A78E52888812CF2B25CEFCAB6B79FD83D5EB5D3",
+      "textureKey": "v1|TreePoplar_LeaflessA|128x128|state:Leafless|orientation:default|pixels:7B8890AE1237AC5627A599C31A78E52888812CF2B25CEFCAB6B79FD83D5EB5D3",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreePoplar",
+      "variation": 2,
+      "texturePath": "Things/Plant/TreePoplar_Immature/TreePoplarImmature",
+      "textureContentHash": "2CEAAE081323A1F416B935E6851824C312E1ED5C6677CE6E41753CB1E6ED6FD6",
+      "textureKey": "v1|TreePoplarImmature|128x128|state:Immature|orientation:default|pixels:2CEAAE081323A1F416B935E6851824C312E1ED5C6677CE6E41753CB1E6ED6FD6",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreePoplar",
+      "variation": 3,
+      "texturePath": "Things/Plant/TreePoplar_LeaflessImmature/TreePoplarLeaflessImmature",
+      "textureContentHash": "DB8286378AE5E9F1412CB51BE6CCE3726945C425681F40554DD620E3A176EF25",
+      "textureKey": "v1|TreePoplarLeaflessImmature|128x128|state:Leafless Immature|orientation:default|pixels:DB8286378AE5E9F1412CB51BE6CCE3726945C425681F40554DD620E3A176EF25",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeSnagroot",
+      "variation": 0,
+      "texturePath": "Things/Plant/TreeSnagroot/SnagrootA",
+      "textureContentHash": "4F7B571B710AA9598D81D4479875A07CE2106FC94CFA07B926B5212BB873E279",
+      "textureKey": "v1|SnagrootA|128x128|state:Normal|orientation:default|pixels:4F7B571B710AA9598D81D4479875A07CE2106FC94CFA07B926B5212BB873E279",
+      "sourcePackageId": "ludeon.rimworld.odyssey",
+      "sourceModName": "Odyssey",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeSnagroot",
+      "variation": 1,
+      "texturePath": "Things/Plant/TreeSnagroot/SnagrootB",
+      "textureContentHash": "7646650120BAEA2A1DFAFE2920BE536A6A768BF010DD520BDF4557443A08BED1",
+      "textureKey": "v1|SnagrootB|128x128|state:Normal|orientation:default|pixels:7646650120BAEA2A1DFAFE2920BE536A6A768BF010DD520BDF4557443A08BED1",
+      "sourcePackageId": "ludeon.rimworld.odyssey",
+      "sourceModName": "Odyssey",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeSnagroot",
+      "variation": 2,
+      "texturePath": "Things/Plant/TreeSnagroot/SnagrootC",
+      "textureContentHash": "0ABA1579A55C9C548B62544E55469B68E2E2521B370809F0A3DB85F6062F57EA",
+      "textureKey": "v1|SnagrootC|128x128|state:Normal|orientation:default|pixels:0ABA1579A55C9C548B62544E55469B68E2E2521B370809F0A3DB85F6062F57EA",
+      "sourcePackageId": "ludeon.rimworld.odyssey",
+      "sourceModName": "Odyssey",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeSnagroot",
+      "variation": 3,
+      "texturePath": "Things/Plant/TreeSnagroot/SnagrootD",
+      "textureContentHash": "31488880248A887EED8B1BCA3959ACEAEF9B100C473E276A376399846A94579E",
+      "textureKey": "v1|SnagrootD|128x128|state:Normal|orientation:default|pixels:31488880248A887EED8B1BCA3959ACEAEF9B100C473E276A376399846A94579E",
+      "sourcePackageId": "ludeon.rimworld.odyssey",
+      "sourceModName": "Odyssey",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeSnagroot",
+      "variation": 4,
+      "texturePath": "Things/Plant/TreeSnagroot_Immature/TreeSnagroot_Immature",
+      "textureContentHash": "9932E6332D0DE0252B82BBB1F6387F6AA7C315B16DE24BC99D1666A6E4CF42B5",
+      "textureKey": "v1|TreeSnagroot_Immature|128x128|state:Immature|orientation:default|pixels:9932E6332D0DE0252B82BBB1F6387F6AA7C315B16DE24BC99D1666A6E4CF42B5",
+      "sourcePackageId": "ludeon.rimworld.odyssey",
+      "sourceModName": "Odyssey",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeTeak",
+      "variation": 0,
+      "texturePath": "Things/Plant/TreeTeak/TreeTeakA",
+      "textureContentHash": "B759C6FF048197D9DB7838F00680B1CD331768A38EA47DBC8F47630CF0AEE879",
+      "textureKey": "v1|TreeTeakA|128x128|state:Normal|orientation:default|pixels:B759C6FF048197D9DB7838F00680B1CD331768A38EA47DBC8F47630CF0AEE879",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeTeak",
+      "variation": 1,
+      "texturePath": "Things/Plant/TreeTeak/TreeTeakB",
+      "textureContentHash": "A7065A2028059D17BD638C0B12CA65E90121A95F0C2469B1EE30DCF4179A49ED",
+      "textureKey": "v1|TreeTeakB|128x128|state:Normal|orientation:default|pixels:A7065A2028059D17BD638C0B12CA65E90121A95F0C2469B1EE30DCF4179A49ED",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeTeak",
+      "variation": 2,
+      "texturePath": "Things/Plant/TreeOak_Leafless/TreeOak_LeaflessA",
+      "textureContentHash": "0B0EEC2050F70891991D5F7D847B7A1D34D7F2A2168CE077467C473C0391AC1C",
+      "textureKey": "v1|TreeOak_LeaflessA|128x128|state:Leafless|orientation:default|pixels:0B0EEC2050F70891991D5F7D847B7A1D34D7F2A2168CE077467C473C0391AC1C",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeTeak",
+      "variation": 3,
+      "texturePath": "Things/Plant/TreeOak_Leafless/TreeOak_LeaflessB",
+      "textureContentHash": "5D1C974ABAEC5903E42C981CC22143D1688F5F56D714D9F79FE27B7320EB8E94",
+      "textureKey": "v1|TreeOak_LeaflessB|128x128|state:Leafless|orientation:default|pixels:5D1C974ABAEC5903E42C981CC22143D1688F5F56D714D9F79FE27B7320EB8E94",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeTeak",
+      "variation": 4,
+      "texturePath": "Things/Plant/TreeTeak_Immature/TreeTeakImmature",
+      "textureContentHash": "003ADBAB675461A623FF0D39ABA3A26C2EB6C717EC962404962EC025F1C4D6D0",
+      "textureKey": "v1|TreeTeakImmature|128x128|state:Immature|orientation:default|pixels:003ADBAB675461A623FF0D39ABA3A26C2EB6C717EC962404962EC025F1C4D6D0",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeWillow",
+      "variation": 0,
+      "texturePath": "Things/Plant/TreeWillow/TreeWillowA",
+      "textureContentHash": "479FB77837484A3427C1980FC4F227AD694EBA8319E668F68797124F579C3F52",
+      "textureKey": "v1|TreeWillowA|128x128|state:Normal|orientation:default|pixels:479FB77837484A3427C1980FC4F227AD694EBA8319E668F68797124F579C3F52",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeWillow",
+      "variation": 1,
+      "texturePath": "Things/Plant/TreeWillow/TreeWillowB",
+      "textureContentHash": "6A72DC283B3569606FC43003935FEF1A1E4A3CD99EEEE470BD9AA908BD2EFB15",
+      "textureKey": "v1|TreeWillowB|128x128|state:Normal|orientation:default|pixels:6A72DC283B3569606FC43003935FEF1A1E4A3CD99EEEE470BD9AA908BD2EFB15",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeWillow",
+      "variation": 2,
+      "texturePath": "Things/Plant/TreeWillow_Leafless/TreeWillow_LeaflessA",
+      "textureContentHash": "88CD8B89B5D9EA1451DBD52D3F84441015F0D861DD6EF66B12336815CADBBA15",
+      "textureKey": "v1|TreeWillow_LeaflessA|128x128|state:Leafless|orientation:default|pixels:88CD8B89B5D9EA1451DBD52D3F84441015F0D861DD6EF66B12336815CADBBA15",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeWillow",
+      "variation": 3,
+      "texturePath": "Things/Plant/TreeWillow_Leafless/TreeWillow_LeaflessB",
+      "textureContentHash": "AB81A1E4F1F260739B7BB2B62E51B689557F0E5B508D7A23841EBBB67CC6A276",
+      "textureKey": "v1|TreeWillow_LeaflessB|128x128|state:Leafless|orientation:default|pixels:AB81A1E4F1F260739B7BB2B62E51B689557F0E5B508D7A23841EBBB67CC6A276",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeWillow",
+      "variation": 4,
+      "texturePath": "Things/Plant/TreeWillow_Immature/TreeWillowImmature",
+      "textureContentHash": "F95179CFF4150A94D666811EA1F559252C1B7DB223DD4E9C4734F089C5F7F3B7",
+      "textureKey": "v1|TreeWillowImmature|128x128|state:Immature|orientation:default|pixels:F95179CFF4150A94D666811EA1F559252C1B7DB223DD4E9C4734F089C5F7F3B7",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_TreeWillow",
+      "variation": 5,
+      "texturePath": "Things/Plant/TreeWillow_LeaflessImmature/TreeWillowLeaflessImmature",
+      "textureContentHash": "1A31213042684633AC589AA17DB93E64F14F30DB7CCEDC465B1AE04BDB30FBB6",
+      "textureKey": "v1|TreeWillowLeaflessImmature|128x128|state:Leafless Immature|orientation:default|pixels:1A31213042684633AC589AA17DB93E64F14F30DB7CCEDC465B1AE04BDB30FBB6",
+      "sourcePackageId": "ludeon.rimworld",
+      "sourceModName": "Core",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Witchwood",
+      "variation": 0,
+      "texturePath": "Things/Plant/Witchwood/WitchwoodA",
+      "textureContentHash": "0D83FFE5D42B49485ED182467AF19B36FD7472D1816742ADB60E0A2F547595AA",
+      "textureKey": "v1|WitchwoodA|128x128|state:Normal|orientation:default|pixels:0D83FFE5D42B49485ED182467AF19B36FD7472D1816742ADB60E0A2F547595AA",
+      "sourcePackageId": "ludeon.rimworld.biotech",
+      "sourceModName": "Biotech",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Witchwood",
+      "variation": 1,
+      "texturePath": "Things/Plant/Witchwood/WitchwoodB",
+      "textureContentHash": "FB61AFE895D30C50E2AB2C176BBEEE7043AEA8E19232CC8101CF2FA507AE9F87",
+      "textureKey": "v1|WitchwoodB|128x128|state:Normal|orientation:default|pixels:FB61AFE895D30C50E2AB2C176BBEEE7043AEA8E19232CC8101CF2FA507AE9F87",
+      "sourcePackageId": "ludeon.rimworld.biotech",
+      "sourceModName": "Biotech",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "Plant_Witchwood",
+      "variation": 2,
+      "texturePath": "Things/Plant/Witchwood/WitchwoodC",
+      "textureContentHash": "FF5DD7B56BDB7F58391495872C05B053FFFDF22ECA45DC71E1F359DB7A343D1B",
+      "textureKey": "v1|WitchwoodC|128x128|state:Normal|orientation:default|pixels:FF5DD7B56BDB7F58391495872C05B053FFFDF22ECA45DC71E1F359DB7A343D1B",
+      "sourcePackageId": "ludeon.rimworld.biotech",
+      "sourceModName": "Biotech",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_Agave",
+      "variation": 0,
+      "texturePath": "Things/Plant/Agave/AgaveA",
+      "textureContentHash": "5C9A35AC962FA43FD95771D0501C8AD4F27F76D945B9B57E9611CE0632ADE90C",
+      "textureKey": "v1|AgaveA|64x64|state:Normal|orientation:default|pixels:5C9A35AC962FA43FD95771D0501C8AD4F27F76D945B9B57E9611CE0632ADE90C",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_Eggplant",
+      "variation": 0,
+      "texturePath": "Things/Plant/Crops/VCE_EggplantPlant/VCE_EggplantPlantA",
+      "textureContentHash": "50B18E16171E1A7A04930FAC5FC24965EF9629688D228A19024A8ED8C2482303",
+      "textureKey": "v1|VCE_EggplantPlantA|128x128|state:Normal|orientation:default|pixels:50B18E16171E1A7A04930FAC5FC24965EF9629688D228A19024A8ED8C2482303",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_Eggplant",
+      "variation": 1,
+      "texturePath": "Things/Plant/Crops/VCE_EggplantPlant/VCE_EggplantPlantB",
+      "textureContentHash": "592C3230AEF61242747846F2B5EA39E5B79C4AE113613363639F405C9FAF5F74",
+      "textureKey": "v1|VCE_EggplantPlantB|128x128|state:Normal|orientation:default|pixels:592C3230AEF61242747846F2B5EA39E5B79C4AE113613363639F405C9FAF5F74",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_Eggplant",
+      "variation": 2,
+      "texturePath": "Things/Plant/Crops/VCE_EggplantPlantImmature/VCE_EggplantPlantA",
+      "textureContentHash": "C8CAB553032F675D98CDA94E1727E357A9D6DFBA95B4D126380752825ADE371F",
+      "textureKey": "v1|VCE_EggplantPlantA|128x128|state:Immature|orientation:default|pixels:C8CAB553032F675D98CDA94E1727E357A9D6DFBA95B4D126380752825ADE371F",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_Grass",
+      "variation": 0,
+      "texturePath": "Things/Plant/Grass/GrassA",
+      "textureContentHash": "58CD6BE714B7F815DA6697310796F07EBB1C63CB6E589FA05A77884CDD08BA7E",
+      "textureKey": "v1|GrassA|64x64|state:Normal|orientation:default|pixels:58CD6BE714B7F815DA6697310796F07EBB1C63CB6E589FA05A77884CDD08BA7E",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_Grass",
+      "variation": 1,
+      "texturePath": "Things/Plant/Grass/GrassB",
+      "textureContentHash": "C37FF8DE1CD20AD8D6113AE68DAA7776B9A93BCCE70D4DF830C34030A88CC3F6",
+      "textureKey": "v1|GrassB|64x64|state:Normal|orientation:default|pixels:C37FF8DE1CD20AD8D6113AE68DAA7776B9A93BCCE70D4DF830C34030A88CC3F6",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_Grass",
+      "variation": 2,
+      "texturePath": "Things/Plant/Grass_Leafless/GrassA_Leafless",
+      "textureContentHash": "97A6FB722858AF8B29C592063AA117F08618D11FE4E7CA63DDFDE5A872A22022",
+      "textureKey": "v1|GrassA_Leafless|64x64|state:Leafless|orientation:default|pixels:97A6FB722858AF8B29C592063AA117F08618D11FE4E7CA63DDFDE5A872A22022",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_Onion",
+      "variation": 0,
+      "texturePath": "Things/Plant/Crops/VCE_Onion/VCE_OnionA",
+      "textureContentHash": "AA8D15E612EE1E8DD513A9E0721198CD98A7225EF2580FBDF9403B53B793B12A",
+      "textureKey": "v1|VCE_OnionA|128x128|state:Normal|orientation:default|pixels:AA8D15E612EE1E8DD513A9E0721198CD98A7225EF2580FBDF9403B53B793B12A",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_Onion",
+      "variation": 1,
+      "texturePath": "Things/Plant/Crops/VCE_Onion/VCE_OnionB",
+      "textureContentHash": "7A7058B9D671E68B9FE4831F9808E9E3F39BD8DBD5B74CBFD26D561E3D38A3D5",
+      "textureKey": "v1|VCE_OnionB|128x128|state:Normal|orientation:default|pixels:7A7058B9D671E68B9FE4831F9808E9E3F39BD8DBD5B74CBFD26D561E3D38A3D5",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_Opuntia",
+      "variation": 0,
+      "texturePath": "Things/Plant/Trees/VCE_Opuntia/VCE_OpuntiaA",
+      "textureContentHash": "B40301AE343A5A547C9831E33BD1F440FAE55770AD90767E80A10F4BDC74C07E",
+      "textureKey": "v1|VCE_OpuntiaA|128x128|state:Normal|orientation:default|pixels:B40301AE343A5A547C9831E33BD1F440FAE55770AD90767E80A10F4BDC74C07E",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_Opuntia",
+      "variation": 1,
+      "texturePath": "Things/Plant/Trees/VCE_Opuntia/VCE_OpuntiaB",
+      "textureContentHash": "56F4AEC5FE1BC969117057372D536B94C9DE92E2C1F36AAB05B2FA8EF9899D2F",
+      "textureKey": "v1|VCE_OpuntiaB|128x128|state:Normal|orientation:default|pixels:56F4AEC5FE1BC969117057372D536B94C9DE92E2C1F36AAB05B2FA8EF9899D2F",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_Opuntia",
+      "variation": 2,
+      "texturePath": "Things/Plant/Trees/VCE_Opuntia_Leafless/VCE_OpuntiaA",
+      "textureContentHash": "3D02EDEAB0D97F69A96AEF729CF5F0F4701BB4D8B135F7B1147BAF7D22DEB6AE",
+      "textureKey": "v1|VCE_OpuntiaA|128x128|state:Leafless|orientation:default|pixels:3D02EDEAB0D97F69A96AEF729CF5F0F4701BB4D8B135F7B1147BAF7D22DEB6AE",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_Opuntia",
+      "variation": 3,
+      "texturePath": "Things/Plant/Trees/VCE_Opuntia_Leafless/VCE_OpuntiaB",
+      "textureContentHash": "E332503A2A8B96B2231D2DFFA8727D675FD33921D1ED58080CB94114F86E201A",
+      "textureKey": "v1|VCE_OpuntiaB|128x128|state:Leafless|orientation:default|pixels:E332503A2A8B96B2231D2DFFA8727D675FD33921D1ED58080CB94114F86E201A",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_Opuntia",
+      "variation": 4,
+      "texturePath": "Things/Plant/Trees/VCE_Opuntia_Immature/VCE_OpuntiaA",
+      "textureContentHash": "62183500F9FA582E0418B680103E8C6EB75556D2D599AA446B3209B583BECCC9",
+      "textureKey": "v1|VCE_OpuntiaA|128x128|state:Immature|orientation:default|pixels:62183500F9FA582E0418B680103E8C6EB75556D2D599AA446B3209B583BECCC9",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_Opuntia",
+      "variation": 5,
+      "texturePath": "Things/Plant/Trees/VCE_Opuntia_Immature/VCE_OpuntiaB",
+      "textureContentHash": "311598AE4C4BB29E96EA9D792B9C678AF68E7E5D2F607BDC286292BA43DD37F4",
+      "textureKey": "v1|VCE_OpuntiaB|128x128|state:Immature|orientation:default|pixels:311598AE4C4BB29E96EA9D792B9C678AF68E7E5D2F607BDC286292BA43DD37F4",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_OrangeTree",
+      "variation": 0,
+      "texturePath": "Things/Plant/Trees/VCE_TreeOrange/VCE_TreeOrangeA",
+      "textureContentHash": "81209D6386546BBD3CB99AAF505EE290D763CA92DD5F29AA8D9220E378441DC8",
+      "textureKey": "v1|VCE_TreeOrangeA|256x256|state:Normal|orientation:default|pixels:81209D6386546BBD3CB99AAF505EE290D763CA92DD5F29AA8D9220E378441DC8",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_OrangeTree",
+      "variation": 1,
+      "texturePath": "Things/Plant/Trees/VCE_TreeOrange/VCE_TreeOrangeB",
+      "textureContentHash": "C5EFB441FFB18C7F2A7D1EFCA18766CD130AF094BD211303138A960F855FF93A",
+      "textureKey": "v1|VCE_TreeOrangeB|256x256|state:Normal|orientation:default|pixels:C5EFB441FFB18C7F2A7D1EFCA18766CD130AF094BD211303138A960F855FF93A",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_OrangeTree",
+      "variation": 2,
+      "texturePath": "Things/Plant/Trees/VCE_TreeOrange_Leafless/VCE_TreeOrangeA",
+      "textureContentHash": "938D4020E89EC0DC13DCE8275A681F5B16E3A7F8F4B9FCC3F4C28F524B91A4FD",
+      "textureKey": "v1|VCE_TreeOrangeA|256x256|state:Leafless|orientation:default|pixels:938D4020E89EC0DC13DCE8275A681F5B16E3A7F8F4B9FCC3F4C28F524B91A4FD",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_OrangeTree",
+      "variation": 3,
+      "texturePath": "Things/Plant/Trees/VCE_TreeOrange_Leafless/VCE_TreeOrangeB",
+      "textureContentHash": "3E4E6BE1ABCB3B23A075100D633BEC3E0786411F96F2269A3AC5E192F376554D",
+      "textureKey": "v1|VCE_TreeOrangeB|256x256|state:Leafless|orientation:default|pixels:3E4E6BE1ABCB3B23A075100D633BEC3E0786411F96F2269A3AC5E192F376554D",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_OrangeTree",
+      "variation": 4,
+      "texturePath": "Things/Plant/Trees/VCE_TreeOrange_Immature/VCE_TreeOrangeA",
+      "textureContentHash": "5C730EF8B9FA6E01962CE3A0BD0513F1A4F145A3C0D27918AA69CBC85C42EE24",
+      "textureKey": "v1|VCE_TreeOrangeA|256x256|state:Immature|orientation:default|pixels:5C730EF8B9FA6E01962CE3A0BD0513F1A4F145A3C0D27918AA69CBC85C42EE24",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_OrangeTree",
+      "variation": 5,
+      "texturePath": "Things/Plant/Trees/VCE_TreeOrange_Immature/VCE_TreeOrangeB",
+      "textureContentHash": "EAB353070AA6C4B71D4038EE23E2D0EA5BF862C9F2A0A18BB4A7EAC90FCCFDD3",
+      "textureKey": "v1|VCE_TreeOrangeB|256x256|state:Immature|orientation:default|pixels:EAB353070AA6C4B71D4038EE23E2D0EA5BF862C9F2A0A18BB4A7EAC90FCCFDD3",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_PeachTree",
+      "variation": 0,
+      "texturePath": "Things/Plant/Trees/VCE_TreePeach/VCE_TreePeachA",
+      "textureContentHash": "18DB33DD00973063187EAFCF24A9393260C81FB37F0353D3EE3379F74141B69D",
+      "textureKey": "v1|VCE_TreePeachA|256x256|state:Normal|orientation:default|pixels:18DB33DD00973063187EAFCF24A9393260C81FB37F0353D3EE3379F74141B69D",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_PeachTree",
+      "variation": 1,
+      "texturePath": "Things/Plant/Trees/VCE_TreePeach/VCE_TreePeachB",
+      "textureContentHash": "F03C1F256CFEDB74E6A2B130D08102442C5689E7A8B07C6FA9E7C182B9AE33BA",
+      "textureKey": "v1|VCE_TreePeachB|256x256|state:Normal|orientation:default|pixels:F03C1F256CFEDB74E6A2B130D08102442C5689E7A8B07C6FA9E7C182B9AE33BA",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_PeachTree",
+      "variation": 2,
+      "texturePath": "Things/Plant/Trees/VCE_TreePeach_Leafless/VCE_TreePeachA",
+      "textureContentHash": "1F26307D6D9510286AE810DCD68E0E4EE20962DB99C4F7C92883B62339107925",
+      "textureKey": "v1|VCE_TreePeachA|256x256|state:Leafless|orientation:default|pixels:1F26307D6D9510286AE810DCD68E0E4EE20962DB99C4F7C92883B62339107925",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_PeachTree",
+      "variation": 3,
+      "texturePath": "Things/Plant/Trees/VCE_TreePeach_Leafless/VCE_TreePeachB",
+      "textureContentHash": "49BADBF8A89271FDDA5CE0CC4C234E02697E1E2892740EA72A2395737FF1E650",
+      "textureKey": "v1|VCE_TreePeachB|256x256|state:Leafless|orientation:default|pixels:49BADBF8A89271FDDA5CE0CC4C234E02697E1E2892740EA72A2395737FF1E650",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_PeachTree",
+      "variation": 4,
+      "texturePath": "Things/Plant/Trees/VCE_TreePeach_Immature/VCE_TreePeachA",
+      "textureContentHash": "ACCB1B3D3D879FDEA47DD39A058E13234B5355CE51C118CB0942EC5911BB8322",
+      "textureKey": "v1|VCE_TreePeachA|256x256|state:Immature|orientation:default|pixels:ACCB1B3D3D879FDEA47DD39A058E13234B5355CE51C118CB0942EC5911BB8322",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_PeachTree",
+      "variation": 5,
+      "texturePath": "Things/Plant/Trees/VCE_TreePeach_Immature/VCE_TreePeachB",
+      "textureContentHash": "6A8F23E666D8D507682E55B4443C947AA2B4356C3B4230747253D7D5C99FB436",
+      "textureKey": "v1|VCE_TreePeachB|256x256|state:Immature|orientation:default|pixels:6A8F23E666D8D507682E55B4443C947AA2B4356C3B4230747253D7D5C99FB436",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_PearTree",
+      "variation": 0,
+      "texturePath": "Things/Plant/Trees/VCE_TreePear/VCE_TreePearA",
+      "textureContentHash": "106F620FEB171236B8553233DE9FCDA78525472E909A5010BCE60E7B84B5FDA6",
+      "textureKey": "v1|VCE_TreePearA|128x128|state:Normal|orientation:default|pixels:106F620FEB171236B8553233DE9FCDA78525472E909A5010BCE60E7B84B5FDA6",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_PearTree",
+      "variation": 1,
+      "texturePath": "Things/Plant/Trees/VCE_TreePear/VCE_TreePearB",
+      "textureContentHash": "D90BD1C7A384A78BB4CFD5889677A1D1714F2E103C61980B442613B09508607B",
+      "textureKey": "v1|VCE_TreePearB|128x128|state:Normal|orientation:default|pixels:D90BD1C7A384A78BB4CFD5889677A1D1714F2E103C61980B442613B09508607B",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_PearTree",
+      "variation": 2,
+      "texturePath": "Things/Plant/Trees/VCE_TreePear_Leafless/VCE_TreePearA",
+      "textureContentHash": "9DF2DE99F1FCA38A9EADD84DBC7D6998B2CC597C689D184A226A25649A17090D",
+      "textureKey": "v1|VCE_TreePearA|128x128|state:Leafless|orientation:default|pixels:9DF2DE99F1FCA38A9EADD84DBC7D6998B2CC597C689D184A226A25649A17090D",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_PearTree",
+      "variation": 3,
+      "texturePath": "Things/Plant/Trees/VCE_TreePear_Leafless/VCE_TreePearB",
+      "textureContentHash": "EA91C197A95FCDD75A6EE648C3002768AECD229D50EA954D6520380F71D09960",
+      "textureKey": "v1|VCE_TreePearB|128x128|state:Leafless|orientation:default|pixels:EA91C197A95FCDD75A6EE648C3002768AECD229D50EA954D6520380F71D09960",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_PearTree",
+      "variation": 4,
+      "texturePath": "Things/Plant/Trees/VCE_TreePear_Immature/VCE_TreePearA",
+      "textureContentHash": "5AD74C7B7495832FF29EE43332DF5DEEFC4940B15D0377E80D2D8C3C37B483EE",
+      "textureKey": "v1|VCE_TreePearA|128x128|state:Immature|orientation:default|pixels:5AD74C7B7495832FF29EE43332DF5DEEFC4940B15D0377E80D2D8C3C37B483EE",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_PearTree",
+      "variation": 5,
+      "texturePath": "Things/Plant/Trees/VCE_TreePear_Immature/VCE_TreePearB",
+      "textureContentHash": "D982749F0E82E4D1BC35CD1EBC5B04043D04DF2D0C294EBC089C4D91CEF84CEB",
+      "textureKey": "v1|VCE_TreePearB|128x128|state:Immature|orientation:default|pixels:D982749F0E82E4D1BC35CD1EBC5B04043D04DF2D0C294EBC089C4D91CEF84CEB",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_Peas",
+      "variation": 0,
+      "texturePath": "Things/Plant/Crops/VCE_PeaPlant/VCE_PeaPlantA",
+      "textureContentHash": "CDF61E1A652C6AE957F44E6A764F0F6C2BB239DDE8FBBD6D94DF6354D684EA6E",
+      "textureKey": "v1|VCE_PeaPlantA|128x128|state:Normal|orientation:default|pixels:CDF61E1A652C6AE957F44E6A764F0F6C2BB239DDE8FBBD6D94DF6354D684EA6E",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_Peas",
+      "variation": 1,
+      "texturePath": "Things/Plant/Crops/VCE_PeaPlant/VCE_PeaPlantB",
+      "textureContentHash": "03B54692B47278C49FD99D46C33A25A4C7B09483C1E00D21F3B2DC6CA7D77DD2",
+      "textureKey": "v1|VCE_PeaPlantB|128x128|state:Normal|orientation:default|pixels:03B54692B47278C49FD99D46C33A25A4C7B09483C1E00D21F3B2DC6CA7D77DD2",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_Peas",
+      "variation": 2,
+      "texturePath": "Things/Plant/Crops/VCE_PeaPlantImmature/VCE_PeaPlantA",
+      "textureContentHash": "2C2E1902BC923930A81B16C6D31D9AB1CE22BC6E76AB9D9FD01D73E82C1F6A9A",
+      "textureKey": "v1|VCE_PeaPlantA|128x128|state:Immature|orientation:default|pixels:2C2E1902BC923930A81B16C6D31D9AB1CE22BC6E76AB9D9FD01D73E82C1F6A9A",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_Pepper",
+      "variation": 0,
+      "texturePath": "Things/Plant/Crops/VCE_PepperPlant/VCE_PepperPlantA",
+      "textureContentHash": "D421704F64A47B521921F2D98AD1CAD16A77F29A036308465436206BB6BE8347",
+      "textureKey": "v1|VCE_PepperPlantA|128x128|state:Normal|orientation:default|pixels:D421704F64A47B521921F2D98AD1CAD16A77F29A036308465436206BB6BE8347",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_Pepper",
+      "variation": 1,
+      "texturePath": "Things/Plant/Crops/VCE_PepperPlant/VCE_PepperPlantB",
+      "textureContentHash": "3A25485BA683A265AB8DBDC3CAFDDB3B50C16BD6C0629B1555A61DF1E37A4A49",
+      "textureKey": "v1|VCE_PepperPlantB|128x128|state:Normal|orientation:default|pixels:3A25485BA683A265AB8DBDC3CAFDDB3B50C16BD6C0629B1555A61DF1E37A4A49",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_Pepper",
+      "variation": 2,
+      "texturePath": "Things/Plant/Crops/VCE_PepperPlantImmature/VCE_PepperPlantA",
+      "textureContentHash": "B94F4B913D6C65D2915B5537740BD37259C5818CD6DFB3FC4E1E5B2FD91BCE05",
+      "textureKey": "v1|VCE_PepperPlantA|128x128|state:Immature|orientation:default|pixels:B94F4B913D6C65D2915B5537740BD37259C5818CD6DFB3FC4E1E5B2FD91BCE05",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_PlumTree",
+      "variation": 0,
+      "texturePath": "Things/Plant/Trees/VCE_TreePlum/VCE_TreePlumA",
+      "textureContentHash": "2879E4ABEAD9E408D4FB466A3512C1E1D9209A59D67D521A043A74096FACC535",
+      "textureKey": "v1|VCE_TreePlumA|256x256|state:Normal|orientation:default|pixels:2879E4ABEAD9E408D4FB466A3512C1E1D9209A59D67D521A043A74096FACC535",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_PlumTree",
+      "variation": 1,
+      "texturePath": "Things/Plant/Trees/VCE_TreePlum/VCE_TreePlumB",
+      "textureContentHash": "658B1077B95DB9F6DCF5ADE9C72BE642CFE764A414690BDDC416ACD5A9CE960F",
+      "textureKey": "v1|VCE_TreePlumB|256x256|state:Normal|orientation:default|pixels:658B1077B95DB9F6DCF5ADE9C72BE642CFE764A414690BDDC416ACD5A9CE960F",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_PlumTree",
+      "variation": 2,
+      "texturePath": "Things/Plant/Trees/VCE_TreePlum_Leafless/VCE_TreePlumA",
+      "textureContentHash": "AFCDF80AEF8B503914D3D79017D865A1BD87DC0A9C20E5CEF32376A9E31DDAC8",
+      "textureKey": "v1|VCE_TreePlumA|256x256|state:Leafless|orientation:default|pixels:AFCDF80AEF8B503914D3D79017D865A1BD87DC0A9C20E5CEF32376A9E31DDAC8",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_PlumTree",
+      "variation": 3,
+      "texturePath": "Things/Plant/Trees/VCE_TreePlum_Leafless/VCE_TreePlumB",
+      "textureContentHash": "76800C55D48D42A2FB0F17C68038FF00D1A0EE9FE415D3956A7119DAB183D793",
+      "textureKey": "v1|VCE_TreePlumB|256x256|state:Leafless|orientation:default|pixels:76800C55D48D42A2FB0F17C68038FF00D1A0EE9FE415D3956A7119DAB183D793",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_PlumTree",
+      "variation": 4,
+      "texturePath": "Things/Plant/Trees/VCE_TreePlum_Immature/VCE_TreePlumA",
+      "textureContentHash": "6D54B718C47F58637F1B73E5BB3921ACFA03438B3411E312BCD75457960AC934",
+      "textureKey": "v1|VCE_TreePlumA|256x256|state:Immature|orientation:default|pixels:6D54B718C47F58637F1B73E5BB3921ACFA03438B3411E312BCD75457960AC934",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_PlumTree",
+      "variation": 5,
+      "texturePath": "Things/Plant/Trees/VCE_TreePlum_Immature/VCE_TreePlumB",
+      "textureContentHash": "207AB72226C3A4DF86F3FECA2BAA12AB0BFF6429871C7670E5CFEEBA071841E8",
+      "textureKey": "v1|VCE_TreePlumB|256x256|state:Immature|orientation:default|pixels:207AB72226C3A4DF86F3FECA2BAA12AB0BFF6429871C7670E5CFEEBA071841E8",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_Pumpkin",
+      "variation": 0,
+      "texturePath": "Things/Plant/Crops/VCE_PumpkinPlant/VCE_PumpkinPlantA",
+      "textureContentHash": "814834DA4010AF58EB9300E4D40D8F0983F4E16DBB90EBC68E0E31E78E0303CE",
+      "textureKey": "v1|VCE_PumpkinPlantA|128x128|state:Normal|orientation:default|pixels:814834DA4010AF58EB9300E4D40D8F0983F4E16DBB90EBC68E0E31E78E0303CE",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_Pumpkin",
+      "variation": 1,
+      "texturePath": "Things/Plant/Crops/VCE_PumpkinPlant/VCE_PumpkinPlantB",
+      "textureContentHash": "EBAC472E78F4653116BC685704AF67F48E9B1FACA375FAB1C6D6E93671564437",
+      "textureKey": "v1|VCE_PumpkinPlantB|128x128|state:Normal|orientation:default|pixels:EBAC472E78F4653116BC685704AF67F48E9B1FACA375FAB1C6D6E93671564437",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_Pumpkin",
+      "variation": 2,
+      "texturePath": "Things/Plant/Crops/VCE_PumpkinPlantImmature/VCE_PumpkinPlantA",
+      "textureContentHash": "F006BA83D7C3B21563E024D4990BA4061439463A3B702F713E78D0DBE0FCF43A",
+      "textureKey": "v1|VCE_PumpkinPlantA|128x128|state:Immature|orientation:default|pixels:F006BA83D7C3B21563E024D4990BA4061439463A3B702F713E78D0DBE0FCF43A",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_TallGrass",
+      "variation": 0,
+      "texturePath": "Things/Plant/Grass/GrassA",
+      "textureContentHash": "58CD6BE714B7F815DA6697310796F07EBB1C63CB6E589FA05A77884CDD08BA7E",
+      "textureKey": "v1|GrassA|64x64|state:Normal|orientation:default|pixels:58CD6BE714B7F815DA6697310796F07EBB1C63CB6E589FA05A77884CDD08BA7E",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_TallGrass",
+      "variation": 1,
+      "texturePath": "Things/Plant/Grass/GrassB",
+      "textureContentHash": "C37FF8DE1CD20AD8D6113AE68DAA7776B9A93BCCE70D4DF830C34030A88CC3F6",
+      "textureKey": "v1|GrassB|64x64|state:Normal|orientation:default|pixels:C37FF8DE1CD20AD8D6113AE68DAA7776B9A93BCCE70D4DF830C34030A88CC3F6",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    },
+    {
+      "plantDef": "VCE_TallGrass",
+      "variation": 2,
+      "texturePath": "Things/Plant/Grass_Leafless/GrassA_Leafless",
+      "textureContentHash": "97A6FB722858AF8B29C592063AA117F08618D11FE4E7CA63DDFDE5A872A22022",
+      "textureKey": "v1|GrassA_Leafless|64x64|state:Leafless|orientation:default|pixels:97A6FB722858AF8B29C592063AA117F08618D11FE4E7CA63DDFDE5A872A22022",
+      "sourcePackageId": "vanillaexpanded.vplantse",
+      "sourceModName": "Vanilla Plants Expanded",
+      "lowConfidence": false
+    }
+  ]
+}

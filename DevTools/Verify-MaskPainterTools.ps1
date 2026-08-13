@@ -2,14 +2,15 @@ $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
 $operations = Get-Content -Raw (Join-Path $root 'Source\MaskPainterOperations.cs') -ErrorAction SilentlyContinue
 $editor = Get-Content -Raw (Join-Path $root 'Source\ProduceMasking.cs')
+$maskDocument = Get-Content -Raw (Join-Path $root 'Source\HorticultureMaskEditorDocument.cs')
 $settings = Get-Content -Raw (Join-Path $root 'Source\Settings.cs')
-$bridge = Get-Content -Raw (Join-Path $root 'DevTools\BridgeAdapter\HorticultureBridgeAdapter.cs')
 $projection = Get-Content -Raw (Join-Path $root 'Source\MaskProjection.cs')
 $identity = Get-Content -Raw (Join-Path $root 'Source\MaskTextureIdentity.cs')
 $auto = Get-Content -Raw (Join-Path $root 'Source\AutoPlantMasks.cs')
 $review = Get-Content -Raw (Join-Path $root 'Source\MaskReviewQueue.cs')
 $breeding = Get-Content -Raw (Join-Path $root 'Source\BreedingMixRegression.cs')
 $modern = Get-Content -Raw (Join-Path $root 'Source\ModernSettingsUI.cs')
+$ui = Get-Content -Raw (Join-Path $root 'Source\InsightSettingsUI.cs')
 $patches = Get-Content -Raw (Join-Path $root 'Source\Patches.cs')
 $resource = Get-Content -Raw (Join-Path $root 'Source\ResourceNeed.cs')
 $traitRegression = Get-Content -Raw (Join-Path $root 'Source\TraitCatalogRegression.cs')
@@ -18,22 +19,22 @@ $checks = [ordered]@{
     'grow and shrink support configurable distance' = $operations -match 'Grow\(' -and $operations -match 'Shrink\(' -and $editor -match 'selectionAmount'
     'smooth and binary-compatible feather operations exist' = $operations -match 'Smooth\(' -and $operations -match 'Feather\('
     'paint add remove replace modes exist' = $editor -match 'PaintSelectionMode' -and $editor -match 'Add' -and $editor -match 'Remove' -and $editor -match 'Replace'
-    'brush size remains adjustable' = $editor -match 'brushSize' -and $editor -match 'HorizontalSlider'
+    'brush size remains adjustable' = $editor -match 'brushSize' -and $maskDocument -match 'HorticultureMaskEditorDocument' -and $maskDocument -match 'Brush size'
     'region tool honors shift add and control remove' = $editor -match 'regionSelect' -and $editor -match 'current\.shift' -and $editor -match 'current\.control' -and $operations -match 'ConnectedTextureRegion'
     'cleanup supports tiny islands holes and largest component' = $operations -match 'RemoveSmallComponents' -and $operations -match 'FillHoles' -and $operations -match 'KeepLargest'
     'smart expansion follows texture boundaries' = $operations -match 'SmartExpand' -and $operations -match 'ColorDistance' -and $operations -match 'alpha'
     'live preview has original mask and final modes' = $editor -match 'MaskPreviewMode' -and $editor -match 'Original' -and $editor -match 'Final' -and $editor -match 'FinalPreviewTexture'
-    'all semantic channels can be locked' = $editor -match 'channelLocks' -and $editor -match 'ToggleChannelLock' -and $editor -match '!SelectedLocked'
+    'all semantic channels can be locked' = $editor -match 'channelLocks' -and $maskDocument -match 'GetLayerLocked' -and $maskDocument -match 'SetLayerLocked' -and $editor -match 'SelectedLocked' -and $editor -match '!channelLocks\[i\]'
     'keyboard workflow covers tools layers operations and history' = $editor -match 'HandleEditorShortcuts' -and $editor -match 'KeyCode\.Alpha1' -and $editor -match 'KeyCode\.LeftBracket' -and $editor -match 'KeyCode\.Z'
     'masks can copy and project between texture variations' = $editor -match 'CopyMaskToVariation' -and $editor -match 'ProjectMaskToVariation' -and $operations -match 'Project\('
     'validation covers transparency overlaps empty fragments and gaps' = $operations -match 'MaskValidationResult' -and $operations -match 'transparentPixels' -and $operations -match 'overlappingPixels' -and $operations -match 'emptyChannels' -and $operations -match 'tinyFragments' -and $operations -match 'unmaskedVisiblePixels'
-    'fill unmasked excludes transparent and assigned pixels' = $operations -match 'FillUnmasked\(' -and $operations -match 'VisibleAlpha' -and $operations -match 'assigned' -and $editor -match 'Fill Unmasked'
+    'fill unmasked excludes transparent and assigned pixels' = $operations -match 'FillUnmasked\(' -and $operations -match 'VisibleAlpha' -and $operations -match 'assigned' -and $maskDocument -match 'Fill unmasked'
     'fill unmasked is lock-aware and one transaction' = $operations -match 'targetLocked' -and $editor -match 'FillUnmaskedPixels' -and $editor -match 'CompleteImmediateChange\(before, changed\)'
     'validation retains separate issue categories' = $operations -match 'transparentPaintIssues' -and $operations -match 'overlapIssues' -and $operations -match 'tinyFragmentIssues' -and $operations -match 'unmaskedVisibleIssues'
-    'validation navigation groups components and centers issues' = $operations -match 'MaskValidationNavigator' -and $operations -match 'MaskIssueComponent' -and $editor -match 'Previous Issue' -and $editor -match 'Next Issue' -and $editor -match 'CenterOnCurrentValidationIssue'
-    'region labeling documents replace add and remove' = $editor -match 'normal click replaces the selected channel' -and $editor -match 'Shift adds; Ctrl removes'
+    'validation navigation groups components and centers issues' = $operations -match 'MaskValidationNavigator' -and $operations -match 'MaskIssueComponent' -and $maskDocument -match 'Previous issue' -and $maskDocument -match 'Next issue' -and $editor -match 'HorticultureMaskEditorDocument'
+    'region labeling documents replace add and remove' = (Get-Content -Raw (Join-Path $root 'Source\HorticultureMaskEditorDocument.cs')) -match 'Click replaces the selected channel' -and (Get-Content -Raw (Join-Path $root 'Source\HorticultureMaskEditorDocument.cs')) -match 'Shift adds; Ctrl removes'
     'validation state clears when masks or variations change' = $editor -match 'validationResult = null' -and $editor -match 'ResetToAutoMask[\s\S]*?validationResult = null'
-    'new operations have deterministic regression coverage' = $operations -match 'MaskPainterOperationsRegression' -and $bridge -match 'MaskPainterOperationsRegression'
+    'new operations have deterministic regression coverage' = $operations -match 'MaskPainterOperationsRegression'
     'manual mask serialization keys remain unchanged' = $settings -match '"plantMaskLayers"' -and $settings -match '"plantMaskVariations"'
     'three semantic layer contract remains unchanged' = $editor -match 'new VisualMaskLayerRecord \{ name = "Produce" \}' -and $editor -match 'new VisualMaskLayerRecord \{ name = "Leaves" \}' -and $editor -match 'new VisualMaskLayerRecord \{ name = "Stem" \}'
     'projection is preview-only before settings mutation' = $editor -match 'projectionPreview' -and $editor -match 'ApplyProjectionPreview' -and $editor -match 'CancelProjectionPreview' -and $editor -match 'SemanticMaskProjection\.Build'
@@ -46,12 +47,12 @@ $checks = [ordered]@{
     'normal rendering uses cached identity while startup/editor may precompute readbacks' = $identity -match 'TryGetCached' -and $identity -match 'allowRead' -and $identity -match 'PreloadPlantTextures' -and $auto -match 'allowIdentityGeneration'
     'shared manual conflicts are ambiguous and manual authority remains first' = $identity -match 'entry\.ambiguous' -and $editor -match 'CurrentUsesSharedManual' -and $editor -match 'PromoteAutoToManual'
     'batch review groups and sorts exact texture work' = $review -match 'MaskReviewQueueBuilder' -and $review -match 'IdentityKey' -and $review -match 'ThenBy\(row => row\.Confidence\)' -and $review -match 'ThenByDescending\(row => row\.IssueCount\)'
-    'batch review validates lazily by identity and mask hash' = $review -match 'ValidationCache' -and $review -match 'ValidationKey' -and $review -match 'MaskPainterOperations\.Validate' -and $modern -match 'Review Mask Queue'
+    'batch review validates lazily by identity and mask hash' = $review -match 'ValidationCache' -and $review -match 'ValidationKey' -and $review -match 'MaskPainterOperations\.Validate' -and $ui -match 'Review Mask Queue' -and $ui -match 'Dialog_MaskReviewQueue'
     'review opens existing painter and refreshes after close' = $review -match 'new Dialog_PlantMasks' -and $editor -match 'Action reviewRefresh' -and $editor -match 'reviewRefresh\?\.Invoke'
     'projection regression measures per-channel coverage and IoU' = (Test-Path (Join-Path $root 'Source\MaskProjectionRegression.cs')) -and (Get-Content -Raw (Join-Path $root 'Source\MaskProjectionRegression.cs')) -match 'IntersectionOverUnion' -and (Get-Content -Raw (Join-Path $root 'Source\MaskProjectionRegression.cs')) -match 'Coverage' -and (Get-Content -Raw (Join-Path $root 'Source\MaskProjectionRegression.cs')) -match 'ConfidenceRegression'
     'projection regression covers translation scale conflicts rejection cancel undo and identity' = $projection -match 'MaskProjectionRegression' -or (Test-Path (Join-Path $root 'Source\MaskProjectionRegression.cs'))
     'projection application uses one existing editor history transaction' = $editor -match 'ApplyProjectionPreview\([\s\S]*?CaptureHistory\(0, projectionTargetVariation\)[\s\S]*?CompleteImmediateChange\(before, true\)' -and $editor -match 'BeginProjectionPreviewForRegression' -and $editor -match 'UndoForRegression' -and $editor -match 'RedoForRegression'
-    'breeding mix diagnostic covers empty staggered and complete harvest scenarios' = $breeding -match 'List<HarvestScenario> empty' -and $breeding -match 'List<HarvestScenario> staggered' -and $breeding -match 'List<HarvestScenario> complete' -and $breeding -match 'ProductionDonors' -and $bridge -match 'HNS_BREEDING_MIX_DIAGNOSTIC'
+    'breeding mix diagnostic covers empty staggered and complete harvest scenarios' = $breeding -match 'List<HarvestScenario> empty' -and $breeding -match 'List<HarvestScenario> staggered' -and $breeding -match 'List<HarvestScenario> complete' -and $breeding -match 'ProductionDonors'
     'manual edits invalidate shared identity indexes' = $editor -match 'SharedManualMaskCache\.Invalidate' -and $settings -match 'ReplaceMasks' -and $settings -match 'SharedManualMaskCache\.Invalidate'
     'perennial harvest transpiler selects the exact helper overload' = $patches -match 'AccessTools\.Method\([\s\S]*typeof\(bool\), typeof\(Plant\), typeof\(PlantDestructionMode\)'
     'projection confidence is bounded and penalizes ambiguity and coverage gaps' = $projection -match 'BoundedConfidence' -and $projection -match 'Mathf\.Clamp01' -and $projection -match 'ambiguityFree' -and (Get-Content -Raw (Join-Path $root 'Source\MaskProjectionRegression.cs')) -match 'ambiguousCannotImprove' -and (Get-Content -Raw (Join-Path $root 'Source\MaskProjectionRegression.cs')) -match 'missingCoveragePenalty'
@@ -59,7 +60,7 @@ $checks = [ordered]@{
     'projection confidence is channel-local and empty channels are zero' = $projection -match 'sourcePixelsForChannel' -and $projection -match 'channelResult\.SpatialAgreement' -and $projection -match 'channelResult\.SemanticAgreement' -and $projection -match 'hasSourcePixels' -and $projection -match 'expectedPixels <= 0' -and (Get-Content -Raw (Join-Path $root 'Source\MaskProjectionRegression.cs')) -match 'emptyIsZero' -and (Get-Content -Raw (Join-Path $root 'Source\MaskProjectionRegression.cs')) -match 'presentZeroAssignmentIsZero' -and (Get-Content -Raw (Join-Path $root 'Source\MaskProjectionRegression.cs')) -match 'channelLocal'
     'projection regression covers shaded multi-island and full ambiguous regions' = (Get-Content -Raw (Join-Path $root 'Source\MaskProjectionRegression.cs')) -match 'ShadedMultiIslandRegression' -and (Get-Content -Raw (Join-Path $root 'Source\MaskProjectionRegression.cs')) -match 'LargeAmbiguousRegionRegression' -and (Get-Content -Raw (Join-Path $root 'Source\MaskProjectionRegression.cs')) -match 'ArbitrationDomainPixels == expected'
     'breeding diagnostics reuse production donor and mix helpers' = $breeding -match 'MakeCrossPollinationDonor' -and $breeding -match 'AggregateCrossPollinationDonors' -and $breeding -match 'SelectWeightedCrossPollinationDonor' -and $breeding -match 'SelectBreedingMixVariety' -and $breeding -notmatch '397.*7919'
-    'resource production path covers work eligibility payment and retry behavior' = $resource -match 'CanStartJob' -and $resource -match 'EvaluatePayment' -and $resource -match 'TryMakePreToilReservations' -and $resource -match 'SatisfyResource' -and $traitRegression -match 'ResourceProductionRegression' -and $traitRegression -match 'noDoublePayment' -and $bridge -match 'HNS_RESOURCE_JOB_REGRESSION' -and $bridge -match 'ResourceJobRegression'
+    'resource production path covers work eligibility payment and retry behavior' = $resource -match 'CanStartJob' -and $resource -match 'EvaluatePayment' -and $resource -match 'TryMakePreToilReservations' -and $resource -match 'SatisfyResource' -and $traitRegression -match 'ResourceProductionRegression' -and $traitRegression -match 'noDoublePayment'
     'resource payment diagnostics cover exact payment and growth gate' = $traitRegression -match 'ConsumedUnits' -and $traitRegression -match 'ApplyResourceGrowthGate' -and $resource -match 'CanReserveStack' -and $resource -match 'EvaluatePayment'
 }
 

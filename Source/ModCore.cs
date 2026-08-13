@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using HarmonyLib;
+using KnowledgeFramework;
 using ProgressionAgriculture;
 using RimWorld;
 using UnityEngine;
@@ -15,6 +16,7 @@ namespace HorticultureNovelSeeds
         public static Harmony HarmonyInstance;
         public static NovelSeedsSettings Settings;
         public static string ContentRootPath;
+        private InsightSettingsDocument settingsDocument;
 
         public HorticultureNovelSeedsMod(ModContentPack pack) : base(pack)
         {
@@ -53,7 +55,12 @@ namespace HorticultureNovelSeeds
 
         public override void DoSettingsWindowContents(Rect inRect)
         {
-            NovelSeedsSettingsUI.DoWindowContents(inRect, Settings);
+            if (settingsDocument == null || !ReferenceEquals(settingsDocument.Settings, Settings))
+            {
+                settingsDocument?.PostClose();
+                settingsDocument = new InsightSettingsDocument(Settings);
+            }
+            settingsDocument.Draw(inRect);
         }
 
         public override void WriteSettings()
@@ -278,8 +285,11 @@ namespace HorticultureNovelSeeds
 
     public class GameComponent_NovelSeeds : GameComponent
     {
+        private const int KnowledgeIntegrationRetryIntervalTicks = 15;
         private bool knowledgeIntegrationRetryScheduled;
         private bool knowledgeIntegrationRetryAttempted;
+        private int nextKnowledgeIntegrationRetryTick;
+        private Game knowledgeIntegrationGame;
         private List<VarietyRecord> unlockedVarieties = new List<VarietyRecord>();
         private List<BreedingProgramRecord> legacyBreedingPrograms = new List<BreedingProgramRecord>();
         private List<SpeciesColorPaletteRecord> speciesColorPalettes = new List<SpeciesColorPaletteRecord>();
@@ -357,7 +367,22 @@ namespace HorticultureNovelSeeds
 
         public override void GameComponentTick()
         {
-            HorticultureInGameTestRunner.Tick(60);
+            base.GameComponentTick();
+            if (knowledgeIntegrationGame == Current.Game &&
+                HorticultureKnowledgeRegistration.State == HorticultureKnowledgeRegistrationState.Registered &&
+                KnowledgeConsumerApi.Readiness.IsReady)
+                return;
+            TickManager tickManager = Find.TickManager;
+            int currentTick = tickManager?.TicksGame ?? -1;
+            if (currentTick < 0 || currentTick < nextKnowledgeIntegrationRetryTick) return;
+            nextKnowledgeIntegrationRetryTick = currentTick + KnowledgeIntegrationRetryIntervalTicks;
+            RetryKnowledgeIntegration();
+        }
+
+        internal void RetryKnowledgeIntegration()
+        {
+            knowledgeIntegrationRetryScheduled = false;
+            InitializeKnowledgeIntegration();
         }
 
         private void InitializeKnowledgeIntegration()
@@ -368,6 +393,7 @@ namespace HorticultureNovelSeeds
                 ScheduleKnowledgeIntegrationRetry();
                 return;
             }
+            knowledgeIntegrationGame = Current.Game;
             if (!HorticultureKnowledgeAdapter.TryMigrateLegacy(legacyHorticultureKnowledge))
             {
                 ScheduleKnowledgeIntegrationRetry();
@@ -431,6 +457,13 @@ namespace HorticultureNovelSeeds
 
         public IEnumerable<VarietyRecord> AllVarieties => allVisibleVarieties.Where(value =>
             value?.cropDef != null && HorticulturePlantPolicy.IsSupported(value.cropDef));
+
+        /// <summary>
+        /// Read-only access for the field-guide presentation. Breeding programs remain legacy
+        /// serialized records; this property deliberately exposes no create, delete, or mutation API.
+        /// </summary>
+        public IReadOnlyList<BreedingProgramRecord> BreedingPrograms =>
+            (legacyBreedingPrograms ?? new List<BreedingProgramRecord>()).AsReadOnly();
 
         public VarietyRecord GetVariety(string id)
         {

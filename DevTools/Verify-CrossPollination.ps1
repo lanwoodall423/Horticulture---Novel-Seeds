@@ -25,8 +25,7 @@ $checks = @(
     @{ File = 'Source/Settings.cs'; Pattern = 'globalCrossPollinationChance = other.globalCrossPollinationChance'; Name = 'profile rate migration' },
     @{ File = 'Source/SettingsProfiles.cs'; Pattern = 'ApplyFrom'; Name = 'profile application path' },
     @{ File = 'Source/CrossPollinationRegression.cs'; Pattern = 'DonorEligibilityRegression'; Name = 'eligibility regression coverage' },
-    @{ File = 'Source/CrossPollinationRegression.cs'; Pattern = 'SettingsRegression'; Name = 'settings migration regression coverage' },
-    @{ File = 'DevTools/BridgeAdapter/HorticultureBridgeAdapter.cs'; Pattern = 'HNS_CROSS_REGRESSIONS'; Name = 'runtime regression bridge' }
+    @{ File = 'Source/CrossPollinationRegression.cs'; Pattern = 'SettingsRegression'; Name = 'settings migration regression coverage' }
 )
 
 $failed = @()

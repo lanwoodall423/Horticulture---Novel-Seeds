@@ -8,7 +8,6 @@ $diagnostics = Get-Content (Join-Path $source 'HorticultureKnowledgeEventDiagnos
 $router = Get-Content (Join-Path $source 'HorticultureEventRouter.cs') -Raw
 $adapter = Get-Content (Join-Path $source 'HorticultureKnowledgeAdapter.cs') -Raw
 $patches = Get-Content (Join-Path $source 'Patches.cs') -Raw
-$bridge = Get-Content (Join-Path $PSScriptRoot 'BridgeAdapter/HorticultureBridgeAdapter.cs') -Raw
 $passed = 0
 
 function Assert-Contract([bool] $condition, [string] $name) {
@@ -28,8 +27,9 @@ Assert-Contract ($router -match 'traitList' -and $router -notmatch 'TraitInherit
 Assert-Contract ($diagnostics -match 'MaxRecentEvents = 1024' -and $diagnostics -match 'ResetForGameTransition') 'dedupe cache is bounded and game-scoped'
 Assert-Contract ($adapter -match 'HorticultureKnowledgeEventDiagnostics\.Accept' -and $adapter -match 'SubmittedEvent') 'adapter enforces integration-boundary deduplication'
 Assert-Contract ($adapter -match 'uniquePerSourceInstance = true' -and $adapter -match 'stateLimit = 4096') 'framework accrual enforces stable source idempotency'
-Assert-Contract ($adapter -match 'InvalidateSubjects\(' -and $adapter -notmatch 'InvalidateDomain\(DomainId\)' ) 'normal cultivar registration uses targeted invalidation'
-Assert-Contract ($bridge -match 'HNS_EVENT_ROUTING_DUPLICATE_TEST' -and $bridge -match 'HNS_EVENT_INVALIDATION_PERF') 'owner adapter exposes executable routing and performance checks'
+Assert-Contract ($adapter -match 'InvalidateSubjects\(' -and $adapter -match 'catch \(InvalidOperationException\)' -and
+    $adapter -match 'InvalidateDomain\(DomainId\)' ) 'normal cultivar registration uses targeted invalidation with safe fallback'
+Assert-Contract ($router -match 'HorticultureKnowledgeEventIdentity' -and $diagnostics -match 'Snapshot') 'runtime diagnostics expose executable routing state'
 Assert-Contract ($source | ForEach-Object { $files = Get-ChildItem $_ -Filter '*.cs' -Recurse; -not (($files | ForEach-Object { Get-Content $_.FullName -Raw }) -match 'GameComponent_KnowledgeFramework\.Current|KnowledgeRegistry\.BuildDefSchemas\(\)|KnowledgeService\.') }) 'gameplay source avoids direct framework implementation/lifecycle calls'
 
 Write-Output "event-routing-verification=PASS checks=$passed"

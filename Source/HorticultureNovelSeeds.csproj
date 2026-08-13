@@ -9,6 +9,9 @@
     <Deterministic>true</Deterministic>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <InsightCanvasVersion>2.1.0</InsightCanvasVersion>
+    <InsightCanvasCommit>93a09005fa15190009daee625352cf4004974472</InsightCanvasCommit>
+    <InsightCanvasDllSha256>E8D163B6A2B39EB80BBF8A5EA5AA0B8A80481D69A8CEE1D74526548D0A28C011</InsightCanvasDllSha256>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <Optimize>true</Optimize>
@@ -55,6 +58,10 @@
     </Reference>
     <Reference Include="KnowledgeFramework">
       <HintPath>..\..\KnowledgeFramework\1.6\Assemblies\KnowledgeFramework.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="InsightCanvas">
+      <HintPath>..\..\InsightCanvas\1.6\Assemblies\InsightCanvas.dll</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>

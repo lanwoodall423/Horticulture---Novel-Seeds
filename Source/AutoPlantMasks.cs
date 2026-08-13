@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using RimWorld;
@@ -10,18 +11,46 @@ namespace HorticultureNovelSeeds
 {
     public sealed class AutoPlantMaskRecord : IExposable
     {
+        private int formatVersion = PlantAutoMaskCache.FormatVersion;
+        private int generatorVersion = PlantAutoMaskCache.GeneratorVersion;
+        private string sourcePackageId;
+        private string sourceModName;
         private string plantDefName;
         private int variationIndex;
+        private string texturePath;
+        private string textureContentHash;
+        private int textureWidth;
+        private int textureHeight;
         private string textureKey;
+        private string graphicIdentity;
+        private string growthState;
+        private string directionIdentity;
+        private string variationIdentity;
+        private string produceSignature;
         private string eligibilityKey;
+        private string morphologyIdentity;
         private float confidence;
         private bool lowConfidence;
         private List<VisualMaskLayerRecord> layers = new List<VisualMaskLayerRecord>();
 
+        public int FormatVersion => formatVersion;
+        public int GeneratorVersion => generatorVersion;
+        public string SourcePackageId => sourcePackageId;
+        public string SourceModName => sourceModName;
         public string PlantDefName => plantDefName;
         public int VariationIndex => variationIndex;
+        public string TexturePath => texturePath;
+        public string TextureContentHash => textureContentHash;
+        public int TextureWidth => textureWidth;
+        public int TextureHeight => textureHeight;
         public string TextureKey => textureKey;
+        public string GraphicIdentity => graphicIdentity;
+        public string GrowthState => growthState;
+        public string DirectionIdentity => directionIdentity;
+        public string VariationIdentity => variationIdentity;
+        public string ProduceSignature => produceSignature;
         public string EligibilityKey => eligibilityKey;
+        public string MorphologyIdentity => morphologyIdentity;
         public float Confidence => confidence;
         public bool LowConfidence => lowConfidence;
         public IReadOnlyList<VisualMaskLayerRecord> Layers => layers;
@@ -41,12 +70,120 @@ namespace HorticultureNovelSeeds
             Normalize();
         }
 
+        internal AutoPlantMaskRecord(AutoMaskIdentity identity, float confidence,
+            IEnumerable<VisualMaskLayerRecord> layers)
+        {
+            ApplyIdentity(identity);
+            this.confidence = Mathf.Clamp01(confidence);
+            lowConfidence = this.confidence < PlantAutoMaskCache.LowConfidenceThreshold;
+            this.layers = layers?.Select(layer => layer.Clone()).ToList() ?? new List<VisualMaskLayerRecord>();
+            Normalize();
+        }
+
+        internal AutoPlantMaskRecord CloneWithIdentity(AutoMaskIdentity identity)
+        {
+            return new AutoPlantMaskRecord(identity, confidence, layers);
+        }
+
+        internal void ApplyIdentity(AutoMaskIdentity identity)
+        {
+            if (identity == null) return;
+            formatVersion = identity.FormatVersion;
+            generatorVersion = identity.GeneratorVersion;
+            sourcePackageId = identity.SourcePackageId;
+            sourceModName = identity.SourceModName;
+            plantDefName = identity.PlantDefName;
+            variationIndex = identity.VariationIndex;
+            texturePath = identity.TexturePath;
+            textureContentHash = identity.TextureContentHash;
+            textureWidth = identity.TextureWidth;
+            textureHeight = identity.TextureHeight;
+            textureKey = identity.TextureKey;
+            graphicIdentity = identity.GraphicIdentity;
+            growthState = identity.GrowthState;
+            directionIdentity = identity.DirectionIdentity;
+            variationIdentity = identity.VariationIdentity;
+            produceSignature = identity.ProduceSignature;
+            eligibilityKey = identity.EligibilityKey;
+            morphologyIdentity = identity.MorphologyIdentity;
+            variationIndex = Math.Max(0, variationIndex);
+        }
+
+        internal bool Matches(AutoMaskIdentity identity)
+        {
+            return identity != null && formatVersion == PlantAutoMaskCache.FormatVersion
+                && generatorVersion == PlantAutoMaskCache.GeneratorVersion
+                && sourcePackageId == identity.SourcePackageId && sourceModName == identity.SourceModName
+                && plantDefName == identity.PlantDefName && variationIndex == identity.VariationIndex
+                && texturePath == identity.TexturePath
+                && textureContentHash == identity.TextureContentHash && textureWidth == identity.TextureWidth
+                && textureHeight == identity.TextureHeight && textureKey == identity.TextureKey
+                && graphicIdentity == identity.GraphicIdentity && growthState == identity.GrowthState
+                && directionIdentity == identity.DirectionIdentity && variationIdentity == identity.VariationIdentity
+                && produceSignature == identity.ProduceSignature && eligibilityKey == identity.EligibilityKey
+                && morphologyIdentity == identity.MorphologyIdentity;
+        }
+
+        internal bool CanReuseFor(AutoMaskIdentity identity)
+        {
+            return identity != null && formatVersion == PlantAutoMaskCache.FormatVersion
+                && generatorVersion == PlantAutoMaskCache.GeneratorVersion
+                && sourcePackageId == identity.SourcePackageId && sourceModName == identity.SourceModName
+                && variationIndex == identity.VariationIndex && texturePath == identity.TexturePath
+                && textureContentHash == identity.TextureContentHash
+                && textureWidth == identity.TextureWidth && textureHeight == identity.TextureHeight
+                && textureKey == identity.TextureKey && graphicIdentity == identity.GraphicIdentity
+                && growthState == identity.GrowthState && directionIdentity == identity.DirectionIdentity
+                && produceSignature == identity.ProduceSignature && eligibilityKey == identity.EligibilityKey
+                && morphologyIdentity == identity.MorphologyIdentity;
+        }
+
+        internal string MismatchReason(AutoMaskIdentity identity)
+        {
+            if (identity == null) return "current identity is unavailable";
+            List<string> mismatches = new List<string>();
+            Action<bool, string> check = (matches, name) => { if (!matches) mismatches.Add(name); };
+            check(formatVersion == PlantAutoMaskCache.FormatVersion, "formatVersion");
+            check(generatorVersion == PlantAutoMaskCache.GeneratorVersion, "generatorVersion");
+            check(sourcePackageId == identity.SourcePackageId, "sourcePackageId");
+            check(sourceModName == identity.SourceModName, "sourceModName");
+            check(plantDefName == identity.PlantDefName, "plantDefName");
+            check(variationIndex == identity.VariationIndex, "variationIndex");
+            check(texturePath == identity.TexturePath, "texturePath");
+            check(textureContentHash == identity.TextureContentHash, "textureContentHash");
+            check(textureWidth == identity.TextureWidth, "textureWidth");
+            check(textureHeight == identity.TextureHeight, "textureHeight");
+            check(textureKey == identity.TextureKey, "textureKey");
+            check(graphicIdentity == identity.GraphicIdentity, "graphicIdentity");
+            check(growthState == identity.GrowthState, "growthState");
+            check(directionIdentity == identity.DirectionIdentity, "directionIdentity");
+            check(variationIdentity == identity.VariationIdentity, "variationIdentity");
+            check(produceSignature == identity.ProduceSignature, "produceSignature");
+            check(eligibilityKey == identity.EligibilityKey, "eligibilityKey");
+            check(morphologyIdentity == identity.MorphologyIdentity, "morphologyIdentity");
+            return mismatches.Count == 0 ? "unknown mismatch" : string.Join(",", mismatches.ToArray());
+        }
+
         public void ExposeData()
         {
+            Scribe_Values.Look(ref formatVersion, "formatVersion", PlantAutoMaskCache.FormatVersion, true);
+            Scribe_Values.Look(ref generatorVersion, "generatorVersion", PlantAutoMaskCache.GeneratorVersion, true);
+            Scribe_Values.Look(ref sourcePackageId, "sourcePackageId");
+            Scribe_Values.Look(ref sourceModName, "sourceModName");
             Scribe_Values.Look(ref plantDefName, "plantDef");
             Scribe_Values.Look(ref variationIndex, "variationIndex", 0);
+            Scribe_Values.Look(ref texturePath, "texturePath");
+            Scribe_Values.Look(ref textureContentHash, "textureContentHash");
+            Scribe_Values.Look(ref textureWidth, "textureWidth", 0, true);
+            Scribe_Values.Look(ref textureHeight, "textureHeight", 0, true);
             Scribe_Values.Look(ref textureKey, "textureKey");
+            Scribe_Values.Look(ref graphicIdentity, "graphicIdentity");
+            Scribe_Values.Look(ref growthState, "growthState");
+            Scribe_Values.Look(ref directionIdentity, "directionIdentity");
+            Scribe_Values.Look(ref variationIdentity, "variationIdentity");
+            Scribe_Values.Look(ref produceSignature, "produceSignature");
             Scribe_Values.Look(ref eligibilityKey, "eligibilityKey");
+            Scribe_Values.Look(ref morphologyIdentity, "morphologyIdentity");
             Scribe_Values.Look(ref confidence, "confidence", 0f);
             Scribe_Values.Look(ref lowConfidence, "lowConfidence", true);
             Scribe_Collections.Look(ref layers, "layers", LookMode.Deep);
@@ -57,6 +194,8 @@ namespace HorticultureNovelSeeds
         {
             variationIndex = Mathf.Max(0, variationIndex);
             confidence = Mathf.Clamp01(confidence);
+            formatVersion = formatVersion <= 0 ? PlantAutoMaskCache.FormatVersion : formatVersion;
+            generatorVersion = generatorVersion <= 0 ? PlantAutoMaskCache.GeneratorVersion : generatorVersion;
             if (layers == null) layers = new List<VisualMaskLayerRecord>();
             layers.RemoveAll(layer => layer == null);
             while (layers.Count < 3) layers.Add(new VisualMaskLayerRecord());
@@ -94,9 +233,15 @@ namespace HorticultureNovelSeeds
     {
         public int generated;
         public int reused;
+        public int localReused;
+        public int bundled;
         public int manualSkipped;
         public int lowConfidence;
         public int failed;
+        public int workItems;
+        public long elapsedMilliseconds;
+        public string currentPlant;
+        public bool queued;
     }
 
     public static class PlantAutoMaskCache
@@ -156,32 +301,156 @@ namespace HorticultureNovelSeeds
             public bool structuralOnly;
         }
 
-        public const int FormatVersion = 1;
-        public const int GeneratorVersion = 14;
+        public const int FormatVersion = 2;
+        public const int GeneratorVersion = 15;
         public const float LowConfidenceThreshold = 0.54f;
         private const byte TransparentAlpha = 4;
         private const int AnalysisSize = VisualMaskLayerRecord.Resolution;
         private static readonly Dictionary<string, AutoPlantMaskRecord> Records = new Dictionary<string, AutoPlantMaskRecord>();
+        private static readonly Dictionary<string, AutoPlantMaskRecord> BundledRecords = new Dictionary<string, AutoPlantMaskRecord>();
         private static readonly HashSet<string> SessionValidated = new HashSet<string>();
+        private static readonly HashSet<string> SessionBundled = new HashSet<string>();
         private static readonly HashSet<string> FailedKeys = new HashSet<string>();
+        private static readonly Dictionary<string, AutoMaskIdentity> CurrentIdentities = new Dictionary<string, AutoMaskIdentity>();
         private static bool initialized;
+        private static bool bundleInitialized;
         private static bool dirty;
+        private static bool generationQueued;
+        private static bool? runtimeTestBundleOverride;
+        private static AutoMaskBatchResult lastBatchResult;
 
         public static string CachePath => Path.Combine(GenFilePaths.ConfigFolderPath, "HorticultureNovelSeedsAutoMasks.xml");
+        public static string BundledCachePath => Path.Combine(HorticultureNovelSeedsMod.ContentRootPath ?? string.Empty,
+            "1.6", "AutoMasks", "BundledAutoMasks.xml");
+        public static string BundledManifestPath => Path.Combine(HorticultureNovelSeedsMod.ContentRootPath ?? string.Empty,
+            "1.6", "AutoMasks", "BundledAutoMasks.manifest.json");
+        public static bool GenerationQueued => generationQueued;
+        public static AutoMaskBatchResult LastBatchResult => lastBatchResult;
+        public static int LocalRecordCount => Records.Count;
+        public static int BundledRecordCount => BundledRecords.Count;
+
+        internal static IEnumerable<AutoPlantMaskRecord> LocalRecords => Records.Values;
+        internal static IEnumerable<AutoPlantMaskRecord> BundledRecordsForExport => BundledRecords.Values;
+
+        public static string RecordSource(ThingDef plantDef, int variationIndex)
+        {
+            AutoPlantMaskRecord record = GetRecord(plantDef, variationIndex, false, true);
+            if (record == null) return "none";
+            return IsBundledRecord(record) ? "bundled" : "local";
+        }
+
+        public static bool PromoteBundledRecord(ThingDef plantDef, int variationIndex, bool save)
+        {
+            EnsureLoaded();
+            EnsureBundleLoaded();
+            if (plantDef == null || runtimeTestBundleOverride == false) return false;
+            string key = RecordKey(plantDef.defName, variationIndex);
+            if (!BundledRecords.TryGetValue(key, out AutoPlantMaskRecord bundled)) return false;
+            Texture texture = PlantMaskUtility.TextureForVariation(plantDef, variationIndex);
+            AutoMaskIdentity identity = texture == null ? null : CurrentIdentityFor(plantDef, variationIndex, texture);
+            if (!bundled.Matches(identity)) return false;
+            Records[key] = bundled.CloneWithIdentity(identity);
+            SessionValidated.Add(key);
+            dirty = true;
+            if (save) SaveIfDirty();
+            return true;
+        }
+
+        public static void ClearRuntimeTestLocalRecord(ThingDef plantDef, int variationIndex)
+        {
+            if (plantDef == null) return;
+            string key = RecordKey(plantDef.defName, variationIndex);
+            Records.Remove(key);
+            SessionValidated.Remove(key);
+            dirty = true;
+        }
+
+        public static void SetRuntimeTestBundleEnabled(bool enabled)
+        {
+            runtimeTestBundleOverride = enabled;
+            SessionBundled.Clear();
+        }
+
+        public static void ResetRuntimeTestState()
+        {
+            Records.Clear();
+            BundledRecords.Clear();
+            SessionValidated.Clear();
+            SessionBundled.Clear();
+            FailedKeys.Clear();
+            initialized = false;
+            bundleInitialized = false;
+            dirty = false;
+            generationQueued = false;
+            runtimeTestBundleOverride = null;
+            lastBatchResult = default(AutoMaskBatchResult);
+            EnsureLoaded();
+            EnsureBundleLoaded();
+        }
 
         public static void InitializeAndGenerateMissing()
         {
             EnsureLoaded();
-            AutoMaskBatchResult result = GenerateMissing(false);
-            if (result.generated > 0 || result.failed > 0)
+            EnsureBundleLoaded();
+            AutoMaskBatchResult scan;
+            List<AutoMaskWorkItem> work = BuildWorkList(false, out scan);
+            scan.workItems = work.Count;
+            if (work.Count == 0)
+            {
+                scan.queued = false;
+                lastBatchResult = scan;
+                generationQueued = false;
+                Log.Message("[Horticulture - Novel Seeds] Auto masks are current; no generation long event was queued (bundle hits "
+                    + scan.bundled + ", local hits " + scan.localReused + ").");
+                return;
+            }
+
+            generationQueued = true;
+            scan.queued = true;
+            lastBatchResult = scan;
+            LongEventHandler.QueueLongEvent(() =>
+            {
+                Stopwatch timer = Stopwatch.StartNew();
+                AutoMaskBatchResult result = ExecuteWork(work, scan);
+                result.elapsedMilliseconds = timer.ElapsedMilliseconds;
+                result.queued = true;
+                lastBatchResult = result;
+                generationQueued = false;
                 Log.Message("[Horticulture - Novel Seeds] Auto masks: generated " + result.generated + ", reused " + result.reused
-                    + ", manual " + result.manualSkipped + ", review " + result.lowConfidence + ", failed " + result.failed + ".");
+                    + ", bundled " + result.bundled + ", manual " + result.manualSkipped + ", review " + result.lowConfidence
+                    + ", failed " + result.failed + ".");
+            }, "HNS_GeneratingAutoMasks", false, exception =>
+            {
+                generationQueued = false;
+                Log.Error("[Horticulture - Novel Seeds] Automatic plant-mask generation failed: " + exception);
+            }, true, false);
         }
 
         public static AutoMaskBatchResult GenerateMissing(bool regenerateAutomatic)
         {
             EnsureLoaded();
-            AutoMaskBatchResult result = new AutoMaskBatchResult();
+            EnsureBundleLoaded();
+            AutoMaskBatchResult scan;
+            List<AutoMaskWorkItem> work = BuildWorkList(regenerateAutomatic, out scan);
+            scan.workItems = work.Count;
+            Stopwatch timer = Stopwatch.StartNew();
+            AutoMaskBatchResult result = ExecuteWork(work, scan);
+            result.elapsedMilliseconds = timer.ElapsedMilliseconds;
+            result.queued = false;
+            lastBatchResult = result;
+            return result;
+        }
+
+        private sealed class AutoMaskWorkItem
+        {
+            public ThingDef plant;
+            public int variation;
+        }
+
+        private static List<AutoMaskWorkItem> BuildWorkList(bool regenerateAutomatic, out AutoMaskBatchResult result)
+        {
+            result = new AutoMaskBatchResult();
+            List<AutoMaskWorkItem> work = new List<AutoMaskWorkItem>();
             IEnumerable<ThingDef> plants = DefDatabase<ThingDef>.AllDefsListForReading
                 .Where(def => HorticulturePlantPolicy.IsSupported(def) && def.graphicData != null).OrderBy(def => def.defName);
             foreach (ThingDef plant in plants)
@@ -194,22 +463,39 @@ namespace HorticultureNovelSeeds
                         result.manualSkipped++;
                         continue;
                     }
-                    AutoPlantMaskRecord existing = GetRecord(plant, variation, false, true);
-                    if (!regenerateAutomatic && existing != null)
+                    AutoPlantMaskRecord existing = regenerateAutomatic ? null : GetRecord(plant, variation, false, true);
+                    if (existing != null)
                     {
                         result.reused++;
                         if (existing.LowConfidence) result.lowConfidence++;
+                        if (IsBundledRecord(existing)) result.bundled++;
+                        else result.localReused++;
                         continue;
                     }
-                    AutoPlantMaskRecord generated = Generate(plant, variation, false);
-                    if (generated == null) result.failed++;
-                    else
-                    {
-                        result.generated++;
-                        if (generated.LowConfidence) result.lowConfidence++;
-                    }
+                    work.Add(new AutoMaskWorkItem { plant = plant, variation = variation });
                 }
             }
+            return work;
+        }
+
+        private static AutoMaskBatchResult ExecuteWork(List<AutoMaskWorkItem> work, AutoMaskBatchResult result)
+        {
+            result.workItems = work.Count;
+            for (int index = 0; index < work.Count; index++)
+            {
+                AutoMaskWorkItem item = work[index];
+                result.currentPlant = item.plant.defName + " / " + PlantMaskUtility.VariationLabel(item.plant, item.variation);
+                LongEventHandler.SetCurrentEventText("Horticulture - Novel Seeds: analyzing " + result.currentPlant
+                    + " (" + (index + 1) + "/" + work.Count + ")");
+                AutoPlantMaskRecord generated = Generate(item.plant, item.variation, false);
+                if (generated == null) result.failed++;
+                else
+                {
+                    result.generated++;
+                    if (generated.LowConfidence) result.lowConfidence++;
+                }
+            }
+            result.currentPlant = string.Empty;
             SaveIfDirty();
             return result;
         }
@@ -218,33 +504,37 @@ namespace HorticultureNovelSeeds
             bool allowIdentityGeneration = false)
         {
             EnsureLoaded();
+            EnsureBundleLoaded();
             if (plantDef == null || !HorticulturePlantPolicy.IsSupported(plantDef)) return null;
             string key = RecordKey(plantDef.defName, variationIndex);
             if (!allowIdentityGeneration)
             {
                 if (SessionValidated.Contains(key) && Records.TryGetValue(key, out AutoPlantMaskRecord sessionRecord)) return sessionRecord;
+                if (SessionBundled.Contains(key) && BundledRecords.TryGetValue(key, out AutoPlantMaskRecord bundledSessionRecord)) return bundledSessionRecord;
                 return null;
             }
             Texture texture = PlantMaskUtility.TextureForVariation(plantDef, variationIndex);
             if (texture == null) return null;
-            ProduceSignature produce = ProduceColorFor(plantDef);
-            LayerEligibility eligibility = EligibilityFor(plantDef, variationIndex, texture, produce);
-            string textureKey = TextureKey(plantDef, variationIndex, texture, produce);
-            string eligibilityKey = EligibilityKey(plantDef, variationIndex, texture, produce, eligibility);
-            if (Records.TryGetValue(key, out AutoPlantMaskRecord record)
-                && record.TextureKey == textureKey && record.EligibilityKey == eligibilityKey)
+            AutoMaskIdentity identity = CurrentIdentityFor(plantDef, variationIndex, texture);
+            if (identity == null) return null;
+            if (Records.TryGetValue(key, out AutoPlantMaskRecord record) && record.Matches(identity))
             {
                 SessionValidated.Add(key);
                 return record;
             }
+            if (runtimeTestBundleOverride != false
+                && BundledRecords.TryGetValue(key, out AutoPlantMaskRecord bundledRecord) && bundledRecord.Matches(identity))
+            {
+                SessionBundled.Add(key);
+                return bundledRecord;
+            }
             AutoPlantMaskRecord reusable = Records.Values
-                .Where(candidate => candidate != null && candidate.TextureKey == textureKey && candidate.EligibilityKey == eligibilityKey)
+                .Where(candidate => candidate != null && candidate.CanReuseFor(identity))
                 .OrderBy(candidate => candidate.PlantDefName)
                 .FirstOrDefault();
             if (reusable != null)
             {
-                AutoPlantMaskRecord clone = new AutoPlantMaskRecord(plantDef.defName, variationIndex, textureKey,
-                    reusable.Confidence, reusable.Layers, eligibilityKey);
+                AutoPlantMaskRecord clone = reusable.CloneWithIdentity(identity);
                 Records[key] = clone;
                 SessionValidated.Add(key);
                 dirty = true;
@@ -265,21 +555,31 @@ namespace HorticultureNovelSeeds
             return record != null && !record.LowConfidence && record.Layers.Any(layer => layer?.HasPixels == true);
         }
 
+        public static bool RuntimeTestLowConfidenceSafety()
+        {
+            VisualMaskLayerRecord layer = new VisualMaskLayerRecord { name = "Leaves" };
+            layer.PaintPixel(120, 120, true);
+            AutoPlantMaskRecord low = new AutoPlantMaskRecord("RuntimeLow", 0, "runtime-low",
+                LowConfidenceThreshold - 0.01f,
+                new[] { new VisualMaskLayerRecord(), layer, new VisualMaskLayerRecord() });
+            AutoPlantMaskRecord high = new AutoPlantMaskRecord("RuntimeHigh", 0, "runtime-high",
+                LowConfidenceThreshold + 0.01f,
+                new[] { new VisualMaskLayerRecord(), layer, new VisualMaskLayerRecord() });
+            return !IsRenderable(low) && IsRenderable(high);
+        }
+
         public static AutoPlantMaskRecord Generate(ThingDef plantDef, int variationIndex, bool save)
         {
             EnsureLoaded();
+            EnsureBundleLoaded();
             Texture texture = PlantMaskUtility.TextureForVariation(plantDef, variationIndex);
             if (plantDef == null || !HorticulturePlantPolicy.IsSupported(plantDef) || texture == null) return null;
             ProduceSignature produce = ProduceColorFor(plantDef);
-            string textureKey = TextureKey(plantDef, variationIndex, texture, produce);
             LayerEligibility eligibility = EligibilityFor(plantDef, variationIndex, texture, produce);
-            string eligibilityKey = EligibilityKey(plantDef, variationIndex, texture, produce, eligibility);
             string key = RecordKey(plantDef.defName, variationIndex);
             FailedKeys.Remove(key);
             try
             {
-                SourceData source = AnalyzeTexture(texture);
-                if (source == null) return Failed(key);
                 Color32[] immatureReference = ReadPixels(PlantMaskUtility.ReferenceTextureForVariation(plantDef,
                     variationIndex, "Immature"), AnalysisSize);
                 string variationLabel = PlantMaskUtility.VariationLabel(plantDef, variationIndex) ?? string.Empty;
@@ -288,10 +588,14 @@ namespace HorticultureNovelSeeds
                     ?? PlantMaskUtility.ReferenceTextureForVariation(plantDef, variationIndex, "Leafless");
                 Color32[] leaflessReference = ReadPixels(structuralTexture, AnalysisSize);
                 if (leaflessReference != null && HasTreeMorphology(plantDef)) eligibility.forceStem = true;
+                AutoMaskIdentity identity = BuildIdentity(plantDef, variationIndex, texture, produce, eligibility);
+                if (identity == null) return Failed(key);
+                SourceData source = AnalyzeTexture(texture);
+                if (source == null) return Failed(key);
                 List<VisualMaskLayerRecord> layers = Classify(source, produce, eligibility, immatureReference,
                     leaflessReference, out float confidence);
-                AutoPlantMaskRecord record = new AutoPlantMaskRecord(plantDef.defName, variationIndex, textureKey,
-                    confidence, layers, eligibilityKey);
+                AutoPlantMaskRecord record = new AutoPlantMaskRecord(identity, confidence, layers);
+                CurrentIdentities[key] = identity;
                 Records[key] = record;
                 SessionValidated.Add(key);
                 dirty = true;
@@ -330,6 +634,124 @@ namespace HorticultureNovelSeeds
             }
         }
 
+        public static bool ExportBundle(string outputPath, out AutoMaskBundleValidationResult validation)
+        {
+            validation = new AutoMaskBundleValidationResult();
+            EnsureLoaded();
+            EnsureBundleLoaded();
+            if (outputPath.NullOrEmpty())
+            {
+                validation.Error = "No bundle output path was supplied.";
+                return false;
+            }
+            try
+            {
+                string directory = Path.GetDirectoryName(outputPath);
+                if (!directory.NullOrEmpty()) Directory.CreateDirectory(directory);
+                Dictionary<string, AutoPlantMaskRecord> effective = runtimeTestBundleOverride == false
+                    ? new Dictionary<string, AutoPlantMaskRecord>()
+                    : new Dictionary<string, AutoPlantMaskRecord>(BundledRecords);
+                foreach (KeyValuePair<string, AutoPlantMaskRecord> pair in Records) effective[pair.Key] = pair.Value;
+                HashSet<string> currentKeys = new HashSet<string>();
+                foreach (ThingDef plant in DefDatabase<ThingDef>.AllDefsListForReading
+                    .Where(def => HorticulturePlantPolicy.IsSupported(def) && def.graphicData != null))
+                {
+                    for (int variation = 0; variation < PlantMaskUtility.VariationCount(plant); variation++)
+                    {
+                        string key = RecordKey(plant.defName, variation);
+                        if (HorticultureNovelSeedsMod.Settings?.GetPlantSettings(plant, false)?.HasManualPlantMask(variation) != true)
+                            currentKeys.Add(key);
+                    }
+                }
+                List<AutoPlantMaskRecord> records = effective
+                    .Where(pair => currentKeys.Contains(pair.Key) && !RequiresIdentityRegeneration(pair.Value))
+                    .Select(pair => pair.Value)
+                    .OrderBy(record => record.PlantDefName).ThenBy(record => record.VariationIndex).ToList();
+                if (records.Count == 0)
+                {
+                    validation.Error = "No complete local or bundled records were available for export.";
+                    return false;
+                }
+                string temporary = outputPath + ".tmp";
+                if (File.Exists(temporary)) File.Delete(temporary);
+                AutoPlantMaskBundleFile file = new AutoPlantMaskBundleFile();
+                file.SetMetadata("mixed", "Horticulture - Novel Seeds", "generated-" + DateTime.UtcNow.ToString("yyyyMMddHHmmss"));
+                file.Masks.AddRange(records);
+                Scribe.saver.InitSaving(temporary, "HorticultureNovelSeedsBundledAutoMasks");
+                Scribe_Deep.Look(ref file, "autoMaskBundle");
+                Scribe.saver.FinalizeSaving();
+                if (File.Exists(outputPath)) File.Replace(temporary, outputPath, null);
+                else File.Move(temporary, outputPath);
+                validation = ValidateBundle(outputPath, true);
+                return validation.Valid;
+            }
+            catch (Exception exception)
+            {
+                Scribe.ForceStop();
+                validation.Error = exception.Message;
+                try { if (File.Exists(outputPath + ".tmp")) File.Delete(outputPath + ".tmp"); } catch { }
+                return false;
+            }
+        }
+
+        public static AutoMaskBundleValidationResult ValidateBundle(string inputPath, bool validateAgainstCurrentDefs)
+        {
+            AutoMaskBundleValidationResult validation = new AutoMaskBundleValidationResult();
+            if (inputPath.NullOrEmpty() || !File.Exists(inputPath))
+            {
+                validation.Error = "Bundle file does not exist.";
+                return validation;
+            }
+            try
+            {
+                AutoPlantMaskBundleFile file = null;
+                Scribe.loader.InitLoading(inputPath);
+                Scribe_Deep.Look(ref file, "autoMaskBundle");
+                Scribe.loader.FinalizeLoading();
+                if (file == null)
+                {
+                    validation.Error = "Bundle root is missing.";
+                    return validation;
+                }
+                if (file.LoadedFormatVersion != FormatVersion || file.LoadedGeneratorVersion != GeneratorVersion)
+                {
+                    validation.Error = "Bundle format/generator version is stale.";
+                    return validation;
+                }
+                validation.BundleId = file.BundleId;
+                HashSet<string> keys = new HashSet<string>();
+                foreach (AutoPlantMaskRecord record in file.Masks)
+                {
+                    validation.RecordCount++;
+                    if (record != null && record.LowConfidence) validation.LowConfidenceCount++;
+                    string key = record == null ? string.Empty : RecordKey(record.PlantDefName, record.VariationIndex);
+                    if (record == null || RequiresIdentityRegeneration(record) || !keys.Add(key))
+                    {
+                        validation.FailureCount++;
+                        validation.FailureDetails.Add(key + ": incomplete or duplicate record");
+                        continue;
+                    }
+                    if (!validateAgainstCurrentDefs) continue;
+                    ThingDef plant = DefDatabase<ThingDef>.GetNamedSilentFail(record.PlantDefName);
+                    Texture texture = plant == null ? null : PlantMaskUtility.TextureForVariation(plant, record.VariationIndex);
+                    AutoMaskIdentity identity = texture == null ? null : CurrentIdentityFor(plant, record.VariationIndex, texture);
+                    if (!record.Matches(identity))
+                    {
+                        validation.FailureCount++;
+                        validation.FailureDetails.Add(key + ": " + record.MismatchReason(identity));
+                    }
+                }
+                validation.Valid = validation.RecordCount > 0 && validation.FailureCount == 0;
+                return validation;
+            }
+            catch (Exception exception)
+            {
+                Scribe.ForceStop();
+                validation.Error = exception.Message;
+                return validation;
+            }
+        }
+
         private static void EnsureLoaded()
         {
             if (initialized) return;
@@ -362,7 +784,14 @@ namespace HorticultureNovelSeeds
 
         internal static bool RequiresIdentityRegeneration(AutoPlantMaskRecord record)
         {
-            return record == null || record.EligibilityKey.NullOrEmpty();
+            return record == null || record.FormatVersion != FormatVersion || record.GeneratorVersion != GeneratorVersion
+                || record.SourcePackageId.NullOrEmpty() || record.SourceModName.NullOrEmpty()
+                || record.PlantDefName.NullOrEmpty() || record.TexturePath.NullOrEmpty()
+                || record.TextureContentHash.NullOrEmpty() || record.TextureWidth <= 0 || record.TextureHeight <= 0
+                || record.TextureKey.NullOrEmpty() || record.GraphicIdentity.NullOrEmpty()
+                || record.GrowthState.NullOrEmpty() || record.DirectionIdentity.NullOrEmpty()
+                || record.VariationIdentity.NullOrEmpty() || record.ProduceSignature.NullOrEmpty()
+                || record.EligibilityKey.NullOrEmpty() || record.MorphologyIdentity.NullOrEmpty();
         }
 
         private static AutoPlantMaskRecord Failed(string key)
@@ -389,6 +818,104 @@ namespace HorticultureNovelSeeds
             return "p:" + eligibility.produce + "|l:" + eligibility.leaves + "|s:" + eligibility.stem
                 + "|f:" + eligibility.forceStem + "|struct:" + eligibility.structuralOnly
                 + "|immature:" + immatureKey + "|leafless:" + leaflessKey + "|produce:" + produce.key;
+        }
+
+        private static AutoMaskIdentity BuildIdentity(ThingDef plantDef, int variationIndex, Texture texture)
+        {
+            ProduceSignature produce = ProduceColorFor(plantDef);
+            LayerEligibility eligibility = EligibilityFor(plantDef, variationIndex, texture, produce);
+            return BuildIdentity(plantDef, variationIndex, texture, produce, eligibility);
+        }
+
+        private static AutoMaskIdentity CurrentIdentityFor(ThingDef plantDef, int variationIndex, Texture texture)
+        {
+            string key = RecordKey(plantDef?.defName, variationIndex);
+            if (CurrentIdentities.TryGetValue(key, out AutoMaskIdentity identity)) return identity;
+            identity = BuildIdentity(plantDef, variationIndex, texture);
+            if (identity != null) CurrentIdentities[key] = identity;
+            return identity;
+        }
+
+        private static AutoMaskIdentity BuildIdentity(ThingDef plantDef, int variationIndex, Texture texture,
+            ProduceSignature produce, LayerEligibility eligibility)
+        {
+            if (plantDef == null || texture == null) return null;
+            string label = PlantMaskUtility.VariationLabel(plantDef, variationIndex) ?? string.Empty;
+            if (!MaskTextureIdentity.TryGetDetails(texture, label, out MaskTextureIdentityDetails details)) return null;
+            string textureKey = details.Key;
+            string eligibilityKey = EligibilityKey(plantDef, variationIndex, texture, produce, eligibility);
+            string sourcePackageId = plantDef.modContentPack?.PackageId;
+            string sourceModName = plantDef.modContentPack?.Name;
+            if (sourcePackageId.NullOrEmpty()) sourcePackageId = "Core";
+            if (sourceModName.NullOrEmpty()) sourceModName = "Core";
+            string morphology = "tree:" + HasTreeMorphology(plantDef)
+                + "|isTree:" + (plantDef.plant?.IsTree == true)
+                + "|forceTree:" + (plantDef.plant?.forceIsTree == true)
+                + "|variation:" + label
+                + "|produce:" + eligibility.produce + "|leaves:" + eligibility.leaves
+                + "|stem:" + eligibility.stem + "|forceStem:" + eligibility.forceStem
+                + "|structural:" + eligibility.structuralOnly;
+            return new AutoMaskIdentity
+            {
+                SourcePackageId = sourcePackageId,
+                SourceModName = sourceModName,
+                PlantDefName = plantDef.defName,
+                VariationIndex = variationIndex,
+                TexturePath = PlantMaskUtility.TexturePathForVariation(plantDef, variationIndex) ?? string.Empty,
+                TextureContentHash = details.ContentHash,
+                TextureWidth = details.Width,
+                TextureHeight = details.Height,
+                TextureKey = textureKey,
+                GraphicIdentity = PlantMaskUtility.GraphicIdentityFor(plantDef),
+                GrowthState = details.StateLabel,
+                DirectionIdentity = details.Orientation,
+                VariationIdentity = PlantMaskUtility.VariationIdentityFor(plantDef, variationIndex),
+                ProduceSignature = (produce.key ?? "none"),
+                EligibilityKey = eligibilityKey,
+                MorphologyIdentity = morphology,
+                FormatVersion = FormatVersion,
+                GeneratorVersion = GeneratorVersion
+            };
+        }
+
+        private static bool IsBundledRecord(AutoPlantMaskRecord record)
+        {
+            if (record == null) return false;
+            return BundledRecords.TryGetValue(RecordKey(record.PlantDefName, record.VariationIndex), out AutoPlantMaskRecord bundled)
+                && ReferenceEquals(record, bundled);
+        }
+
+        private static void EnsureBundleLoaded()
+        {
+            if (bundleInitialized) return;
+            bundleInitialized = true;
+            if (runtimeTestBundleOverride == false) return;
+            if (HorticultureNovelSeedsMod.ContentRootPath.NullOrEmpty() || !File.Exists(BundledCachePath)) return;
+            try
+            {
+                AutoPlantMaskBundleFile file = null;
+                Scribe.loader.InitLoading(BundledCachePath);
+                Scribe_Deep.Look(ref file, "autoMaskBundle");
+                Scribe.loader.FinalizeLoading();
+                if (file == null || file.LoadedFormatVersion != FormatVersion || file.LoadedGeneratorVersion != GeneratorVersion)
+                {
+                    Log.Warning("[Horticulture - Novel Seeds] Ignored bundled automatic masks because its format or generator version is stale.");
+                    return;
+                }
+                foreach (AutoPlantMaskRecord record in file.Masks)
+                {
+                    if (RequiresIdentityRegeneration(record)) continue;
+                    string key = RecordKey(record.PlantDefName, record.VariationIndex);
+                    BundledRecords[key] = record;
+                }
+                Log.Message("[Horticulture - Novel Seeds] Loaded " + BundledRecords.Count + " bundled automatic plant masks.");
+            }
+            catch (Exception exception)
+            {
+                Scribe.ForceStop();
+                BundledRecords.Clear();
+                Log.Warning("[Horticulture - Novel Seeds] Could not load bundled automatic plant masks: " + exception.Message);
+            }
         }
 
         private static string ReferenceFingerprint(Texture texture)

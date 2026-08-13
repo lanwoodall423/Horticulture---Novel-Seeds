@@ -60,8 +60,7 @@ namespace HorticultureNovelSeeds
             foreach (string capability in RequiredCapabilities.Concat(OptionalCapabilities))
             {
                 report.capabilityVersions[capability] = KnowledgeFrameworkApi.CapabilityVersion(capability);
-                if (!KnowledgeFrameworkApi.Supports(MinimumApiGeneration, capability) ||
-                    report.capabilityVersions[capability] < MinimumApiGeneration)
+                if (!KnowledgeFrameworkApi.Supports(MinimumApiGeneration, capability))
                 {
                     if (RequiredCapabilities.Contains(capability)) report.missingRequired.Add(capability);
                     else report.missingOptional.Add(capability);

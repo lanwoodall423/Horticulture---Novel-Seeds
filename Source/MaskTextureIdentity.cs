@@ -7,9 +7,21 @@ using Verse;
 
 namespace HorticultureNovelSeeds
 {
+    public sealed class MaskTextureIdentityDetails
+    {
+        public string Key;
+        public string TextureName;
+        public int Width;
+        public int Height;
+        public string StateLabel;
+        public string Orientation;
+        public string ContentHash;
+    }
+
     public static class MaskTextureIdentity
     {
         private static readonly Dictionary<string, string> IdentityCache = new Dictionary<string, string>();
+        private static readonly Dictionary<string, MaskTextureIdentityDetails> DetailsCache = new Dictionary<string, MaskTextureIdentityDetails>();
 
         public static bool TryGet(Texture texture, string stateLabel, out string key)
         {
@@ -24,16 +36,52 @@ namespace HorticultureNovelSeeds
         private static bool TryGet(Texture texture, string stateLabel, bool allowRead, out string key)
         {
             key = null;
+            if (!TryGetDetails(texture, stateLabel, allowRead, out MaskTextureIdentityDetails details)) return false;
+            key = details.Key;
+            return true;
+        }
+
+        public static bool TryGetDetails(Texture texture, string stateLabel, out MaskTextureIdentityDetails details)
+        {
+            return TryGetDetails(texture, stateLabel, true, out details);
+        }
+
+        public static bool TryGetCachedDetails(Texture texture, string stateLabel, out MaskTextureIdentityDetails details)
+        {
+            return TryGetDetails(texture, stateLabel, false, out details);
+        }
+
+        private static bool TryGetDetails(Texture texture, string stateLabel, bool allowRead, out MaskTextureIdentityDetails details)
+        {
+            details = null;
             if (texture == null || texture.width <= 0 || texture.height <= 0) return false;
-            string cacheKey = texture.GetInstanceID() + "|" + NormalizeStateLabel(stateLabel);
-            if (IdentityCache.TryGetValue(cacheKey, out key)) return !key.NullOrEmpty();
+            string normalizedState = NormalizeStateLabel(stateLabel);
+            string cacheKey = texture.GetInstanceID() + "|" + normalizedState;
+            if (DetailsCache.TryGetValue(cacheKey, out details)) return details != null && !details.Key.NullOrEmpty();
             if (!allowRead) return false;
             Color32[] pixels = ReadPixels(texture, texture.width, texture.height);
-            if (pixels == null) { IdentityCache[cacheKey] = string.Empty; return false; }
-            key = "v1|" + (texture.name ?? string.Empty) + "|" + texture.width + "x" + texture.height
-                + "|state:" + NormalizeStateLabel(stateLabel) + "|orientation:" + OrientationFor(texture.name)
-                + "|pixels:" + PixelFingerprint(pixels);
+            if (pixels == null)
+            {
+                IdentityCache[cacheKey] = string.Empty;
+                DetailsCache[cacheKey] = null;
+                return false;
+            }
+            string orientation = OrientationFor(texture.name);
+            string contentHash = PixelFingerprint(pixels);
+            string key = "v1|" + (texture.name ?? string.Empty) + "|" + texture.width + "x" + texture.height
+                + "|state:" + normalizedState + "|orientation:" + orientation + "|pixels:" + contentHash;
+            details = new MaskTextureIdentityDetails
+            {
+                Key = key,
+                TextureName = texture.name ?? string.Empty,
+                Width = texture.width,
+                Height = texture.height,
+                StateLabel = normalizedState,
+                Orientation = orientation,
+                ContentHash = contentHash
+            };
             IdentityCache[cacheKey] = key;
+            DetailsCache[cacheKey] = details;
             return true;
         }
 
@@ -75,6 +123,7 @@ namespace HorticultureNovelSeeds
         public static void ClearCache()
         {
             IdentityCache.Clear();
+            DetailsCache.Clear();
         }
 
         public static Color32[] ReadPixels(Texture texture, int width, int height)
@@ -122,7 +171,7 @@ namespace HorticultureNovelSeeds
                 return BitConverter.ToString(sha.ComputeHash(bytes)).Replace("-", string.Empty);
         }
 
-        private static string OrientationFor(string textureName)
+        public static string OrientationFor(string textureName)
         {
             if (textureName.NullOrEmpty()) return "unknown";
             string lower = textureName.ToLowerInvariant();
@@ -175,7 +224,7 @@ namespace HorticultureNovelSeeds
             bool found = allowFingerprint
                 ? MaskTextureIdentity.TryGet(target, variationIndex, out identity)
                 : MaskTextureIdentity.TryGetCached(target, variationIndex, out identity);
-            if (!found) return result;
+            if (!found || identity.NullOrEmpty()) return result;
             EnsureBuilt(allowFingerprint);
             result.IdentityKey = identity;
             if (!Entries.TryGetValue(identity, out Entry entry)) return result;

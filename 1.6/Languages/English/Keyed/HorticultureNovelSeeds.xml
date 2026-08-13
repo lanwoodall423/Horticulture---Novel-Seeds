@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
-  <HNS_NameAndUnlockVariety>Name and unlock {0} variety</HNS_NameAndUnlockVariety>
+  <HNS_GeneratingAutoMasks>Generating automatic plant masks...</HNS_GeneratingAutoMasks>
+  <HNS_NameAndUnlockVariety>Name and preserve {0} cultivar</HNS_NameAndUnlockVariety>
   <HNS_AlreadyUnlocked>These traits are already unlocked as {0}.</HNS_AlreadyUnlocked>
   <HNS_InvalidSeedPack>Seed pack data is missing.</HNS_InvalidSeedPack>
-  <HNS_NovelSeedPackLabel>{0} novel seed pack</HNS_NovelSeedPackLabel>
+  <HNS_NovelSeedPackLabel>Novel {0} cultivar seed pack</HNS_NovelSeedPackLabel>
   <HNS_Traits>Traits</HNS_Traits>
   <HNS_ColorTraitDescription>Changes the color of the {0} layer.</HNS_ColorTraitDescription>
   <HNS_ColorLayerProduce>produce</HNS_ColorLayerProduce>
   <HNS_ColorLayerLeaves>leaves</HNS_ColorLayerLeaves>
   <HNS_ColorLayerStem>stem</HNS_ColorLayerStem>
-  <HNS_PlantVariety>Variety</HNS_PlantVariety>
-  <HNS_VarietyLabel>Variety: {0}</HNS_VarietyLabel>
+  <HNS_PlantVariety>Cultivar</HNS_PlantVariety>
+  <HNS_VarietyLabel>Cultivar: {0}</HNS_VarietyLabel>
   <HNS_StatChanges>Stat Changes</HNS_StatChanges>
   <HNS_NoVarietyData>No variety data.</HNS_NoVarietyData>
   <HNS_NoTraits>No traits.</HNS_NoTraits>
@@ -56,31 +57,32 @@
   <HNS_StatJoyresin>Joyresin: sowing or harvesting gives a temporary mood boost; fully covered hands prevent harvesting exposure</HNS_StatJoyresin>
   <HNS_StatThorny>Thorn scratches: {0} chance, {1} damage to an uncovered hand; hand-covering apparel prevents it</HNS_StatThorny>
   <HNS_StatTraitEffect>{0}: {1}</HNS_StatTraitEffect>
-  <HNS_PendingVariety>unnamed variety</HNS_PendingVariety>
-  <HNS_EvolvingVarietyLabel>evolving {0}</HNS_EvolvingVarietyLabel>
-  <HNS_CrossPollinatedLabel>cross-pollinated ({0})</HNS_CrossPollinatedLabel>
-  <HNS_CrossPollinatedWith>Cross-pollinated with: {0}</HNS_CrossPollinatedWith>
-  <HNS_UnknownVariety>unknown variety</HNS_UnknownVariety>
+  <HNS_PendingVariety>unnamed cultivar discovery</HNS_PendingVariety>
+  <HNS_EvolvingVarietyLabel>evolving {0} cultivar</HNS_EvolvingVarietyLabel>
+  <HNS_CrossPollinatedLabel>hybrid cultivar ({0})</HNS_CrossPollinatedLabel>
+  <HNS_CrossPollinatedWith>Hybrid parents: {0}</HNS_CrossPollinatedWith>
+  <HNS_UnknownVariety>unknown cultivar</HNS_UnknownVariety>
   <HNS_PendingAdditionalTraits>Additional traits: {0}</HNS_PendingAdditionalTraits>
   <HNS_SelectStandard>Standard {0}</HNS_SelectStandard>
-  <HNS_SelectVariety>{0} ({1})</HNS_SelectVariety>
-  <HNS_SelectVarietySubmenu>{0} varieties...</HNS_SelectVarietySubmenu>
-  <HNS_NameDialogTitle>Name plant variety</HNS_NameDialogTitle>
-  <HNS_NameDialogPrompt>Name this {0} variety.</HNS_NameDialogPrompt>
-  <HNS_NameDialogConfirm>Unlock</HNS_NameDialogConfirm>
+  <HNS_SelectVariety>{0} cultivar ({1})</HNS_SelectVariety>
+  <HNS_SelectVarietySubmenu>{0} cultivars...</HNS_SelectVarietySubmenu>
+  <HNS_NameDialogTitle>Name and preserve cultivar</HNS_NameDialogTitle>
+  <HNS_NameDialogPrompt>Choose a name for this {0} cultivar. The exact traits below will be preserved in the colony registry.</HNS_NameDialogPrompt>
+  <HNS_NameDialogPreservationNote>Cancel keeps this seed pack. After preserving the cultivar, you select it from plant menus; no separate seed-stack management is required.</HNS_NameDialogPreservationNote>
+  <HNS_NameDialogConfirm>Save and unlock</HNS_NameDialogConfirm>
   <HNS_NameDialogCancel>Cancel</HNS_NameDialogCancel>
-  <HNS_RenameDialogTitle>Rename plant variety</HNS_RenameDialogTitle>
-  <HNS_RenameDialogPrompt>Rename this {0} variety.</HNS_RenameDialogPrompt>
+  <HNS_RenameDialogTitle>Rename cultivar</HNS_RenameDialogTitle>
+  <HNS_RenameDialogPrompt>Choose a new name for this {0} cultivar.</HNS_RenameDialogPrompt>
   <HNS_RenameDialogConfirm>Rename</HNS_RenameDialogConfirm>
-  <HNS_VarietyUnlocked>{0} unlocked</HNS_VarietyUnlocked>
-  <HNS_VarietyUnlockedDesc>{0} can now be selected as a variety of {1} in growing-zone plant menus.</HNS_VarietyUnlockedDesc>
+  <HNS_VarietyUnlocked>{0} preserved</HNS_VarietyUnlocked>
+  <HNS_VarietyUnlockedDesc>{0} is now a cultivar of {1}. Select it from the growing-zone plant menu whenever you want to grow that exact trait combination.</HNS_VarietyUnlockedDesc>
   <HNS_RenameVariety>Rename</HNS_RenameVariety>
-  <HNS_NicePlantsMenuVarietyHeader>Variety</HNS_NicePlantsMenuVarietyHeader>
-  <HNS_NicePlantsMenuVarietyTitle>Selected variety: {0}</HNS_NicePlantsMenuVarietyTitle>
+  <HNS_NicePlantsMenuVarietyHeader>Cultivar</HNS_NicePlantsMenuVarietyHeader>
+  <HNS_NicePlantsMenuVarietyTitle>Selected cultivar: {0}</HNS_NicePlantsMenuVarietyTitle>
   <HNS_NicePlantsMenuTraitsLine>Traits: {0}</HNS_NicePlantsMenuTraitsLine>
   <HNS_NicePlantsMenuEffectsHeader>Trait Effects</HNS_NicePlantsMenuEffectsHeader>
   <HNS_NicePlantsMenuBullet>- {0}</HNS_NicePlantsMenuBullet>
-  <HNS_VarietyTab>Variety</HNS_VarietyTab>
+  <HNS_VarietyTab>Cultivar</HNS_VarietyTab>
   <HNS_Lineage>Lineage</HNS_Lineage>
   <HNS_LineageTitle>{0} lineage</HNS_LineageTitle>
   <HNS_LineageSubtitle>Recorded cross-pollination history</HNS_LineageSubtitle>
@@ -91,14 +93,14 @@
   <HNS_LineageTraits>Traits: {0}</HNS_LineageTraits>
   <HNS_NoCrossLineage>No recorded cross-pollination lineage. This variety originated as a mutation or wild discovery.</HNS_NoCrossLineage>
   <HNS_LineageMissingParent>This parent variety is no longer available in the variety registry.</HNS_LineageMissingParent>
-  <HNS_SeedDiscovered>{0} novel seed pack discovered</HNS_SeedDiscovered>
-  <HNS_SeedDiscoveredDesc>Seeds were preserved from a novel {0} plant with these traits: {1}.</HNS_SeedDiscoveredDesc>
-  <HNS_SaveSeeds>Save seeds</HNS_SaveSeeds>
-  <HNS_SaveSeedsDesc>Harvest this plant while carefully preserving its novel seeds. Harvesting it normally will lose the seeds.</HNS_SaveSeedsDesc>
-  <HNS_SaveSeedsRequested>Seeds are marked to be saved when this plant is harvested.</HNS_SaveSeedsRequested>
-  <HNS_VarietyProduce>Variety Produce</HNS_VarietyProduce>
-  <HNS_SourceVariety>Source Variety: {0}</HNS_SourceVariety>
-  <HNS_SourceVarieties>Source Varieties: {0}</HNS_SourceVarieties>
+  <HNS_SeedDiscovered>{0} cultivar seed pack discovered</HNS_SeedDiscovered>
+  <HNS_SeedDiscoveredDesc>Traits were preserved from a novel {0} plant. Name the cultivar when you are ready; its exact combination is shown below: {1}.</HNS_SeedDiscoveredDesc>
+  <HNS_SaveSeeds>Preserve novel seeds</HNS_SaveSeeds>
+  <HNS_SaveSeedsDesc>Mark this mature discovery for harvest. The special harvest preserves its exact traits as a seed pack; an ordinary harvest would lose the pending discovery.</HNS_SaveSeedsDesc>
+  <HNS_SaveSeedsRequested>Marked to preserve: the harvest designation will create a seed pack.</HNS_SaveSeedsRequested>
+  <HNS_VarietyProduce>Cultivar produce</HNS_VarietyProduce>
+  <HNS_SourceVariety>Source cultivar: {0}</HNS_SourceVariety>
+  <HNS_SourceVarieties>Source cultivars: {0}</HNS_SourceVarieties>
   <HNS_InheritedQualities>Inherited Qualities</HNS_InheritedQualities>
   <HNS_NoInheritedQualities>This variety has no traits that alter harvested produce.</HNS_NoInheritedQualities>
   <HNS_EffectiveNutrition>Effective Nutrition: {0} of base</HNS_EffectiveNutrition>
@@ -161,6 +163,44 @@
   <HNS_RegistryBalanced>Balanced</HNS_RegistryBalanced>
   <HNS_RegistryBeneficial>Beneficial</HNS_RegistryBeneficial>
   <HNS_RegistryDetrimental>Detrimental</HNS_RegistryDetrimental>
+  <HNS_SettingsTitle>Novel Seeds settings</HNS_SettingsTitle>
+  <HNS_SettingsSubtitle>Set the defaults used by new discoveries. Select a plant or group for targeted overrides.</HNS_SettingsSubtitle>
+  <HNS_SettingsAdvanced>Advanced settings</HNS_SettingsAdvanced>
+  <HNS_SettingsAdvancedShow>Show advanced settings</HNS_SettingsAdvancedShow>
+  <HNS_SettingsAdvancedHide>Hide advanced settings</HNS_SettingsAdvancedHide>
+  <HNS_RegistryPlantsTab>Plants</HNS_RegistryPlantsTab>
+  <HNS_RegistryCultivarsTab>Cultivars</HNS_RegistryCultivarsTab>
+  <HNS_RegistryKnowledgeTab>Knowledge</HNS_RegistryKnowledgeTab>
+  <HNS_RegistryCompareTab>Compare</HNS_RegistryCompareTab>
+  <HNS_RegistryPlantCount>Plants discovered: {0} / {1}   Cultivars: {2}</HNS_RegistryPlantCount>
+  <HNS_RegistryUndiscoveredPlant>Undiscovered plant</HNS_RegistryUndiscoveredPlant>
+  <HNS_RegistryLearnPlant>Work with this plant or discover a cultivar to reveal it.</HNS_RegistryLearnPlant>
+  <HNS_RegistryNoPlantMatches>No plants match the current search and filter.</HNS_RegistryNoPlantMatches>
+  <HNS_RegistrySelectPlant>Select a discovered plant to inspect it.</HNS_RegistrySelectPlant>
+  <HNS_RegistryUndiscoveredDetails>Undiscovered plant\n\nWork with this plant or discover a cultivar to reveal its information.</HNS_RegistryUndiscoveredDetails>
+  <HNS_RegistryPlantKnowledge>Plant knowledge</HNS_RegistryPlantKnowledge>
+  <HNS_RegistryKnownCultivars>Known cultivars</HNS_RegistryKnownCultivars>
+  <HNS_RegistryLineageDepth>Lineage depth</HNS_RegistryLineageDepth>
+  <HNS_RegistrySource>Source</HNS_RegistrySource>
+  <HNS_RegistryOnMaps>On maps</HNS_RegistryOnMaps>
+  <HNS_RegistryDiscovered>First recorded</HNS_RegistryDiscovered>
+  <HNS_RegistryTraits>Traits</HNS_RegistryTraits>
+  <HNS_RegistryNeedKnowledge>Learn more about this plant to reveal cultivar traits.</HNS_RegistryNeedKnowledge>
+  <HNS_RegistryModifiers>Cultivar effects</HNS_RegistryModifiers>
+  <HNS_RegistryUnknown>Not yet documented</HNS_RegistryUnknown>
+  <HNS_RegistryComparePrompt>Select at least two discovered cultivars on the Cultivars page.</HNS_RegistryComparePrompt>
+  <HNS_RegistryComparisonTitle>Cultivar comparison</HNS_RegistryComparisonTitle>
+  <HNS_RegistryParentPlant>Parent plant</HNS_RegistryParentPlant>
+  <HNS_RegistryFrameworkEvidence>Evidence quality</HNS_RegistryFrameworkEvidence>
+  <HNS_RegistryShowFilter>Show: {0}</HNS_RegistryShowFilter>
+  <HNS_RegistryKnowledgeRank>{0} knowledge</HNS_RegistryKnowledgeRank>
+  <HNS_RegistryColonyRank>Colony knowledge</HNS_RegistryColonyRank>
+  <HNS_RegistryGrowing>Growing</HNS_RegistryGrowing>
+  <HNS_RegistryHarvest>Harvest</HNS_RegistryHarvest>
+  <HNS_RegistryEnvironment>Environment</HNS_RegistryEnvironment>
+  <HNS_RegistryBalance>Balance: {0}</HNS_RegistryBalance>
+  <HNS_RegistryProduceEffectFilter>Inherited produce effects</HNS_RegistryProduceEffectFilter>
+  <HNS_RegistrySearch>Search</HNS_RegistrySearch>
 </LanguageData>
 
 

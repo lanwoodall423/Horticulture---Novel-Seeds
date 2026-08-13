@@ -241,12 +241,12 @@ namespace HorticultureNovelSeeds
         }
     }
 
-    public class Dialog_SaveSettingsProfile : Window
+    public class Dialog_SaveSettingsProfile : Window, IHorticultureInputDialogSurface
     {
         private readonly NovelSeedsSettings settings;
         private string profileName = string.Empty;
         private string errorText;
-        private bool focused;
+        private HorticultureInputDialogDocument canvasDocument;
 
         public override Vector2 InitialSize => new Vector2(520f, 250f);
 
@@ -258,31 +258,18 @@ namespace HorticultureNovelSeeds
             closeOnClickedOutside = false;
             closeOnAccept = false;
             forceCatchAcceptAndCancelEventEvenIfUnfocused = true;
+            canvasDocument = new HorticultureInputDialogDocument(this, "hns.settings-profile.save");
         }
 
         public override void DoWindowContents(Rect inRect)
         {
-            Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(inRect.x, inRect.y, inRect.width, 32f), "Save Configuration");
-            Text.Font = GameFont.Small;
-            Widgets.Label(new Rect(inRect.x, inRect.y + 42f, inRect.width, 26f), "Name this configuration profile.");
-            GUI.SetNextControlName("HNS_ProfileName");
-            profileName = Widgets.TextField(new Rect(inRect.x, inRect.y + 72f, inRect.width, 32f), profileName, 64);
-            if (!focused)
-            {
-                UI.FocusControl("HNS_ProfileName", this);
-                focused = true;
-            }
-            if (!errorText.NullOrEmpty())
-            {
-                Color old = GUI.color;
-                GUI.color = ColorLibrary.RedReadable;
-                Widgets.Label(new Rect(inRect.x, inRect.y + 110f, inRect.width, 40f), errorText);
-                GUI.color = old;
-            }
+            canvasDocument?.Draw(inRect);
+        }
 
-            if (Widgets.ButtonText(new Rect(inRect.xMax - 220f, inRect.yMax - 34f, 100f, 30f), "Cancel")) Close();
-            if (Widgets.ButtonText(new Rect(inRect.xMax - 110f, inRect.yMax - 34f, 110f, 30f), "Save")) Save();
+        public override void PostClose()
+        {
+            canvasDocument?.PostClose();
+            base.PostClose();
         }
 
         public override void OnAcceptKeyPressed()
@@ -315,5 +302,16 @@ namespace HorticultureNovelSeeds
             }
             else errorText = "Could not save configuration: " + error;
         }
+
+        string IHorticultureInputDialogSurface.Title => "Save Configuration Profile";
+        string IHorticultureInputDialogSurface.Description => "Name a portable snapshot of the current Horticulture settings. Existing profile names require confirmation before replacement.";
+        string IHorticultureInputDialogSurface.FieldLabel => "Profile name";
+        string IHorticultureInputDialogSurface.Value { get => profileName; set => profileName = value ?? string.Empty; }
+        string IHorticultureInputDialogSurface.ValidationMessage => errorText;
+        string IHorticultureInputDialogSurface.PrimaryLabel => "Save profile";
+        Action IHorticultureInputDialogSurface.PrimaryAction => Save;
+        string IHorticultureInputDialogSurface.SecondaryLabel => string.Empty;
+        Action IHorticultureInputDialogSurface.SecondaryAction => null;
+        void IHorticultureInputDialogSurface.Close() => Close();
     }
 }

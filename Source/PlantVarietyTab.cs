@@ -8,11 +8,8 @@ namespace HorticultureNovelSeeds
 {
     public class ITab_PlantVariety : ITab
     {
-        private const float PanelPadding = 8f;
-        private const float PanelGap = 10f;
-        private const float PanelHeaderHeight = 36f;
-        private Vector2 traitScrollPosition;
-        private Vector2 statScrollPosition;
+        private HorticultureInspectorDocument document;
+        private Thing lastThing;
 
         public ITab_PlantVariety()
         {
@@ -32,143 +29,69 @@ namespace HorticultureNovelSeeds
         protected override void FillTab()
         {
             CompPlantVariety comp = SelThing?.TryGetComp<CompPlantVariety>();
-            Rect rect = new Rect(0f, 0f, size.x, size.y).ContractedBy(12f);
             if (comp == null || !comp.HasAnyTraits)
             {
-                Widgets.Label(rect, "HNS_NoVarietyData".Translate());
+                EnsureDocument();
+                document.Refresh(new HorticultureInspectorSnapshot
+                {
+                    Title = "Cultivar details",
+                    Subtitle = "No Cultivar data is available for this plant.",
+                    PrimaryHeader = "Traits",
+                    SecondaryHeader = "Effects",
+                    PrimaryEmpty = "No traits",
+                    SecondaryEmpty = "No effects"
+                });
+                document.Draw(ContentRect());
                 return;
             }
-            string varietyName = comp.DisplayVarietyName;
-            List<VarietyTraitDef> traits = comp.ActiveTraits.ToList();
-            List<string> statLines = NovelSeedUtility.StatChangeLines(traits, SelThing.def);
+
+            EnsureDocument();
+            List<VarietyTraitDef> traits = comp.ActiveTraits?.Where(trait => trait != null).ToList()
+                ?? new List<VarietyTraitDef>();
+            List<string> statLines = NovelSeedUtility.StatChangeLines(traits, SelThing.def) ?? new List<string>();
             statLines.Add(NovelSeedUtility.TraitBalanceSummary(traits));
-
-            Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(rect.x, rect.y, rect.width - 150f, 30f), "HNS_VarietyLabel".Translate(varietyName));
-            if (Widgets.ButtonText(new Rect(rect.xMax - 138f, rect.y, 104f, 30f), "HNS_Lineage".Translate()))
+            VarietyRecord variety = comp.PendingDiscovery ? null : comp.Variety;
+            string subtitle = variety == null ? "Discovery details are still unknown." :
+                (variety.FirstDiscoveredInfo.NullOrEmpty() ? "Discovered Cultivar" :
+                    "First discovered: " + variety.FirstDiscoveredInfo);
+            document.Refresh(new HorticultureInspectorSnapshot
             {
-                VarietyRecord variety = comp.Variety;
-                List<string> parentIds = comp.CrossPollinated
-                    ? comp.CrossPollinationParentIds
-                    : variety?.parentVarietyIds?.ToList() ?? new List<string>();
-                Find.WindowStack.Add(new Dialog_VarietyLineage(varietyName, traits, parentIds));
-            }
-            Text.Font = GameFont.Small;
-
-            VarietyRecord discoveredVariety = comp.PendingDiscovery ? null : comp.Variety;
-            float headerHeight = 40f;
-            if (discoveredVariety != null && !discoveredVariety.FirstDiscoveredInfo.NullOrEmpty())
-            {
-                Color previous = GUI.color;
-                GUI.color = new Color(0.72f, 0.72f, 0.72f);
-                Widgets.Label(new Rect(rect.x, rect.y + 31f, rect.width - 8f, 24f), "HNS_FirstDiscoveredHeader".Translate() + ": " + discoveredVariety.FirstDiscoveredInfo);
-                GUI.color = previous;
-                headerHeight = 64f;
-            }
-
-            Rect contentRect = new Rect(rect.x, rect.y + headerHeight, rect.width, rect.height - headerHeight);
-            float traitsHeight = Mathf.Min(178f, Mathf.Max(126f, contentRect.height * 0.44f));
-            Rect traitsPanel = new Rect(contentRect.x, contentRect.y, contentRect.width, traitsHeight);
-            Rect statsPanel = new Rect(contentRect.x, traitsPanel.yMax + PanelGap, contentRect.width, contentRect.height - traitsHeight - PanelGap);
-
-            DrawTraitsPanel(traitsPanel, traits);
-            DrawStatChangesPanel(statsPanel, statLines);
-        }
-
-        private void DrawTraitsPanel(Rect rect, List<VarietyTraitDef> traits)
-        {
-            DrawPanelFrame(rect, "HNS_Traits".Translate().ToString());
-            Rect outRect = PanelContentRect(rect);
-            float viewWidth = outRect.width - 16f;
-            List<float> rowHeights = traits.Select(trait => TraitHeight(trait, viewWidth)).ToList();
-            float viewHeight = Mathf.Max(outRect.height, traits.Count == 0 ? 28f : rowHeights.Sum());
-            Rect viewRect = new Rect(0f, 0f, viewWidth, viewHeight);
-            Widgets.BeginScrollView(outRect, ref traitScrollPosition, viewRect);
-            if (traits.Count == 0) Widgets.Label(new Rect(0f, 0f, viewRect.width, 28f), "HNS_NoTraits".Translate());
-            else
-            {
-                float y = 0f;
-                for (int i = 0; i < traits.Count; i++)
+                Title = "Cultivar: " + comp.DisplayVarietyName,
+                Subtitle = subtitle,
+                PrimaryHeader = "Traits",
+                SecondaryHeader = "Stat changes",
+                PrimaryEmpty = "No traits",
+                SecondaryEmpty = "No stat changes",
+                PrimaryRows = traits.Select((trait, index) => new HorticultureInspectorRow
                 {
-                    DrawTraitRow(new Rect(0f, y, viewRect.width, rowHeights[i] - 4f), traits[i]);
-                    y += rowHeights[i];
-                }
-            }
-            Widgets.EndScrollView();
-        }
-        private void DrawStatChangesPanel(Rect rect, List<string> statLines)
-        {
-            DrawPanelFrame(rect, "HNS_StatChanges".Translate().ToString());
-            Rect outRect = PanelContentRect(rect);
-            float viewWidth = outRect.width - 16f;
-            List<float> rowHeights = statLines.Select(line => StatHeight(line, viewWidth)).ToList();
-            float viewHeight = Mathf.Max(outRect.height, statLines.Count == 0 ? 28f : rowHeights.Sum());
-            Rect viewRect = new Rect(0f, 0f, viewWidth, viewHeight);
-            Widgets.BeginScrollView(outRect, ref statScrollPosition, viewRect);
-            if (statLines.Count == 0) Widgets.Label(new Rect(0f, 0f, viewRect.width, 28f), "HNS_NoStatChanges".Translate());
-            else
-            {
-                float y = 0f;
-                for (int i = 0; i < statLines.Count; i++)
+                    Id = trait.defName ?? "trait-" + index,
+                    Label = TraitColorUI.Label(trait),
+                    Detail = TraitColorUI.Description(trait)
+                }).ToArray(),
+                SecondaryRows = statLines.Select((line, index) => new HorticultureInspectorRow
                 {
-                    DrawStatRow(new Rect(0f, y, viewRect.width, rowHeights[i] - 2f), statLines[i]);
-                    y += rowHeights[i];
+                    Id = "stat-" + index,
+                    Label = line,
+                    Detail = string.Empty
+                }).ToArray(),
+                ActionLabel = "Open in Horticulture",
+                Action = () =>
+                {
+                    if (variety != null) MainTabWindow_CultivarRegistry.OpenLineage(variety);
+                    else MainTabWindow_CultivarRegistry.OpenPlant(SelThing?.def);
                 }
-            }
-            Widgets.EndScrollView();
-        }
-        private static Rect PanelContentRect(Rect panelRect)
-        {
-            return new Rect(panelRect.x + PanelPadding, panelRect.y + PanelHeaderHeight, panelRect.width - PanelPadding * 2f, panelRect.height - PanelHeaderHeight - PanelPadding);
+            });
+            document.Draw(ContentRect());
         }
 
-        private static void DrawPanelFrame(Rect rect, string title)
+        private void EnsureDocument()
         {
-            Widgets.DrawMenuSection(rect);
-            Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(rect.x + PanelPadding, rect.y + 2f, rect.width - PanelPadding * 2f, 32f), title);
-            Text.Font = GameFont.Small;
+            if (document != null && ReferenceEquals(lastThing, SelThing)) return;
+            document?.PostClose();
+            document = new HorticultureInspectorDocument("hns.inspector.plant");
+            lastThing = SelThing;
         }
 
-        private static float TraitHeight(VarietyTraitDef trait, float width)
-        {
-            float textWidth = Mathf.Max(80f, width - 12f);
-            string label = TraitColorUI.Label(trait);
-            string description = TraitColorUI.Description(trait);
-            float labelHeight = Mathf.Max(22f, Text.CalcHeight(label, textWidth));
-            float descriptionHeight = description.NullOrEmpty() ? 0f : Text.CalcHeight(description, textWidth);
-            return Mathf.Max(42f, 7f + labelHeight + descriptionHeight + (descriptionHeight > 0f ? 5f : 0f));
-        }
-
-        private static float StatHeight(string line, float width)
-        {
-            return Mathf.Max(34f, Text.CalcHeight(line ?? string.Empty, Mathf.Max(80f, width - 12f)) + 10f);
-        }
-
-        private static void DrawTraitRow(Rect rect, VarietyTraitDef trait)
-        {
-            Widgets.DrawHighlightIfMouseover(rect);
-            float textWidth = rect.width - 12f;
-            string label = TraitColorUI.Label(trait);
-            string description = TraitColorUI.Description(trait);
-            float labelHeight = Mathf.Max(22f, Text.CalcHeight(label, textWidth));
-            Widgets.Label(new Rect(rect.x + 6f, rect.y + 3f, textWidth, labelHeight), label);
-            if (!description.NullOrEmpty())
-            {
-                float descriptionY = rect.y + 3f + labelHeight;
-                float descriptionHeight = Mathf.Max(18f, Text.CalcHeight(description, textWidth));
-                Color previous = GUI.color;
-                GUI.color = new Color(0.72f, 0.72f, 0.72f);
-                Widgets.Label(new Rect(rect.x + 6f, descriptionY, textWidth, descriptionHeight), description);
-                GUI.color = previous;
-                TooltipHandler.TipRegion(rect, TraitColorUI.Tooltip(trait));
-            }
-        }
-
-        private static void DrawStatRow(Rect rect, string line)
-        {
-            Widgets.DrawHighlightIfMouseover(rect);
-            Widgets.Label(new Rect(rect.x + 6f, rect.y + 4f, rect.width - 12f, rect.height - 6f), line);
-        }
+        private Rect ContentRect() => new Rect(0f, 0f, size.x, size.y).ContractedBy(12f);
     }
 }
