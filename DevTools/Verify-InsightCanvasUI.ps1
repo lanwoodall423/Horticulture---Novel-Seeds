@@ -8,6 +8,8 @@ $compat = Get-Content -Raw (Join-Path $root 'Source\ModernSettingsUI.cs')
 $ui = Get-Content -Raw (Join-Path $root 'Source\InsightSettingsUI.cs')
 $runtime = Get-Content -Raw (Join-Path $root 'DevTools\RuntimeTests\RuntimeScenarioSuite.cs')
 $architecture = Get-Content -Raw (Join-Path $root 'docs\UI_ARCHITECTURE.md')
+$plantInspector = Get-Content -Raw (Join-Path $root 'Source\PlantVarietyTab.cs')
+$produceInspector = Get-Content -Raw (Join-Path $root 'Source\ProduceVarietyTab.cs')
 
 $checks = [ordered]@{
     'Insight Canvas dependency and load order' = $about -match 'lan\.insightcanvas' -and $about -match '<loadAfter>'
@@ -27,6 +29,7 @@ $checks = [ordered]@{
     'direct authoritative bindings' = $ui -match 'FloatControl\([\s\S]*?settings\.' -and $ui -match 'ToggleControl\([\s\S]*?settings\.' -and $ui -match 'settingsChanged'
     'document feedback and destructive confirmation' = $ui -match 'uiDocument\.Toasts\.Show' -and $ui -match 'Dialog_MessageBox\.CreateConfirmation'
     'visual generation and review actions' = $ui -match 'Generate Missing Auto-Masks' -and $ui -match 'Review Mask Queue' -and $ui -match 'InitializeAndGenerateMissing'
+    'embedded inspectors expose Horticulture navigation' = $plantInspector -match 'ActionLabel\s*=\s*"Open in Horticulture"' -and $produceInspector -match 'ActionLabel\s*=\s*.*Open in Horticulture' -and $produceInspector -match 'SourceVarietyIds'
     'runtime UI assertions' = @('ux-insight-navigation-and-search', 'ux-insight-selections-and-group-action', 'ux-insight-bindings-and-dependent-controls', 'ux-insight-responsive-accessibility', 'ux-insight-diagnostics' | ForEach-Object { $runtime -match $_ }) -notcontains $false
     'provenance documentation' = $architecture -match 'E8D163B6A2B39EB80BBF8A5EA5AA0B8A80481D69A8CEE1D74526548D0A28C011' -and $architecture -match 'no fallback'
 }

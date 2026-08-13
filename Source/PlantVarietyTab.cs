@@ -74,7 +74,7 @@ namespace HorticultureNovelSeeds
                     Label = line,
                     Detail = string.Empty
                 }).ToArray(),
-                ActionLabel = "Open lineage",
+                ActionLabel = "Open in Horticulture",
                 Action = () =>
                 {
                     if (variety != null) MainTabWindow_CultivarRegistry.OpenLineage(variety);

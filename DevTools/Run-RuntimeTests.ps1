@@ -23,7 +23,10 @@ $playerLog = if ($env:RIMWORLD_DATA_PATH) { Join-Path $env:RIMWORLD_DATA_PATH 'P
 }
 
 if (-not (Test-Path -LiteralPath $bridge -PathType Leaf)) { throw "DevBridge.cmd not found: $bridge" }
-& "$PSScriptRoot\Build-RuntimeTests.ps1" -SkipGameplayBuild:$SkipGameplayBuild -SkipDeploy:$SkipRestart
+# SkipRestart means that the coordinator generation is reused; it does not
+# mean that the test payload is present on disk.  Let the build helper verify
+# the hash and restore the exact payload when a prior run cleaned it up.
+& "$PSScriptRoot\Build-RuntimeTests.ps1" -SkipGameplayBuild:$SkipGameplayBuild
 if (-not (Test-Path -LiteralPath $assembly -PathType Leaf)) { throw "Runtime test assembly not found: $assembly" }
 
 function Invoke-DevBridge([string[]]$Arguments) {
@@ -67,7 +70,13 @@ if (-not $SkipRestart) {
         catch { }
         Start-Sleep -Seconds 1
     }
-    if ([string]::IsNullOrEmpty($launchId)) { throw 'DevBridge2 did not expose the new launch ID before the Horticulture test deadline.' }
+    if ([string]::IsNullOrEmpty($launchId)) {
+        # The lease/finally block begins after launch coordination.  Clean the
+        # test-only payload here too when a queued restart cannot expose its
+        # replacement generation before the bounded deadline.
+        if (Test-Path -LiteralPath $assembly) { Remove-Item -LiteralPath $assembly -Force -ErrorAction SilentlyContinue }
+        throw 'DevBridge2 did not expose the new launch ID before the Horticulture test deadline.'
+    }
 }
 else {
     Invoke-DevBridge @('wait-ready') | Write-Host
@@ -123,7 +132,6 @@ $leaseId = $null
 $exitCode = 1
 try {
     if (-not $SkipRestart) {
-        Write-HorticultureRequest
         Wait-ForReadyStatus
     }
 
@@ -133,7 +141,7 @@ try {
     if (-not $leaseMatch.Success) { throw 'DevBridge2 did not return a test lease.' }
     $leaseId = $leaseMatch.Groups['id'].Value
 
-    if ($SkipRestart) { Write-HorticultureRequest }
+    Write-HorticultureRequest
 
     $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
     $report = $null
@@ -165,6 +173,8 @@ finally {
     }
     if (Test-Path -LiteralPath $requestPath) { Remove-Item -LiteralPath $requestPath -Force -ErrorAction SilentlyContinue }
     if (Test-Path -LiteralPath $tracePath) { Remove-Item -LiteralPath $tracePath -Force -ErrorAction SilentlyContinue }
+    $checkpointPath = Join-Path $runtime ('Horticulture.RuntimeTest.' + $requestId + '.checkpoint.json')
+    if (Test-Path -LiteralPath $checkpointPath) { Remove-Item -LiteralPath $checkpointPath -Force -ErrorAction SilentlyContinue }
     # A skipped-restart run shares the already loaded runner with follow-up
     # scenarios. Keep that assembly available until the generation is restarted.
     if (-not $SkipRestart -and (Test-Path -LiteralPath $assembly)) {
