@@ -8,7 +8,7 @@ function Read-ModFile([string]$relativePath) {
 $patches = Read-ModFile 'Source\Patches.cs'
 $work = Read-ModFile 'Source\ExpandedTraitWorkPatches.cs'
 $nice = Read-ModFile 'Source\NicePlantsMenuCompat.cs'
-$runtime = Read-ModFile 'DevTools\RuntimeTests\RuntimeScenarioSuite.cs'
+$bridge = Read-ModFile 'DevTools\BridgeTools\HorticultureBridgeTools.cs'
 $checks = [ordered]@{
     'sow closures use structural discovery' = $patches -match 'GetNestedTypes' -and $patches -match 'ReadsField\(method, SowWorkField\)' -and $patches -notmatch '<MakeNewToils>'
     'all sow-work reads are substituted' = $patches -match 'TargetMethods\(\)[\s\S]*?SowWorkMethods' -and $patches -match 'AdjustedSowWorkMethod'
@@ -18,7 +18,7 @@ $checks = [ordered]@{
     'Nice Plants Menu never rewrites shared definitions' = $nice -notmatch 'NicePlantsInfoOverrideState|DrawInfoPrefix|DrawInfoFinalizer|cachedLabelCap' -and $nice -notmatch '\.(label|description|sowWork|harvestWork|harvestYield|harvestAfterGrowth|minGrowthTemperature|minOptimalGrowthTemperature|maxOptimalGrowthTemperature|maxGrowthTemperature|statBases)\s*[+*/-]?='
     'Nice Plants Menu retains dedicated variety panel' = $nice -match 'DrawNovelSeedsInfo' -and $nice -match 'StatChangeLines' -and $nice -match 'DrawNicePlantsTraitRow'
     'Nice Plants Menu constructor receives requested growers and restores selection' = $nice -match 'CreateDialogForGrowers' -and $nice -match 'List<object> previous = selected\.ToList\(\)' -and $nice -match 'finally[\s\S]*?selected\.AddRange\(previous\)'
-    'runtime fixtures are transient and cleaned with vanish semantics' = $runtime -match 'DestroyFixture' -and $runtime -match 'Fixtures\.Clear' -and $runtime -match 'DestroyMode\.Vanish'
+    'bridge fixtures are transient and cleaned with vanish semantics' = $bridge -match 'DestroyFixture' -and $bridge -match 'Fixtures\.Clear' -and $bridge -match 'DestroyMode\.Vanish'
 }
 
 $failed = @($checks.GetEnumerator() | Where-Object { -not $_.Value })

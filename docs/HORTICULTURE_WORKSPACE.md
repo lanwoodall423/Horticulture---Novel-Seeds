@@ -60,14 +60,13 @@ dotnet build .\Source\HorticultureNovelSeeds.csproj --configuration Release
 .\DevTools\Test-ReleasePackage.ps1
 ```
 
-Runtime UI and lifecycle checks are owned by Horticulture and coordinated through DevBridge2:
+Runtime UI and lifecycle checks are owned by Horticulture and executed by the RimTest smoke
+recipe through DevBridge2:
 
 ```powershell
-.\DevTools\Run-RuntimeTests.ps1 -Scenario workspace
+& 'C:\Games\Steam\steamapps\common\RimWorld\Mods\RimTest\rimtest.cmd' run horticulture-in-game-smoke --json
 ```
 
-The scenario checks page IDs, document isolation, duplicate/render diagnostics, navigation and
-search bindings, responsive/accessibility state, empty and 1,000-item bounds, comparison gates,
-trait chips, Knowledge and external navigation, and deterministic missing-parent/cycle lineage.
-The existing registry-scale, Knowledge, gameplay, and save-reload scenarios remain required for
-large collections, adapter authority, mechanics, and serialization regression coverage.
+The complete companion suite checks startup, UX discovery, Knowledge, gameplay, automatic masks,
+and save/reload on the real quicktest map. Focused workspace assertions remain companion-owned
+and must be exposed through a RimTest catalog/DevBridge recipe rather than a second runner.

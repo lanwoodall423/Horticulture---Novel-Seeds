@@ -78,9 +78,8 @@ nodes remain informational and cannot mutate game state.
 
 The document tracks Knowledge revision changes, repairs stale selections and comparison IDs, and
 keeps per-document accessibility state (normal/compact density, high contrast, reduced motion)
-and responsive split orientation. `HasIsolatedPresentationState`, duplicate-ID diagnostics, and
-the `workspace` runtime scenario cover lifecycle isolation and rendering contracts separately
-from settings.
+and responsive split orientation. `HasIsolatedPresentationState` and duplicate-ID diagnostics
+are covered by the RimTest-managed Horticulture smoke suite separately from settings.
 
 ## Theme, accessibility, and diagnostics
 

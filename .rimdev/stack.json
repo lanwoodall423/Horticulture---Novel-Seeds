@@ -1,0 +1,8 @@
+{
+  "schemaVersion": "rimdev-stack/v1",
+  "project": "Horticulture - Novel Seeds",
+  "devBridgeProject": "horticulture",
+  "catalog": "TestCatalog/rimtest.catalog.json",
+  "fallbackSuite": "smoke",
+  "rimBridge": "via-devbridge"
+}

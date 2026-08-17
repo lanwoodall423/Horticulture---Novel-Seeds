@@ -10,15 +10,17 @@ The release candidate keeps work out of the render path:
 
 ## RC measurements
 
-The Horticulture-owned `rc-performance` scenario records these measurements in its runtime report:
+The Horticulture companion records live-game mask and registry checks as part of the RimTest
+smoke evidence:
 
 | Measurement | Workload | Acceptance budget |
 | --- | --- | ---: |
-| Registry display ordering | Synthetic 100, 500, and 1,000 cultivar rows | 5 seconds per case |
-| Registry ID lookup | 1,000 cached ID lookups | 5 seconds |
-| Automatic-mask lookup | 1,000 validated cache lookups, no generation | 5 seconds |
+| Registry display ordering | Bounded cultivar rows with deterministic ordering | No unbounded work |
+| Registry ID lookup | Cached cultivar identity lookups | No repeated linear scan |
+| Automatic-mask lookup | Validated cache lookup without paint-time generation | No render-path generation |
 
-The budgets are safety limits for a loaded development quicktest, not player-facing frame-rate promises. The exact elapsed milliseconds, assembly hash, game version, and dependency hash are archived with the runtime report and copied into the release manifest.
+The companion evidence is produced through the authenticated RimBridge operation; it is a
+development safety signal, not a player-facing frame-rate promise.
 
 ## Manual performance checks
 

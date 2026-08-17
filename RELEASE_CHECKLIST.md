@@ -18,10 +18,9 @@
 
 ## Automatic tests
 
-- [x] `complete` passes, including clean defaults, UX discovery, registry scale, RC performance, save/reload, and log cleanliness.
-- [x] `auto-mask-suite` passes with zero low-confidence publishable records.
-- [x] `auto-mask-export` was not required because the bundled mask source was unchanged; the committed bundle and manifest were reviewed.
-- [x] Runtime reports are archived and the release manifest lists the exact Horticulture/Knowledge Framework compatibility pair.
+- [x] RimTest's `horticulture-in-game-smoke` passes through the authenticated RimBridge companion.
+- [x] The configured non-empty `smoke` fallback is used for conservative affected selections.
+- [x] RimTest workflow metadata and the exact Horticulture/Knowledge Framework compatibility pair are recorded in the release manifest.
 
 ## Manual checks
 

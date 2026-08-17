@@ -45,7 +45,7 @@ compact density, switch list/inspector splits below the 820px breakpoint, and ca
 
 ## Verification
 
-Use the Horticulture-owned `visual-designer` runtime scenario for document isolation, Plant /
-Produce channels, section controls, inheritance/reset paths, accessibility, preview delegation,
-bounded collection chrome, and diagnostics. Run it through `DevTools\\Run-RuntimeTests.ps1`;
-DevBridge2 coordinates only readiness, leases, restart, and result collection.
+Use the RimTest-managed Horticulture smoke recipe for document isolation, Plant/Produce channels,
+section controls, inheritance/reset paths, accessibility, preview delegation, bounded collection
+chrome, and diagnostics. DevBridge2 coordinates only readiness, leases, restart, and evidence
+collection.
