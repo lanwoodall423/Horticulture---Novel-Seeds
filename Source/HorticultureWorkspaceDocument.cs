@@ -43,7 +43,7 @@ namespace HorticultureNovelSeeds
 
         private readonly InsightUiDocument uiDocument;
         private readonly InsightUiHost uiHost;
-        private readonly InsightUiNavigation navigation;
+        private InsightUiNavigation navigation;
         private readonly InsightUiVirtualList plantList;
         private readonly InsightUiVirtualList cultivarList;
         private readonly InsightUiVirtualList breedingList;
@@ -54,16 +54,14 @@ namespace HorticultureNovelSeeds
         private readonly InsightUiSearchField breedingSearchField;
         private readonly InsightUiSearchField knowledgeSearchField;
         private readonly InsightUiSegmented plantFilterField;
-        private readonly InsightUiSegmented balanceFilterField;
         private readonly InsightUiToggle archivedField;
-        private readonly InsightUiToggle produceEffectField;
         private InsightUiButton compareButton;
-        private readonly InsightUiSplit plantSplit;
-        private readonly InsightUiSplit cultivarSplit;
-        private readonly InsightUiSplit breedingSplit;
-        private readonly InsightUiElement cultivarCollectionSurface;
-        private readonly InsightUiElement comparisonSurface;
-        private readonly InsightUiElement lineageSurface;
+        private InsightUiSplit plantSplit;
+        private InsightUiSplit cultivarSplit;
+        private InsightUiSplit breedingSplit;
+        private InsightUiElement cultivarCollectionSurface;
+        private InsightUiElement comparisonSurface;
+        private InsightUiElement lineageSurface;
         private readonly List<InsightUiBadge> traitChips = new List<InsightUiBadge>();
 
         private readonly List<PlantView> plantViews = new List<PlantView>();
@@ -90,9 +88,7 @@ namespace HorticultureNovelSeeds
         private string breedingSearch = string.Empty;
         private string knowledgeSearch = string.Empty;
         private int plantFilter;
-        private int balanceFilter;
         private bool showArchived;
-        private bool requireProduceEffect;
         private bool compareMode;
         private bool snapshotDirty = true;
         private bool highContrast;
@@ -112,18 +108,13 @@ namespace HorticultureNovelSeeds
         private readonly Dictionary<string, string> lineageLabels = new Dictionary<string, string>(StringComparer.Ordinal);
         private readonly Dictionary<string, string> lineageRawIds = new Dictionary<string, string>(StringComparer.Ordinal);
         private KnowledgeFrameworkDiagnosticView knowledgeDiagnostic;
+        private readonly HashSet<string> explicitPlantDefNames = new HashSet<string>(StringComparer.Ordinal);
+        private readonly HashSet<string> explicitCultivarIds = new HashSet<string>(StringComparer.Ordinal);
+        private readonly HashSet<string> availablePageIds = new HashSet<string>(StringComparer.Ordinal) { "overview" };
+        private bool explicitKnowledgeContext;
 
         public HorticultureWorkspaceDocument()
         {
-            navigation = InsightUi.Navigation("hns.workspace.navigation", 760f);
-            navigation.Bind(() => activePageId, value =>
-            {
-                if (string.IsNullOrEmpty(value)) return;
-                activePageId = value;
-                compareMode = false;
-                uiDocument?.Invalidate();
-            });
-
             plantSearchField = InsightUi.SearchField("hns.workspace.plants.search", string.Empty, "Search plants")
                 .Bind(() => plantSearch, value => SetSearch(ref plantSearch, value));
             cultivarSearchField = InsightUi.SearchField("hns.workspace.cultivars.search", string.Empty, "Search cultivars")
@@ -135,12 +126,8 @@ namespace HorticultureNovelSeeds
 
             plantFilterField = InsightUi.Segmented("hns.workspace.plants.filter", new[] { "All", "Discovered", "Undiscovered" }, 0)
                 .Bind(() => plantFilter, value => SetFilter(ref plantFilter, value));
-            balanceFilterField = InsightUi.Segmented("hns.workspace.cultivars.balance", new[] { "All", "Balanced", "Beneficial", "Detrimental" }, 0)
-                .Bind(() => balanceFilter, value => SetFilter(ref balanceFilter, value));
             archivedField = InsightUi.Toggle("hns.workspace.cultivars.archived", "Show archived")
                 .Bind(() => showArchived, value => SetBool(ref showArchived, value));
-            produceEffectField = InsightUi.Toggle("hns.workspace.cultivars.produce", "Produce effects only")
-                .Bind(() => requireProduceEffect, value => SetBool(ref requireProduceEffect, value));
 
             plantList = InsightUi.VirtualList("hns.workspace.plants.list", 0, 38f, PlantListItem);
             plantList.Overscan = 3;
@@ -170,7 +157,7 @@ namespace HorticultureNovelSeeds
                 TrackDuplicateIds = true
             };
             uiHost = new InsightUiHost(uiDocument);
-            comparisonSurface.Visible = false;
+            if (comparisonSurface != null) comparisonSurface.Visible = false;
         }
 
         public string ActivePageId => activePageId;
@@ -221,6 +208,7 @@ namespace HorticultureNovelSeeds
             compareMode = false;
             selectedPawn = pawn;
             knowledgeScope = KnowledgeMenuScope.Colonist;
+            explicitKnowledgeContext = true;
             snapshotDirty = true;
             uiDocument.Invalidate();
         }
@@ -231,6 +219,7 @@ namespace HorticultureNovelSeeds
             activePageId = "plants";
             compareMode = false;
             selectedPlantDefName = plant.defName;
+            explicitPlantDefNames.Add(plant.defName);
             snapshotDirty = true;
             uiDocument.Invalidate();
         }
@@ -241,6 +230,7 @@ namespace HorticultureNovelSeeds
             activePageId = "cultivars";
             compareMode = false;
             selectedCultivarId = variety.id;
+            explicitCultivarIds.Add(variety.id);
             snapshotDirty = true;
             uiDocument.Invalidate();
         }
@@ -297,11 +287,29 @@ namespace HorticultureNovelSeeds
             out InsightUiSplit breedingSplitOut, out InsightUiElement collectionOut, out InsightUiElement compareOut,
             out InsightUiElement lineageOut)
         {
+            navigation = InsightUi.Navigation("hns.workspace.navigation", 760f);
+            navigation.Bind(() => activePageId, value =>
+            {
+                if (string.IsNullOrEmpty(value)) return;
+                activePageId = value;
+                compareMode = false;
+                uiDocument?.Invalidate();
+            });
             navigation.Add("overview", "Overview", BuildOverviewPage());
-            navigation.Add("plants", "Plants", BuildPlantsPage(out plantSplitOut));
-            navigation.Add("cultivars", "Cultivars", BuildCultivarsPage(out cultivarSplitOut, out collectionOut, out compareOut, out lineageOut));
-            navigation.Add("breeding", "Breeding", BuildBreedingPage(out breedingSplitOut));
-            navigation.Add("knowledge", "Knowledge", BuildKnowledgePage());
+            plantSplitOut = null;
+            cultivarSplitOut = null;
+            breedingSplitOut = null;
+            collectionOut = null;
+            compareOut = null;
+            lineageOut = null;
+            if (availablePageIds.Contains("plants"))
+                navigation.Add("plants", "Plants", BuildPlantsPage(out plantSplitOut));
+            if (availablePageIds.Contains("cultivars"))
+                navigation.Add("cultivars", "Cultivars", BuildCultivarsPage(out cultivarSplitOut, out collectionOut, out compareOut, out lineageOut));
+            if (availablePageIds.Contains("breeding"))
+                navigation.Add("breeding", "Breeding", BuildBreedingPage(out breedingSplitOut));
+            if (availablePageIds.Contains("knowledge"))
+                navigation.Add("knowledge", "Knowledge", BuildKnowledgePage());
             InsightUiStack root = InsightUi.Column("hns.workspace.root", navigation, InsightUi.Toast("hns.workspace.toast"));
             root.Style.Gap = 8f;
             root.Style.Padding = InsightUiPadding.All(4f);
@@ -311,36 +319,29 @@ namespace HorticultureNovelSeeds
         private InsightUiElement BuildOverviewPage()
         {
             InsightUiElement guidance = InsightUi.Callout("hns.overview.guidance", InsightUiCalloutSeverity.Info,
-                "Horticulture field guide", "A bounded, searchable collection of plants, cultivars, breeding records, and Knowledge Framework evidence. Unknown values stay unknown until evidence is available.");
-            InsightUiGrid stats = InsightUi.Grid("hns.overview.stats", 210f);
-            stats.Add(
-                DynamicLabel("hns.overview.plants", () => "Plants in guide: " + plantViews.Count),
-                DynamicLabel("hns.overview.cultivars", () => "Cultivars in collection: " + allCultivarViews.Count),
-                DynamicLabel("hns.overview.breeding", () => "Breeding programs: " + breedingViews.Count),
-                DynamicLabel("hns.overview.knowledge", () => "Knowledge entries: " + knowledgeViews.Count));
+                "Horticulture field guide", "Open a relevant collection or an explicit Knowledge entry point. Unknown values remain unknown until the Knowledge Framework supplies evidence.");
+            InsightUiElement signals = Panel("hns.overview.signals",
+                InsightUi.SectionHeader("hns.overview.signals.header", "What needs attention", "Actionable signals are derived from player-facing records and evidence."),
+                DynamicLabel("hns.overview.signals.line", OverviewSignal));
             InsightUiElement actions = Panel("hns.overview.actions",
                 InsightUi.SectionHeader("hns.overview.actions.header", "Start with a collection", "Open a bounded registry or follow a Knowledge Framework entry point."),
                 InsightUi.Row("hns.overview.actions.row",
                     ActionButton("hns.overview.open-plants", "Browse plants", () => SelectPage("plants")),
                     ActionButton("hns.overview.open-cultivars", "Browse cultivars", () => SelectPage("cultivars")),
                     ActionButton("hns.overview.open-knowledge", "Open knowledge", () => SelectPage("knowledge"))));
-            InsightUiElement integrity = Panel("hns.overview.integrity",
-                InsightUi.SectionHeader("hns.overview.integrity.header", "Presentation integrity", "Snapshots are rebuilt before a frame; graph traversal and virtual-list caches are bounded."),
-                DynamicLabel("hns.overview.integrity.lineage", () => "Lineage graph: " + lineageNodeCount + " nodes, " + lineageEdgeCount + " edges"),
-                DynamicLabel("hns.overview.integrity.diagnostics", () => "Render diagnostics: " + uiDocument.Diagnostics.RenderErrors + " errors, " + uiDocument.Diagnostics.DuplicateIds + " duplicate IDs"));
-            return Page("hns.overview.page", guidance, stats, actions, integrity);
+            return Page("hns.overview.page", guidance, signals, actions);
         }
 
         private InsightUiElement BuildPlantsPage(out InsightUiSplit splitOut)
         {
             InsightUiElement listPane = Panel("hns.plants.list-pane",
-                InsightUi.SectionHeader("hns.plants.list.header", "Plants", "Growable plant definitions with discovery masking and bounded search."),
+                InsightUi.SectionHeader("hns.plants.list.header", "Plants", "Relevant plants and explicitly opened entries only; raw definitions are never used as a catalog."),
                 plantSearchField, plantFilterField, plantList);
             InsightUiElement inspector = Panel("hns.plants.inspector",
                 InsightUi.SectionHeader("hns.plants.inspector.header", "Plant field guide", "Plant facts are progressively revealed by the selected Knowledge scope."),
                 DynamicLabel("hns.plants.inspector.name", () => SelectedPlant()?.Label ?? "Select a plant", InsightUiTextStyle.Heading),
                 DynamicLabel("hns.plants.inspector.status", PlantDetailStatus),
-                DynamicLabel("hns.plants.inspector.rank", () => SelectedPlant() == null ? string.Empty : "Knowledge: " + SelectedPlant().Rank),
+                DynamicLabel("hns.plants.inspector.rank", () => SelectedPlant() == null ? string.Empty : "Knowledge stage: " + HorticultureKnowledgeAdapter.StageLabel(SelectedPlant().Stage)),
                 DynamicLabel("hns.plants.inspector.growth", PlantGrowthDetail),
                 DynamicLabel("hns.plants.inspector.cultivars", () => SelectedPlant() == null ? string.Empty : "Known cultivars: " + SelectedPlant().CultivarCount),
                 ActionButton("hns.plants.inspector.cultivars-action", "View cultivars", () =>
@@ -361,12 +362,12 @@ namespace HorticultureNovelSeeds
         {
             compareButton = ActionButton("hns.cultivars.compare", "Compare selected", OpenCompare);
             collectionOut = Panel("hns.cultivars.collection",
-                InsightUi.SectionHeader("hns.cultivars.collection.header", "Cultivar collection", "Favorites, archive state, balance, and produce-effect filters preserve the registry’s existing behavior."),
-                cultivarSearchField, balanceFilterField, archivedField, produceEffectField,
+                InsightUi.SectionHeader("hns.cultivars.collection.header", "Cultivar collection", "Search uses cultivar identity and authorized Knowledge claims. Unsupported advanced filters are omitted."),
+                cultivarSearchField, archivedField,
                 InsightUi.Row("hns.cultivars.collection.actions", compareButton,
                     ActionButton("hns.cultivars.clear-compare", "Clear comparison", ClearComparison)), cultivarList);
             InsightUiElement inspector = Panel("hns.cultivars.inspector",
-                InsightUi.SectionHeader("hns.cultivars.inspector.header", "Cultivar inspector", "Trait chips, modifiers, products, and lineage remain gated by Knowledge rank."),
+                InsightUi.SectionHeader("hns.cultivars.inspector.header", "Cultivar inspector", "Each fact is shown only when its own cultivar claim, facet, or relation is authorized."),
                 DynamicLabel("hns.cultivars.inspector.name", () => SelectedCultivar()?.Label ?? "Select a cultivar", InsightUiTextStyle.Heading),
                 DynamicLabel("hns.cultivars.inspector.status", CultivarStatus),
                 BuildTraitChips(),
@@ -412,7 +413,7 @@ namespace HorticultureNovelSeeds
                 DynamicLabel("hns.breeding.inspector.name", () => SelectedBreeding()?.Name ?? "Select a breeding program", InsightUiTextStyle.Heading),
                 DynamicLabel("hns.breeding.inspector.crop", () => SelectedBreeding()?.CropLabel ?? string.Empty),
                 DynamicLabel("hns.breeding.inspector.traits", () => SelectedBreeding()?.DesiredTraits ?? string.Empty),
-                DynamicLabel("hns.breeding.inspector.matches", () => SelectedBreeding() == null ? string.Empty : "Matching cultivars: " + SelectedBreeding().MatchingCount),
+                DynamicLabel("hns.breeding.inspector.matches", () => SelectedBreeding() == null ? string.Empty : "Matching cultivars: " + SelectedBreeding().MatchingStatus),
                 DynamicLabel("hns.breeding.inspector.notifications", () => SelectedBreeding() == null ? string.Empty : "Notified cultivars: " + SelectedBreeding().NotifiedCount),
                 DynamicLabel("hns.breeding.inspector.active", () => SelectedBreeding() == null ? string.Empty : (SelectedBreeding().Active ? "Active" : "Completed / inactive")));
             splitOut = InsightUi.Split("hns.breeding.split", listPane, InsightUi.Scroll("hns.breeding.inspector.scroll", inspector), 0.4f);
@@ -479,6 +480,7 @@ namespace HorticultureNovelSeeds
 
         private InsightUiElement BuildTraitChips()
         {
+            traitChips.Clear();
             InsightUiBadge[] chips = Enumerable.Range(0, 8)
                 .Select(index =>
                 {
@@ -560,6 +562,7 @@ namespace HorticultureNovelSeeds
 
             EnsureSelections(component);
             List<VarietyRecord> varieties = component.AllVarieties
+                .Concat(explicitCultivarIds.Select(component.GetVariety))
                 .Where(value => value?.cropDef != null && HorticulturePlantPolicy.IsSupported(value.cropDef))
                 .GroupBy(value => value.id ?? string.Empty).Select(group => group.First())
                 .ToList();
@@ -568,11 +571,10 @@ namespace HorticultureNovelSeeds
             plantViews.Clear();
             foreach (ThingDef plant in PlantDefinitions())
             {
-                bool discovered = IsDiscovered(plant, component);
-                int count = component.VarietiesFor(plant).Count();
-                KnowledgeRank rank = VisiblePlantRank(plant);
-                plantViews.Add(new PlantView(plant, discovered ? plant.LabelCap.ToString() : "Undiscovered plant",
-                    discovered, rank, count, plant.plant?.growDays ?? 0f, plant.plant?.harvestYield ?? 0f));
+                HorticulturePlantPresentation authority = HorticulturePresentationPolicy.ForPlant(plant, selectedPawn,
+                    knowledgeScope == KnowledgeMenuScope.Colony, explicitPlantDefNames.Contains(plant.defName));
+                if (authority == null) continue;
+                plantViews.Add(new PlantView(authority));
             }
             filteredPlantViews.Clear();
             filteredPlantViews.AddRange(plantViews.Where(MatchesPlantFilter));
@@ -580,7 +582,7 @@ namespace HorticultureNovelSeeds
             cultivarViews.Clear();
             allCultivarViews.Clear();
             foreach (VarietyRecord variety in varieties) allCultivarViews.Add(CreateCultivarView(variety));
-            cultivarViews.AddRange(allCultivarViews.Where(view => MatchesCultivarFilter(view.Authority)));
+            cultivarViews.AddRange(allCultivarViews.Where(MatchesCultivarFilter));
             cultivarViews.Sort((left, right) =>
             {
                 int favorite = right.Favorite.CompareTo(left.Favorite);
@@ -602,6 +604,7 @@ namespace HorticultureNovelSeeds
             BuildLineageSnapshot(component, varieties);
             BuildComparisonSnapshot();
             EnsureSnapshotSelections();
+            UpdateNavigationAvailability();
             SetListState(plantList, filteredPlantViews.Count);
             SetListState(cultivarList, filteredCultivarViews.Count);
             SetListState(breedingList, filteredBreedingViews.Count);
@@ -612,6 +615,31 @@ namespace HorticultureNovelSeeds
             lastKnowledgeRevision = HorticultureKnowledgeAdapter.KnowledgeRevision;
             lastKnowledgeRegistryRevision = HorticultureKnowledgeAdapter.RegistryRevision;
             snapshotDirty = false;
+        }
+
+        private void UpdateNavigationAvailability()
+        {
+            HashSet<string> desired = new HashSet<string>(StringComparer.Ordinal) { "overview" };
+            if (plantViews.Count > 0) desired.Add("plants");
+            if (allCultivarViews.Count > 0) desired.Add("cultivars");
+            if (breedingViews.Count > 0) desired.Add("breeding");
+            if (knowledgeViews.Count > 0 || explicitKnowledgeContext) desired.Add("knowledge");
+            if (desired.SetEquals(availablePageIds)) return;
+
+            availablePageIds.Clear();
+            foreach (string pageId in desired) availablePageIds.Add(pageId);
+            if (!availablePageIds.Contains(activePageId))
+            {
+                activePageId = "overview";
+                compareMode = false;
+            }
+            foreach (string id in comparisonIds.Where(value => !allCultivarViews.Any(view => view.Id == value)).ToList())
+                comparisonIds.Remove(id);
+            if (comparisonIds.Count < 2) compareMode = false;
+            uiDocument.Focus.ClearFocus();
+            uiDocument.Root = BuildRoot(out plantSplit, out cultivarSplit, out breedingSplit,
+                out cultivarCollectionSurface, out comparisonSurface, out lineageSurface);
+            uiDocument.Invalidate();
         }
 
         private void ClearSnapshots()
@@ -642,6 +670,25 @@ namespace HorticultureNovelSeeds
             SetListState(breedingList, 0);
             SetListState(knowledgeList, 0);
             SetListState(lineageNodeList, 0);
+            availablePageIds.Clear();
+            availablePageIds.Add("overview");
+            activePageId = "overview";
+            compareMode = false;
+            if (uiDocument != null)
+            {
+                uiDocument.Focus.ClearFocus();
+                uiDocument.Root = BuildRoot(out plantSplit, out cultivarSplit, out breedingSplit,
+                    out cultivarCollectionSurface, out comparisonSurface, out lineageSurface);
+            }
+        }
+
+        private string OverviewSignal()
+        {
+            if (knowledgeViews.Count > 0) return "Knowledge evidence is ready to review.";
+            if (breedingViews.Count > 0) return "Review your saved breeding programs.";
+            if (allCultivarViews.Count > 0) return "Review named cultivars and their available actions.";
+            if (plantViews.Count > 0) return "Review relevant plant evidence or open a plant explicitly.";
+            return "Sow or observe a supported plant to begin building the field guide.";
         }
 
         private void EnsureSelections(GameComponent_NovelSeeds component)
@@ -654,8 +701,7 @@ namespace HorticultureNovelSeeds
                 .OrderBy(pawn => pawn.LabelShort).ToList();
             if (selectedPawn == null || !colonists.Contains(selectedPawn)) selectedPawn = colonists.FirstOrDefault();
             if (selectedPlantDefName.NullOrEmpty() || DefDatabase<ThingDef>.GetNamedSilentFail(selectedPlantDefName) == null)
-                selectedPlantDefName = PlantDefinitions().FirstOrDefault(def => IsDiscovered(def, component))?.defName ??
-                    PlantDefinitions().FirstOrDefault()?.defName;
+                selectedPlantDefName = PlantDefinitions().FirstOrDefault()?.defName;
             VarietyRecord cultivar = component.GetVariety(selectedCultivarId);
             if (cultivar == null || !HorticulturePlantPolicy.IsSupported(cultivar.cropDef))
                 selectedCultivarId = component.AllVarieties.OrderBy(value => value.cropDef?.label).ThenBy(value => value.Label)
@@ -671,42 +717,30 @@ namespace HorticultureNovelSeeds
                 selectedCultivarId = allCultivarViews.FirstOrDefault()?.Id;
             if (selectedPlantDefName.NullOrEmpty() || !plantViews.Any(value => value.Definition?.defName == selectedPlantDefName))
                 selectedPlantDefName = plantViews.FirstOrDefault()?.Definition?.defName;
+            if (selectedBreedingId.NullOrEmpty() || !breedingViews.Any(value => value.Id == selectedBreedingId))
+                selectedBreedingId = breedingViews.FirstOrDefault()?.Id;
         }
 
         private List<ThingDef> PlantDefinitions()
         {
-            return DefDatabase<ThingDef>.AllDefsListForReading.Where(NovelSeedUtility.IsGrowableCrop)
+            GameComponent_NovelSeeds component = GameComponent_NovelSeeds.Instance;
+            return DefDatabase<ThingDef>.AllDefsListForReading.Where(HorticulturePlantPolicy.IsSupported)
+                .Where(def => explicitPlantDefNames.Contains(def.defName) || component?.VarietiesFor(def).Any() == true ||
+                    HorticulturePresentationPolicy.HasPlantEvidence(def))
                 .OrderBy(def => def.label).ThenBy(def => def.defName).ToList();
-        }
-
-        private bool IsDiscovered(ThingDef plant, GameComponent_NovelSeeds component)
-        {
-            return plant != null && (component.VarietiesFor(plant).Any() ||
-                HorticultureKnowledgeAdapter.ColonyKnowledge(plant) > 0f ||
-                HorticultureKnowledgeAdapter.StageOrder(HorticultureKnowledgeAdapter.StageFor(plant, null, true)) > 0);
         }
 
         private bool MatchesPlantFilter(PlantView view)
         {
             if (plantFilter == 1 && !view.Discovered || plantFilter == 2 && view.Discovered) return false;
-            return Matches(view.Label, view.Definition?.defName, plantSearch);
+            return Matches(view.Label, plantSearch);
         }
 
-        private bool MatchesCultivarFilter(VarietyRecord variety)
+        private bool MatchesCultivarFilter(CultivarView view)
         {
-            if (variety == null || variety.cropDef == null || !HorticulturePlantPolicy.IsSupported(variety.cropDef)) return false;
-            if (!showArchived && variety.registryArchived) return false;
-            if (!Matches(variety.Label, variety.cropDef.label, NovelSeedUtility.TraitSummary(variety.traits), cultivarSearch)) return false;
-            if (requireProduceEffect && !(variety.traits ?? new List<VarietyTraitDef>()).Any(trait =>
-                    trait != null && ProduceTraitEffectUtility.Summary(TraitConfigUtility.Root(trait), HorticultureNovelSeedsMod.Settings) != "No Effect")) return false;
-            float balance = NovelSeedUtility.TraitBalanceScore(variety.traits);
-            switch (balanceFilter)
-            {
-                case 1: return Mathf.Abs(balance) <= (HorticultureNovelSeedsMod.Settings?.allowedTraitImbalance ?? 1);
-                case 2: return balance > 0f;
-                case 3: return balance < 0f;
-                default: return true;
-            }
+            if (view?.Authority == null || view.Authority.cropDef == null || !HorticulturePlantPolicy.IsSupported(view.Authority.cropDef)) return false;
+            if (!showArchived && view.Archived) return false;
+            return Matches(view.Label, view.CropLabel, view.Traits, view.Products, cultivarSearch);
         }
 
         private static bool Matches(params string[] values)
@@ -718,22 +752,36 @@ namespace HorticultureNovelSeeds
 
         private CultivarView CreateCultivarView(VarietyRecord variety)
         {
-            KnowledgeRank rank = VisibleCultivarRank(variety);
+            HorticultureCultivarPresentation authority = HorticulturePresentationPolicy.ForCultivar(variety, selectedPawn,
+                knowledgeScope == KnowledgeMenuScope.Colony);
             RegistryAvailabilityRead availabilityRead = AvailabilityFor(variety);
             return new CultivarView(variety.id, variety.Label, variety.cropDef?.LabelCap.ToString() ?? "Unknown plant", variety.registryFavorite,
-                variety.registryArchived, rank, variety.originKind.NullOrEmpty() ? "mutation" : variety.originKind,
-                variety.generation > 0 ? variety.generation : LineageDepth(variety),
-                TraitText(variety, rank), ModifierText(variety, rank), ProductText(variety, rank),
+                variety.registryArchived, authority,
                 availabilityRead.Plants, availabilityRead.Produce, availabilityRead.SeedPacks,
-                variety.parentVarietyIds?.Count ?? 0, variety);
+                authority?.Parents.Count ?? 0, variety);
         }
 
         private BreedingView CreateBreedingView(BreedingProgramRecord program, List<VarietyRecord> varieties)
         {
-            int matches = varieties.Count(value => program.Matches(value));
+            int knownMatches = 0;
+            bool unknownMatches = false;
+            foreach (VarietyRecord variety in varieties ?? new List<VarietyRecord>())
+            {
+                if (variety?.cropDef != program?.cropDef) continue;
+                HorticultureCultivarPresentation authority = HorticulturePresentationPolicy.ForCultivar(variety, selectedPawn,
+                    knowledgeScope == KnowledgeMenuScope.Colony);
+                if (authority?.HasKnownTraits != true)
+                {
+                    unknownMatches = true;
+                    continue;
+                }
+                HashSet<string> roots = new HashSet<string>(authority.AuthorizedTraits
+                    .Select(trait => TraitConfigUtility.Root(trait)?.defName).Where(value => !value.NullOrEmpty()), StringComparer.Ordinal);
+                if ((program.desiredTraitRootDefNames ?? new List<string>()).All(roots.Contains)) knownMatches++;
+            }
             return new BreedingView(program.id ?? string.Empty, program.name.NullOrEmpty() ? "Unnamed program" : program.name,
                 program.cropDef?.LabelCap.ToString() ?? "Any crop", program.DesiredTraitSummary ?? string.Empty,
-                program.active, program.notifiedVarietyIds?.Count ?? 0, matches);
+                program.active, program.notifiedVarietyIds?.Count ?? 0, knownMatches, unknownMatches);
         }
 
         private void BuildKnowledgeViews()
@@ -784,7 +832,7 @@ namespace HorticultureNovelSeeds
             lineageValidation = string.Empty;
             VarietyRecord root = component.GetVariety(selectedCultivarId);
             if (root == null) return;
-            LineageGraphBuild graph = CreateLineageGraph(varieties, root.id);
+            LineageGraphBuild graph = CreateAuthorizedLineageGraph(root);
             lineageLabels.Clear();
             foreach (KeyValuePair<string, string> label in graph.Labels) lineageLabels[label.Key] = label.Value;
             lineageRawIds.Clear();
@@ -811,6 +859,80 @@ namespace HorticultureNovelSeeds
                 lineageValidation = exception.Message;
                 lineageLayout = null;
             }
+        }
+
+        private static LineageGraphBuild CreateAuthorizedLineageGraph(VarietyRecord root)
+        {
+            LineageGraphBuild result = new LineageGraphBuild(root?.id);
+            if (root == null) return result;
+            Queue<LineageVisit> pending = new Queue<LineageVisit>();
+            pending.Enqueue(new LineageVisit(root.id, 0, root));
+            HashSet<string> expanded = new HashSet<string>(StringComparer.Ordinal);
+            while (pending.Count > 0)
+            {
+                LineageVisit visit = pending.Dequeue();
+                if (visit.Record == null || visit.RawId.NullOrEmpty()) continue;
+                string rawId = visit.RawId;
+                if (!result.GraphIds.ContainsKey(rawId))
+                {
+                    if (result.GraphIds.Count >= MaximumLineageNodes)
+                    {
+                        result.Complete = false;
+                        break;
+                    }
+                    string graphId = InsightIds.Stable("hns.lineage.node", rawId);
+                    result.GraphIds[rawId] = graphId;
+                    string label = visit.Record.hiddenFromMenus ? "Unknown parent" : visit.Record.Label;
+                    result.Model.Entity(new InsightEntity(graphId, label,
+                        visit.Record.cropDef?.LabelCap.ToString() ?? "Unidentified plant",
+                        visit.Record.hiddenFromMenus ? "unidentified-lineage" : "cultivar", sourceId: rawId));
+                    result.Labels[graphId] = label;
+                    result.RawIds[graphId] = rawId;
+                }
+                if (!expanded.Add(rawId) || visit.Depth >= MaximumLineageDepth)
+                {
+                    if (visit.Depth >= MaximumLineageDepth) result.Complete = false;
+                    continue;
+                }
+                HorticultureCultivarPresentation authority = HorticulturePresentationPolicy.ForCultivar(visit.Record, null, true);
+                foreach (HorticultureLineageReference reference in authority?.Parents ?? Array.Empty<HorticultureLineageReference>())
+                {
+                    if (result.EdgeCount >= MaximumLineageEdges)
+                    {
+                        result.Complete = false;
+                        break;
+                    }
+                    string parentId = reference.SubjectId.NullOrEmpty() ? null : reference.SubjectId.Substring("cultivar:".Length);
+                    VarietyRecord parent = reference.IsKnown ? GameComponent_NovelSeeds.Instance?.GetVariety(parentId) : null;
+                    string parentKey = parent == null ? "missing:" + SafeId(reference.Label + ":" + reference.SubjectId) : parent.id;
+                    if (!result.GraphIds.ContainsKey(parentKey))
+                    {
+                        if (result.GraphIds.Count >= MaximumLineageNodes)
+                        {
+                            result.Complete = false;
+                            break;
+                        }
+                        string parentGraphId = InsightIds.Stable("hns.lineage.node", parentKey);
+                        result.GraphIds[parentKey] = parentGraphId;
+                        string parentLabel = parent == null || parent.hiddenFromMenus ? "Unknown parent" : parent.Label;
+                        result.Model.Entity(new InsightEntity(parentGraphId, parentLabel,
+                            parent?.cropDef?.LabelCap.ToString() ?? "Unidentified lineage record",
+                            parent == null || parent.hiddenFromMenus ? "unidentified-lineage" : "cultivar", sourceId: parentKey));
+                        result.Labels[parentGraphId] = parentLabel;
+                        result.RawIds[parentGraphId] = parentKey;
+                    }
+                    string parentGraph = result.GraphIds[parentKey];
+                    string childGraph = result.GraphIds[rawId];
+                    result.Model.Relation(parentGraph, childGraph, "parent-of", parent == null ? 0f : 1f,
+                        parent != null, parent == null ? 0f : 1f, parent != null);
+                    result.EdgeCount++;
+                    if (parent != null && !expanded.Contains(parent.id))
+                        pending.Enqueue(new LineageVisit(parent.id, visit.Depth + 1, parent));
+                }
+            }
+            InsightModelValidation validation = result.Model.Validate();
+            result.Validation = validation == null || validation.IsValid ? string.Empty : string.Join("; ", validation.Errors.ToArray());
+            return result;
         }
 
         private static LineageGraphBuild CreateLineageGraph(IEnumerable<VarietyRecord> records, string rootId)
@@ -942,6 +1064,12 @@ namespace HorticultureNovelSeeds
 
         private void SelectPage(string page)
         {
+            if (!availablePageIds.Contains(page))
+            {
+                uiDocument.Toasts.Show("That workspace section has no relevant information yet.", InsightToastSeverity.Info);
+                return;
+            }
+
             activePageId = page;
             compareMode = false;
             navigation.Select(page);
@@ -1049,37 +1177,6 @@ namespace HorticultureNovelSeeds
             CameraJumper.TryJumpAndSelect(stock.Target);
         }
 
-        private KnowledgeRank VisiblePlantRank(ThingDef plant)
-        {
-            if (plant == null) return KnowledgeRank.Novice;
-            return knowledgeScope == KnowledgeMenuScope.Colony
-                ? HorticultureKnowledgeAdapter.TierFor(plant, null, true)
-                : HorticultureKnowledgeAdapter.TierFor(plant, selectedPawn, false);
-        }
-
-        private KnowledgeRank VisibleCultivarRank(VarietyRecord variety)
-        {
-            if (variety == null) return KnowledgeRank.Novice;
-            KnowledgeRank cultivar = HorticultureKnowledgeAdapter.CultivarTierFor(variety,
-                knowledgeScope == KnowledgeMenuScope.Colony ? null : selectedPawn, knowledgeScope == KnowledgeMenuScope.Colony);
-            return (KnowledgeRank)Math.Max((int)VisiblePlantRank(variety.cropDef), (int)cultivar);
-        }
-
-        private static int LineageDepth(VarietyRecord variety)
-        {
-            return LineageDepth(variety, new HashSet<string>(StringComparer.Ordinal), 0);
-        }
-
-        private static int LineageDepth(VarietyRecord variety, HashSet<string> path, int depth)
-        {
-            if (variety == null || depth >= MaximumLineageDepth || !path.Add(variety.id ?? string.Empty)) return 0;
-            int result = 1;
-            foreach (string parentId in variety.parentVarietyIds ?? new List<string>())
-                result = Math.Max(result, 1 + LineageDepth(GameComponent_NovelSeeds.Instance?.GetVariety(parentId), path, depth + 1));
-            path.Remove(variety.id ?? string.Empty);
-            return result;
-        }
-
         private RegistryAvailabilityRead AvailabilityFor(VarietyRecord variety)
         {
             if (variety != null && availability.TryGetValue(variety.id, out AvailabilityView view))
@@ -1087,63 +1184,48 @@ namespace HorticultureNovelSeeds
             return new RegistryAvailabilityRead(0, 0, 0, null);
         }
 
-        private static string TraitText(VarietyRecord variety, KnowledgeRank rank)
-        {
-            return rank < KnowledgeRank.Adept ? "Unknown until Adept knowledge." :
-                (variety?.traits == null || variety.traits.Count == 0 ? "No recorded traits" : NovelSeedUtility.TraitSummary(variety.traits));
-        }
-
-        private static string ModifierText(VarietyRecord variety, KnowledgeRank rank)
-        {
-            if (rank < KnowledgeRank.Expert || variety == null) return rank < KnowledgeRank.Expert ? "Unknown until Expert knowledge." : "";
-            return "Yield " + NovelSeedUtility.YieldFactor(variety.traits).ToStringPercent() + "; growth " +
-                NovelSeedUtility.GrowthRateFactor(variety.traits).ToStringPercent() + "; sow " +
-                ExpandedTraitUtility.SowWorkFactor(variety.traits).ToStringPercent();
-        }
-
-        private static string ProductText(VarietyRecord variety, KnowledgeRank rank)
-        {
-            if (rank < KnowledgeRank.Master) return "Unknown until Master knowledge.";
-            List<string> products = new List<string>();
-            if (variety?.cropDef?.plant?.harvestedThingDef != null) products.Add(variety.cropDef.plant.harvestedThingDef.LabelCap.ToString());
-            products.AddRange((variety?.traits ?? new List<VarietyTraitDef>()).Where(trait => trait?.byproductDef != null)
-                .Select(trait => trait.byproductDef.LabelCap.ToString()));
-            return products.Count == 0 ? "None recorded" : string.Join(", ", products.Distinct());
-        }
-
         private string PlantDetailStatus()
         {
             PlantView plant = SelectedPlant();
-            return plant == null ? string.Empty : plant.Discovered ? "Discovered" : "Undiscovered plant — details are intentionally masked.";
+            if (plant == null) return string.Empty;
+            string identity = plant.Discovered ? "Plant identity recorded" : "Undiscovered plant — details are intentionally masked.";
+            return identity + "; technology: " + (plant.Authority?.TechnologicallyAvailable == true ? "available" : "not available");
         }
 
         private string PlantGrowthDetail()
         {
             PlantView plant = SelectedPlant();
             if (plant == null) return string.Empty;
-            if (plant.Rank < KnowledgeRank.Adept) return "Growing details are unknown until Adept knowledge.";
-            return "Growth: " + plant.GrowDays.ToString("0.##") + " days; harvest yield " + plant.HarvestYield.ToString("0.##");
+            List<string> claims = new List<string>();
+            if (plant.Authority?.GrowthDuration?.HasValue == true)
+                claims.Add("Growth duration: " + HorticultureCultivarPresentation.FormatClaim(plant.Authority.GrowthDuration));
+            if (plant.Authority?.Yield?.HasValue == true)
+                claims.Add("Observed yield: " + HorticultureCultivarPresentation.FormatClaim(plant.Authority.Yield));
+            if (claims.Count == 0) return "Growth duration and yield are unknown until plant evidence is recorded.";
+            return string.Join("; ", claims);
         }
 
         private string CultivarStatus()
         {
             CultivarView view = SelectedCultivar();
             if (view == null) return string.Empty;
-            return view.CropLabel + " · " + view.Rank + " · " + view.Origin + " · generation " + view.Generation +
+            return view.CropLabel + " · stage " + HorticultureKnowledgeAdapter.StageLabel(view.Policy?.Stage) + " · " + view.Origin + " · generation " + view.GenerationText +
                 " · plants " + view.Plants + ", produce " + view.Produce + ", seed packs " + view.SeedPacks;
         }
 
         private string CultivarTraits()
         {
             CultivarView view = SelectedCultivar();
-            return view == null ? string.Empty : "Traits: " + view.Traits + "\nProducts: " + view.Products;
+            return view == null ? string.Empty : "Traits: " + view.Traits +
+                (view.Policy?.TraitDescriptionText.NullOrEmpty() == false ? "\nDescriptions: " + view.Policy.TraitDescriptionText : string.Empty) +
+                "\nProducts: " + view.Products;
         }
 
         private void UpdateTraitChips()
         {
             CultivarView view = SelectedCultivar();
-            List<VarietyTraitDef> traits = view?.Authority?.traits ?? new List<VarietyTraitDef>();
-            if (view == null || view.Rank < KnowledgeRank.Adept)
+            List<VarietyTraitDef> traits = view?.Policy?.AuthorizedTraits?.Where(value => value != null).Distinct().ToList() ?? new List<VarietyTraitDef>();
+            if (view == null || view.Policy?.HasKnownTraits != true)
             {
                 for (int index = 0; index < traitChips.Count; index++)
                 {
@@ -1153,7 +1235,7 @@ namespace HorticultureNovelSeeds
                 }
                 return;
             }
-            List<VarietyTraitDef> visible = traits.Where(trait => trait != null).Distinct().Take(traitChips.Count).ToList();
+            List<VarietyTraitDef> visible = traits.Take(traitChips.Count).ToList();
             for (int index = 0; index < traitChips.Count; index++)
             {
                 VarietyTraitDef trait = index < visible.Count ? visible[index] : null;
@@ -1201,7 +1283,7 @@ namespace HorticultureNovelSeeds
                 "Knowledge evidence: " + string.Join("  |  ", selected.Select(view => comparisonConfidence.TryGetValue(view.Id, out string value) ? value : "No evidence")),
                 "Traits: " + string.Join("  |  ", selected.Select(view => view.Traits)),
                 "Modifiers: " + string.Join("  |  ", selected.Select(view => view.Modifiers)),
-                "Lineage: " + string.Join("  |  ", selected.Select(view => view.Generation + " generations / " + view.ParentCount + " parents")),
+                "Lineage: " + string.Join("  |  ", selected.Select(view => view.Policy?.LineageText ?? "Lineage unknown.")),
                 "Products: " + string.Join("  |  ", selected.Select(view => view.Products)),
                 "Meaningful differences: " + ComparisonDifferences(selected)
             };
@@ -1212,12 +1294,24 @@ namespace HorticultureNovelSeeds
         {
             List<string> differences = new List<string>();
             if (selected.Select(value => value.Rank).Distinct().Count() > 1) differences.Add("Knowledge rank differs");
-            if (selected.Select(value => value.Traits).Distinct(StringComparer.Ordinal).Count() > 1) differences.Add("traits differ");
-            if (selected.Select(value => value.Modifiers).Distinct(StringComparer.Ordinal).Count() > 1) differences.Add("modifiers differ");
-            if (selected.Select(value => value.Products).Distinct(StringComparer.Ordinal).Count() > 1) differences.Add("products differ");
-            if (selected.Select(value => value.Generation).Distinct().Count() > 1 ||
-                selected.Select(value => value.ParentCount).Distinct().Count() > 1) differences.Add("lineage differs");
-            return differences.Count == 0 ? "No differences in known values." : string.Join(", ", differences);
+            AddKnownDifference(differences, "traits", selected.Select(value => value.Policy?.HasKnownTraits == true ? value.Traits : null));
+            AddKnownDifference(differences, "cultivar measurements", selected.Select(value => HasKnownModifiers(value) ? value.Modifiers : null));
+            AddKnownDifference(differences, "products", selected.Select(value => value.Policy?.HasKnownProducts == true ? value.Products : null));
+            AddKnownDifference(differences, "lineage", selected.Select(value => value.Policy?.HasLineage == true ? value.Policy.LineageText : null));
+            return differences.Count == 0 ? "No differences in known values; unsupported values remain unknown." : string.Join(", ", differences);
+        }
+
+        private static void AddKnownDifference(List<string> differences, string label, IEnumerable<string> values)
+        {
+            List<string> known = (values ?? Enumerable.Empty<string>()).Where(value => !value.NullOrEmpty() &&
+                value.IndexOf("unknown", StringComparison.OrdinalIgnoreCase) < 0).ToList();
+            if (known.Count >= 2 && known.Distinct(StringComparer.Ordinal).Count() > 1) differences.Add(label + " differ");
+        }
+
+        private static bool HasKnownModifiers(CultivarView view)
+        {
+            return view?.Policy != null && new[] { view.Policy.Yield, view.Policy.GrowthDuration,
+                view.Policy.SowWork, view.Policy.HarvestWork, view.Policy.TemperatureRange }.Any(value => value?.HasValue == true);
         }
 
         private void DrawLineageGraph(InsightUiCustomDrawContext context)
@@ -1270,9 +1364,9 @@ namespace HorticultureNovelSeeds
                 : InsightUiOrientation.Horizontal;
             if (splitOrientation == nextOrientation) return false;
             splitOrientation = nextOrientation;
-            plantSplit.Orientation = splitOrientation;
-            cultivarSplit.Orientation = splitOrientation;
-            breedingSplit.Orientation = splitOrientation;
+            if (plantSplit != null) plantSplit.Orientation = splitOrientation;
+            if (cultivarSplit != null) cultivarSplit.Orientation = splitOrientation;
+            if (breedingSplit != null) breedingSplit.Orientation = splitOrientation;
             return true;
         }
 
@@ -1280,18 +1374,18 @@ namespace HorticultureNovelSeeds
         {
             bool changed = false;
             bool collectionVisible = !compareMode;
-            if (cultivarCollectionSurface.Visible != collectionVisible)
+            if (cultivarCollectionSurface != null && cultivarCollectionSurface.Visible != collectionVisible)
             {
                 cultivarCollectionSurface.Visible = collectionVisible;
                 changed = true;
             }
-            if (comparisonSurface.Visible == collectionVisible)
+            if (comparisonSurface != null && comparisonSurface.Visible == collectionVisible)
             {
                 comparisonSurface.Visible = !collectionVisible;
                 changed = true;
             }
             bool compareEnabled = MainTabWindow_CultivarRegistry.CanCompareCount(comparisonIds.Count);
-            if (compareButton.Enabled != compareEnabled)
+            if (compareButton != null && compareButton.Enabled != compareEnabled)
             {
                 compareButton.Enabled = compareEnabled;
                 changed = true;
@@ -1311,7 +1405,7 @@ namespace HorticultureNovelSeeds
         private void SetFilter(ref int field, int value)
         {
             if (field == value) return;
-            field = Mathf.Clamp(value, 0, 3);
+            field = Mathf.Clamp(value, 0, 2);
             snapshotDirty = true;
             uiDocument.Invalidate();
         }
@@ -1357,20 +1451,19 @@ namespace HorticultureNovelSeeds
             public readonly string Label;
             public readonly bool Discovered;
             public readonly KnowledgeRank Rank;
+            public readonly string Stage;
             public readonly int CultivarCount;
-            public readonly float GrowDays;
-            public readonly float HarvestYield;
+            public readonly HorticulturePlantPresentation Authority;
 
-            public PlantView(ThingDef definition, string label, bool discovered, KnowledgeRank rank, int cultivarCount,
-                float growDays, float harvestYield)
+            public PlantView(HorticulturePlantPresentation authority)
             {
-                Definition = definition;
-                Label = label;
-                Discovered = discovered;
-                Rank = rank;
-                CultivarCount = cultivarCount;
-                GrowDays = growDays;
-                HarvestYield = harvestYield;
+                Authority = authority;
+                Definition = authority?.Definition;
+                Label = authority?.IdentityKnown == true ? authority.Definition.LabelCap.ToString() : "Undiscovered plant";
+                Discovered = authority?.IdentityKnown == true;
+                Rank = authority?.Rank ?? KnowledgeRank.Novice;
+                Stage = authority?.Stage ?? HorticultureKnowledgeAdapter.StageUnknown;
+                CultivarCount = authority?.CultivarCount ?? 0;
             }
         }
 
@@ -1383,7 +1476,7 @@ namespace HorticultureNovelSeeds
             public readonly bool Archived;
             public readonly KnowledgeRank Rank;
             public readonly string Origin;
-            public readonly int Generation;
+            public readonly int? Generation;
             public readonly string Traits;
             public readonly string Modifiers;
             public readonly string Products;
@@ -1391,29 +1484,33 @@ namespace HorticultureNovelSeeds
             public readonly int Produce;
             public readonly int SeedPacks;
             public readonly int ParentCount;
+            public readonly HorticultureCultivarPresentation Policy;
             public readonly VarietyRecord Authority;
 
-            public CultivarView(string id, string label, string cropLabel, bool favorite, bool archived, KnowledgeRank rank,
-                string origin, int generation, string traits, string modifiers, string products, int plants, int produce,
-                int seedPacks, int parentCount, VarietyRecord authority)
+            public CultivarView(string id, string label, string cropLabel, bool favorite, bool archived,
+                HorticultureCultivarPresentation policy, int plants, int produce, int seedPacks, int parentCount,
+                VarietyRecord authority)
             {
                 Id = id ?? string.Empty;
                 Label = label ?? string.Empty;
                 CropLabel = cropLabel ?? string.Empty;
                 Favorite = favorite;
                 Archived = archived;
-                Rank = rank;
-                Origin = origin ?? string.Empty;
-                Generation = generation;
-                Traits = traits ?? string.Empty;
-                Modifiers = modifiers ?? string.Empty;
-                Products = products ?? string.Empty;
+                Policy = policy;
+                Rank = policy?.Rank ?? KnowledgeRank.Novice;
+                Origin = policy?.Origin ?? "Origin unknown";
+                Generation = policy?.Generation;
+                Traits = policy?.TraitText ?? "Traits unknown until a cultivar claim is recorded.";
+                Modifiers = policy?.ModifierText ?? "No cultivar-specific measurements are documented.";
+                Products = policy?.ProductText ?? "Product identity unknown.";
                 Plants = plants;
                 Produce = produce;
                 SeedPacks = seedPacks;
                 ParentCount = parentCount;
                 Authority = authority;
             }
+
+            public string GenerationText => Generation.HasValue ? Generation.Value.ToString() : "unknown";
         }
 
         private sealed class BreedingView
@@ -1424,10 +1521,14 @@ namespace HorticultureNovelSeeds
             public readonly string DesiredTraits;
             public readonly bool Active;
             public readonly int NotifiedCount;
-            public readonly int MatchingCount;
+            public readonly int KnownMatchingCount;
+            public readonly bool UnknownMatches;
+            public string MatchingStatus => UnknownMatches
+                ? KnownMatchingCount + " known; additional matches unknown"
+                : KnownMatchingCount.ToString();
 
             public BreedingView(string id, string name, string cropLabel, string desiredTraits, bool active,
-                int notifiedCount, int matchingCount)
+                int notifiedCount, int knownMatchingCount, bool unknownMatches)
             {
                 Id = id ?? string.Empty;
                 Name = name ?? string.Empty;
@@ -1435,7 +1536,8 @@ namespace HorticultureNovelSeeds
                 DesiredTraits = desiredTraits ?? string.Empty;
                 Active = active;
                 NotifiedCount = notifiedCount;
-                MatchingCount = matchingCount;
+                KnownMatchingCount = knownMatchingCount;
+                UnknownMatches = unknownMatches;
             }
         }
 

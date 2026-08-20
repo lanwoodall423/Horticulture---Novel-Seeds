@@ -30,8 +30,7 @@ namespace HorticultureNovelSeeds
                     MainButtonDef button = DefDatabase<MainButtonDef>.GetNamedSilentFail("HNS_CultivarRegistry");
                     if (button != null) Find.MainTabsRoot.SetCurrentTab(button, true);
                 };
-                Func<bool> visible = () => DefDatabase<MainButtonDef>.GetNamedSilentFail("HNS_CultivarRegistry")
-                    ?.tabWindowClass == typeof(MainTabWindow_CultivarRegistry);
+                Func<bool> visible = () => HorticulturePresentationPolicy.WorkspaceRelevance().AnyMeaningfulState;
                 register.Invoke(null, new object[]
                 {
                     "horticulture.novel-seeds", "Horticulture", "Open the Horticulture field guide and cultivar workspace.",
@@ -52,7 +51,7 @@ namespace HorticultureNovelSeeds
     public class MainTabWindow_CultivarRegistry : MainTabWindow
     {
         // Kept as a compatibility contract for integrations and saved UI probes. The visible
-        // workspace uses five navigation pages and opens Compare contextually from Cultivars.
+        // workspace navigation is progressive; Compare remains contextual inside Cultivars.
         private enum RegistryPage { Plants, Cultivars, Knowledge, Compare }
         private enum DiscoveryFilter { All, Discovered, Undiscovered }
         private enum BalanceFilter { All, Balanced, Beneficial, Detrimental }

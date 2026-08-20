@@ -59,9 +59,9 @@ $checks = [ordered]@{
     'legacy cache records regenerate or reuse by identity' = $auto -match 'Loaded a legacy automatic plant-mask cache' -and $auto -match 'LoadedGeneratorVersion != GeneratorVersion' -and $auto -match 'reusable'
     'shared manual masks are cached and ambiguous conflicts are explicit' = $masking -match 'SharedManualMaskCache' -and $masking -match 'Ambiguous shared manual' -and $settings -match 'SharedManualMaskCache\.Invalidate'
     'bundled masks have committed XML and manifest paths' = $auto -match 'BundledCachePath' -and $auto -match 'BundledManifestPath' -and (Test-Path (Join-Path $root '1.6\AutoMasks\BundledAutoMasks.xml')) -and (Test-Path (Join-Path $root '1.6\AutoMasks\BundledAutoMasks.manifest.json'))
-    'bundled precedence and promotion are explicit' = $auto -match 'BundledRecords' -and $auto -match 'PromoteBundledRecord' -and $auto -match 'runtimeTestBundleOverride != false'
+    'bundled precedence and promotion are explicit' = $auto -match 'BundledRecords' -and $auto -match 'PromoteBundledRecord' -and $auto -match 'BundledRecords\.TryGetValue'
     'generation is finite visible and not renderer-triggered' = $auto -match 'BuildWorkList' -and $auto -match 'QueueLongEvent' -and $auto -match 'SetCurrentEventText' -and $auto -match 'work\.Count == 0' -and $masking -match 'LayersForVariation'
-    'developer bundle publishing tooling exists' = (Test-Path (Join-Path $root 'DevTools\Publish-AutoMaskBundle.ps1')) -and (Test-Path (Join-Path $root 'DevTools\Verify-AutoMaskBundle.ps1'))
+    'committed bundle verification tooling exists' = (Test-Path (Join-Path $root 'DevTools\Verify-AutoMaskBundle.ps1')) -and -not (Test-Path (Join-Path $root 'DevTools\Publish-AutoMaskBundle.ps1'))
 }
 
 $failed = @($checks.GetEnumerator() | Where-Object { -not $_.Value })

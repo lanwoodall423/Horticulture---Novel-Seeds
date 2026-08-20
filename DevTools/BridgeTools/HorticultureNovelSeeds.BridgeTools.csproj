@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <RootNamespace>HorticultureNovelSeeds.BridgeTools</RootNamespace>
+    <AssemblyName>HorticultureNovelSeeds.BridgeTools</AssemblyName>
+    <LangVersion>latest</LangVersion>
+    <Deterministic>true</Deterministic>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <OutputPath>..\..\..\..\BridgeTools\Horticulture - Novel Seeds\</OutputPath>
+    <DebugType>none</DebugType>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <RimBridgeServerSdkPath Condition="'$(RimBridgeServerSdkPath)' == ''">$(RIMBRIDGE_SERVER_SDK_PATH)</RimBridgeServerSdkPath>
+    <RimBridgeServerSdkPackageVersion Condition="'$(RimBridgeServerSdkPackageVersion)' == ''">2.0.0</RimBridgeServerSdkPackageVersion>
+    <RimWorldRoot Condition="'$(RimWorldRoot)' == ''">$(MSBuildThisFileDirectory)..\..\..\..</RimWorldRoot>
+    <SteamAppsRoot Condition="'$(SteamAppsRoot)' == ''">$(RimWorldRoot)\..\..</SteamAppsRoot>
+    <ProgressionAgriculturePath Condition="'$(ProgressionAgriculturePath)' == ''">$(SteamAppsRoot)\workshop\content\294100\3418017359\1.6\Assemblies\ProgressionAgriculture.dll</ProgressionAgriculturePath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>$(RimWorldRoot)\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="ProgressionAgriculture">
+      <HintPath>$(ProgressionAgriculturePath)</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <PackageReference Include="RimBridgeServer.Sdk" Version="$(RimBridgeServerSdkPackageVersion)"
+                      Condition="'$(RimBridgeServerSdkPath)' == ''">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>compile;build;buildTransitive;analyzers</IncludeAssets>
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
+    <Reference Include="RimBridgeServer.Sdk" Condition="'$(RimBridgeServerSdkPath)' != ''">
+      <HintPath>$(RimBridgeServerSdkPath)</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="KnowledgeFramework">
+      <HintPath>..\..\..\KnowledgeFramework\1.6\Assemblies\KnowledgeFramework.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="HorticultureNovelSeeds">
+      <HintPath>..\..\1.6\Assemblies\HorticultureNovelSeeds.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+</Project>

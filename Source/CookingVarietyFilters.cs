@@ -468,7 +468,8 @@ namespace HorticultureNovelSeeds
                 Rect row = __instance.GetRect(__instance.lineHeight);
                 bool allowed = state.Allows(variety.id);
                 bool previous = allowed;
-                string tooltip = variety.TraitKey.NullOrEmpty() ? null : "Traits: " + NovelSeedUtility.TraitSummary(variety.traits);
+                HorticultureCultivarPresentation authority = HorticulturePresentationPolicy.ForCultivar(variety, null, true);
+                string tooltip = authority?.HasKnownTraits == true ? "Traits: " + authority.TraitText : "Traits not documented";
                 DrawChildRow(__instance, row, visualParentIndent + 1, variety.Label, ref allowed, tooltip);
                 if (allowed != previous) state.SetAllowed(variety.id, allowed);
             }

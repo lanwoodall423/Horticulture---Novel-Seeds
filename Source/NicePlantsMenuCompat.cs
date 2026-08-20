@@ -243,14 +243,17 @@ namespace HorticultureNovelSeeds
                 DrawNicePlantsHeader(ref y, innerRect, "HNS_BreedingMixHeader".Translate().ToString());
                 DrawNicePlantsLine(ref y, innerRect, "HNS_BreedingMixMembers".Translate(string.Join(", ", breedingMix.Select(item => item.Label).ToArray())).ToString());
                 foreach (VarietyRecord member in breedingMix)
-                    DrawNicePlantsLine(ref y, innerRect, member.Label + ": " + NovelSeedUtility.TraitSummary(member.traits));
+                {
+                    HorticultureCultivarPresentation authority = HorticulturePresentationPolicy.ForCultivar(member, null, true);
+                    DrawNicePlantsLine(ref y, innerRect, member.Label + ": " + (authority?.TraitText ?? "Traits not documented"));
+                }
                 y += 4f;
                 return;
             }
             if (variety == null || variety.cropDef != plantDef) return;
 
-            List<VarietyTraitDef> traits = variety.traits?.Where(t => t != null).ToList() ?? new List<VarietyTraitDef>();
-            List<string> effects = NovelSeedUtility.StatChangeLines(traits, plantDef);
+            HorticultureCultivarPresentation policy = HorticulturePresentationPolicy.ForCultivar(variety, null, true);
+            List<VarietyTraitDef> traits = policy?.AuthorizedTraits?.Where(t => t != null).ToList() ?? new List<VarietyTraitDef>();
             y += 10f;
 
             DrawNicePlantsHeader(ref y, innerRect, "HNS_NicePlantsMenuVarietyHeader".Translate().ToString());
@@ -265,23 +268,11 @@ namespace HorticultureNovelSeeds
                 }
             }
 
-            if (effects.Count > 0)
+            if (policy != null && policy.ModifierText.IndexOf("documented", StringComparison.OrdinalIgnoreCase) < 0)
             {
                 DrawNicePlantsHeader(ref y, innerRect, "HNS_NicePlantsMenuEffectsHeader".Translate().ToString());
-                foreach (string effect in effects)
-                {
-                    DrawNicePlantsLine(ref y, innerRect, "HNS_NicePlantsMenuBullet".Translate(effect).ToString());
-                }
+                DrawNicePlantsLine(ref y, innerRect, policy.ModifierText);
             }
-
-            if (!variety.FirstDiscoveredInfo.NullOrEmpty())
-            {
-                DrawNicePlantsHeader(ref y, innerRect, "HNS_FirstDiscoveredHeader".Translate().ToString());
-                DrawNicePlantsLine(ref y, innerRect, variety.FirstDiscoveredInfo);
-            }
-
-            DrawNicePlantsHeader(ref y, innerRect, "Trait Balance");
-            DrawNicePlantsLine(ref y, innerRect, NovelSeedUtility.TraitBalanceSummary(traits));
 
             y += 4f;
         }

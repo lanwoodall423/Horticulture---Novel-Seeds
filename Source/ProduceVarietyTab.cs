@@ -39,37 +39,41 @@ namespace HorticultureNovelSeeds
                 return;
             }
 
-            List<string> sources = comp.SourceVarietyLabels ?? new List<string>();
-            List<VarietyTraitDef> qualities = comp.InheritedTraits?.Where(trait => trait != null).ToList()
-                ?? new List<VarietyTraitDef>();
-            ThingDef productDef = SelThing?.def;
             ThingDef sourcePlant = comp.SourcePlantDef;
-            VarietyRecord sourceCultivar = (comp.SourceVarietyIds ?? new string[0])
+            List<VarietyRecord> sourceCultivars = (comp.SourceVarietyIds ?? new string[0])
                 .Where(id => !id.NullOrEmpty())
                 .Select(id => GameComponent_NovelSeeds.Instance?.GetVariety(id))
-                .FirstOrDefault(variety => variety != null);
+                .Where(variety => variety != null).ToList();
+            List<Tuple<VarietyRecord, HorticultureCultivarPresentation>> sourceRows = sourceCultivars
+                .Select(variety => Tuple.Create(variety, HorticulturePresentationPolicy.ForCultivar(variety, null, true))).ToList();
+            List<HorticultureCultivarPresentation> sourceAuthority = sourceRows.Select(value => value.Item2)
+                .Where(value => value != null).ToList();
+            VarietyRecord sourceCultivar = sourceCultivars.FirstOrDefault();
+            HorticultureCultivarPresentation primaryAuthority = sourceAuthority.FirstOrDefault();
+            List<VarietyTraitDef> qualities = sourceAuthority.SelectMany(value => value.AuthorizedTraits ?? Array.Empty<VarietyTraitDef>())
+                .Where(trait => trait != null).Distinct().ToList();
             Action openSource = sourceCultivar != null
                 ? (Action)(() => MainTabWindow_CultivarRegistry.OpenCultivar(sourceCultivar))
                 : sourcePlant == null ? null : (Action)(() => MainTabWindow_CultivarRegistry.OpenPlant(sourcePlant));
             document.Refresh(new HorticultureInspectorSnapshot
             {
                 Title = "Produce Cultivar",
-                Subtitle = "Nutrition factor: " + comp.NutritionFactor.ToStringPercent(),
+                Subtitle = primaryAuthority?.ProductText ?? "Produce identity remains unknown until a source cultivar claim is available.",
                 PrimaryHeader = "Source Cultivars",
                 SecondaryHeader = "Inherited qualities",
                 PrimaryEmpty = "No source Cultivars",
                 SecondaryEmpty = "No inherited qualities",
-                PrimaryRows = sources.Select((source, index) => new HorticultureInspectorRow
+                PrimaryRows = sourceRows.Select((source, index) => new HorticultureInspectorRow
                 {
                     Id = "source-" + index,
-                    Label = source,
-                    Detail = "Source Cultivar"
+                    Label = source.Item2 == null ? "Source cultivar identity unknown" : source.Item1.Label,
+                    Detail = source.Item2 == null ? "Identity unknown" : "Source Cultivar"
                 }).ToArray(),
                 SecondaryRows = qualities.Select((trait, index) => new HorticultureInspectorRow
                 {
                     Id = trait.defName ?? "quality-" + index,
                     Label = TraitColorUI.Label(trait),
-                    Detail = ProduceEffectLine(comp, trait, productDef)
+                    Detail = ProduceEffectLine(primaryAuthority)
                 }).ToArray(),
                 ActionLabel = openSource == null ? null : "Open in Horticulture",
                 Action = openSource
@@ -77,17 +81,11 @@ namespace HorticultureNovelSeeds
             document.Draw(ContentRect());
         }
 
-        private static string ProduceEffectLine(CompNovelProduceAppearance comp, VarietyTraitDef trait, ThingDef productDef)
+        private static string ProduceEffectLine(HorticultureCultivarPresentation authority)
         {
-            List<string> effects = new List<string>();
-            if (comp.HasProduceEffect(trait))
-            {
-                string gameplayEffect = NovelSeedUtility.InheritedProduceQualityLine(trait, productDef);
-                if (!gameplayEffect.NullOrEmpty() && gameplayEffect != "No Effect") effects.Add(gameplayEffect);
-            }
-            if (NovelSeedUtility.HasProduceColorVisual(comp.SourcePlantDef, new[] { trait }))
-                effects.Add("Visual: Applies the configured produce appearance.");
-            return effects.Count == 0 ? "No Effect" : string.Join("\n", effects);
+            return authority?.HasKnownProducts == true
+                ? "Produce identity is documented; detailed effects remain claim-scoped."
+                : "Produce effects unknown until the source cultivar is documented.";
         }
 
         private void EnsureDocument()

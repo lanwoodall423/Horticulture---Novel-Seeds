@@ -2,8 +2,7 @@
 !1.6/Assemblies/HorticultureNovelSeeds.dll
 **/obj/
 **/bin/
+.rimctx/
+.rimdev/profiles/
 DevTools/Staged/
 DevTools/TestResults/
-DevTools/RuntimeTests/Build/
-DevTools/RuntimeTests/obj/
-DevTools/RuntimeTests/bin/

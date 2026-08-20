@@ -35,7 +35,9 @@ namespace HorticultureNovelSeeds
             foreach (VarietyRecord variety in varietyList)
             {
                 VarietyRecord localVariety = variety;
-                string optionLabel = "HNS_SelectVariety".Translate(localVariety.Label, NovelSeedUtility.TraitSummary(localVariety.traits));
+                HorticultureCultivarPresentation authority = HorticulturePresentationPolicy.ForCultivar(localVariety, null, true);
+                string optionLabel = "HNS_SelectVariety".Translate(localVariety.Label,
+                    authority?.TraitText ?? "Traits not documented");
                 if (!ExpandedTraitUtility.VarietyMatchesGrowers(localVariety, settables))
                 {
                     optionLabel += " (" + "HNS_RequiresZone".Translate(ExpandedTraitUtility.ZoneLabel(localVariety)) + ")";
@@ -163,20 +165,21 @@ namespace HorticultureNovelSeeds
             string query = search?.Trim();
             return varieties
                 .Where(variety => variety != null)
-                .Where(variety => string.IsNullOrEmpty(query)
-                    || variety.Label.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0
-                    || NovelSeedUtility.TraitSummary(variety.traits).IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0)
-                .Select((variety, index) => new HorticultureDialogRow
+                .Select(variety => new { Variety = variety, Authority = HorticulturePresentationPolicy.ForCultivar(variety, null, true) })
+                .Where(value => string.IsNullOrEmpty(query)
+                    || value.Variety.Label.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0
+                    || (value.Authority?.TraitText ?? "Traits not documented").IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0)
+                .Select((row, index) => new HorticultureDialogRow
                 {
                     Id = "cultivar-" + index,
-                    Label = variety.Label,
-                    Detail = NovelSeedUtility.TraitSummary(variety.traits),
-                    Status = selected.Contains(variety.id) ? "Selected" : "Available",
-                    Selected = selected.Contains(variety.id),
+                    Label = row.Variety.Label,
+                    Detail = row.Authority?.TraitText ?? "Traits not documented",
+                    Status = selected.Contains(row.Variety.id) ? "Selected" : "Available",
+                    Selected = selected.Contains(row.Variety.id),
                     CanToggle = true,
-                    Toggle = value =>
+                    Toggle = enabled =>
                     {
-                        if (value) selected.Add(variety.id); else selected.Remove(variety.id);
+                        if (enabled) selected.Add(row.Variety.id); else selected.Remove(row.Variety.id);
                     }
                 }).ToArray();
         }

@@ -4,9 +4,7 @@ param(
     [string]$Version = '0.1.0-rc.1',
     [string]$BuildTimestampUtc = '',
     [string]$RimWorldRoot = (Join-Path $PSScriptRoot '..\..\..'),
-    [string]$RuntimeResultsDirectory = (Join-Path $PSScriptRoot 'Staged\RuntimeResults'),
-    [switch]$SkipBuild,
-    [switch]$RequireRuntimePass
+    [switch]$SkipBuild
 )
 
 $ErrorActionPreference = 'Stop'
@@ -86,39 +84,6 @@ $knowledge = [ordered]@{
     dllSha256 = (Get-FileHash -LiteralPath $knowledgePath -Algorithm SHA256).Hash
 }
 
-$resultFiles = @(Get-ChildItem -LiteralPath $RuntimeResultsDirectory -Filter '*.json' -File -ErrorAction SilentlyContinue)
-$requiredScenarios = @('complete', 'auto-mask-suite')
-$runtimeSummary = New-Object System.Collections.Generic.List[object]
-$testedRimWorldVersions = New-Object System.Collections.Generic.List[string]
-foreach ($scenario in $requiredScenarios) {
-    $matches = @($resultFiles | Where-Object { $_.BaseName -like ($scenario + '.*') } | Sort-Object LastWriteTimeUtc -Descending)
-    $report = if ($matches.Count -gt 0) { Get-Content -LiteralPath $matches[0].FullName -Raw | ConvertFrom-Json } else { $null }
-    if ($null -ne $report -and -not [string]::IsNullOrWhiteSpace([string]$report.rimWorldVersion)) {
-        $testedRimWorldVersions.Add([string]$report.rimWorldVersion)
-    }
-    $performanceMeasurements = @()
-    if ($null -ne $report -and $null -ne $report.performanceMeasurements) {
-        $performanceMeasurements = @($report.performanceMeasurements | Where-Object { $null -ne $_ })
-    }
-    $summary = [ordered]@{
-        scenario = $scenario
-        status = if ($null -eq $report) { 'NOT_RUN' } else { $report.status }
-        reportFile = if ($null -eq $report) { '' } else { $matches[0].Name }
-        suiteVersion = if ($null -eq $report) { '' } else { $report.suiteVersion }
-        assertionCount = if ($null -eq $report) { 0 } else { $report.assertionCount }
-        passedAssertions = if ($null -eq $report) { 0 } else { $report.passedAssertions }
-        failedAssertions = if ($null -eq $report) { 0 } else { $report.failedAssertionsCount }
-        blockedAssertions = if ($null -eq $report) { 0 } else { $report.blockedAssertionsCount }
-        elapsedTicks = if ($null -eq $report) { 0 } else { $report.elapsedTicks }
-        performanceMeasurements = $performanceMeasurements
-    }
-    $runtimeSummary.Add($summary)
-    if ($RequireRuntimePass -and ($null -eq $report -or $report.status -ne 'PASS')) { throw "Required runtime scenario did not pass: $scenario" }
-}
-$distinctTestedVersions = @($testedRimWorldVersions | Sort-Object -Unique)
-if ($distinctTestedVersions.Count -gt 1) { throw 'Required runtime reports disagree about the RimWorld version.' }
-if ($distinctTestedVersions.Count -eq 1) { $rimWorldVersion = $distinctTestedVersions[0] }
-
 $manifest = [ordered]@{
     schemaVersion = 1
     manifestVersion = 1
@@ -140,9 +105,11 @@ $manifest = [ordered]@{
     }
     knowledgeFramework = $knowledge
     testSuite = [ordered]@{
-        suite = 'Horticulture.RuntimeTests'
-        requiredScenarios = $requiredScenarios
-        summary = [object[]]$runtimeSummary.ToArray()
+        workflow = 'RimTest'
+        catalog = 'TestCatalog/rimtest.catalog.json'
+        smokeTest = 'horticulture-in-game-smoke'
+        fallbackSuite = 'smoke'
+        recipe = 'horticulture-in-game-suite'
     }
     testedCompatibilitySet = @(
         'RimWorld 1.6 vanilla conventional sowable crops',

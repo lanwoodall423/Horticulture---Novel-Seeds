@@ -316,7 +316,6 @@ namespace HorticultureNovelSeeds
         private static bool bundleInitialized;
         private static bool dirty;
         private static bool generationQueued;
-        private static bool? runtimeTestBundleOverride;
         private static AutoMaskBatchResult lastBatchResult;
 
         public static string CachePath => Path.Combine(GenFilePaths.ConfigFolderPath, "HorticultureNovelSeedsAutoMasks.xml");
@@ -343,7 +342,7 @@ namespace HorticultureNovelSeeds
         {
             EnsureLoaded();
             EnsureBundleLoaded();
-            if (plantDef == null || runtimeTestBundleOverride == false) return false;
+            if (plantDef == null) return false;
             string key = RecordKey(plantDef.defName, variationIndex);
             if (!BundledRecords.TryGetValue(key, out AutoPlantMaskRecord bundled)) return false;
             Texture texture = PlantMaskUtility.TextureForVariation(plantDef, variationIndex);
@@ -354,38 +353,6 @@ namespace HorticultureNovelSeeds
             dirty = true;
             if (save) SaveIfDirty();
             return true;
-        }
-
-        public static void ClearRuntimeTestLocalRecord(ThingDef plantDef, int variationIndex)
-        {
-            if (plantDef == null) return;
-            string key = RecordKey(plantDef.defName, variationIndex);
-            Records.Remove(key);
-            SessionValidated.Remove(key);
-            dirty = true;
-        }
-
-        public static void SetRuntimeTestBundleEnabled(bool enabled)
-        {
-            runtimeTestBundleOverride = enabled;
-            SessionBundled.Clear();
-        }
-
-        public static void ResetRuntimeTestState()
-        {
-            Records.Clear();
-            BundledRecords.Clear();
-            SessionValidated.Clear();
-            SessionBundled.Clear();
-            FailedKeys.Clear();
-            initialized = false;
-            bundleInitialized = false;
-            dirty = false;
-            generationQueued = false;
-            runtimeTestBundleOverride = null;
-            lastBatchResult = default(AutoMaskBatchResult);
-            EnsureLoaded();
-            EnsureBundleLoaded();
         }
 
         public static void InitializeAndGenerateMissing()
@@ -522,8 +489,7 @@ namespace HorticultureNovelSeeds
                 SessionValidated.Add(key);
                 return record;
             }
-            if (runtimeTestBundleOverride != false
-                && BundledRecords.TryGetValue(key, out AutoPlantMaskRecord bundledRecord) && bundledRecord.Matches(identity))
+            if (BundledRecords.TryGetValue(key, out AutoPlantMaskRecord bundledRecord) && bundledRecord.Matches(identity))
             {
                 SessionBundled.Add(key);
                 return bundledRecord;
@@ -553,19 +519,6 @@ namespace HorticultureNovelSeeds
         internal static bool IsRenderable(AutoPlantMaskRecord record)
         {
             return record != null && !record.LowConfidence && record.Layers.Any(layer => layer?.HasPixels == true);
-        }
-
-        public static bool RuntimeTestLowConfidenceSafety()
-        {
-            VisualMaskLayerRecord layer = new VisualMaskLayerRecord { name = "Leaves" };
-            layer.PaintPixel(120, 120, true);
-            AutoPlantMaskRecord low = new AutoPlantMaskRecord("RuntimeLow", 0, "runtime-low",
-                LowConfidenceThreshold - 0.01f,
-                new[] { new VisualMaskLayerRecord(), layer, new VisualMaskLayerRecord() });
-            AutoPlantMaskRecord high = new AutoPlantMaskRecord("RuntimeHigh", 0, "runtime-high",
-                LowConfidenceThreshold + 0.01f,
-                new[] { new VisualMaskLayerRecord(), layer, new VisualMaskLayerRecord() });
-            return !IsRenderable(low) && IsRenderable(high);
         }
 
         public static AutoPlantMaskRecord Generate(ThingDef plantDef, int variationIndex, bool save)
@@ -648,9 +601,8 @@ namespace HorticultureNovelSeeds
             {
                 string directory = Path.GetDirectoryName(outputPath);
                 if (!directory.NullOrEmpty()) Directory.CreateDirectory(directory);
-                Dictionary<string, AutoPlantMaskRecord> effective = runtimeTestBundleOverride == false
-                    ? new Dictionary<string, AutoPlantMaskRecord>()
-                    : new Dictionary<string, AutoPlantMaskRecord>(BundledRecords);
+                Dictionary<string, AutoPlantMaskRecord> effective =
+                    new Dictionary<string, AutoPlantMaskRecord>(BundledRecords);
                 foreach (KeyValuePair<string, AutoPlantMaskRecord> pair in Records) effective[pair.Key] = pair.Value;
                 HashSet<string> currentKeys = new HashSet<string>();
                 foreach (ThingDef plant in DefDatabase<ThingDef>.AllDefsListForReading
@@ -889,7 +841,6 @@ namespace HorticultureNovelSeeds
         {
             if (bundleInitialized) return;
             bundleInitialized = true;
-            if (runtimeTestBundleOverride == false) return;
             if (HorticultureNovelSeedsMod.ContentRootPath.NullOrEmpty() || !File.Exists(BundledCachePath)) return;
             try
             {

@@ -54,7 +54,7 @@ namespace HorticultureNovelSeeds
             ? new[] { varietyId, crossPollinationParentVarietyId }.Where(id => !id.NullOrEmpty()).Distinct().ToList()
             : new List<string>();
         public string DisplayVarietyName => CrossPollinated
-            ? "HNS_CrossPollinatedLabel".Translate(CrossPollinationParent?.Label ?? "HNS_UnknownVariety".Translate()).ToString()
+            ? "Unidentified novel variation"
             : Variety?.Label ?? "HNS_PendingVariety".Translate().ToString();
         public List<VarietyTraitDef> DiscoveryTraits => PendingDiscovery ? ActiveTraits.ToList() : transientTraits;
         public VarietyTraitDef RequiredResourceTrait { get { EnsureTraitCache(); return requiredResourceTraitCache; } }
@@ -312,15 +312,11 @@ namespace HorticultureNovelSeeds
             }
             VarietyRecord variety = Variety;
             string name = DisplayVarietyName;
-            string text = "HNS_PlantVariety".Translate() + ": " + name + "\n" + "HNS_Traits".Translate() + ": " + NovelSeedUtility.TraitSummary(ActiveTraits);
-            if (CrossPollinated)
-            {
-                text += "\n" + "HNS_CrossPollinatedWith".Translate(CrossPollinationParent?.Label ?? "HNS_UnknownVariety".Translate());
-            }
-            else if (variety != null && PendingDiscovery)
-            {
-                text += "\n" + "HNS_PendingAdditionalTraits".Translate(NovelSeedUtility.TraitSummary(transientTraits));
-            }
+            HorticultureCultivarPresentation policy = variety == null ? null :
+                HorticulturePresentationPolicy.ForCultivar(variety, null, true);
+            string traitText = policy == null ? "Traits unknown until the cultivar is documented." : policy.TraitText;
+            string text = "HNS_PlantVariety".Translate() + ": " + name + "\n" + "HNS_Traits".Translate() + ": " + traitText;
+            if (PendingDiscovery) text += "\nObservable novel variation is not yet a documented cultivar.";
             if (NeedsResource)
             {
                 VarietyTraitDef need = RequiredResourceTrait;
@@ -416,7 +412,7 @@ namespace HorticultureNovelSeeds
             {
                 return "HNS_InvalidSeedPack".Translate();
             }
-            return cropDef.LabelCap + "\n" + "HNS_Traits".Translate() + ": " + NovelSeedUtility.TraitSummary(traits);
+            return cropDef.LabelCap + "\n" + "HNS_Traits".Translate() + ": Traits are not documented until this seed pack is named.";
         }
 
         public void OpenNamingDialog(Pawn pawn)
@@ -520,12 +516,9 @@ namespace HorticultureNovelSeeds
 
         string IHorticultureNamingSurface.Title => "New Cultivar";
         string IHorticultureNamingSurface.SourceLabel => comp?.CropDef?.LabelCap.ToString() ?? "Unknown plant";
-        string IHorticultureNamingSurface.OriginLabel => "Origin: " + (comp?.OriginKind ?? "mutation");
-        string IHorticultureNamingSurface.LineageLabel => comp?.ParentVarietyIds?.Count > 0
-            ? "Lineage: " + comp.ParentVarietyIds.Count + " parent cultivars"
-            : "Lineage: original discovery";
-        IReadOnlyList<string> IHorticultureNamingSurface.TraitLabels =>
-            (comp?.Traits ?? new List<VarietyTraitDef>()).Select(TraitColorUI.Label).ToArray();
+        string IHorticultureNamingSurface.OriginLabel => "Origin: recorded after documentation";
+        string IHorticultureNamingSurface.LineageLabel => "Lineage: recorded after documentation";
+        IReadOnlyList<string> IHorticultureNamingSurface.TraitLabels => Array.Empty<string>();
         string IHorticultureNamingSurface.Name { get => varietyName; set => varietyName = value ?? string.Empty; }
         string IHorticultureNamingSurface.ValidationMessage => validationMessage;
         void IHorticultureNamingSurface.Save() => TryConfirm();
@@ -537,9 +530,7 @@ namespace HorticultureNovelSeeds
             {
                 return "New Variety";
             }
-            VarietyTraitDef firstPositive = comp.Traits?.FirstOrDefault(t => HorticultureNovelSeedsMod.Settings?.TraitHasTag(t, "Positive") == true);
-            VarietyTraitDef firstTrait = firstPositive ?? comp.Traits?.FirstOrDefault();
-            return firstTrait == null ? comp.CropDef.label.CapitalizeFirst() : firstTrait.label + " " + comp.CropDef.label.CapitalizeFirst();
+            return comp.CropDef.label.CapitalizeFirst();
         }
     }
 
@@ -596,11 +587,11 @@ namespace HorticultureNovelSeeds
 
         string IHorticultureNamingSurface.Title => "Rename Cultivar";
         string IHorticultureNamingSurface.SourceLabel => variety?.cropDef?.LabelCap.ToString() ?? "Unknown plant";
-        string IHorticultureNamingSurface.OriginLabel => variety == null ? "Origin unavailable" : "Origin: " + variety.originKind;
-        string IHorticultureNamingSurface.LineageLabel => variety == null || variety.parentVarietyIds.Count == 0
-            ? "Lineage: original discovery" : "Lineage: " + variety.parentVarietyIds.Count + " parent cultivars";
-        IReadOnlyList<string> IHorticultureNamingSurface.TraitLabels =>
-            (variety?.traits ?? new List<VarietyTraitDef>()).Select(TraitColorUI.Label).ToArray();
+        private HorticultureCultivarPresentation Presentation => variety == null ? null :
+            HorticulturePresentationPolicy.ForCultivar(variety, null, true);
+        string IHorticultureNamingSurface.OriginLabel => "Origin: " + (Presentation?.Origin ?? "Origin unknown");
+        string IHorticultureNamingSurface.LineageLabel => "Lineage: " + (Presentation?.LineageText ?? "Lineage unknown.");
+        IReadOnlyList<string> IHorticultureNamingSurface.TraitLabels => Presentation?.TraitNames ?? Array.Empty<string>();
         string IHorticultureNamingSurface.Name { get => varietyName; set => varietyName = value ?? string.Empty; }
         string IHorticultureNamingSurface.ValidationMessage => validationMessage;
         void IHorticultureNamingSurface.Save() => TryConfirm();

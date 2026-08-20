@@ -1,51 +1,67 @@
-# Runtime test scenarios
+# RimTest in-game validation
 
-The test implementation is `DevTools/RuntimeTests`, built as a versioned `HorticultureNovelSeeds.RuntimeTests.*.dll`. It is loaded only for a test run and is excluded from the production project and release package. It adds a test-only `GameComponent` and Harmony hooks in that assembly; no test hook is compiled into `HorticultureNovelSeeds.dll`.
+Horticulture owns the gameplay assertions in the `HorticultureSuite` RimBridge companion.
+RimTest selects and runs the suite; DevBridge2 owns project registration, lifecycle, readiness,
+generation identity, and leases. The production DLL contains no test `GameComponent`, Harmony
+bootstrap, request-directory transport, or test result writer.
 
-## Coordination workflow
+## Workflow
 
-The harness uses this sequence:
+Run these commands from the Horticulture repository root:
 
-1. Build the production and test assemblies.
-2. Ask `C:\Games\Steam\steamapps\common\RimWorld\Mods\DevBridge2\DevBridge.cmd restart` to load the test generation.
-3. Read the ready generation and acquire a lease with `DevBridge.cmd test begin`.
-4. Write `DevBridge2/Runtime/Horticulture.RuntimeTest.request.json` only after the exact lease is held.
-5. Horticulture reads the request from the real game, executes the named scenario, and writes a result JSON atomically.
-6. The harness prints the result and releases the exact lease with `DevBridge.cmd test end <lease-id>`.
-
-DevBridge2 coordinates process lifecycle only. It provides no Horticulture RPC, fixtures, assertions, or scenario logic.
-
-## Scenarios
-
-| Scenario | Coverage |
-| --- | --- |
-| `startup` | Default settings, supported Def discovery, GameComponent creation, Knowledge diagnostics, and initialization readiness. |
-| `ordinary-crop` | Real plant spawn/sow/growth callbacks, mutation state, cultivar creation/rename/selection, harvest identity, and inherited produce. |
-| `sowable-tree` | Supported tree sowing, mutation, cultivar save/replant, cutting path, and tree identity. |
-| `cross-pollination` | Distinct parents, real sow/cross-pollination path with deterministic forced probability, lineage, hybrid identity, and stable breeding selection. |
-| `produce-processing` | Multiple inherited ingredients, pigment/trait propagation, processing routing, and unrelated ingredient isolation. |
-| `knowledge` | Registration, sow/growth/harvest/cutting/documentation, personal/colony transaction paths, witness-capable routing, and duplicate identity deduplication. |
-| `save-reload` | Normal RimWorld save/load request with ordinary, tree, hybrid, trait, palette, and Knowledge state checks after reload. |
-| `negative` | Unsupported plant, missing cultivar, empty registry, missing/invalid mask cache, and safe rejection behavior. |
-| `long-running` | Repeated plant/event ticks, cache availability, and diagnostic/log growth checks. |
-| `auto-mask-suite` | No-work baseline and long-event suppression, manual/local/bundled precedence, new-plant render safety and explicit fallback generation, stale-bundle rejection, low-confidence safety/promotion behavior, tree morphology, growth/collection/directional variants, and ordinary lookup performance. |
-| `auto-mask-export` | Horticulture-owned in-game Unity texture analysis, complete identity validation, bundle export, and failure/low-confidence diagnostics for publishing. |
-| `complete` | Runs the release smoke journey and includes `save-reload` as an asynchronous final phase. |
-
-An assertion is `PASS`, `FAIL`, or `BLOCKED`. A blocked assertion means the required game state or capability was genuinely unavailable; the result never silently treats an unrun scenario as a pass.
-
-## Result format and location
-
-Results are written outside the mod package to:
-
-```text
-C:\Games\Steam\steamapps\common\RimWorld\Mods\DevBridge2\Runtime\Horticulture.RuntimeTest.<request-id>.json
+```powershell
+& 'C:\Games\Steam\steamapps\common\RimWorld\Mods\RimTest\rimtest.cmd' doctor --json
+& 'C:\Games\Steam\steamapps\common\RimWorld\Mods\RimTest\rimtest.cmd' validate --json
+& 'C:\Games\Steam\steamapps\common\RimWorld\Mods\RimTest\rimtest.cmd' run horticulture-in-game-smoke --json
+& 'C:\Games\Steam\steamapps\common\RimWorld\Mods\RimTest\rimtest.cmd' affected --run --json
 ```
 
-The JSON contains `schemaVersion`, `suiteVersion`, `requestId`, `scenario`, `status`, Horticulture commit and DLL SHA-256, Knowledge Framework release/API and DLL SHA-256, RimWorld version, start/end/elapsed ticks, assertion counts, failed assertions, exception stack traces, relevant Horticulture diagnostics, and new Horticulture log errors/warnings.
+The optional wrapper `DevTools\Run-RimBridgeTests.ps1` delegates to the same RimTest catalog;
+it does not control RimWorld or acquire a second lease. Build the companion first when its
+source changes:
 
-Before a scenario starts, the harness records the current `Player.log` line count. The runner inspects only subsequent Horticulture lines and classifies new exceptions, errors, missing-method/type-load failures, serialization failures, and Harmony patch failures as release-blocking. Historical unrelated log noise is not counted.
+```powershell
+dotnet build .\Source\HorticultureNovelSeeds.csproj --configuration Release
+dotnet build .\DevTools\BridgeTools\HorticultureNovelSeeds.BridgeTools.csproj --configuration Release
+.\DevTools\Run-RimBridgeTests.ps1
+```
 
-## Adding a scenario
+## Suite scenarios
 
-Add a deterministic case to `RuntimeScenarioSuite.cs`, use the existing `Check`, `Failure`, `Block`, and fixture-cleanup helpers, add its name to the `ValidateSet` in `Run-RuntimeTests.ps1`, update the table above, build the test assembly, and run the focused scenario through DevBridge2. Do not add scenario classes, request files, or test Defs to `Source` or `1.6/Defs`; the Release DLL must remain free of test fixtures.
+The companion supports `complete`, `startup`, `ux-discovery`, `ordinary-crop`, `sowable-tree`,
+`cross-pollination`, `produce-processing`, `knowledge`, `authority`, `negative`, `long-running`,
+`auto-mask-suite`, and `save-reload`. The catalog smoke recipe runs `complete`; its `knowledge`
+phase covers the existing event/registration path, while its `authority` phase is the focused
+authority-boundary equivalent of the former workspace/knowledge checks. Focused scenario
+selection remains a companion/recipe change and must stay behind the same authenticated
+RimTest/DevBridge workflow.
+
+The `knowledge` phase asserts, on the live game thread:
+
+- a new document exposes Overview only until evidence or an explicit route exists;
+- explicit plant routing adds only the Plants page and Compare never becomes persistent navigation;
+- cultivar traits are unknown before `CultivarDocumented` and become visible only from the
+  documented cultivar claim;
+- lineage uses the registered Knowledge relation and never renders a raw parent identifier; and
+- claim-backed presentation remains available as an honest semantic unknown when a fact is not
+  authorized.
+
+The `authority` phase adds the ten minimum disclosure checks:
+
+- fresh Overview-only navigation with no pre-snapshot plant catalog or advanced side-channel filters;
+- first sow/germination/growth evidence making Plants relevant through bounded projections;
+- high species knowledge remaining separate from an unclaimed cultivar;
+- precise documented trait identity without fabricated aggregate modifiers;
+- Progression: Agriculture capability remaining separate from biological Knowledge;
+- hidden-trait search and comparison refusing unauthorized classification or differences;
+- serialized breeding intent remaining visible while raw matching stays unknown;
+- semantic authorized lineage with bounded deterministic cycle/missing-parent diagnostics;
+- conservative gameplay and presentation behavior on the unavailable-Knowledge path; and
+- runtime breeding-page removal repairing active page, selection, focus, IDs, and diagnostics.
+
+Fixtures are created on the live quicktest map and cleaned with vanish semantics. Save/reload
+uses RimBridgeServer's authenticated save/load tools. Evidence and failure identity are returned
+through the DevBridge recipe result; no repository request, checkpoint, or result files are used.
+
+If `affected --run` reports a conservative selection, it must execute the configured non-empty
+`smoke` fallback. A zero-test execution is not validation.

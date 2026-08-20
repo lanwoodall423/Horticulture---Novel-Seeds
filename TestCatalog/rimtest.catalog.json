@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "rimtest-catalog/v1",
+  "tests": [
+    {
+      "id": "horticulture-in-game-smoke",
+      "description": "Run the Horticulture gameplay assertions through the authenticated RimBridge companion.",
+      "recipe": "horticulture-in-game-suite",
+      "artifactFreshnessAnchor": true,
+      "cost": "medium",
+      "tags": ["horticulture", "in-game", "rimbridge", "smoke"],
+      "covers": [
+        { "kind": "csharp_type", "name": "HorticultureNovelSeeds.BridgeTools.HorticultureBridgeTools" },
+        { "kind": "csharp_type", "name": "HorticultureNovelSeeds.BridgeTools.HorticultureSuite" },
+        { "kind": "csharp_type", "name": "HorticultureNovelSeeds.GameComponent_NovelSeeds" }
+      ]
+    }
+  ],
+  "suites": [
+    {
+      "id": "smoke",
+      "description": "RimTest-managed Horticulture in-game smoke validation.",
+      "tests": ["horticulture-in-game-smoke"]
+    }
+  ]
+}
