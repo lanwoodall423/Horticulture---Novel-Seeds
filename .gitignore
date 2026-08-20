@@ -3,5 +3,6 @@
 **/obj/
 **/bin/
 .rimctx/
+.rimdev/profiles/
 DevTools/Staged/
 DevTools/TestResults/
