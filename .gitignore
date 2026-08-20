@@ -4,5 +4,6 @@
 **/bin/
 .rimctx/
 .rimdev/profiles/
+.rimdev/observability/
 DevTools/Staged/
 DevTools/TestResults/
