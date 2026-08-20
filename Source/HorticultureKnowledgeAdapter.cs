@@ -187,7 +187,7 @@ namespace HorticultureNovelSeeds
             KnowledgeContextKey context = default(KnowledgeContextKey), bool colony = false)
         {
             if (!Register()) return null;
-            return KnowledgeClaimService.Snapshot(DomainId, SubjectId(plant), facetId, claimId, pawn,
+            return HorticultureKnowledgeSnapshots.Claim(DomainId, SubjectId(plant), facetId, claimId, pawn,
                 colony ? KnowledgeScope.Colony : KnowledgeScope.Personal, context,
                 KnowledgeContextFallbackMode.ParentThenGlobal);
         }
@@ -642,6 +642,9 @@ namespace HorticultureNovelSeeds
         {
             if (from.NullOrEmpty() || to.NullOrEmpty() || from == to) return true;
             if (!IsFrameworkUsable) return false;
+            // Serialized cultivar pedigree is an intentional certain relation: the registry
+            // already owns the parent assignment. Presentation still hides an unavailable
+            // parent's identity and never turns the raw ID into a player-facing label.
             return KnowledgeRelationService.Add(new KnowledgeSubjectRelation
             {
                 domainId = DomainId,

@@ -1574,7 +1574,9 @@ namespace HorticultureNovelSeeds
             Thing seedPack = ThingMaker.MakeThing(HNS_DefOf.HNS_NovelSeedPack);
             seedPack.TryGetComp<CompNovelSeedPack>()?.Initialize(cropDef, traits, lineageParentIds, originKind);
             GenPlace.TryPlaceThing(seedPack, position, map, ThingPlaceMode.Near);
-            Find.LetterStack.ReceiveLetter("HNS_SeedDiscovered".Translate(cropDef.LabelCap), "HNS_SeedDiscoveredDesc".Translate(cropDef.label, TraitSummary(traits)), LetterDefOf.PositiveEvent, seedPack);
+            Find.LetterStack.ReceiveLetter("HNS_SeedDiscovered".Translate(cropDef.LabelCap),
+                "A novel seed pack was recovered. Name the cultivar to document its traits and lineage.",
+                LetterDefOf.PositiveEvent, seedPack);
         }
 
         private static void AddBlockedTags(VarietyTraitDef trait, HashSet<string> blockedTags)

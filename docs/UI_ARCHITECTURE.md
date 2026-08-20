@@ -55,31 +55,39 @@ and `OpenKnowledge` for external integrations. `PostClose` always reaches
 `InsightUiHost.PostClose`, so focus, popovers, toasts, and overlay ownership cannot leak into a
 later window.
 
-The workspace has five persistent pages: Overview, Plants, Cultivars, Breeding, and Knowledge.
-Compare is a contextual Cultivars surface and is never a permanent navigation page. Plants and
-Cultivars use searchable bounded `VirtualList` collections with responsive draggable `Split`
-inspectors. Overview remains actionable when every collection is empty. Cultivars expose
-semantic trait badges, favorite/archive/origin/balance/produce filters, locate/rename actions,
-and a bounded comparison selection of two to eight records. Breeding presents the existing
-`BreedingProgramRecord` values read-only; it does not invent create/delete mechanics. Knowledge
-uses `HorticultureKnowledgeAdapter` and `HorticultureKnowledgeSnapshots` for personal versus
-colony scope, with explicit unavailable/incompatible guidance and no framework internals in the
-normal UI.
+The workspace starts with Overview only. Plants, Cultivars, Breeding, and Knowledge are composed
+progressively from evidence/activity or an explicit `OpenPlant`, `OpenCultivar`, `OpenLineage`, or
+`OpenKnowledge` route. Compare is a contextual Cultivars surface and is never a permanent
+navigation page. Plants and Cultivars use searchable bounded `VirtualList` collections with
+responsive draggable `Split` inspectors. Overview remains actionable when every collection is
+empty and shows signals rather than diagnostics or internal counts. Cultivars expose semantic
+trait badges, favorite/archive and locate/rename actions, and a bounded comparison selection of
+two to eight records; unsupported balance/produce-effect filters are omitted. Breeding presents
+the existing `BreedingProgramRecord` values read-only, with hidden-trait matches represented as
+unknown; it does not invent create/delete mechanics. Knowledge uses
+`HorticultureKnowledgeAdapter`, `HorticultureKnowledgeSnapshots`, and the
+`HorticulturePresentationPolicy` for personal versus colony scope, with explicit
+unavailable/incompatible guidance and no framework internals in the normal UI.
 
 All map scans, Knowledge queries, comparison requests, graph traversal, and selection repair
 occur during the document's pre-frame refresh, never inside paint callbacks. User-initiated
 rename/favorite/archive/locate actions remain explicit controls that write through the existing
 gameplay authority; ordinary painting only reads immutable presentation summaries and stable
-`Scope` IDs. Lineage uses
-existing `parentVarietyIds`, deterministic `InsightIds.Stable` node IDs, explicit missing-parent
-entities, cycle protection, a 128-node/256-edge/12-level budget, model validation, and bounded
-`InsightGraphLayout`. Selecting a known graph node returns to its cultivar inspector; missing
-nodes remain informational and cannot mutate game state.
+`Scope` IDs. `HorticulturePresentationPolicy` owns no persistent state and never falls back to
+raw traits, grow days, yields, origin, generation, parent IDs, balance scores, or produce effects
+when Knowledge is unavailable. Lineage uses Knowledge claims/relations, deterministic
+`InsightIds.Stable` node IDs, semantic unknown-parent entities, cycle protection, a
+128-node/256-edge/12-level budget, model validation, and bounded `InsightGraphLayout`. Selecting
+a known graph node returns to its cultivar inspector; unknown nodes remain informational and
+cannot mutate game state.
 
-The document tracks Knowledge revision changes, repairs stale selections and comparison IDs, and
-keeps per-document accessibility state (normal/compact density, high contrast, reduced motion)
-and responsive split orientation. `HasIsolatedPresentationState` and duplicate-ID diagnostics
-are covered by the RimTest-managed Horticulture smoke suite separately from settings.
+The document tracks Knowledge revision changes, repairs stale plant/cultivar/breeding selections
+and comparison IDs, and keeps per-document accessibility state (normal/compact density, high
+contrast, reduced motion) and responsive split orientation. The RimTest-managed Horticulture
+`authority` scenario covers fresh progressive navigation, evidence disclosure, hidden search and
+comparison, breeding uncertainty, bounded lineage, unavailable Knowledge, and page-removal focus
+repair; `HasIsolatedPresentationState` and duplicate-ID diagnostics remain covered by the same
+suite separately from settings.
 
 ## Theme, accessibility, and diagnostics
 

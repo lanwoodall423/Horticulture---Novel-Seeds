@@ -12,6 +12,7 @@ namespace HorticultureNovelSeeds
         private static int registryRevision = -1;
         private static readonly Dictionary<string, KnowledgeFacetSnapshotV2> Facets = new Dictionary<string, KnowledgeFacetSnapshotV2>();
         private static readonly Dictionary<string, KnowledgeSubjectSnapshotV2> Subjects = new Dictionary<string, KnowledgeSubjectSnapshotV2>();
+        private static readonly Dictionary<string, KnowledgeClaimSnapshot> Claims = new Dictionary<string, KnowledgeClaimSnapshot>();
 
         public static KnowledgeFacetSnapshotV2 Facet(string domainId, string subjectId, string facetId, Pawn pawn,
             KnowledgeScope scope, KnowledgeContextKey context, KnowledgeContextFallbackMode fallback)
@@ -38,10 +39,24 @@ namespace HorticultureNovelSeeds
             return snapshot;
         }
 
+        public static KnowledgeClaimSnapshot Claim(string domainId, string subjectId, string facetId, string claimId,
+            Pawn pawn, KnowledgeScope scope, KnowledgeContextKey context, KnowledgeContextFallbackMode fallback)
+        {
+            if (!HorticultureKnowledgeAdapter.IsFrameworkUsable) return null;
+            EnsureRevision();
+            string key = domainId + "|" + subjectId + "|" + facetId + "|" + claimId + "|" + PawnKey(pawn) + "|" + scope + "|" + context;
+            if (Claims.TryGetValue(key, out KnowledgeClaimSnapshot snapshot)) return snapshot;
+            snapshot = KnowledgeClaimService.Snapshot(domainId, subjectId, facetId, claimId, pawn, scope, context, fallback);
+            if (Claims.Count >= MaximumEntries) Claims.Clear();
+            Claims[key] = snapshot;
+            return snapshot;
+        }
+
         public static void Clear()
         {
             Facets.Clear();
             Subjects.Clear();
+            Claims.Clear();
             knowledgeRevision = -1;
             registryRevision = -1;
         }
@@ -53,6 +68,7 @@ namespace HorticultureNovelSeeds
             if (currentKnowledgeRevision == knowledgeRevision && currentRegistryRevision == registryRevision) return;
             Facets.Clear();
             Subjects.Clear();
+            Claims.Clear();
             knowledgeRevision = currentKnowledgeRevision;
             registryRevision = currentRegistryRevision;
         }

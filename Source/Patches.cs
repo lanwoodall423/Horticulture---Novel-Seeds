@@ -350,13 +350,6 @@ namespace HorticultureNovelSeeds
             {
                 HorticultureEventRouter.CuttingCompleted(by, __state.plant, __state.yield, __state.eventIdentity);
             }
-            if (__state?.shouldSaveSeeds == true)
-            {
-                string origin = __state.plant?.sown == false ? "wild" :
-                    __state.lineageParentIds?.Count > 0 ? "cross-pollination" : "mutation";
-                NovelSeedUtility.DropDiscoverySeed(__state.cropDef, __state.traits, __state.position, __state.map,
-                    __state.lineageParentIds, origin);
-            }
             if (__state?.pendingDiscoveryHarvest == true)
             {
                 string origin = __state.plant?.sown == false ? "wild" :
@@ -365,6 +358,13 @@ namespace HorticultureNovelSeeds
                     __state.map, __state.lineageParentIds, __state.eventIdentity, __state.yield,
                     __state.perennialResetGrowth > 0f, __state.perennialResetGrowth > 0f))
                     __state.comp?.ClearPendingDiscovery();
+            }
+            if (__state?.shouldSaveSeeds == true)
+            {
+                string origin = __state.plant?.sown == false ? "wild" :
+                    __state.lineageParentIds?.Count > 0 ? "cross-pollination" : "mutation";
+                NovelSeedUtility.DropDiscoverySeed(__state.cropDef, __state.traits, __state.position, __state.map,
+                    __state.lineageParentIds, origin);
             }
             if (__state?.perennialResetGrowth > 0f && __instance?.Destroyed == false)
             {
@@ -768,7 +768,9 @@ namespace HorticultureNovelSeeds
             foreach (VarietyRecord variety in varieties.OrderBy(v => v.Label))
             {
                 VarietyRecord localVariety = variety;
-                string optionLabel = "HNS_SelectVariety".Translate(localVariety.Label, NovelSeedUtility.TraitSummary(localVariety.traits));
+                HorticultureCultivarPresentation authority = HorticulturePresentationPolicy.ForCultivar(localVariety, null, true);
+                string optionLabel = "HNS_SelectVariety".Translate(localVariety.Label,
+                    authority?.TraitText ?? "Traits not documented");
                 if (!ExpandedTraitUtility.VarietyMatchesGrowers(localVariety, settables))
                 {
                     optionLabel += " (" + "HNS_RequiresZone".Translate(ExpandedTraitUtility.ZoneLabel(localVariety)) + ")";

@@ -16,7 +16,7 @@ $checks = [ordered]@{
     'skill reads are substituted without definition writes' = $work -match 'EffectiveSowMinSkill' -and $work -notmatch '\.sowMinSkill\s*='
     'perennial harvest keeps and resets only the plant instance' = $patches -match 'EffectiveHarvestDestroys\(bool baseValue, Plant plant, PlantDestructionMode mode\)' -and $patches -match 'mode != HarvestMode' -and $patches -match '__instance\.Growth = Mathf\.Max' -and $patches -notmatch '\.harvestAfterGrowth\s*='
     'Nice Plants Menu never rewrites shared definitions' = $nice -notmatch 'NicePlantsInfoOverrideState|DrawInfoPrefix|DrawInfoFinalizer|cachedLabelCap' -and $nice -notmatch '\.(label|description|sowWork|harvestWork|harvestYield|harvestAfterGrowth|minGrowthTemperature|minOptimalGrowthTemperature|maxOptimalGrowthTemperature|maxGrowthTemperature|statBases)\s*[+*/-]?='
-    'Nice Plants Menu retains dedicated variety panel' = $nice -match 'DrawNovelSeedsInfo' -and $nice -match 'StatChangeLines' -and $nice -match 'DrawNicePlantsTraitRow'
+    'Nice Plants Menu retains dedicated variety panel' = $nice -match 'DrawNovelSeedsInfo' -and $nice -match 'HorticulturePresentationPolicy\.ForCultivar' -and $nice -match 'DrawNicePlantsTraitRow'
     'Nice Plants Menu constructor receives requested growers and restores selection' = $nice -match 'CreateDialogForGrowers' -and $nice -match 'List<object> previous = selected\.ToList\(\)' -and $nice -match 'finally[\s\S]*?selected\.AddRange\(previous\)'
     'bridge fixtures are transient and cleaned with vanish semantics' = $bridge -match 'DestroyFixture' -and $bridge -match 'Fixtures\.Clear' -and $bridge -match 'DestroyMode\.Vanish'
 }

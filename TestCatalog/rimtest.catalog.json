@@ -5,6 +5,7 @@
       "id": "horticulture-in-game-smoke",
       "description": "Run the Horticulture gameplay assertions through the authenticated RimBridge companion.",
       "recipe": "horticulture-in-game-suite",
+      "artifactFreshnessAnchor": true,
       "cost": "medium",
       "tags": ["horticulture", "in-game", "rimbridge", "smoke"],
       "covers": [

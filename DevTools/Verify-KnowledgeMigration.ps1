@@ -7,6 +7,7 @@ $snapshots = Get-Content -Raw (Join-Path $root 'Source\HorticultureKnowledgeSnap
 $router = Get-Content -Raw (Join-Path $root 'Source\HorticultureEventRouter.cs')
 $registry = Get-Content -Raw (Join-Path $root 'Source\CultivarRegistry.cs')
 $workspace = Get-Content -Raw (Join-Path $root 'Source\HorticultureWorkspaceDocument.cs')
+$presentationPolicy = Get-Content -Raw (Join-Path $root 'Source\HorticulturePresentationPolicy.cs')
 $about = Get-Content -Raw (Join-Path $root 'About\About.xml')
 $contract = Get-Content -Raw (Join-Path $root 'Source\HorticultureKnowledgeContract.cs')
 $compatibility = Get-Content -Raw (Join-Path $root 'Source\HorticultureKnowledgeCompatibility.cs')
@@ -30,7 +31,7 @@ $checks = [ordered]@{
     'obsolete knowledge is load only' = $core -match 'Scribe\.mode != LoadSaveMode\.Saving[\s\S]*?"horticultureKnowledge"'
     'obsolete breeding programs are load only' = $core -match 'Scribe\.mode != LoadSaveMode\.Saving[\s\S]*?"breedingPrograms"' -and $core -notmatch 'AddBreedingProgram'
     'controlled cultivar mixes remain' = $core -match 'breedingVarietyIdsByGrower' -and $core -match 'SetBreedingMix'
-    'registry queries framework snapshots through the adapter' = $registry -match 'HorticultureKnowledgeAdapter\.Menu' -and $workspace -match 'HorticultureKnowledgeAdapter\.TierFor' -and $snapshots -match 'HorticultureKnowledgeAdapter\.KnowledgeRevision'
+    'registry queries framework snapshots through the adapter' = $registry -match 'HorticultureKnowledgeAdapter\.Menu' -and $workspace -match 'HorticulturePresentationPolicy\.ForCultivar' -and $presentationPolicy -match 'HorticultureKnowledgeSnapshots\.(Claim|Facet|Subject)' -and $snapshots -match 'HorticultureKnowledgeAdapter\.KnowledgeRevision'
     'completed events route through one semantic router' = $router -match 'SowingCompleted' -and $router -match 'HarvestCompleted' -and $router -match 'ProduceProcessed' -and $router -match 'CuttingCompleted' -and $router -notmatch 'CurrentTick\(|TicksGame'
     'canonical policy includes sowable trees' = $policy -match 'plantDef\.plant\.Sowable' -and $policy -match 'IsSowableTree' -and $policy -notmatch '!plantDef\.plant\.IsTree'
     'stable identities and bounded dedupe are present' = $identity -match 'StableHash' -and $identity -match 'MaxIdentityLength' -and $diagnostics -match 'MaxRecentEvents = 1024'

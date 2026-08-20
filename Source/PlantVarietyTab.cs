@@ -46,23 +46,26 @@ namespace HorticultureNovelSeeds
             }
 
             EnsureDocument();
-            List<VarietyTraitDef> traits = comp.ActiveTraits?.Where(trait => trait != null).ToList()
-                ?? new List<VarietyTraitDef>();
-            List<string> statLines = NovelSeedUtility.StatChangeLines(traits, SelThing.def) ?? new List<string>();
-            statLines.Add(NovelSeedUtility.TraitBalanceSummary(traits));
             VarietyRecord variety = comp.PendingDiscovery ? null : comp.Variety;
-            string subtitle = variety == null ? "Discovery details are still unknown." :
-                (variety.FirstDiscoveredInfo.NullOrEmpty() ? "Discovered Cultivar" :
-                    "First discovered: " + variety.FirstDiscoveredInfo);
+            HorticultureCultivarPresentation authority = variety == null ? null :
+                HorticulturePresentationPolicy.ForCultivar(variety, null, true);
+            List<VarietyTraitDef> traits = authority?.AuthorizedTraits?.Where(trait => trait != null).ToList()
+                ?? new List<VarietyTraitDef>();
+            List<string> statLines = authority == null ? new List<string> { "Cultivar claims are not documented yet." } :
+                new List<string> { authority.ModifierText };
+            string subtitle = variety == null ? "Observable novel variation is not a documented cultivar." :
+                "Cultivar evidence is shown only from Knowledge claims.";
             document.Refresh(new HorticultureInspectorSnapshot
             {
                 Title = "Cultivar: " + comp.DisplayVarietyName,
                 Subtitle = subtitle,
                 PrimaryHeader = "Traits",
                 SecondaryHeader = "Stat changes",
-                PrimaryEmpty = "No traits",
-                SecondaryEmpty = "No stat changes",
-                PrimaryRows = traits.Select((trait, index) => new HorticultureInspectorRow
+                PrimaryEmpty = authority == null ? "Trait identity is unknown." : "No documented traits",
+                SecondaryEmpty = "No documented cultivar measurements",
+                PrimaryRows = authority == null
+                    ? new[] { new HorticultureInspectorRow { Id = "unknown-traits", Label = "Traits unknown", Detail = string.Empty } }
+                    : traits.Select((trait, index) => new HorticultureInspectorRow
                 {
                     Id = trait.defName ?? "trait-" + index,
                     Label = TraitColorUI.Label(trait),

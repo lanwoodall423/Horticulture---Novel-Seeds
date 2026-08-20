@@ -1,7 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using RimBridgeServer.Sdk;
@@ -20,7 +22,7 @@ public sealed class HorticultureBridgeTools
         ResultDescription = "A Horticulture evidence manifest and assertion report.",
         Tags = new[] { "horticulture", "testing", "destructive" }, RequiresAuth = true)]
     public async Task<object> RunSuite(
-        [ToolParameter(Description = "Suite name: complete, startup, ux-discovery, ordinary-crop, sowable-tree, cross-pollination, produce-processing, knowledge, negative, long-running, auto-mask-suite, or save-reload")]
+        [ToolParameter(Description = "Suite name: complete, startup, ux-discovery, ordinary-crop, sowable-tree, cross-pollination, produce-processing, knowledge, authority, negative, long-running, auto-mask-suite, or save-reload")]
         string scenario = "complete",
         [ToolParameter(Description = "Real game ticks to advance before assertions")]
         int warmupTicks = 120,
@@ -441,11 +443,12 @@ internal static class HorticultureSuite
     internal static readonly string[] Scenarios =
     {
         "complete", "startup", "ux-discovery", "ordinary-crop", "sowable-tree",
-        "cross-pollination", "produce-processing", "knowledge", "negative",
+        "cross-pollination", "produce-processing", "knowledge", "authority", "negative",
         "long-running", "auto-mask-suite", "save-reload"
     };
 
     private static readonly List<Thing> Fixtures = new List<Thing>();
+    private static readonly BindingFlags AllInstanceFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
     internal static HorticultureSuiteReport Run(string scenario)
     {
@@ -456,7 +459,7 @@ internal static class HorticultureSuite
             {
                 case "complete":
                     Startup(report); UxDiscovery(report); OrdinaryCrop(report); SowableTree(report);
-                    CrossPollination(report); ProduceProcessing(report); Knowledge(report);
+                    CrossPollination(report); ProduceProcessing(report); Knowledge(report); Authority(report);
                     Negative(report); LongRunning(report); AutoMaskSuite(report);
                     break;
                 case "startup": Startup(report); break;
@@ -466,6 +469,7 @@ internal static class HorticultureSuite
                 case "cross-pollination": CrossPollination(report); break;
                 case "produce-processing": ProduceProcessing(report); break;
                 case "knowledge": Knowledge(report); break;
+                case "authority": Authority(report); break;
                 case "negative": Negative(report); break;
                 case "long-running": LongRunning(report); break;
                 case "auto-mask-suite": AutoMaskSuite(report); break;
@@ -505,6 +509,31 @@ internal static class HorticultureSuite
             .GroupBy(def => def.configFamily.NullOrEmpty() ? def.defName : def.configFamily)
             .Select(group => group.First())
             .Take(Math.Max(1, count)).ToList();
+    }
+
+    private static List<VarietyTraitDef> FindUnusedTraits(ThingDef crop, int seed)
+    {
+        List<VarietyTraitDef> candidates = TraitConfigUtility.TopLevelTraits()
+            .Where(def => def != null)
+            .GroupBy(def => def.configFamily.NullOrEmpty() ? def.defName : def.configFamily)
+            .Select(group => group.First())
+            .ToList();
+        if (candidates.Count == 0) return GetTraits(1);
+        for (int width = 1; width <= Math.Min(3, candidates.Count); width++)
+        for (int offset = 0; offset < candidates.Count; offset++)
+        {
+            List<VarietyTraitDef> traits = Enumerable.Range(0, width)
+                .Select(index => candidates[(seed + offset + index) % candidates.Count])
+                .Distinct().ToList();
+            if (traits.Count == width && GameComponent_NovelSeeds.Instance?.FindMatchingVariety(crop, traits) == null)
+                return traits;
+        }
+        return candidates.Take(Math.Min(3, candidates.Count)).ToList();
+    }
+
+    private static bool KnowledgeUsable()
+    {
+        return HorticultureKnowledgeAdapter.Diagnostics?.IsUsable == true;
     }
 
     private static void Startup(HorticultureSuiteReport report)
@@ -656,6 +685,337 @@ internal static class HorticultureSuite
             });
         }
         finally { DestroyFixture(plant); }
+        report.Check("knowledge-cultivar-authority", () =>
+        {
+            Pawn observer = Observer();
+            List<VarietyTraitDef> traits = GetTraits(1);
+            Require(observer != null && traits.Count > 0, "A colonist and trait were required for cultivar authority coverage.");
+            VarietyRecord parent = GameComponent_NovelSeeds.Instance.UnlockVariety(crop, traits,
+                "Horticulture authority parent", hiddenFromMenus: true, discoverer: observer, originKind: "mutation");
+            VarietyRecord child = GameComponent_NovelSeeds.Instance.UnlockVariety(crop, GetTraits(2),
+                "Horticulture authority child", new[] { parent.id }, hiddenFromMenus: true, discoverer: observer,
+                originKind: "cross-pollination");
+            Require(parent != null && child != null, "Authority fixtures could not be created.");
+            HorticultureCultivarPresentation beforeDocumentation = HorticulturePresentationPolicy.ForCultivar(child, observer, true);
+            Require(beforeDocumentation != null && !beforeDocumentation.HasKnownTraits,
+                "Cultivar traits were visible before a cultivar claim was documented.");
+            Require(beforeDocumentation.Parents.Count > 0 && beforeDocumentation.Parents[0].Label != parent.id,
+                "Lineage exposed a raw parent identifier or failed to use the relation projection.");
+            HorticultureEventRouter.CultivarDocumented(observer, child);
+            HorticultureCultivarPresentation afterDocumentation = HorticulturePresentationPolicy.ForCultivar(child, observer, true);
+            Require(afterDocumentation.HasKnownTraits && afterDocumentation.TraitNames.Count > 0,
+                "Cultivar documentation did not authorize the cultivar trait claim.");
+            Require(afterDocumentation.ProductText != null && afterDocumentation.ModifierText != null,
+                "Authorized cultivar presentation did not provide semantic unknown/value states.");
+            return "pre-documentation=unknown; post-documentation=authorized; lineage=relation-backed";
+        });
+        report.Check("knowledge-workspace-progressive-navigation", () =>
+        {
+            HorticultureWorkspaceDocument workspace = new HorticultureWorkspaceDocument();
+            Require(workspace.NavigationPageIds.Count == 1 && workspace.NavigationPageIds[0] == "overview",
+                "A fresh workspace exposed pages before evidence or an explicit route.");
+            workspace.PreparePlant(crop);
+            workspace.PreOpen();
+            Require(workspace.NavigationPageIds.Contains("overview") && workspace.NavigationPageIds.Contains("plants"),
+                "An explicit plant route did not add the Plants page.");
+            Require(!workspace.NavigationPageIds.Contains("compare"), "Compare leaked into persistent navigation.");
+            return "overview-only baseline; explicit plant route; contextual compare only";
+        });
+    }
+
+    private static void Authority(HorticultureSuiteReport report)
+    {
+        ThingDef crop = FindCrop(false);
+        Pawn observer = Observer();
+        GameComponent_NovelSeeds component = GameComponent_NovelSeeds.Instance;
+        if (crop == null || observer == null || component == null)
+        {
+            Block(report, "authority", "A supported crop, player observer, and Horticulture component are required.");
+            return;
+        }
+
+        report.Check("authority-fresh-overview", () =>
+        {
+            GameComponent_NovelSeeds freshComponent = new GameComponent_NovelSeeds();
+            HorticultureWorkspaceDocument workspace = new HorticultureWorkspaceDocument();
+            try
+            {
+                Require(!freshComponent.AllVarieties.Any() && freshComponent.BreedingPrograms.Count == 0,
+                    "A fresh Horticulture component unexpectedly contained serialized records.");
+                Require(workspace.NavigationPageCount == 1 && workspace.NavigationPageIds[0] == "overview",
+                    "A fresh workspace exposed non-overview pages before a route or snapshot.");
+                Require(((ICollection)PrivateField(workspace, "plantViews"))?.Count == 0,
+                    "A fresh workspace materialized a plant catalog before evidence or explicit context.");
+                Require(typeof(HorticultureWorkspaceDocument).GetField("balanceFilterField", AllInstanceFlags) == null &&
+                    typeof(HorticultureWorkspaceDocument).GetField("produceEffectField", AllInstanceFlags) == null,
+                    "Removed advanced filters still exist as workspace controls.");
+                Require(workspace.HasUniqueComponentIds() && workspace.DuplicateIdCount == 0 && workspace.RenderErrorCount == 0,
+                    "Fresh workspace diagnostics were not clean.");
+                return "fresh component empty; overview-only; no pre-snapshot plant catalog; no raw balance or produce filter controls";
+            }
+            finally { workspace.PostClose(); }
+        });
+
+        VarietyRecord hiddenParent = component.UnlockVariety(crop, FindUnusedTraits(crop, 17),
+            "Horticulture authority hidden parent", hiddenFromMenus: true, discoverer: observer, originKind: "mutation");
+        VarietyRecord documentedChild = component.UnlockVariety(crop, FindUnusedTraits(crop, 23),
+            "Horticulture authority documented child", new[] { hiddenParent?.id }, hiddenFromMenus: true,
+            discoverer: observer, originKind: "cross-pollination");
+        VarietyRecord unknownA = component.UnlockVariety(crop, FindUnusedTraits(crop, 31),
+            "Horticulture authority unknown A", hiddenFromMenus: true, discoverer: observer, originKind: "mutation");
+        VarietyRecord unknownB = component.UnlockVariety(crop, FindUnusedTraits(crop, 37),
+            "Horticulture authority unknown B", hiddenFromMenus: true, discoverer: observer, originKind: "mutation");
+        VarietyRecord lineageParent = component.UnlockVariety(crop, FindUnusedTraits(crop, 41),
+            "Horticulture authority visible parent", hiddenFromMenus: false, discoverer: observer, originKind: "mutation");
+        VarietyRecord lineageChild = component.UnlockVariety(crop, FindUnusedTraits(crop, 47),
+            "Horticulture authority lineage child", new[] { lineageParent?.id }, hiddenFromMenus: true,
+            discoverer: observer, originKind: "cross-pollination");
+        Require(hiddenParent != null && documentedChild != null && unknownA != null && unknownB != null &&
+            lineageParent != null && lineageChild != null, "Authority fixtures could not be created.");
+
+        Plant evidencePlant = null;
+        report.Check("authority-first-species-evidence", () =>
+        {
+            evidencePlant = SpawnPlant(crop);
+            evidencePlant.sown = true;
+            HorticultureEventRouter.SowingCompleted(observer, evidencePlant);
+            evidencePlant.Growth = 0.10f;
+            HorticultureEventRouter.GrowthObserved(observer, evidencePlant, "authority-germination");
+            evidencePlant.Growth = 0.35f;
+            HorticultureEventRouter.GrowthObserved(observer, evidencePlant, "authority-growth");
+            HorticultureEventRouter.HarvestCompleted(observer, evidencePlant, 1, sourceInstanceId: "authority-harvest-first");
+            HorticultureEventRouter.HarvestCompleted(observer, evidencePlant, 1, repeated: true,
+                sourceInstanceId: "authority-harvest-repeated");
+            HorticultureEventRouter.HarvestCompleted(observer, evidencePlant, 1, multiSeason: true,
+                sourceInstanceId: "authority-harvest-multiseason");
+            HorticulturePlantPresentation species = HorticulturePresentationPolicy.ForPlant(crop, observer, true, true);
+            Require(species != null && species.Identity != null && species.Claims().All(claim => claim != null),
+                "Species evidence did not produce a bounded claim projection.");
+            HorticultureWorkspaceDocument workspace = new HorticultureWorkspaceDocument();
+            try
+            {
+                workspace.PreparePlant(crop);
+                workspace.PreOpen();
+                Require(workspace.NavigationPageIds.Contains("plants"),
+                    "First sow/germination/growth evidence did not make Plants relevant.");
+            }
+            finally { workspace.PostClose(); }
+            if (KnowledgeUsable())
+                Require(HorticulturePresentationPolicy.HasPlantEvidence(crop),
+                    "Knowledge Framework evidence was not visible through the species relevance policy.");
+            return "sowing, germination, growth, and harvest evidence routed; Plants opened through explicit/evidence context";
+        });
+
+        report.Check("authority-species-cultivar-separation", () =>
+        {
+            HorticulturePlantPresentation species = HorticulturePresentationPolicy.ForPlant(crop, observer, true, true);
+            HorticultureCultivarPresentation cultivar = HorticulturePresentationPolicy.ForCultivar(unknownA, observer, true);
+            Require(species != null && cultivar != null && !cultivar.HasKnownTraits && !cultivar.HasKnownProducts,
+                "A newly created cultivar received species-level or raw cultivar disclosure.");
+            Require(typeof(HorticulturePlantPresentation).GetProperty("AuthorizedTraits") == null &&
+                typeof(HorticulturePlantPresentation).GetProperty("Parents") == null &&
+                typeof(HorticulturePlantPresentation).GetProperty("Origin") == null,
+                "Species presentation exposed cultivar-only fields.");
+            if (KnowledgeUsable())
+                Require(HorticultureKnowledgeAdapter.StageOrder(species.Stage) >=
+                    HorticultureKnowledgeAdapter.StageOrder(HorticultureKnowledgeAdapter.StageEstablished),
+                    "Species evidence did not reach the high-knowledge boundary used by this separation test.");
+            Require(cultivar.TraitText.IndexOf("unknown", StringComparison.OrdinalIgnoreCase) >= 0 &&
+                cultivar.ProductText.IndexOf("unknown", StringComparison.OrdinalIgnoreCase) >= 0,
+                "Species knowledge leaked into an unclaimed cultivar projection.");
+            return "high species state remains separate from unclaimed cultivar traits, products, and lineage fields";
+        });
+
+        report.Check("authority-documentation-precision", () =>
+        {
+            HorticultureEventRouter.CultivarDocumented(observer, documentedChild);
+            HorticultureCultivarPresentation documented = HorticulturePresentationPolicy.ForCultivar(documentedChild, observer, true);
+            Require(documented != null && documented.HasKnownTraits && documented.TraitNames.Count > 0,
+                "Documentation did not authorize the recorded precise trait identity.");
+            Require(documented.ModifierText == "No cultivar-specific measurements are documented." &&
+                documented.ProductText.IndexOf("unknown", StringComparison.OrdinalIgnoreCase) >= 0,
+                "Trait identity documentation fabricated exact aggregate modifiers or product identity.");
+            return "recorded trait identity is precise; aggregate simulator modifiers and product remain unknown";
+        });
+
+        report.Check("authority-progression-unlock", () =>
+        {
+            GameComponent_UnlockedCrops crops = GameComponent_UnlockedCrops.Instance;
+            Require(crops != null, "Progression: Agriculture crop registry is unavailable.");
+            bool priorUnlocked = crops.IsCropUnlocked(crop);
+            VarietyRecord preserved = component.UnlockVariety(crop, FindUnusedTraits(crop, 53),
+                "Horticulture authority progression preservation", hiddenFromMenus: true, discoverer: observer,
+                originKind: "mutation");
+            Require(preserved != null && crops.IsCropUnlocked(crop),
+                "Preserving a cultivar no longer preserves the existing crop-unlock behavior.");
+            HorticulturePlantPresentation species = HorticulturePresentationPolicy.ForPlant(crop, observer, true, true);
+            HorticultureCultivarPresentation cultivar = HorticulturePresentationPolicy.ForCultivar(preserved, observer, true);
+            Require(species != null && cultivar != null && species.TechnologicallyAvailable == crops.IsCropUnlocked(crop) &&
+                cultivar.TechnologicallyAvailable == crops.IsCropUnlocked(crop),
+                "Technological availability was not reported separately from Knowledge.");
+            Require(!cultivar.HasKnownTraits && !cultivar.HasKnownProducts &&
+                cultivar.ModifierText == "No cultivar-specific measurements are documented.",
+                "Technological unlock fabricated biological Knowledge.");
+            return "prior capability=" + priorUnlocked + "; crop capability=" + crops.IsCropUnlocked(crop) + "; preserved=" + (preserved != null) +
+                "; biological claims remain independent";
+        });
+
+        report.Check("authority-hidden-filters-and-comparison", () =>
+        {
+            string hiddenTrait = unknownA.traits.FirstOrDefault()?.LabelCap.ToString() ?? "hidden trait";
+            HorticultureWorkspaceDocument workspace = new HorticultureWorkspaceDocument();
+            try
+            {
+                workspace.PrepareCultivar(unknownA);
+                workspace.PrepareCultivar(unknownB);
+                SetPrivateField(workspace, "cultivarSearch", hiddenTrait);
+                workspace.PreOpen();
+                ICollection filtered = PrivateField(workspace, "filteredCultivarViews") as ICollection;
+                Require(filtered != null && filtered.Count == 0,
+                    "An unauthorized raw trait query classified an unknown cultivar.");
+                SetPrivateField(workspace, "cultivarSearch", string.Empty);
+                workspace.PreOpen();
+                InvokeMember(workspace, "ToggleComparison", unknownA.id, true);
+                InvokeMember(workspace, "ToggleComparison", unknownB.id, true);
+                string comparison = InvokeMember(workspace, "ComparisonText") as string ?? string.Empty;
+                Require(comparison.IndexOf("No differences in known values", StringComparison.OrdinalIgnoreCase) >= 0 &&
+                    comparison.IndexOf(hiddenTrait, StringComparison.OrdinalIgnoreCase) < 0,
+                    "Comparison exposed an unauthorized difference or trait label.");
+                Require(typeof(HorticultureWorkspaceDocument).GetField("balanceFilterField", AllInstanceFlags) == null &&
+                    typeof(HorticultureWorkspaceDocument).GetField("produceEffectField", AllInstanceFlags) == null,
+                    "Unauthorized balance or produce side-channel controls were present.");
+                return "hidden trait search is inert; unsupported filters are absent; unauthorized comparison differences stay unknown";
+            }
+            finally { workspace.PostClose(); }
+        });
+
+        report.Check("authority-breeding-intent", () =>
+        {
+            IList programs = PrivateField(component, "legacyBreedingPrograms") as IList;
+            Require(programs != null && unknownA.traits.Count > 0, "Legacy breeding storage or fixture traits are unavailable.");
+            BreedingProgramRecord program = new BreedingProgramRecord
+            {
+                id = "HNS_authority_program_" + (Find.TickManager?.TicksGame ?? 0),
+                name = "Horticulture authority breeding intent",
+                cropDef = crop,
+                desiredTraitRootDefNames = unknownA.traits.Select(trait => TraitConfigUtility.Root(trait)?.defName)
+                    .Where(value => !value.NullOrEmpty()).Distinct().ToList(),
+                active = true
+            };
+            Require(program.desiredTraitRootDefNames.Count > 0, "Breeding fixture has no valid desired trait root.");
+            programs.Add(program);
+            HorticultureWorkspaceDocument workspace = new HorticultureWorkspaceDocument();
+            try
+            {
+                workspace.PrepareCultivar(unknownA);
+                workspace.PreOpen();
+                Require(workspace.NavigationPageIds.Contains("breeding"), "A serialized breeding program did not make Breeding relevant.");
+                ICollection views = PrivateField(workspace, "filteredBreedingViews") as ICollection;
+                object view = ((IEnumerable)views).Cast<object>().FirstOrDefault(value =>
+                    string.Equals(Member(value, "Id") as string, program.id, StringComparison.Ordinal));
+                Require(view != null && string.Equals(Member(view, "DesiredTraits") as string, program.DesiredTraitSummary,
+                    StringComparison.Ordinal) && (Member(view, "MatchingStatus") as string ?? string.Empty)
+                    .IndexOf("unknown", StringComparison.OrdinalIgnoreCase) >= 0,
+                    "Breeding intent was hidden or unauthorized raw matching counts were shown.");
+                return "program intent visible; additional cultivar matches remain unknown";
+            }
+            finally
+            {
+                workspace.PostClose();
+                programs.Remove(program);
+            }
+        });
+
+        report.Check("authority-lineage-bounds", () =>
+        {
+            HorticultureCultivarPresentation lineage = HorticulturePresentationPolicy.ForCultivar(lineageChild, observer, true);
+            HorticultureLineageReference parent = lineage?.Parents.FirstOrDefault();
+            Require(parent != null && parent.IsKnown && parent.Label == lineageParent.Label &&
+                !lineage.LineageText.Contains(lineageParent.id),
+                "Authorized lineage did not resolve semantically or leaked the parent ID.");
+            HorticultureWorkspaceDocument workspace = new HorticultureWorkspaceDocument();
+            try
+            {
+                workspace.PrepareLineage(lineageChild);
+                workspace.PreOpen();
+                Require(workspace.LineageNodeCount >= 2 && !workspace.NavigationPageIds.Contains("lineage"),
+                    "Lineage was not contextualized to the cultivar workspace.");
+            }
+            finally { workspace.PostClose(); }
+
+            VarietyRecord cycleA = new VarietyRecord { id = "HNS_authority_cycle_a", cropDef = crop,
+                customName = "Cycle A", parentVarietyIds = new List<string> { "HNS_authority_cycle_b" } };
+            VarietyRecord cycleB = new VarietyRecord { id = "HNS_authority_cycle_b", cropDef = crop,
+                customName = "Cycle B", parentVarietyIds = new List<string> { "HNS_authority_cycle_a", "HNS_authority_missing" } };
+            HorticultureLineageInspection first = HorticultureWorkspaceDocument.AnalyzeLineage(new[] { cycleA, cycleB }, cycleA.id);
+            HorticultureLineageInspection second = HorticultureWorkspaceDocument.AnalyzeLineage(new[] { cycleA, cycleB }, cycleA.id);
+            Require(first.NodeCount <= HorticultureWorkspaceDocument.MaximumLineageNodes &&
+                first.EdgeCount <= HorticultureWorkspaceDocument.MaximumLineageEdges && first.NodeIds.SequenceEqual(second.NodeIds),
+                "Lineage cycle or missing-parent bounds were not deterministic.");
+            return "authorized parent label is semantic; lineage is contextual; cycle and missing-parent diagnostics are bounded";
+        });
+
+        report.Check("authority-knowledge-unavailable-safe", () =>
+        {
+            VarietyRecord gameplay = component.UnlockVariety(crop, FindUnusedTraits(crop, 59),
+                "Horticulture authority unavailable-path cultivar", hiddenFromMenus: true, discoverer: observer,
+                originKind: "mutation");
+            HorticultureCultivarPresentation projection = HorticulturePresentationPolicy.ForCultivar(gameplay, observer, true);
+            Require(gameplay != null && projection != null && !projection.HasKnownTraits && !projection.HasKnownProducts &&
+                projection.ProductText.IndexOf("unknown", StringComparison.OrdinalIgnoreCase) >= 0 &&
+                projection.ModifierText == "No cultivar-specific measurements are documented.",
+                "Knowledge-dependent presentation fell back to raw simulation truth.");
+            Require(GameComponent_UnlockedCrops.Instance == null || GameComponent_UnlockedCrops.Instance.IsCropUnlocked(crop),
+                "Gameplay capability was lost while testing the conservative Knowledge path.");
+            return KnowledgeUsable()
+                ? "framework available; unclaimed path remains conservative (same gate used when unavailable)"
+                : "framework unavailable; gameplay remains functional and presentation stays unknown";
+        });
+
+        report.Check("authority-page-removal", () =>
+        {
+            IList programs = PrivateField(component, "legacyBreedingPrograms") as IList;
+            Require(programs != null, "Legacy breeding storage is unavailable.");
+            List<BreedingProgramRecord> savedPrograms = programs.Cast<BreedingProgramRecord>().ToList();
+            BreedingProgramRecord temporary = new BreedingProgramRecord
+            {
+                id = "HNS_authority_page_removal_" + (Find.TickManager?.TicksGame ?? 0),
+                name = "Horticulture authority page removal",
+                cropDef = crop,
+                desiredTraitRootDefNames = new List<string> { TraitConfigUtility.Root(unknownB.traits.First())?.defName },
+                active = true
+            };
+            temporary.desiredTraitRootDefNames.RemoveAll(value => value.NullOrEmpty());
+            Require(temporary.desiredTraitRootDefNames.Count > 0, "Page-removal fixture has no desired trait root.");
+            programs.Clear();
+            programs.Add(temporary);
+            HorticultureWorkspaceDocument workspace = new HorticultureWorkspaceDocument();
+            try
+            {
+                workspace.PreOpen();
+                InvokeMember(workspace, "SelectBreeding", temporary.id);
+                Require(workspace.ActivePageId == "breeding", "Breeding page could not be selected before removal.");
+                object document = PrivateField(workspace, "uiDocument");
+                object focus = Member(document, "Focus");
+                InvokeMember(focus, "RequestFocus", "hns.workspace.breeding.page");
+                programs.Remove(temporary);
+                workspace.PreOpen();
+                string selectedBreeding = PrivateField(workspace, "selectedBreedingId") as string;
+                string focusedId = Member(focus, "FocusedId") as string;
+                Require(workspace.ActivePageId == "overview" && !workspace.NavigationPageIds.Contains("breeding") &&
+                    selectedBreeding.NullOrEmpty() && focusedId.NullOrEmpty(),
+                    "Removed page left stale navigation, selection, or focus state.");
+                Require(workspace.HasUniqueComponentIds() && workspace.DuplicateIdCount == 0 && workspace.RenderErrorCount == 0,
+                    "Page removal rebuilt a UI tree with duplicate IDs or render errors.");
+                return "active page fell back to Overview; selection and focus cleared; rebuilt tree diagnostics clean";
+            }
+            finally
+            {
+                workspace.PostClose();
+                programs.Clear();
+                foreach (BreedingProgramRecord saved in savedPrograms) programs.Add(saved);
+            }
+        });
     }
 
     private static void Negative(HorticultureSuiteReport report)
@@ -711,6 +1071,64 @@ internal static class HorticultureSuite
             AutoMaskBatchResult result = PlantAutoMaskCache.GenerateMissing(false);
             return result.ToString();
         });
+    }
+
+    private static object PrivateField(object instance, string name)
+    {
+        Type type = instance?.GetType();
+        while (type != null)
+        {
+            FieldInfo field = type.GetField(name, AllInstanceFlags);
+            if (field != null) return field.GetValue(instance);
+            type = type.BaseType;
+        }
+        return null;
+    }
+
+    private static void SetPrivateField(object instance, string name, object value)
+    {
+        Type type = instance?.GetType();
+        while (type != null)
+        {
+            FieldInfo field = type.GetField(name, AllInstanceFlags);
+            if (field != null)
+            {
+                field.SetValue(instance, value);
+                return;
+            }
+            type = type.BaseType;
+        }
+        throw new MissingFieldException(instance?.GetType().FullName, name);
+    }
+
+    private static object Member(object instance, string name)
+    {
+        if (instance == null) return null;
+        Type type = instance.GetType();
+        while (type != null)
+        {
+            PropertyInfo property = type.GetProperty(name, AllInstanceFlags);
+            if (property != null && property.GetIndexParameters().Length == 0) return property.GetValue(instance, null);
+            FieldInfo field = type.GetField(name, AllInstanceFlags);
+            if (field != null) return field.GetValue(instance);
+            type = type.BaseType;
+        }
+        return null;
+    }
+
+    private static object InvokeMember(object instance, string name, params object[] arguments)
+    {
+        if (instance == null) throw new ArgumentNullException(nameof(instance));
+        Type type = instance.GetType();
+        while (type != null)
+        {
+            MethodInfo method = type.GetMethods(AllInstanceFlags)
+                .Where(candidate => candidate.Name == name && candidate.GetParameters().Length == (arguments?.Length ?? 0))
+                .FirstOrDefault();
+            if (method != null) return method.Invoke(instance, arguments);
+            type = type.BaseType;
+        }
+        throw new MissingMethodException(instance.GetType().FullName, name);
     }
 
     private static Plant SpawnPlant(ThingDef def)

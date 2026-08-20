@@ -248,7 +248,7 @@ namespace HorticultureNovelSeeds
             HorticultureKnowledgeAdapter.ObserveCultivar(author, variety, HorticultureKnowledgeEvent.Documentation,
                  author?.MapHeld, true, 1.1f, "A cultivar was named and preserved in the colony registry.",
                  HorticultureKnowledgeEventIdentity.Documentation(variety), HorticultureKnowledgeRole.Researcher,
-                TraitMeasurements(variety.traits), HorticultureKnowledgeAdapter.ContextFor(author?.MapHeld),
+                TraitMeasurements(variety.traits, variety.parentVarietyIds), HorticultureKnowledgeAdapter.ContextFor(author?.MapHeld),
                 HorticultureWitnesses(author, author?.MapHeld));
         }
 
@@ -264,18 +264,33 @@ namespace HorticultureNovelSeeds
                 HorticultureWitnesses(observer, plant.Map));
         }
 
-        private static List<KnowledgeMeasurement> TraitMeasurements(IEnumerable<VarietyTraitDef> traits) => new List<KnowledgeMeasurement>
+        private static List<KnowledgeMeasurement> TraitMeasurements(IEnumerable<VarietyTraitDef> traits, IEnumerable<string> parentIds = null)
         {
-            new KnowledgeMeasurement
+            List<KnowledgeMeasurement> measurements = new List<KnowledgeMeasurement>
             {
-                facetId = HorticultureKnowledgeAdapter.FacetTraits,
-                claimId = "trait_identity",
-                value = KnowledgeClaimValue.Set((traits ?? Enumerable.Empty<VarietyTraitDef>()).Where(value => value != null).Select(value => value.defName)),
-                summary = "Traits recorded during cultivar documentation.",
-                documented = true,
-                revealed = true
-            }
-        };
+                new KnowledgeMeasurement
+                {
+                    facetId = HorticultureKnowledgeAdapter.FacetTraits,
+                    claimId = "trait_identity",
+                    value = KnowledgeClaimValue.Set((traits ?? Enumerable.Empty<VarietyTraitDef>()).Where(value => value != null).Select(value => value.defName)),
+                    summary = "Traits recorded during cultivar documentation.",
+                    documented = true,
+                    revealed = true
+                }
+            };
+            List<string> parents = (parentIds ?? Enumerable.Empty<string>()).Where(value => !value.NullOrEmpty()).Distinct().ToList();
+            if (parents.Count > 0)
+                measurements.Add(new KnowledgeMeasurement
+                {
+                    facetId = HorticultureKnowledgeAdapter.FacetLineage,
+                    claimId = "parent_lineage",
+                    value = KnowledgeClaimValue.Set(parents),
+                    summary = "Parent cultivars recorded during cultivar documentation.",
+                    documented = true,
+                    revealed = true
+                });
+            return measurements;
+        }
 
         private static IReadOnlyList<Pawn> HorticultureWitnesses(Pawn observer, Map map) =>
             (map?.mapPawns?.FreeColonistsSpawned ?? Enumerable.Empty<Pawn>()).Where(value => value != null && value != observer)

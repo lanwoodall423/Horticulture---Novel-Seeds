@@ -38,4 +38,5 @@ After gameplay, Def, Harmony, serialized-type, core, or companion changes, use D
 coordinated restart/readiness flow before in-game validation. Never launch RimWorld directly,
 edit `ModsConfig`, or use a second in-game test harness.
 
-See [RUNTIME_TESTS.md](RUNTIME_TESTS.md) for the companion boundary and scenario list.
+See [RUNTIME_TESTS.md](RUNTIME_TESTS.md) for the companion boundary, the `knowledge` and
+`authority` coverage, and the full scenario list.

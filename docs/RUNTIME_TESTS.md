@@ -29,10 +29,35 @@ dotnet build .\DevTools\BridgeTools\HorticultureNovelSeeds.BridgeTools.csproj --
 ## Suite scenarios
 
 The companion supports `complete`, `startup`, `ux-discovery`, `ordinary-crop`, `sowable-tree`,
-`cross-pollination`, `produce-processing`, `knowledge`, `negative`, `long-running`,
-`auto-mask-suite`, and `save-reload`. The catalog smoke recipe runs `complete`; focused
-scenario selection remains a companion/recipe change and must stay behind the same authenticated
+`cross-pollination`, `produce-processing`, `knowledge`, `authority`, `negative`, `long-running`,
+`auto-mask-suite`, and `save-reload`. The catalog smoke recipe runs `complete`; its `knowledge`
+phase covers the existing event/registration path, while its `authority` phase is the focused
+authority-boundary equivalent of the former workspace/knowledge checks. Focused scenario
+selection remains a companion/recipe change and must stay behind the same authenticated
 RimTest/DevBridge workflow.
+
+The `knowledge` phase asserts, on the live game thread:
+
+- a new document exposes Overview only until evidence or an explicit route exists;
+- explicit plant routing adds only the Plants page and Compare never becomes persistent navigation;
+- cultivar traits are unknown before `CultivarDocumented` and become visible only from the
+  documented cultivar claim;
+- lineage uses the registered Knowledge relation and never renders a raw parent identifier; and
+- claim-backed presentation remains available as an honest semantic unknown when a fact is not
+  authorized.
+
+The `authority` phase adds the ten minimum disclosure checks:
+
+- fresh Overview-only navigation with no pre-snapshot plant catalog or advanced side-channel filters;
+- first sow/germination/growth evidence making Plants relevant through bounded projections;
+- high species knowledge remaining separate from an unclaimed cultivar;
+- precise documented trait identity without fabricated aggregate modifiers;
+- Progression: Agriculture capability remaining separate from biological Knowledge;
+- hidden-trait search and comparison refusing unauthorized classification or differences;
+- serialized breeding intent remaining visible while raw matching stays unknown;
+- semantic authorized lineage with bounded deterministic cycle/missing-parent diagnostics;
+- conservative gameplay and presentation behavior on the unavailable-Knowledge path; and
+- runtime breeding-page removal repairing active page, selection, focus, IDs, and diagnostics.
 
 Fixtures are created on the live quicktest map and cleaned with vanish semantics. Save/reload
 uses RimBridgeServer's authenticated save/load tools. Evidence and failure identity are returned
