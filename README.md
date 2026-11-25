@@ -48,3 +48,5 @@ The release includes a validated automatic-mask bundle. Low-confidence records r
 Please include the RimWorld version, active plant/content mods, the affected plant Def if known, the expected and actual behavior, and a save or reproduction sequence when reporting a problem. The beta questionnaire is in [docs/BETA_FEEDBACK.md](docs/BETA_FEEDBACK.md).
 
 For defaults, testing, and release details, see [docs/DEFAULTS.md](docs/DEFAULTS.md), [docs/RC_TEST_PLAN.md](docs/RC_TEST_PLAN.md), and [CHANGELOG.md](CHANGELOG.md).
+
+ProjectNexus development and validation: [onboarding guide](docs/PROJECTNEXUS.md).

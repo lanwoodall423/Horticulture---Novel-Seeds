@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "projectId": "horticulture",
+  "displayName": "Horticulture - Novel Seeds",
+  "capabilities": {
+    "checks": [],
+    "transforms": [],
+    "localOperations": []
+  },
+  "developmentRelations": {
+    "provides": [],
+    "consumes": [
+      {
+        "providerProjectId": "rimliaison",
+        "capabilityId": "rimworld.mod-development",
+        "contractVersion": 1
+      }
+    ]
+  },
+  "validationPack": {
+    "schemaVersion": 1,
+    "releaseTargets": [
+      "win32"
+    ],
+    "profiles": [
+      {
+        "profileId": "source-regression",
+        "title": "Windows source regression",
+        "checkIds": [],
+        "procedureIds": [
+          "source.traits",
+          "source.visuals",
+          "source.integration"
+        ]
+      },
+      {
+        "profileId": "runtime-smoke",
+        "title": "RimTest-managed build and gameplay smoke",
+        "checkIds": [],
+        "procedureIds": [
+          "source.traits",
+          "source.visuals",
+          "source.integration",
+          "rimtest.doctor",
+          "rimtest.smoke"
+        ]
+      },
+      {
+        "profileId": "waylith-qualification",
+        "title": "Future RimWorld 1.7 rendering qualification",
+        "checkIds": [],
+        "procedureIds": [
+          "rimtest.doctor",
+          "rimtest.smoke",
+          "waylith.visuals"
+        ]
+      }
+    ],
+    "procedures": [
+      {
+        "procedureId": "source.traits",
+        "title": "Trait and inheritance source regression",
+        "steps": [
+          "Run DevTools/Verify-TraitCatalog.ps1, DevTools/Verify-ColorInheritance.ps1 and DevTools/Verify-CrossPollination.ps1 from the exact candidate using Windows PowerShell -NoProfile -File.",
+          "Record individual exit codes; these are source checks, not in-game evidence."
+        ],
+        "requirements": {
+          "platform": "win32",
+          "hardware": []
+        }
+      },
+      {
+        "procedureId": "source.visuals",
+        "title": "Plant and produce visual source regression",
+        "steps": [
+          "Run DevTools/Verify-AutoPlantMasks.ps1, DevTools/Verify-MaskPainterTools.ps1, DevTools/Verify-ColorTraitUI.ps1 and DevTools/Verify-RandomVarietyGrid.ps1 against the candidate.",
+          "Require every selected script to exit 0. These checks do not establish GPU or visual fidelity."
+        ],
+        "requirements": {
+          "platform": "win32",
+          "hardware": []
+        }
+      },
+      {
+        "procedureId": "source.integration",
+        "title": "Integration and definition safety regression",
+        "steps": [
+          "Run DevTools/Verify-EventRouting.ps1, DevTools/Verify-ImmutablePlantDefs.ps1, DevTools/Verify-PlayerFactionSafety.ps1 and DevTools/Verify-KnowledgeMigration.ps1 against the candidate.",
+          "The older Knowledge Cultivar UI and Insight Canvas checks require external dependency layout; qualify separately with matching dependency sources."
+        ],
+        "requirements": {
+          "platform": "win32",
+          "hardware": []
+        }
+      },
+      {
+        "procedureId": "rimtest.doctor",
+        "title": "RimTest toolchain preflight",
+        "steps": [
+          "Run rimtest doctor --json from the candidate checkout using the supported installed RimLiaison launcher.",
+          "A blocked or missing promoted toolchain is a blocker, not a pass. Do not substitute a manual game launch or DLL copy."
+        ],
+        "requirements": {
+          "platform": "win32",
+          "hardware": []
+        }
+      },
+      {
+        "procedureId": "rimtest.smoke",
+        "title": "RimTest affected gameplay validation",
+        "steps": [
+          "After a successful doctor, run rimtest affected --run --json from the exact candidate; use the smoke suite in TestCatalog/rimtest.catalog.json as the documented fallback.",
+          "Require artifact freshness and record build, runtime, test and cleanup results. Do not count static scripts as gameplay passes."
+        ],
+        "requirements": {
+          "platform": "win32",
+          "hardware": []
+        }
+      },
+      {
+        "procedureId": "waylith.visuals",
+        "title": "Future Waylith rendering acceptance",
+        "steps": [
+          "After an actual 1.7 implementation, validate the exact 1.7 candidate and dependencies through RimTest; this procedure is not evidence that 1.7 is supported.",
+          "Inspect vanilla and modded plants, wind, growth stages, masks, produce, lighting, snow, shadows and UI preview. Compare render cost and memory on representative fields.",
+          "Record screenshots, shader compile status, candidate identity and profiler evidence; preserve normal vanilla fallback."
+        ],
+        "requirements": {
+          "platform": "win32",
+          "hardware": []
+        }
+      }
+    ]
+  }
+}
