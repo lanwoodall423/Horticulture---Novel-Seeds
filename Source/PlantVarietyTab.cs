@@ -51,10 +51,10 @@ namespace HorticultureNovelSeeds
                 HorticulturePresentationPolicy.ForCultivar(variety, null, true);
             List<VarietyTraitDef> traits = authority?.AuthorizedTraits?.Where(trait => trait != null).ToList()
                 ?? new List<VarietyTraitDef>();
-            List<string> statLines = authority == null ? new List<string> { "Cultivar claims are not documented yet." } :
+            List<string> statLines = authority == null ? new List<string> { "Cultivar is not documented yet." } :
                 new List<string> { authority.ModifierText };
             string subtitle = variety == null ? "Observable novel variation is not a documented cultivar." :
-                "Cultivar evidence is shown only from Knowledge claims.";
+                "Named cultivar traits and genetic modifiers.";
             document.Refresh(new HorticultureInspectorSnapshot
             {
                 Title = "Cultivar: " + comp.DisplayVarietyName,
@@ -62,7 +62,7 @@ namespace HorticultureNovelSeeds
                 PrimaryHeader = "Traits",
                 SecondaryHeader = "Stat changes",
                 PrimaryEmpty = authority == null ? "Trait identity is unknown." : "No documented traits",
-                SecondaryEmpty = "No documented cultivar measurements",
+                SecondaryEmpty = "No documented genetic modifiers",
                 PrimaryRows = authority == null
                     ? new[] { new HorticultureInspectorRow { Id = "unknown-traits", Label = "Traits unknown", Detail = string.Empty } }
                     : traits.Select((trait, index) => new HorticultureInspectorRow

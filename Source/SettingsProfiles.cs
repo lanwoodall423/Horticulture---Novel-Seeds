@@ -27,7 +27,7 @@ namespace HorticultureNovelSeeds
         public static string PublisherExportPath => System.IO.Path.Combine(PublisherDirectory, DefaultFileName);
         public static string BundledDefaultPath => HorticultureNovelSeedsMod.ContentRootPath.NullOrEmpty()
             ? null
-            : System.IO.Path.Combine(HorticultureNovelSeedsMod.ContentRootPath, "1.6", "Defaults", DefaultFileName);
+            : System.IO.Path.Combine(HorticultureNovelSeedsMod.ContentRootPath, "1.7", "Defaults", DefaultFileName);
         public static bool HasBundledDefault => !BundledDefaultPath.NullOrEmpty() && File.Exists(BundledDefaultPath);
 
         public static IReadOnlyList<SettingsProfileInfo> Profiles

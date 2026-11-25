@@ -58,7 +58,7 @@ namespace HorticultureNovelSeeds
             document.Refresh(new HorticultureInspectorSnapshot
             {
                 Title = "Produce Cultivar",
-                Subtitle = primaryAuthority?.ProductText ?? "Produce identity remains unknown until a source cultivar claim is available.",
+                Subtitle = primaryAuthority?.ProductText ?? "Source cultivar is not documented.",
                 PrimaryHeader = "Source Cultivars",
                 SecondaryHeader = "Inherited qualities",
                 PrimaryEmpty = "No source Cultivars",
@@ -84,7 +84,7 @@ namespace HorticultureNovelSeeds
         private static string ProduceEffectLine(HorticultureCultivarPresentation authority)
         {
             return authority?.HasKnownProducts == true
-                ? "Produce identity is documented; detailed effects remain claim-scoped."
+                ? "Documented source cultivar traits."
                 : "Produce effects unknown until the source cultivar is documented.";
         }
 

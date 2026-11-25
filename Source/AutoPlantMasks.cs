@@ -320,9 +320,9 @@ namespace HorticultureNovelSeeds
 
         public static string CachePath => Path.Combine(GenFilePaths.ConfigFolderPath, "HorticultureNovelSeedsAutoMasks.xml");
         public static string BundledCachePath => Path.Combine(HorticultureNovelSeedsMod.ContentRootPath ?? string.Empty,
-            "1.6", "AutoMasks", "BundledAutoMasks.xml");
+            "1.7", "AutoMasks", "BundledAutoMasks.xml");
         public static string BundledManifestPath => Path.Combine(HorticultureNovelSeedsMod.ContentRootPath ?? string.Empty,
-            "1.6", "AutoMasks", "BundledAutoMasks.manifest.json");
+            "1.7", "AutoMasks", "BundledAutoMasks.manifest.json");
         public static bool GenerationQueued => generationQueued;
         public static AutoMaskBatchResult LastBatchResult => lastBatchResult;
         public static int LocalRecordCount => Records.Count;

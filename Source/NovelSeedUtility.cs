@@ -1563,20 +1563,24 @@ namespace HorticultureNovelSeeds
             List<VarietyTraitDef> traits = SelectedVarietyForPlanting(plantDef, cell, map)?.traits;
             return ExpandedTraitUtility.SowWorkFactor(traits) / ExpandedTraitUtility.SynergyFactorAt(cell, map, traits, "SowSpeed");
         }
-        public static void DropDiscoverySeed(ThingDef cropDef, List<VarietyTraitDef> traits, IntVec3 position, Map map,
+        public static bool DropDiscoverySeed(ThingDef cropDef, List<VarietyTraitDef> traits, IntVec3 position, Map map,
             IEnumerable<string> lineageParentIds = null, string originKind = null)
         {
-            if (cropDef == null || traits == null || traits.Count == 0 || map == null)
-            {
-                return;
-            }
-
+            if (cropDef == null || traits == null || traits.Count == 0 || map == null || !position.IsValid) return false;
             Thing seedPack = ThingMaker.MakeThing(HNS_DefOf.HNS_NovelSeedPack);
-            seedPack.TryGetComp<CompNovelSeedPack>()?.Initialize(cropDef, traits, lineageParentIds, originKind);
-            GenPlace.TryPlaceThing(seedPack, position, map, ThingPlaceMode.Near);
+            var comp = seedPack.TryGetComp<CompNovelSeedPack>();
+            if (comp == null) { seedPack.Destroy(); return false; }
+            comp.Initialize(cropDef, traits, lineageParentIds, originKind);
+            if (!GenPlace.TryPlaceThing(seedPack, position, map, ThingPlaceMode.Near))
+            {
+                if (!seedPack.Destroyed && !seedPack.Spawned) seedPack.Destroy();
+                Log.Warning("[Horticulture] Could not place recovered seed pack; discovery was not committed.");
+                return false;
+            }
             Find.LetterStack.ReceiveLetter("HNS_SeedDiscovered".Translate(cropDef.LabelCap),
                 "A novel seed pack was recovered. Name the cultivar to document its traits and lineage.",
                 LetterDefOf.PositiveEvent, seedPack);
+            return true;
         }
 
         private static void AddBlockedTags(VarietyTraitDef trait, HashSet<string> blockedTags)

@@ -115,7 +115,6 @@ namespace HorticultureNovelSeeds
                 string eventIdentity = HorticultureKnowledgeEventIdentity.Fertilization(plant, comp.ResourceCycle);
                 carried.SplitOff(payment.Consumed).Destroy();
                 if (payment.FullyPaid) comp.SatisfyResource();
-                if (payment.FullyPaid) HorticultureEventRouter.FertilizationCompleted(pawn, plant, eventIdentity);
             };
             apply.defaultCompleteMode = ToilCompleteMode.Instant;
             yield return apply;

@@ -604,7 +604,6 @@ namespace HorticultureNovelSeeds
         {
             ProduceInheritanceData data = ProduceInheritanceUtility.FromIngredients(ingredients);
             if (data != null) __result = ProduceInheritanceUtility.ApplyToRecipeProducts(__result, data);
-            HorticultureEventRouter.ProduceProcessed(worker, ingredients);
         }
     }
 }

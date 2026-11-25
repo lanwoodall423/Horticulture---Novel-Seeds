@@ -21,4 +21,4 @@ shared by this engine, so concurrent sessions are not supported.
 Artifact freshness, actual loaded package identities, genuine runtime
 evidence and safe cleanup must be proven before runtime results are accepted.
 A loadout preflight or static regression is not a gameplay or shader pass.
-Do not claim 1.7 support before porting and qualifying required dependencies.
+Do not claim 1.7 support before native qualification. See docs/NATIVE17.md for the test-only packaging and runner; do not use the legacy 1.6 release builder on this branch.

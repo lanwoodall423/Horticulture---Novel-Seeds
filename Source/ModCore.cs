@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using HarmonyLib;
-using KnowledgeFramework;
-using ProgressionAgriculture;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -16,7 +14,6 @@ namespace HorticultureNovelSeeds
         public static Harmony HarmonyInstance;
         public static NovelSeedsSettings Settings;
         public static string ContentRootPath;
-        private InsightSettingsDocument settingsDocument;
 
         public HorticultureNovelSeedsMod(ModContentPack pack) : base(pack)
         {
@@ -36,7 +33,6 @@ namespace HorticultureNovelSeeds
             }
             HarmonyInstance = new Harmony("lan.horticulture.novelseeds");
             HarmonyInstance.PatchAll(typeof(HorticultureNovelSeedsMod).Assembly);
-            HorticultureKnowledgeAdapter.Register();
             WildlifeRegistryIntegration.Apply(HarmonyInstance);
             NicePlantsMenuCompat.Apply(HarmonyInstance);
             LongEventHandler.ExecuteWhenFinished(() =>
@@ -55,12 +51,7 @@ namespace HorticultureNovelSeeds
 
         public override void DoSettingsWindowContents(Rect inRect)
         {
-            if (settingsDocument == null || !ReferenceEquals(settingsDocument.Settings, Settings))
-            {
-                settingsDocument?.PostClose();
-                settingsDocument = new InsightSettingsDocument(Settings);
-            }
-            settingsDocument.Draw(inRect);
+            NovelSeedsSettingsUI.DoWindowContents(inRect, Settings);
         }
 
         public override void WriteSettings()
@@ -285,11 +276,6 @@ namespace HorticultureNovelSeeds
 
     public class GameComponent_NovelSeeds : GameComponent
     {
-        private const int KnowledgeIntegrationRetryIntervalTicks = 15;
-        private bool knowledgeIntegrationRetryScheduled;
-        private bool knowledgeIntegrationRetryAttempted;
-        private int nextKnowledgeIntegrationRetryTick;
-        private Game knowledgeIntegrationGame;
         private List<VarietyRecord> unlockedVarieties = new List<VarietyRecord>();
         private List<BreedingProgramRecord> legacyBreedingPrograms = new List<BreedingProgramRecord>();
         private List<SpeciesColorPaletteRecord> speciesColorPalettes = new List<SpeciesColorPaletteRecord>();
@@ -327,11 +313,11 @@ namespace HorticultureNovelSeeds
             base.ExposeData();
             Scribe_Collections.Look(ref unlockedVarieties, "unlockedVarieties", LookMode.Deep);
             Scribe_Collections.Look(ref speciesColorPalettes, "speciesColorPalettes", LookMode.Deep);
+            Scribe_Collections.Look(ref legacyBreedingPrograms, "breedingPrograms", LookMode.Deep);
+            Scribe_Values.Look(ref legacyNextBreedingProgramId, "nextBreedingProgramId", 1);
             if (Scribe.mode != LoadSaveMode.Saving)
             {
-                Scribe_Collections.Look(ref legacyBreedingPrograms, "breedingPrograms", LookMode.Deep);
                 Scribe_Collections.Look(ref legacyHorticultureKnowledge, "horticultureKnowledge", LookMode.Deep);
-                Scribe_Values.Look(ref legacyNextBreedingProgramId, "nextBreedingProgramId", 1);
             }
             Scribe_Collections.Look(ref selectedVarietyIdsByGrower, "selectedVarietyIdsByGrower", LookMode.Value, LookMode.Value, ref selectionKeysWorking, ref selectionValuesWorking);
             Scribe_Collections.Look(ref breedingVarietyIdsByGrower, "breedingVarietyIdsByGrower", LookMode.Value, LookMode.Value, ref breedingKeysWorking, ref breedingValuesWorking);
@@ -361,62 +347,7 @@ namespace HorticultureNovelSeeds
         public override void FinalizeInit()
         {
             base.FinalizeInit();
-            InitializeKnowledgeIntegration();
             EnsureSpeciesColorPalettes();
-        }
-
-        public override void GameComponentTick()
-        {
-            base.GameComponentTick();
-            if (knowledgeIntegrationGame == Current.Game &&
-                HorticultureKnowledgeRegistration.State == HorticultureKnowledgeRegistrationState.Registered &&
-                KnowledgeConsumerApi.Readiness.IsReady)
-                return;
-            TickManager tickManager = Find.TickManager;
-            int currentTick = tickManager?.TicksGame ?? -1;
-            if (currentTick < 0 || currentTick < nextKnowledgeIntegrationRetryTick) return;
-            nextKnowledgeIntegrationRetryTick = currentTick + KnowledgeIntegrationRetryIntervalTicks;
-            RetryKnowledgeIntegration();
-        }
-
-        internal void RetryKnowledgeIntegration()
-        {
-            knowledgeIntegrationRetryScheduled = false;
-            InitializeKnowledgeIntegration();
-        }
-
-        private void InitializeKnowledgeIntegration()
-        {
-            HorticultureKnowledgeSnapshots.Clear();
-            if (!HorticultureKnowledgeAdapter.Register())
-            {
-                ScheduleKnowledgeIntegrationRetry();
-                return;
-            }
-            knowledgeIntegrationGame = Current.Game;
-            if (!HorticultureKnowledgeAdapter.TryMigrateLegacy(legacyHorticultureKnowledge))
-            {
-                ScheduleKnowledgeIntegrationRetry();
-                return;
-            }
-            legacyHorticultureKnowledge?.Clear();
-            foreach (VarietyRecord variety in AllVarieties.ToList())
-                HorticultureKnowledgeAdapter.RegisterCultivar(variety);
-        }
-
-        private void ScheduleKnowledgeIntegrationRetry()
-        {
-            if (knowledgeIntegrationRetryScheduled || knowledgeIntegrationRetryAttempted) return;
-            HorticultureKnowledgeRegistrationState state = HorticultureKnowledgeAdapter.RegistrationState;
-            if (state != HorticultureKnowledgeRegistrationState.WaitingForFrameworkReadiness && state !=
-                HorticultureKnowledgeRegistrationState.Registered) return;
-            knowledgeIntegrationRetryAttempted = true;
-            knowledgeIntegrationRetryScheduled = true;
-            LongEventHandler.ExecuteWhenFinished(() =>
-            {
-                knowledgeIntegrationRetryScheduled = false;
-                InitializeKnowledgeIntegration();
-            });
         }
 
         public IReadOnlyList<SpeciesColorPaletteRecord> SpeciesColorPalettes
@@ -490,11 +421,7 @@ namespace HorticultureNovelSeeds
                 HorticultureKnowledgeEventDiagnostics.UnsupportedPlant();
                 return null;
             }
-            GameComponent_UnlockedCrops cropRegistry = GameComponent_UnlockedCrops.Instance;
-            if (cropDef != null && cropRegistry != null && !cropRegistry.IsCropUnlocked(cropDef))
-            {
-                cropRegistry.UnlockCrop(cropDef);
-            }
+            CropProgressionCompatibility.NotifyUnlocked(cropDef);
 
             VarietyRecord existing = FindMatchingVariety(cropDef, traits);
             if (existing != null)
@@ -524,7 +451,6 @@ namespace HorticultureNovelSeeds
             unlockedVarieties.Add(variety);
             varietiesById[variety.id] = variety;
             if (!variety.hiddenFromMenus) IndexVisibleVariety(variety);
-            HorticultureKnowledgeAdapter.RegisterCultivar(variety);
             return variety;
         }
 

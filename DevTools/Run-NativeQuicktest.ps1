@@ -1,0 +1,185 @@
+[CmdletBinding()]
+param(
+    [ValidateSet('AllPerformance','BothLoading','Minimal')][string]$Loadout='AllPerformance',
+    [ValidateRange(30,300)][int]$TimeoutSeconds=180
+)
+$ErrorActionPreference='Stop'
+$repo=Split-Path -Parent $PSScriptRoot
+$game='C:\Games\Steam\steamapps\common\RimWorld'
+$exe=Join-Path $game 'RimWorld.exe'
+$normal=Join-Path $env:USERPROFILE 'AppData\LocalLow\Ludeon Studios\RimWorld by Ludeon Studios'
+$normalConfig=Join-Path $normal 'Config\ModsConfig.xml'
+$normalPrefs=Join-Path $normal 'Config\Prefs.xml'
+$normalSaves=Join-Path $normal 'Saves'
+$log=Join-Path $normal 'Logs\Player.log'
+$run=[Guid]::NewGuid().ToString('N')
+$temp=Join-Path ([IO.Path]::GetTempPath()) ('hns-native-'+$run)
+$stage=Join-Path $repo ('DevTools\Staged\Native17Package-'+$run)
+$installed=Join-Path $game ('Mods\HNS-NativeFixture-'+$run)
+$outDir=Join-Path $repo ('DevTools\TestResults\native-'+$run)
+$receipt=[ordered]@{schemaVersion=1;run=$run;loadout=$Loadout;status='BLOCKED';reason='NOT_STARTED';sourceHead=$null;version=$null;assemblySha256=$null;activePackages=@();optimizerIdentities=@();stages=@();fixtureLine=$null;processId=$null;testProcessStopped=$false;testPackageRemoved=$false;normalConfigUnchanged=$null;normalPrefsUnchanged=$null;normalSavesUnchanged=$null;isolatedSaveDirectory=$temp;startedUtc=$null;finishedUtc=$null}
+$proc=$null; $installedByRun=$false; $before=$null; $started=$null
+$utf8=New-Object Text.UTF8Encoding($false)
+function Assert-Closed {
+    if (@(Get-CimInstance Win32_Process -Filter "Name='RimWorld.exe' OR Name='RimWorldWin64.exe'").Count -ne 0) {throw 'RIMWORLD_ALREADY_RUNNING'}
+}
+function Hash-File([string]$path) {
+    if(Test-Path -LiteralPath $path -PathType Leaf){return (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash}
+    return '(missing)'
+}
+function Save-Inventory {
+    if(!(Test-Path -LiteralPath $normalSaves)){return @()}
+    @(Get-ChildItem -LiteralPath $normalSaves -File -Recurse|Sort-Object FullName|ForEach-Object {$_.FullName+'|'+$_.Length+'|'+$_.LastWriteTimeUtc.Ticks})
+}
+function Assert-NoPackage {
+    $roots=@((Join-Path $game 'Mods'),(Join-Path $game 'MyMods'),(Join-Path (Split-Path -Parent (Split-Path -Parent $game)) 'workshop\content\294100'))
+    foreach($base in $roots){
+        if(!(Test-Path -LiteralPath $base -PathType Container)){continue}
+        foreach($dir in Get-ChildItem -LiteralPath $base -Directory){
+            $about=Join-Path $dir.FullName 'About\About.xml'
+            if(Test-Path -LiteralPath $about -PathType Leaf){
+                try{$id=([xml](Get-Content -LiteralPath $about -Raw)).ModMetaData.packageId}catch{continue}
+                if($id -ieq 'lan.horticulture.novelseeds'){throw 'EXISTING_HORTICULTURE_INSTALLATION: refusing duplicate or overwrite'}
+            }
+        }
+    }
+}
+New-Item -ItemType Directory -Path $outDir | Out-Null
+try {
+    Assert-Closed
+    Assert-NoPackage
+    $head=(& git -C $repo rev-parse HEAD).Trim()
+    if($LASTEXITCODE -ne 0 -or $head -notmatch '^[a-f0-9]{40}$' -or @(git -C $repo status --porcelain).Count -ne 0){throw 'CLEAN_SOURCE_REQUIRED'}
+    $receipt.sourceHead=$head
+    $version='0.1.0-alpha+g'+$head.Substring(0,12)
+    $receipt.version=$version
+    $pre=& powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot 'Get-NativeTestLoadout.ps1') -Loadout $Loadout
+    if($LASTEXITCODE -ne 0){throw 'LOADOUT_PREFLIGHT_FAILED'}
+    $pre=$pre|Out-String|ConvertFrom-Json
+    if($pre.status -ne 'PASS' -or !$pre.gameClosed){throw 'LOADOUT_OR_GAME_CLOSED_NOT_PROVEN'}
+    $receipt.optimizerIdentities=@($pre.performanceIdentities)
+    $packages=@($pre.packagesBeforeCandidate)+@('lan.horticulture.novelseeds')+@($pre.packagesAfterCandidate)
+    $receipt.activePackages=$packages
+    $receipt.gameVersion=$pre.gameVersion
+    $before=@(Save-Inventory);$cfgBefore=Hash-File $normalConfig;$prefsBefore=Hash-File $normalPrefs
+    if(!(Test-Path -LiteralPath $normalConfig -PathType Leaf)){throw 'NORMAL_CONFIG_VERSION_UNAVAILABLE'}
+    $gameVersion=[string]([xml](Get-Content -LiteralPath $normalConfig -Raw)).ModsConfigData.version
+    if($gameVersion -notmatch '^1\.7\.\d+( rev\d+)?$'){throw 'NORMAL_CONFIG_VERSION_MISMATCH'}
+    # Build only to ignored staging, never the tracked 1.6 assembly.
+    & dotnet build (Join-Path $repo 'Source\HorticultureNovelSeeds.csproj') -c Release -p:NativeFixture=true "-p:InformationalVersion=$version" --nologo
+    if($LASTEXITCODE -ne 0){throw 'CANDIDATE_BUILD_FAILED'}
+    $dll=Join-Path $repo 'DevTools\Staged\Native17\Assemblies\HorticultureNovelSeeds.dll'
+    $sha=Hash-File $dll
+    if($sha -eq '(missing)'){throw 'CANDIDATE_DLL_MISSING'}
+    $receipt.assemblySha256=$sha
+    New-Item -ItemType Directory -Path (Join-Path $stage 'About'),(Join-Path $stage '1.7\Assemblies') -Force|Out-Null
+    foreach($d in @('Defs','Languages','AutoMasks','Defaults')){
+        Copy-Item -LiteralPath (Join-Path $repo ('1.6\'+$d)) -Destination (Join-Path $stage '1.7') -Recurse
+    }
+    Copy-Item -LiteralPath $dll -Destination (Join-Path $stage '1.7\Assemblies\HorticultureNovelSeeds.dll')
+    $about=@'
+<ModMetaData>
+  <name>Horticulture - Novel Seeds (isolated native test candidate)</name>
+  <author>Lan</author>
+  <packageId>lan.horticulture.novelseeds</packageId>
+  <supportedVersions><li>1.7</li></supportedVersions>
+  <modDependencies><li><packageId>brrainz.harmony</packageId><displayName>Harmony</displayName></li></modDependencies>
+  <loadAfter><li>brrainz.harmony</li></loadAfter>
+  <description>Unreleased test candidate; do not enable in a real colony.</description>
+</ModMetaData>
+'@
+    [IO.File]::WriteAllText((Join-Path $stage 'About\About.xml'),$about,$utf8)
+    [IO.File]::WriteAllText((Join-Path $stage 'LoadFolders.xml'),'<loadFolders><v1.7><li>/</li><li>1.7</li></v1.7></loadFolders>',$utf8)
+    [IO.File]::WriteAllText((Join-Path $stage '.hns-native-run'),$run,$utf8)
+    Assert-Closed;Assert-NoPackage
+    if(Test-Path -LiteralPath $installed){throw 'TEST_PACKAGE_DESTINATION_EXISTS'}
+    Copy-Item -LiteralPath $stage -Destination $installed -Recurse
+    $installedByRun=$true
+    if((Hash-File (Join-Path $installed '1.7\Assemblies\HorticultureNovelSeeds.dll')) -ne $sha){throw 'INSTALLED_HASH_MISMATCH'}
+    $configDir=Join-Path $temp 'Config'
+    if(Test-Path -LiteralPath $temp){throw 'TEMP_ROOT_EXISTS'}
+    New-Item -ItemType Directory -Path $configDir -Force|Out-Null
+    $config=New-Object Xml.XmlDocument
+    $config.LoadXml('<ModsConfigData><version/><activeMods/><knownExpansions/></ModsConfigData>')
+    $config.ModsConfigData.version=$gameVersion
+    foreach($pkg in $packages){$node=$config.CreateElement('li');$node.InnerText=$pkg;$null=$config.ModsConfigData.activeMods.AppendChild($node)}
+    foreach($dlc in @('royalty','ideology','biotech','anomaly','odyssey')){$node=$config.CreateElement('li');$node.InnerText='ludeon.rimworld.'+$dlc;$null=$config.ModsConfigData.knownExpansions.AppendChild($node)}
+    $config.Save((Join-Path $configDir 'ModsConfig.xml'))
+    $prefs='<PrefsData><runInBackground>True</runInBackground><fullscreen>False</fullscreen><screenWidth>1280</screenWidth><screenHeight>720</screenHeight><volumeMaster>0</volumeMaster><devMode>True</devMode><adaptiveTrainingEnabled>False</adaptiveTrainingEnabled><autosaveIntervalDays>7</autosaveIntervalDays></PrefsData>'
+    [IO.File]::WriteAllText((Join-Path $configDir 'Prefs.xml'),$prefs,$utf8)
+    if(Test-Path -LiteralPath $log -PathType Leaf){Copy-Item -LiteralPath $log -Destination (Join-Path $outDir 'prior-player.log')}
+    Assert-Closed
+    $psi=New-Object Diagnostics.ProcessStartInfo
+    $psi.FileName=$exe;$psi.WorkingDirectory=$game;$psi.UseShellExecute=$false
+    $psi.Arguments='"-savedatafolder='+$temp+'" -quicktest'
+    $psi.EnvironmentVariables['HNS_NATIVE_RUN']=$run
+    $psi.EnvironmentVariables['HNS_NATIVE_PACKAGES']=($packages -join ',')
+    $psi.EnvironmentVariables['HNS_NATIVE_DLL']=$sha
+    $receipt.startedUtc=[DateTime]::UtcNow.ToString('o')
+    $proc=[Diagnostics.Process]::Start($psi)
+    $started=$proc.StartTime
+    $receipt.processId=$proc.Id
+    Write-Output ('FIXTURE_STARTED='+$run+' PID='+$proc.Id+' '+$version)
+    $prefix='[HNS NativeFixture] '+$run+' '+$version+' '
+    $deadline=[DateTime]::UtcNow.AddSeconds($TimeoutSeconds)
+    $receipt.reason='FIXTURE_TIMEOUT'
+    while([DateTime]::UtcNow -lt $deadline){
+        if(Test-Path -LiteralPath $log -PathType Leaf){
+            $lines=@(Get-Content -LiteralPath $log -Tail 2000 -ErrorAction SilentlyContinue)
+            $header=@(Get-Content -LiteralPath $log -TotalCount 100 -ErrorAction SilentlyContinue)
+            $all=$lines -join [char]10
+            if(($header -join [char]10).Contains($temp) -and $all.Contains('Caught exception while loading play data')){
+                $receipt.status='FAIL';$receipt.reason='GAME_RECOVERED_FROM_MOD_LOADING_FAILURE';break
+            }
+            foreach($line in $lines|Where-Object {$_.Contains($prefix+'STAGE_PASS ')}){
+                $stageName=$line.Substring($line.IndexOf($prefix+'STAGE_PASS ')+($prefix+'STAGE_PASS ').Length).Trim()
+                if($receipt.stages -cnotcontains $stageName){$receipt.stages+= $stageName;Write-Output ('STAGE_PASS '+$stageName)}
+            }
+            $final=$lines|Where-Object {$_.Contains($prefix+'PASS ') -or $_.Contains($prefix+'FAIL ')}|Select-Object -Last 1
+            if($final){
+                $receipt.fixtureLine=$final
+                $result=$final.Substring($final.IndexOf($prefix)+$prefix.Length)
+                if($result -match '^(PASS|FAIL)\s+(.+)$'){$receipt.status=$Matches[1];$receipt.reason=$Matches[2]}
+                if($receipt.status -eq 'PASS' -and (($receipt.stages -join ',') -ne 'Startup,HarvestAndSeedRecovery,Registration,CultivarHarvest,SaveReload')){$receipt.status='FAIL';$receipt.reason='INCOMPLETE_STAGE_EVIDENCE'}
+                break
+            }
+        }
+        if($proc.HasExited){$receipt.reason='TEST_PROCESS_EXITED';break}
+        Start-Sleep -Milliseconds 500
+    }
+}catch{$receipt.status='BLOCKED';$receipt.reason=$_.Exception.Message}
+finally{
+    if($proc -ne $null){
+        try {
+            $proc.Refresh()
+            if(!$proc.HasExited){
+                $current=Get-CimInstance Win32_Process -Filter ("ProcessId="+$proc.Id)
+                if($current -and $current.ExecutablePath -ieq $exe -and $proc.StartTime -eq $started){
+                    $proc.Kill();$null=$proc.WaitForExit(10000)
+                }else{$receipt.status='FAIL';$receipt.reason='OWNED_PROCESS_IDENTITY_LOST'}
+            }
+            $receipt.testProcessStopped=$proc.HasExited
+        }catch{$receipt.status='FAIL';$receipt.reason='TEST_PROCESS_CLEANUP_FAILED '+$_.Exception.Message}
+    }else{$receipt.testProcessStopped=$true}
+    if($installedByRun -and $receipt.testProcessStopped){
+        try{
+            Assert-Closed
+            $marker=Join-Path $installed '.hns-native-run'
+            if((Get-Content -LiteralPath $marker -Raw) -cne $run -or (Hash-File (Join-Path $installed '1.7\Assemblies\HorticultureNovelSeeds.dll')) -ne $receipt.assemblySha256){throw 'PACKAGE_CUSTODY_LOST'}
+            Remove-Item -LiteralPath $installed -Recurse -Force
+            $receipt.testPackageRemoved=!(Test-Path -LiteralPath $installed)
+        }catch{$receipt.status='FAIL';$receipt.reason='PACKAGE_CLEANUP_FAILED '+$_.Exception.Message}
+    }elseif(!$installedByRun){$receipt.testPackageRemoved=$true}
+    if($before -ne $null){
+        $receipt.normalConfigUnchanged=(Hash-File $normalConfig) -eq $cfgBefore
+        $receipt.normalPrefsUnchanged=(Hash-File $normalPrefs) -eq $prefsBefore
+        $receipt.normalSavesUnchanged=((@(Save-Inventory) -join [char]10) -ceq ($before -join [char]10))
+        if(!$receipt.normalConfigUnchanged -or !$receipt.normalPrefsUnchanged -or !$receipt.normalSavesUnchanged){$receipt.status='FAIL';$receipt.reason='PLAYER_DATA_PRESERVATION_NOT_PROVEN'}
+    }
+    if($proc -ne $null -and $receipt.testProcessStopped -and (Test-Path -LiteralPath $log -PathType Leaf)){Copy-Item -LiteralPath $log -Destination (Join-Path $outDir 'player.log')}
+    $receipt.finishedUtc=[DateTime]::UtcNow.ToString('o')
+    $json=$receipt|ConvertTo-Json -Depth 8
+    [IO.File]::WriteAllText((Join-Path $outDir 'receipt.json'),$json,$utf8)
+    Write-Output $json
+}
+if($receipt.status -ne 'PASS'){exit 2}

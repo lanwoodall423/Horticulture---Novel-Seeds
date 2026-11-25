@@ -1,69 +1,24 @@
-<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
     <OutputType>Library</OutputType>
-    <TargetFramework>net48</TargetFramework>
-    <RootNamespace>HorticultureNovelSeeds</RootNamespace>
     <AssemblyName>HorticultureNovelSeeds</AssemblyName>
+    <RootNamespace>HorticultureNovelSeeds</RootNamespace>
     <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
     <Deterministic>true</Deterministic>
+    <Version>0.1.0-alpha</Version>
+    <InformationalVersion Condition="'$(InformationalVersion)' == ''">0.1.0-alpha+unstamped</InformationalVersion>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+    <DefineConstants Condition="'$(NativeFixture)' == 'true'">$(DefineConstants);HNS_NATIVE_FIXTURE</DefineConstants>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <InsightCanvasVersion>2.1.0</InsightCanvasVersion>
-    <InsightCanvasCommit>93a09005fa15190009daee625352cf4004974472</InsightCanvasCommit>
-    <InsightCanvasDllSha256>E8D163B6A2B39EB80BBF8A5EA5AA0B8A80481D69A8CEE1D74526548D0A28C011</InsightCanvasDllSha256>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <Optimize>true</Optimize>
-    <OutputPath>..\1.6\Assemblies\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <DebugType>none</DebugType>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <Optimize>false</Optimize>
-    <OutputPath>..\1.6\Assemblies\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>none</DebugType>
+    <OutputPath>../DevTools/Staged/Native17/Assemblies/</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="obj\**\*.cs" />
-    <Compile Remove="BreedingMixRegression.cs" />
-    <Compile Remove="CrossPollinationRegression.cs" />
-    <Compile Remove="MaskProjectionRegression.cs" />
-    <Compile Remove="TraitCatalogRegression.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>C:\Games\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>C:\Games\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="UnityEngine.IMGUIModule">
-      <HintPath>C:\Games\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="UnityEngine.TextRenderingModule">
-      <HintPath>C:\Games\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="0Harmony">
-      <HintPath>C:\Games\Steam\steamapps\workshop\content\294100\2009463077\Current\Assemblies\0Harmony.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="ProgressionAgriculture">
-      <HintPath>C:\Games\Steam\steamapps\workshop\content\294100\3418017359\1.6\Assemblies\ProgressionAgriculture.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="KnowledgeFramework">
-      <HintPath>..\..\KnowledgeFramework\1.6\Assemblies\KnowledgeFramework.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="InsightCanvas">
-      <HintPath>..\..\InsightCanvas\1.6\Assemblies\InsightCanvas.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
+    <Compile Remove="Properties/AssemblyInfo.cs;BreedingMixRegression.cs;CrossPollinationRegression.cs;MaskProjectionRegression.cs;TraitCatalogRegression.cs" />
+    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.7.5013-unstable" />
+    <PackageReference Include="Lib.Harmony" Version="3.0.0-rc.7" ExcludeAssets="runtime" />
   </ItemGroup>
 </Project>

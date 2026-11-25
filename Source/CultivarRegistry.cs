@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using HarmonyLib;
-using KnowledgeFramework;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -99,11 +98,6 @@ namespace HorticultureNovelSeeds
         }
 
         internal static bool CanCompareCount(int count) => count >= 2 && count <= HorticultureWorkspaceDocument.MaximumComparisonCount;
-
-        internal KnowledgeMenuModel KnowledgeModelFor(Pawn pawn, bool colony) =>
-            HorticultureKnowledgeAdapter.Menu(pawn, colony);
-
-        internal KnowledgeRank KnowledgeRankFor(Pawn pawn) => HorticultureKnowledgeAdapter.ExpertiseRank(pawn);
 
         internal bool HasComparableSelection => CanCompareCount(comparisonIds.Count);
 

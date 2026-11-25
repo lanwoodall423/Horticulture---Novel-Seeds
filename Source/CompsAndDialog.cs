@@ -432,6 +432,7 @@ namespace HorticultureNovelSeeds
             }
             VarietyRecord variety = GameComponent_NovelSeeds.Instance.UnlockVariety(cropDef, traits, varietyName.Trim(), parentVarietyIds, false,
                 discoverer, OriginKind);
+            if (variety == null) return; // Keep seed pack if registration fails.
             HorticultureEventRouter.CultivarDocumented(discoverer, variety);
             Find.LetterStack.ReceiveLetter("HNS_VarietyUnlocked".Translate(variety.Label), "HNS_VarietyUnlockedDesc".Translate(variety.Label, cropDef.label), LetterDefOf.PositiveEvent);
             parent.Destroy();

@@ -11,67 +11,6 @@ using Verse.AI;
 
 namespace HorticultureNovelSeeds
 {
-    [HarmonyPatch(typeof(KnowledgeFramework.GameComponent_KnowledgeFramework), nameof(KnowledgeFramework.GameComponent_KnowledgeFramework.FinalizeInit))]
-    public static class KnowledgeFramework_FinalizeInit_HorticultureKnowledge_Patch
-    {
-        public static void Postfix()
-        {
-            GameComponent_NovelSeeds.Instance?.RetryKnowledgeIntegration();
-        }
-    }
-
-    [HarmonyPatch(typeof(Game), nameof(Game.FinalizeInit))]
-    public static class Game_FinalizeInit_HorticultureKnowledge_Patch
-    {
-        public static void Postfix(Game __instance)
-        {
-            __instance?.GetComponent<GameComponent_NovelSeeds>()?.RetryKnowledgeIntegration();
-        }
-    }
-
-    [HarmonyPatch(typeof(GameComponentUtility), nameof(GameComponentUtility.FinalizeInit))]
-    public static class GameComponentUtility_FinalizeInit_HorticultureKnowledge_Patch
-    {
-        public static void Postfix()
-        {
-            GameComponent_NovelSeeds.Instance?.RetryKnowledgeIntegration();
-        }
-    }
-
-    [HarmonyPatch(typeof(Game), nameof(Game.InitNewGame))]
-    public static class Game_InitNewGame_HorticultureKnowledge_Patch
-    {
-        public static void Postfix(Game __instance)
-        {
-            __instance?.GetComponent<GameComponent_NovelSeeds>()?.RetryKnowledgeIntegration();
-        }
-    }
-
-    [HarmonyPatch(typeof(Game), nameof(Game.LoadGame))]
-    public static class Game_LoadGame_HorticultureKnowledge_Patch
-    {
-        public static void Postfix(Game __instance)
-        {
-            __instance?.GetComponent<GameComponent_NovelSeeds>()?.RetryKnowledgeIntegration();
-        }
-    }
-
-    [HarmonyPatch]
-    public static class Plant_TickLong_Knowledge_Patch
-    {
-        public static IEnumerable<MethodBase> TargetMethods()
-        {
-            MethodBase method = AccessTools.Method(typeof(Plant), "TickLong");
-            if (method != null) yield return method;
-        }
-
-        public static void Postfix(Plant __instance)
-        {
-            if (__instance?.Spawned == true && HorticulturePlantPolicy.IsSupported(__instance.def))
-                HorticultureEventRouter.GrowthObserved(null, __instance);
-        }
-    }
-
     [HarmonyPatch(typeof(Plant), nameof(Plant.GetGizmos))]
     public static class Plant_GetGizmos_MaskEditor_Patch
     {
@@ -324,7 +263,6 @@ namespace HorticultureNovelSeeds
                 map = __instance.Map,
                 harvester = by,
                 plant = __instance,
-                yield = harvestable || cutting ? __instance.YieldNow() : 0,
                 regularHarvest = regularHarvest,
                 cutting = cutting,
                 harvestable = harvestable,
@@ -340,31 +278,18 @@ namespace HorticultureNovelSeeds
 
         public static void Postfix(Plant __instance, Pawn by, PlantDestructionMode plantDestructionMode, HarvestState __state)
         {
-            if (__state?.regularHarvest == true)
-            {
-                if (!__state.pendingDiscoveryHarvest)
-                    HorticultureEventRouter.HarvestCompleted(by, __state.plant, __state.yield, __state.harvestable,
-                        __state.perennialResetGrowth > 0f, __state.perennialResetGrowth > 0f, __state.eventIdentity);
-            }
-            else if (__state?.cutting == true)
-            {
-                HorticultureEventRouter.CuttingCompleted(by, __state.plant, __state.yield, __state.eventIdentity);
-            }
             if (__state?.pendingDiscoveryHarvest == true)
             {
-                string origin = __state.plant?.sown == false ? "wild" :
-                    __state.lineageParentIds?.Count > 0 ? "cross-pollination" : "mutation";
-                if (HorticultureEventRouter.NovelSeedDiscovered(by, __state.cropDef, __state.traits, origin,
-                    __state.map, __state.lineageParentIds, __state.eventIdentity, __state.yield,
-                    __state.perennialResetGrowth > 0f, __state.perennialResetGrowth > 0f))
-                    __state.comp?.ClearPendingDiscovery();
-            }
-            if (__state?.shouldSaveSeeds == true)
-            {
-                string origin = __state.plant?.sown == false ? "wild" :
-                    __state.lineageParentIds?.Count > 0 ? "cross-pollination" : "mutation";
-                NovelSeedUtility.DropDiscoverySeed(__state.cropDef, __state.traits, __state.position, __state.map,
-                    __state.lineageParentIds, origin);
+                // Seed recovery is a gameplay transaction, independent of the journal.
+                bool recovered = !__state.shouldSaveSeeds;
+                if (__state.shouldSaveSeeds && by?.Faction?.IsPlayer == true)
+                {
+                    string origin = __state.plant?.sown == false ? "wild" :
+                        __state.lineageParentIds?.Count > 0 ? "cross-pollination" : "mutation";
+                    recovered = NovelSeedUtility.DropDiscoverySeed(__state.cropDef, __state.traits, __state.position, __state.map,
+                        __state.lineageParentIds, origin);
+                }
+                if (recovered) __state.comp?.ClearPendingDiscovery();
             }
             if (__state?.perennialResetGrowth > 0f && __instance?.Destroyed == false)
             {
@@ -413,9 +338,6 @@ namespace HorticultureNovelSeeds
                     __instance.TakeDamage(new DamageInfo(DamageDefOf.Rotting, amount));
                 }
             }
-            if (GenTemperature.TryGetTemperatureForCell(__instance.Position, __instance.Map, out float temperature))
-                HorticultureEventRouter.EnvironmentalStressObserved(null, __instance, temperature,
-                    temperature < __instance.def.plant.minOptimalGrowthTemperature, false);
         }
     }
 
@@ -537,7 +459,6 @@ namespace HorticultureNovelSeeds
     {
         public static void Postfix(Pawn actor, Plant plant, ref float __result)
         {
-            if (plant != null) __result *= PlantKnowledgeUtility.PlantWorkSpeedFactor(actor, plant.def);
             CompPlantVariety comp = plant?.TryGetComp<CompPlantVariety>();
             if (comp == null || !comp.HasAnyTraits)
             {
@@ -596,7 +517,7 @@ namespace HorticultureNovelSeeds
             IntVec3 cell = driver.job.GetTarget(TargetIndex.A).Cell;
             Map map = driver.pawn?.Map;
             float traitWork = NovelSeedUtility.SowingWorkFactor(plantDef, cell, map);
-            float factor = traitWork / PlantKnowledgeUtility.PlantWorkSpeedFactor(driver.pawn, plantDef);
+            float factor = traitWork;
             return Mathf.Max(1f, baseWork * factor);
         }
 
