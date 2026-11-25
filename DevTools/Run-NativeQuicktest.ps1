@@ -18,7 +18,7 @@ $stage=Join-Path $repo ('DevTools\Staged\Native17Package-'+$run)
 $installed=Join-Path $game ('Mods\HNS-NativeFixture-'+$run)
 $outDir=Join-Path $repo ('DevTools\TestResults\native-'+$run)
 $receipt=[ordered]@{schemaVersion=1;run=$run;loadout=$Loadout;status='BLOCKED';reason='NOT_STARTED';sourceHead=$null;version=$null;assemblySha256=$null;activePackages=@();optimizerIdentities=@();stages=@();fixtureLine=$null;processId=$null;testProcessStopped=$false;testPackageRemoved=$false;normalConfigUnchanged=$null;normalPrefsUnchanged=$null;normalSavesUnchanged=$null;isolatedSaveDirectory=$temp;startedUtc=$null;finishedUtc=$null}
-$proc=$null; $installedByRun=$false; $before=$null; $started=$null
+$proc=$null; $installedByRun=$false; $before=$null; $started=$null; $capturedPlayerBaseline=$false
 $utf8=New-Object Text.UTF8Encoding($false)
 function Assert-Closed {
     if (@(Get-CimInstance Win32_Process -Filter "Name='RimWorld.exe' OR Name='RimWorldWin64.exe'").Count -ne 0) {throw 'RIMWORLD_ALREADY_RUNNING'}
@@ -61,7 +61,7 @@ try {
     $packages=@($pre.packagesBeforeCandidate)+@('lan.horticulture.novelseeds')+@($pre.packagesAfterCandidate)
     $receipt.activePackages=$packages
     $receipt.gameVersion=$pre.gameVersion
-    $before=@(Save-Inventory);$cfgBefore=Hash-File $normalConfig;$prefsBefore=Hash-File $normalPrefs
+    $before=@(Save-Inventory);$cfgBefore=Hash-File $normalConfig;$prefsBefore=Hash-File $normalPrefs;$capturedPlayerBaseline=$true
     if(!(Test-Path -LiteralPath $normalConfig -PathType Leaf)){throw 'NORMAL_CONFIG_VERSION_UNAVAILABLE'}
     $gameVersion=[string]([xml](Get-Content -LiteralPath $normalConfig -Raw)).ModsConfigData.version
     if($gameVersion -notmatch '^1\.7\.\d+( rev\d+)?$'){throw 'NORMAL_CONFIG_VERSION_MISMATCH'}
@@ -101,9 +101,9 @@ try {
     New-Item -ItemType Directory -Path $configDir -Force|Out-Null
     $config=New-Object Xml.XmlDocument
     $config.LoadXml('<ModsConfigData><version/><activeMods/><knownExpansions/></ModsConfigData>')
-    $config.ModsConfigData.version=$gameVersion
-    foreach($pkg in $packages){$node=$config.CreateElement('li');$node.InnerText=$pkg;$null=$config.ModsConfigData.activeMods.AppendChild($node)}
-    foreach($dlc in @('royalty','ideology','biotech','anomaly','odyssey')){$node=$config.CreateElement('li');$node.InnerText='ludeon.rimworld.'+$dlc;$null=$config.ModsConfigData.knownExpansions.AppendChild($node)}
+    $config.DocumentElement.SelectSingleNode("version").InnerText=$gameVersion
+    foreach($pkg in $packages){$node=$config.CreateElement('li');$node.InnerText=$pkg;$null=$config.DocumentElement.SelectSingleNode("activeMods").AppendChild($node)}
+    foreach($dlc in @('royalty','ideology','biotech','anomaly','odyssey')){$node=$config.CreateElement('li');$node.InnerText='ludeon.rimworld.'+$dlc;$null=$config.DocumentElement.SelectSingleNode("knownExpansions").AppendChild($node)}
     $config.Save((Join-Path $configDir 'ModsConfig.xml'))
     $prefs='<PrefsData><runInBackground>True</runInBackground><fullscreen>False</fullscreen><screenWidth>1280</screenWidth><screenHeight>720</screenHeight><volumeMaster>0</volumeMaster><devMode>True</devMode><adaptiveTrainingEnabled>False</adaptiveTrainingEnabled><autosaveIntervalDays>7</autosaveIntervalDays></PrefsData>'
     [IO.File]::WriteAllText((Join-Path $configDir 'Prefs.xml'),$prefs,$utf8)
@@ -170,7 +170,7 @@ finally{
             $receipt.testPackageRemoved=!(Test-Path -LiteralPath $installed)
         }catch{$receipt.status='FAIL';$receipt.reason='PACKAGE_CLEANUP_FAILED '+$_.Exception.Message}
     }elseif(!$installedByRun){$receipt.testPackageRemoved=$true}
-    if($before -ne $null){
+    if($capturedPlayerBaseline){
         $receipt.normalConfigUnchanged=(Hash-File $normalConfig) -eq $cfgBefore
         $receipt.normalPrefsUnchanged=(Hash-File $normalPrefs) -eq $prefsBefore
         $receipt.normalSavesUnchanged=((@(Save-Inventory) -join [char]10) -ceq ($before -join [char]10))
