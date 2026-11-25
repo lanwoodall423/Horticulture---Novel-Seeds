@@ -1,5 +1,7 @@
 # ProjectNexus onboarding
 
+> See [ROADMAP.md](../ROADMAP.md) for the standalone 1.7 target. The current preflight still reports the old dependencies as blockers; the migration plans to remove Knowledge Framework and Insight Canvas rather than port them, with optional Progression: Agriculture proposed.
+
 Project ID: `horticulture`. The repository's current release supports RimWorld
 1.6. Native 1.7 migration is a development candidate, not a release.
 

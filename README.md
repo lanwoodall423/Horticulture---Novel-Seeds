@@ -1,5 +1,7 @@
 # Horticulture - Novel Seeds
 
+The standalone RimWorld 1.7 / Waylith development plan is tracked in [ROADMAP.md](ROADMAP.md). The current release and requirements below remain the 1.6 baseline until qualification.
+
 Novel Seeds makes plant discovery part of colony life. Plants can develop unusual traits, and mature discoveries can be preserved as named cultivars that you can select from ordinary growing-zone plant menus.
 
 ## How it works

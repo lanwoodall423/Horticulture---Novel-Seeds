@@ -1,5 +1,7 @@
 # Plant Color Inheritance Architecture
 
+> **Scope:** Existing RimWorld 1.6 architecture. The planned standalone 1.7 dependency, UI, knowledge and rendering changes are in [ROADMAP.md](ROADMAP.md); they are not implemented by this document.
+
 ## Coordinated knowledge boundary
 
 `HorticultureKnowledgeAdapter` is the only production boundary for the Knowledge Framework Plants
