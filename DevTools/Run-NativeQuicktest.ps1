@@ -76,6 +76,7 @@ try {
     foreach($d in @('Defs','Languages','AutoMasks','Defaults')){
         Copy-Item -LiteralPath (Join-Path $repo ('1.6\'+$d)) -Destination (Join-Path $stage '1.7') -Recurse
     }
+    Copy-Item -LiteralPath (Join-Path $repo '1.7\Defs\ThingDefs_Items.xml') -Destination (Join-Path $stage '1.7\Defs\ThingDefs_Items.xml') -Force
     Copy-Item -LiteralPath $dll -Destination (Join-Path $stage '1.7\Assemblies\HorticultureNovelSeeds.dll')
     $about=@'
 <ModMetaData>
@@ -83,7 +84,7 @@ try {
   <author>Lan</author>
   <packageId>lan.horticulture.novelseeds</packageId>
   <supportedVersions><li>1.7</li></supportedVersions>
-  <modDependencies><li><packageId>brrainz.harmony</packageId><displayName>Harmony</displayName></li></modDependencies>
+  <modDependencies><li><packageId>brrainz.harmony</packageId><displayName>Harmony</displayName><steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl></li></modDependencies>
   <loadAfter><li>brrainz.harmony</li></loadAfter>
   <description>Unreleased test candidate; do not enable in a real colony.</description>
 </ModMetaData>
