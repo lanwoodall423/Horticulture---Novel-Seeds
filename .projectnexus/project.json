@@ -35,14 +35,14 @@
       },
       {
         "profileId": "runtime-smoke",
-        "title": "RimTest-managed build and gameplay smoke",
+        "title": "Native isolated build and gameplay smoke",
         "checkIds": [],
         "procedureIds": [
           "source.traits",
           "source.visuals",
           "source.integration",
-          "rimtest.doctor",
-          "rimtest.smoke"
+          "native.preflight",
+          "native.smoke"
         ]
       },
       {
@@ -50,9 +50,18 @@
         "title": "Future RimWorld 1.7 rendering qualification",
         "checkIds": [],
         "procedureIds": [
-          "rimtest.doctor",
-          "rimtest.smoke",
+          "native.preflight",
+          "native.smoke",
           "waylith.visuals"
+        ]
+      },
+      {
+        "profileId": "rimtest-optional",
+        "title": "Optional RimTest integration",
+        "checkIds": [],
+        "procedureIds": [
+          "rimtest.doctor",
+          "rimtest.smoke"
         ]
       }
     ],
@@ -98,7 +107,7 @@
         "title": "RimTest toolchain preflight",
         "steps": [
           "Run rimtest doctor --json from the candidate checkout using the supported installed RimLiaison launcher.",
-          "A blocked or missing promoted toolchain is a blocker, not a pass. Do not substitute a manual game launch or DLL copy."
+          "A blocked or missing promoted toolchain is a blocker for optional RimTest validation, not a pass; use the separate native profile for 1.7 development."
         ],
         "requirements": {
           "platform": "win32",
@@ -121,13 +130,38 @@
         "procedureId": "waylith.visuals",
         "title": "Future Waylith rendering acceptance",
         "steps": [
-          "After an actual 1.7 implementation, validate the exact 1.7 candidate and dependencies through RimTest; this procedure is not evidence that 1.7 is supported.",
+          "After an actual 1.7 implementation, validate the exact 1.7 candidate and dependencies using the native isolated workflow; this procedure does not establish current 1.7 support.",
           "Inspect vanilla and modded plants, wind, growth stages, masks, produce, lighting, snow, shadows and UI preview. Compare render cost and memory on representative fields.",
           "Record screenshots, shader compile status, candidate identity and profiler evidence; preserve normal vanilla fallback."
         ],
         "requirements": {
           "platform": "win32",
           "hardware": []
+        }
+      },
+      {
+        "procedureId": "native.preflight",
+        "title": "Native 1.7 performance loadout preflight",
+        "steps": [
+          "Run DevTools/Get-NativeTestLoadout.ps1 with AllPerformance (default); verify installed optimizer identities and separate dependency readiness.",
+          "Retain Minimal and BothLoading for diagnostics. Do not launch if the exact candidate or dependencies are unqualified, or another RimWorld process is running."
+        ],
+        "requirements": {
+          "hardware": [],
+          "platform": "win32"
+        }
+      },
+      {
+        "procedureId": "native.smoke",
+        "title": "Isolated native Quicktest gameplay evidence",
+        "steps": [
+          "Once ported, build an exact Git-stamped candidate with .NET 10, stage and hash-check deployment with backup; only when RimWorld is closed.",
+          "Use a disposable save-data folder and explicit AllPerformance loadout; verify loaded package IDs, order, assembly hashes and Missile Girl patches.",
+          "Require genuine fixture outcomes and exact loaded build; stop only the owned process; preserve ordinary config, prefs and saves. Missing fixture or evidence is BLOCKED."
+        ],
+        "requirements": {
+          "hardware": [],
+          "platform": "win32"
         }
       }
     ]

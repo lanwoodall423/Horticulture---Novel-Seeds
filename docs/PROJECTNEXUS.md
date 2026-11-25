@@ -1,15 +1,61 @@
 # ProjectNexus onboarding
 
-Project ID: `horticulture`. The repository remains a RimWorld 1.6 content mod; this registration does not port it to 1.7.
+Project ID: `horticulture`. The repository's current release supports RimWorld
+1.6. Native 1.7 migration is a development candidate, not a release.
 
 ## Development layout
 
-Keep the canonical checkout under `C:/Projects/Horticulture---Novel-Seeds`. Put new disposable checkouts under `C:/Projects/Worktrees/Horticulture/<task>` and generated evidence under `C:/Projects/Artifacts/Horticulture/<task>`. Preserve ProjectNexus-managed workspace locations. Never relocate an active checkout or manually deploy assemblies.
+Canonical checkout: `C:/Projects/Horticulture---Novel-Seeds`. New worktrees:
+`C:/Projects/Worktrees/Horticulture/<task>`. Keep generated evidence out of
+tracked source and preserve existing managed workspace locations.
 
-## Validation
+## Native testing (Innovations reference)
 
-The tracked ProjectNexus manifest defines three procedure-based profiles: source regression, RimTest runtime smoke, and future Waylith qualification. Windows PowerShell scripts remain directly runnable by an authorized developer or host agent; ProjectNexus's legacy managed check declaration does not accept shell executables. The manifest intentionally does not disguise those scripts as an executable managed check or grant trust. Record each exit code against the exact candidate. No source check is runtime or visual evidence.
+Routine configuration is AllPerformance, with UltraBoost for gameplay fixtures
+where supported. Run this read-only preflight from an exact candidate:
 
-Run `rimtest doctor --json` and then `rimtest affected --run --json` using the supported RimLiaison launcher as required by AGENTS.md. A promoted toolchain must be present; if doctor fails, stop runtime validation. The existing test catalog and artifact freshness requirements remain authoritative. Older dependency-layout-sensitive scripts need matching external sources; do not silently link or copy dependencies just to make them pass.
+```powershell
+powershell.exe -NoProfile -File DevTools/Get-NativeTestLoadout.ps1
+```
 
-The installed game is not proof that the mod is compatible. Do not change supported versions until actual 1.7 migration and validation.
+The preflight checks the installed game, Harmony and optimizer package IDs,
+version folders and SHA-256 hashes. It separately reports whether the 1.7
+candidate/dependencies are ready; PASS means only the performance loadout
+is available, not a game run. Loadout Minimal excludes all three performance
+mods. BothLoading excludes Missile Girl for diagnostic comparisons.
+
+| Order | Package | Notes |
+| --- | --- | --- |
+| 1 | brrainz.harmony | 1.7 assembly |
+| 2 | aruclya.rimworldloadingoptimizer | Workshop 3817423183 |
+| 3 | taranchuk.fastergameloading | Workshop 3652938473 |
+| 4 | ludeon.rimworld | Core |
+| 5 | Horticulture dependencies, then exact Horticulture candidate | Verify actual dependencies before launch |
+| Last | vr.missilegirl | Workshop 3712928623, owner-qualified 1.6-declared exception |
+
+Missile Girl must match the exact assembly qualified by Innovations or be
+requalified. At runtime confirm active package order, loaded assembly hash
+and registered Missile Girl Harmony patches. Do not change Workshop metadata.
+Retain a minimal reference run for unexplained failures and shader regressions.
+
+Use the native workflow from Innovations: source regressions; .NET 10 reference
+build; exact Git-stamped package; guarded staged deployment only when all
+RimWorld processes have closed; isolated Quicktest with a unique save-data
+folder, explicit ModsConfig and Prefs; per-run evidence and process-owned
+cleanup. No separate simultaneous instance, no global kill, no modifications
+to player saves/config/preferences. The normal game log is shared by the engine.
+Verify the candidate actually loaded before accepting evidence. Native runtime
+fixture and 1.7 build are not implemented by this preflight.
+
+## Validation profiles
+
+The ProjectNexus manifest records source regression, native runtime smoke and
+Waylith qualification, plus optional legacy RimTest integration. Existing
+PowerShell scripts are invoked directly by an authorized developer/host agent;
+they are not disguised as managed legacy check executables. Record individual
+exit codes. Preserve the existing 1.6 content and test catalogs.
+
+Knowledge Framework and Insight Canvas still need 1.7 qualification.
+Progression: Agriculture declares 1.7, but its actual load folders and API
+compatibility also require validation. Do not force-load old assemblies or
+change support metadata simply to make a test start.

@@ -1,22 +1,24 @@
 # Content Mod Development
 
-This repository is a RimWorld content mod.
+This repository is a RimWorld content mod. Preserve the existing 1.6 release.
 
-For source changes, RimTest owns build, generation, local deployment,
-RimWorld lifecycle, affected-test selection, and runtime validation.
+For the 1.7 / Waylith development branch, use the native Innovations-style
+workflow: .NET 10 build, standalone/source regressions, exact commit-stamped
+artifact, guarded package installation and isolated RimWorld Quicktest.
+RimTest/RimLiaison is optional for this branch, not a prerequisite. Keep its
+existing catalogs for future integration.
 
-Use:
+Default routine tests use the Innovations AllPerformance loadout and native
+UltraBoost where applicable. See docs/PROJECTNEXUS.md and
+DevTools/Get-NativeTestLoadout.ps1. Use Minimal to diagnose optimizer effects.
 
-rimtest doctor --json
+Never launch or deploy while another RimWorld instance is running. Do not
+close the player's game, alter ordinary saves/configuration/preferences,
+or manually overwrite the live mod. Only stop the test process that the
+runner itself created and whose identity is verified. Runtime logs are
+shared by this engine, so concurrent sessions are not supported.
 
-before validation, and normally:
-
-rimtest affected --run --json
-
-after source changes.
-
-Do not manually copy assemblies into the live mod directory, manually
-substitute RimWorld launches for RimTest lifecycle operations, or call
-RimContext/DevBridge2 directly when RimTest owns the workflow.
-
-Artifact freshness must be proven before runtime results are accepted.
+Artifact freshness, actual loaded package identities, genuine runtime
+evidence and safe cleanup must be proven before runtime results are accepted.
+A loadout preflight or static regression is not a gameplay or shader pass.
+Do not claim 1.7 support before porting and qualifying required dependencies.
