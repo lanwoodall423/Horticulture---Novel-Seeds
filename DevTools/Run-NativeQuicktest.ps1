@@ -62,6 +62,7 @@ try {
     $receipt.activePackages=$packages
     $receipt.gameVersion=$pre.gameVersion
     $before=@(Save-Inventory);$cfgBefore=Hash-File $normalConfig;$prefsBefore=Hash-File $normalPrefs;$capturedPlayerBaseline=$true
+    [IO.File]::WriteAllText((Join-Path $outDir 'preservation-before.json'),([ordered]@{configHash=$cfgBefore;prefsHash=$prefsBefore;saves=@($before)}|ConvertTo-Json -Depth 3),$utf8)
     if(!(Test-Path -LiteralPath $normalConfig -PathType Leaf)){throw 'NORMAL_CONFIG_VERSION_UNAVAILABLE'}
     $gameVersion=[string]([xml](Get-Content -LiteralPath $normalConfig -Raw)).ModsConfigData.version
     if($gameVersion -notmatch '^1\.7\.\d+( rev\d+)?$'){throw 'NORMAL_CONFIG_VERSION_MISMATCH'}
@@ -138,7 +139,7 @@ try {
             }
             $final=$lines|Where-Object {$_.Contains($prefix+'PASS ') -or $_.Contains($prefix+'FAIL ')}|Select-Object -Last 1
             if($final){
-                $receipt.fixtureLine=$final
+                $receipt.fixtureLine=[string]::new(([string]$final).ToCharArray())
                 $result=$final.Substring($final.IndexOf($prefix)+$prefix.Length)
                 if($result -match '^(PASS|FAIL)\s+(.+)$'){$receipt.status=$Matches[1];$receipt.reason=$Matches[2]}
                 if($receipt.status -eq 'PASS' -and (($receipt.stages -join ',') -ne 'Startup,HarvestAndSeedRecovery,Registration,CultivarHarvest,SaveReload')){$receipt.status='FAIL';$receipt.reason='INCOMPLETE_STAGE_EVIDENCE'}
@@ -178,8 +179,9 @@ finally{
         if(!$receipt.normalConfigUnchanged -or !$receipt.normalPrefsUnchanged -or !$receipt.normalSavesUnchanged){$receipt.status='FAIL';$receipt.reason='PLAYER_DATA_PRESERVATION_NOT_PROVEN'}
     }
     if($proc -ne $null -and $receipt.testProcessStopped -and (Test-Path -LiteralPath $log -PathType Leaf)){Copy-Item -LiteralPath $log -Destination (Join-Path $outDir 'player.log')}
+    [IO.File]::WriteAllText((Join-Path $outDir 'preservation-result.json'),([ordered]@{testProcessStopped=$receipt.testProcessStopped;testPackageRemoved=$receipt.testPackageRemoved;normalConfigUnchanged=$receipt.normalConfigUnchanged;normalPrefsUnchanged=$receipt.normalPrefsUnchanged;normalSavesUnchanged=$receipt.normalSavesUnchanged}|ConvertTo-Json -Depth 2),$utf8)
     $receipt.finishedUtc=[DateTime]::UtcNow.ToString('o')
-    $json=$receipt|ConvertTo-Json -Depth 8
+    $json=$receipt|ConvertTo-Json -Depth 4
     [IO.File]::WriteAllText((Join-Path $outDir 'receipt.json'),$json,$utf8)
     Write-Output $json
 }
