@@ -2,7 +2,7 @@
 
 **Updated:** 2026-11-25
 **Target:** standalone RimWorld 1.7 / Waylith development
-**Status:** standalone .NET 10 candidate compiles; native UI and journal implemented in first pass; runtime qualification and shader work pending. See [native development notes](docs/NATIVE17.md).
+**Status:** standalone .NET 10 candidate compiles; native UI and journal implemented in first pass; five-stage native gameplay fixture passed; asset fix, complete runner receipt, full runtime qualification and shader work pending. See [native development notes](docs/NATIVE17.md).
 
 This is the canonical forward-looking development plan. [The release checklist](RELEASE_CHECKLIST.md), [current architecture](architect.md), [compatibility policy](docs/COMPATIBILITY.md), and [RC test plan](docs/RC_TEST_PLAN.md) describe the existing 1.6 release baseline unless explicitly updated for 1.7. Do not interpret this roadmap as a support declaration, completed implementation, or permission to publish a release.
 
@@ -155,7 +155,7 @@ Follow [the ProjectNexus guide](docs/PROJECTNEXUS.md) and Innovations' standalon
 
 ## 8. Phased delivery and exit gates
 
-Native loadout preflight and initial compilation are established. Full exit gates remain open until runtime, UI, save, compatibility and rendering evidence is recorded. Do not mark phases complete without evidence.
+Native loadout preflight, initial compilation and a five-stage native gameplay fixture are established (see docs/NATIVE17.md for exact evidence and limitations). Full exit gates remain open until runtime, UI, save, compatibility and rendering evidence is recorded. Do not mark phases complete without evidence.
 
 | Phase | Work | Exit gate / dependency |
 | --- | --- | --- |

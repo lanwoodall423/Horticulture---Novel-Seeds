@@ -34,7 +34,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuick
 
 The runner requires clean source, an absent Horticulture install, and an exact
 performance loadout. It creates a unique temporary test-only mod folder, copies
-only the legacy content folders into its versioned 1.7 package, verifies the
+the legacy content folders and the standalone 1.7 seed-pack definition into its versioned 1.7 package, verifies the
 commit-stamped loaded assembly, uses a disposable save-data directory, and stops
 only the owned process. No public release packaging or normal game launch is
 supported by this runner. Results live in ignored DevTools/TestResults. The
@@ -44,3 +44,54 @@ The legacy release builder and Framework/Canvas-specific source probes target
 1.6 and are not a native qualification mechanism. Use main for the existing
 1.6 release. A separate 1.7 production package builder and migration tests are
 still required.
+
+## First native gameplay evidence (2026-11-25)
+
+Tested commit f743b1cc2c6adc533de8be44c58531cf6289f9cd, RimWorld
+1.7.5014 rev1195, run d0ca0fe8ad0240a18a1b62b72e996419.
+Loaded DLL SHA256:
+CF33C08904C7B8E91C4C7ECB69B9AABA702AF85538CA5AD51CD8CD44B6057ACD.
+
+The in-game fixture reported PASS for Startup, HarvestAndSeedRecovery,
+Registration, CultivarHarvest, and SaveReload. Startup verified actual
+active package order, isolated save path, loaded DLL hash, absence of
+framework assembly references, and the exact Missile Girl assembly/patches;
+the fixture ran with AllPerformance and UltraBoost. The first crop's
+pending trait was injected for the fixture; harvest, seed recovery and
+registration were real gameplay operations. This does not qualify natural
+mutation frequency, sowing, cross-pollination, UI interaction or old saves.
+The test saved and reloaded a 4,466,196-byte disposable colony.
+
+The raw game log is retained locally under the ignored run result directory.
+SHA256 of the captured log: 8A6A021F2327E31B946107C04A9627297D70822A3F60A0110FE9354D94ECEEA6.
+
+The first package exposed legacy SeedBundle texture and SeedBundles storage
+category references. Gameplay passed despite those errors. Commit 5b79ea6
+replaces the category with HNS_SeedPacks and uses vanilla rice artwork as a
+temporary standalone texture; this content fix requires another runtime test.
+Installed inactive Workshop duplicates also produced unrelated scan errors.
+
+The runner stopped its owned game process and removed its temporary package
+(both independently checked), then stalled in final JSON receipt creation.
+The host operation was cancelled after cleanup. A complete preservation
+receipt is unavailable; do not count this as a full acceptance pass.
+Commit 1d80f89 detaches the raw log line from PowerShell metadata and writes
+separate preservation checkpoints. The plain-log serialization check passed
+against the captured PASS line, but the revised runner needs end-to-end
+qualification. No normal save or preferences were intentionally modified.
+
+## Waylith investigation
+
+Inspected installed Core ShaderDefs/Shaders.Map.xml and
+Shaders/Map/CutoutPlant.frag.glsl and PlantWindSway.vert.glsl. The native
+plant pipeline uses ShaderDef, a wind-aware vertex program, material
+uniforms and samplers in descriptor set 2, a 0.35 alpha cutoff, and a
+per-plant seed carried in UV0.z for seasonal coloration. PlantVisualUtility
+already passes the appropriate wind exposure colors and UVZ payload into
+Printer_Plane. Do not repurpose those channels blindly.
+
+The next isolated shader proof should retain vanilla wind and alpha/seasonal
+behavior while adding controlled phenotype parameters, compare against the
+existing CPU compositor, and only then introduce masks/procedural patterns.
+Shader code, visual comparisons and batching are not yet implemented or
+qualified. No Core shader files were changed.
