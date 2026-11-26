@@ -45,6 +45,8 @@ namespace HorticultureNovelSeeds
             expectedPackages = Environment.GetEnvironmentVariable("HNS_NATIVE_PACKAGES");
             expectedDll = Environment.GetEnvironmentVariable("HNS_NATIVE_DLL");
             version = typeof(NativeQuicktestFixture).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+            bool shaderProbe = Environment.GetEnvironmentVariable("HNS_NATIVE_SHADER_PROBE") == "1";
+            Environment.SetEnvironmentVariable("HNS_NATIVE_SHADER_PROBE", null);
             Environment.SetEnvironmentVariable("HNS_NATIVE_RUN", null);
             LongEventHandler.ExecuteWhenFinished(() =>
             {
@@ -64,6 +66,12 @@ namespace HorticultureNovelSeeds
                         string hash = Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(asm.Location)));
                         Require(hash == "1E9DDB56998F7B963962095944AF3AEABBC90826E55BD53CB8083D3CC7E4B0B3", "Missile Girl assembly identity");
                         Require(Harmony.GetAllPatchedMethods().Any(m => Harmony.GetPatchInfo(m)?.Owners.Any(o => o.StartsWith("VR.MissileGirl", StringComparison.OrdinalIgnoreCase)) == true), "Missile Girl patches");
+                    }
+                    if (shaderProbe)
+                    {
+                        Stage("Startup");
+                        NativeShaderProbe.Begin(root, Stage, Finish);
+                        return;
                     }
                     boost = typeof(TickManager).GetField("UltraSpeedBoost", BindingFlags.Static | BindingFlags.NonPublic);
                     Require(boost?.FieldType == typeof(bool), "UltraBoost available");
@@ -99,6 +107,8 @@ namespace HorticultureNovelSeeds
         private bool Isolated() => !string.IsNullOrEmpty(root) &&
             Path.GetFullPath(GenFilePaths.SaveDataFolderPath).TrimEnd(Path.DirectorySeparatorChar).Equals(Path.GetFullPath(root).TrimEnd(Path.DirectorySeparatorChar), StringComparison.OrdinalIgnoreCase) &&
             string.Join(",", LoadedModManager.RunningModsListForReading.Select(m => m.PackageIdPlayerFacing)).Equals(expectedPackages, StringComparison.OrdinalIgnoreCase);
+
+        public override void GameComponentUpdate() => NativeShaderProbe.Update();
 
         public override void GameComponentTick()
         {

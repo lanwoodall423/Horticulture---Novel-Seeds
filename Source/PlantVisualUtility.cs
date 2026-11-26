@@ -293,6 +293,11 @@ namespace HorticultureNovelSeeds
 
         private static Material GetStyledMaterial(Material source, PlantVisualParameters visual, Plant plant, out bool preservesWind, int isolatedMaskLayer = -2, int variationIndex = 0)
         {
+            if (WaylithPhenotypeShader.TryForPlant(source, visual, plant, isolatedMaskLayer, variationIndex, out var shaderMaterial))
+            {
+                preservesWind = true;
+                return shaderMaterial;
+            }
             Texture2D sourceTexture = source.mainTexture as Texture2D;
             int maskKey = unchecked((PlantMaskUtility.MaskHash(plant.def, variationIndex) * 397 ^ NovelSeedUtility.PlantTextureVisualHash(plant.TryGetComp<CompPlantVariety>())) * 31 + isolatedMaskLayer);
             StyledMaterialKey key = new StyledMaterialKey(sourceTexture != null ? sourceTexture.GetInstanceID() : source.GetInstanceID(), source.shader.GetInstanceID(), source.renderQueue, maskKey, visual);

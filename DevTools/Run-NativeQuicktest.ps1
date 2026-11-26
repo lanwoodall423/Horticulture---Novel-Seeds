@@ -1,7 +1,8 @@
 [CmdletBinding()]
 param(
     [ValidateSet('AllPerformance','BothLoading','Minimal')][string]$Loadout='AllPerformance',
-    [ValidateRange(30,300)][int]$TimeoutSeconds=180
+    [ValidateRange(30,300)][int]$TimeoutSeconds=180,
+    [switch]$ShaderProbe
 )
 $ErrorActionPreference='Stop'
 $repo=Split-Path -Parent $PSScriptRoot
@@ -17,7 +18,7 @@ $temp=Join-Path ([IO.Path]::GetTempPath()) ('hns-native-'+$run)
 $stage=Join-Path $repo ('DevTools\Staged\Native17Package-'+$run)
 $installed=Join-Path $game ('Mods\HNS-NativeFixture-'+$run)
 $outDir=Join-Path $repo ('DevTools\TestResults\native-'+$run)
-$receipt=[ordered]@{schemaVersion=1;run=$run;loadout=$Loadout;status='BLOCKED';reason='NOT_STARTED';sourceHead=$null;version=$null;assemblySha256=$null;activePackages=@();optimizerIdentities=@();stages=@();fixtureLine=$null;processId=$null;testProcessStopped=$false;testPackageRemoved=$false;normalConfigUnchanged=$null;normalPrefsUnchanged=$null;normalSavesUnchanged=$null;isolatedSaveDirectory=$temp;startedUtc=$null;finishedUtc=$null}
+$receipt=[ordered]@{schemaVersion=1;run=$run;loadout=$Loadout;shaderProbe=[bool]$ShaderProbe;status='BLOCKED';reason='NOT_STARTED';sourceHead=$null;version=$null;assemblySha256=$null;activePackages=@();optimizerIdentities=@();stages=@();fixtureLine=$null;processId=$null;testProcessStopped=$false;testPackageRemoved=$false;normalConfigUnchanged=$null;normalPrefsUnchanged=$null;normalSavesUnchanged=$null;isolatedSaveDirectory=$temp;startedUtc=$null;finishedUtc=$null}
 $proc=$null; $installedByRun=$false; $before=$null; $started=$null; $capturedPlayerBaseline=$false
 $utf8=New-Object Text.UTF8Encoding($false)
 function Assert-Closed {
@@ -78,6 +79,10 @@ try {
         Copy-Item -LiteralPath (Join-Path $repo ('1.6\'+$d)) -Destination (Join-Path $stage '1.7') -Recurse
     }
     Copy-Item -LiteralPath (Join-Path $repo '1.7\Defs\ThingDefs_Items.xml') -Destination (Join-Path $stage '1.7\Defs\ThingDefs_Items.xml') -Force
+    if($ShaderProbe){
+        Copy-Item -LiteralPath (Join-Path $repo 'DevTools\ShaderPrototype\Defs\HNS_PhenotypeShaders.xml') -Destination (Join-Path $stage '1.7\Defs')
+        Copy-Item -LiteralPath (Join-Path $repo 'DevTools\ShaderPrototype\Shaders') -Destination (Join-Path $stage '1.7') -Recurse
+    }
     Copy-Item -LiteralPath $dll -Destination (Join-Path $stage '1.7\Assemblies\HorticultureNovelSeeds.dll')
     $about=@'
 <ModMetaData>
@@ -117,6 +122,7 @@ try {
     $psi.EnvironmentVariables['HNS_NATIVE_RUN']=$run
     $psi.EnvironmentVariables['HNS_NATIVE_PACKAGES']=($packages -join ',')
     $psi.EnvironmentVariables['HNS_NATIVE_DLL']=$sha
+    if($ShaderProbe){$psi.EnvironmentVariables['HNS_NATIVE_SHADER_PROBE']='1'}
     $receipt.startedUtc=[DateTime]::UtcNow.ToString('o')
     $proc=[Diagnostics.Process]::Start($psi)
     $started=$proc.StartTime
@@ -142,7 +148,8 @@ try {
                 $receipt.fixtureLine=[string]::new(([string]$final).ToCharArray())
                 $result=$final.Substring($final.IndexOf($prefix)+$prefix.Length)
                 if($result -match '^(PASS|FAIL)\s+(.+)$'){$receipt.status=$Matches[1];$receipt.reason=$Matches[2]}
-                if($receipt.status -eq 'PASS' -and (($receipt.stages -join ',') -ne 'Startup,HarvestAndSeedRecovery,Registration,CultivarHarvest,SaveReload')){$receipt.status='FAIL';$receipt.reason='INCOMPLETE_STAGE_EVIDENCE'}
+                $requiredStages=if($ShaderProbe){'Startup,ShaderPixelParity,ShaderFallback,ShaderField'}else{'Startup,HarvestAndSeedRecovery,Registration,CultivarHarvest,SaveReload'}
+                if($receipt.status -eq 'PASS' -and (($receipt.stages -join ',') -ne $requiredStages)){$receipt.status='FAIL';$receipt.reason='INCOMPLETE_STAGE_EVIDENCE'}
                 break
             }
         }
@@ -180,6 +187,9 @@ finally{
     }
     if($proc -ne $null -and $receipt.testProcessStopped -and (Test-Path -LiteralPath $log -PathType Leaf)){Copy-Item -LiteralPath $log -Destination (Join-Path $outDir 'player.log')}
     [IO.File]::WriteAllText((Join-Path $outDir 'preservation-result.json'),([ordered]@{testProcessStopped=$receipt.testProcessStopped;testPackageRemoved=$receipt.testPackageRemoved;normalConfigUnchanged=$receipt.normalConfigUnchanged;normalPrefsUnchanged=$receipt.normalPrefsUnchanged;normalSavesUnchanged=$receipt.normalSavesUnchanged}|ConvertTo-Json -Depth 2),$utf8)
+    if($ShaderProbe -and (Test-Path -LiteralPath $temp)){
+        foreach($file in Get-ChildItem -LiteralPath $temp -Filter 'HNS-shader-*.png' -File){Copy-Item -LiteralPath $file.FullName -Destination $outDir}
+    }
     $receipt.finishedUtc=[DateTime]::UtcNow.ToString('o')
     $json=$receipt|ConvertTo-Json -Depth 4
     [IO.File]::WriteAllText((Join-Path $outDir 'receipt.json'),$json,$utf8)

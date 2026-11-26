@@ -95,3 +95,44 @@ behavior while adding controlled phenotype parameters, compare against the
 existing CPU compositor, and only then introduce masks/procedural patterns.
 Shader code, visual comparisons and batching are not yet implemented or
 qualified. No Core shader files were changed.
+
+## Verified baseline retest (2026-11-25)
+
+Clean commit d23f22e22d8561c9c0ab5f26b5716bba2607c7c4 passed
+AllPerformance, run 1d224df05b1e460fa83938e96d836292, on RimWorld
+1.7.5014 rev1195. All five gameplay stages passed. The runner produced
+its final PASS receipt and the independent preservation checkpoint: test
+process stopped, temporary package removed, normal configuration/preferences
+hashes unchanged, and normal save inventory unchanged. The earlier seed pack
+texture/category/null material errors were absent in the captured log.
+The temporary vanilla rice artwork remains a placeholder.
+
+Candidate DLL SHA256: A5022BF426AB9FA512B8A87BB526BBBDB1354C0BB2623A24F958C485E83746F7.
+Receipt SHA256: 8603C6E7BA44C8205BC22C611FF710D6E82EDDB1773E1978F727682E0B7A9615.
+Player log SHA256: 610DB4876A598AFB8F262EE1077D71B8C9C299C1D77EA8947F9A5320FB28EC53.
+Artifacts are retained in ignored DevTools/TestResults/native-<run>.
+
+## Experimental opaque phenotype shader
+
+The separate test-only ShaderPrototype assets use a unique ShaderDef and
+the installed Core PlantWindSway vertex stage, with Horticulture's own HSV,
+contrast, brightness, saturation, tint, dullness and outline compositor.
+Shader materials retain the source texture and UV transform. WindManager
+registration must be explicit for non-vanilla shader identities. The cache is
+bounded to 128 materials for the process lifetime; it does not evict materials
+that remain in the engine's wind registry.
+
+Activation is limited to the isolated native shader fixture. Seasonal sources,
+translucency, other shaders, semantic/isolated mask layers and unavailable
+layouts continue through the existing CPU path. No Core files are changed.
+No new CPU readback is performed on the shader material path. The fixture
+deliberately disables automatic masks on a disposable test crop to exercise
+the whole-plant shader. It uses GPU swatches and a real field screenshot; GPU
+readback in this fixture is explicitly for testing, not a draw-time behavior.
+Run it separately, with the game closed:
+
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout Minimal -ShaderProbe
+
+Shader files are staged only for that switch. Ordinary gameplay candidates
+remain on the existing renderer. Full seasonal/mask/produce/preview semantics,
+artist controls, batching and performance remain unqualified.
