@@ -132,6 +132,8 @@ try {
     $receipt.retiredLegacyVisualNodes=$artNodes.Count
     Copy-Item -LiteralPath (Join-Path $repo '1.7\Defs\ThingDefs_Items.xml') -Destination (Join-Path $stage '1.7\Defs\ThingDefs_Items.xml') -Force
     Copy-Item -LiteralPath (Join-Path $repo '1.7\Defs\ProceduralPhenotypes.xml') -Destination (Join-Path $stage '1.7\Defs')
+    Copy-Item -LiteralPath (Join-Path $repo '1.7\Defs\BotanicalExpressionShader.xml') -Destination (Join-Path $stage '1.7\Defs')
+    Copy-Item -LiteralPath (Join-Path $repo '1.7\Shaders') -Destination (Join-Path $stage '1.7') -Recurse -Force
     if($ShaderProbe -or $GardenProbe){
         Copy-Item -LiteralPath (Join-Path $repo 'DevTools\ShaderPrototype\Defs\HNS_PhenotypeShaders.xml') -Destination (Join-Path $stage '1.7\Defs')
         Copy-Item -LiteralPath (Join-Path $repo 'DevTools\ShaderPrototype\Shaders') -Destination (Join-Path $stage '1.7') -Recurse

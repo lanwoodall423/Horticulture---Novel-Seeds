@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Defs>
+  <ShaderDef>
+    <defName>HNS_BotanicalExpression</defName>
+    <shaderProgram>
+      <vertexShaderFileName>HNS_BotanicalExpression.vert.glsl</vertexShaderFileName>
+      <fragmentShaderFileName>HNS_BotanicalExpression.frag.glsl</fragmentShaderFileName>
+      <transparent>true</transparent>
+      <depthWrite>true</depthWrite>
+      <renderQueue>2900</renderQueue>
+    </shaderProgram>
+  </ShaderDef>
+</Defs>
