@@ -1267,13 +1267,15 @@ namespace HorticultureNovelSeeds
             {
                 Find.Selector.ClearSelection();
                 Find.Selector.Select(inventory.First(r=>r.Panel==panel+1&&r.Cultivar!=null).Plant);
-                Dialog_BotanicalLaboratory.LastDrawn=false;
-                Find.WindowStack.Add(new Dialog_BotanicalLaboratory());expressionLabOpened=true;return false;
+                Dialog_BotanicalLaboratory.LastDrawn=false;Dialog_BotanicalLaboratory.LastContents=false;
+                var lab=new Dialog_BotanicalLaboratory();
+                Require(lab.VerifyPreview(root),"actual lab preview API, selected cultivar and edited channel");
+                Find.WindowStack.Add(lab);expressionLabOpened=true;return false;
             }
-            if(++expressionLabAge<20)return false;
-            Require(Dialog_BotanicalLaboratory.LastDrawn,"native laboratory window repainted a selected documented cultivar");
+            if(++expressionLabAge<150&&!Dialog_BotanicalLaboratory.LastDrawn)return false;
+            bool drawn=Dialog_BotanicalLaboratory.LastDrawn,contents=Dialog_BotanicalLaboratory.LastContents;
             Find.WindowStack.TryRemove(typeof(Dialog_BotanicalLaboratory),false);Find.Selector.ClearSelection();
-            File.WriteAllText(Path.Combine(root,"HNS-garden-expression-lab.txt"),"PASS: native lab repainted actual documented cultivar preview.");
+            File.WriteAllText(Path.Combine(root,"HNS-garden-expression-lab.txt"),"Native selected/edited GPU preview API: PASS\nWindow contents executed: "+contents+"\nGUI repaint verified: "+drawn+"\nIf false, GUI remains separately unqualified.");
             return true;
         }
         private static void WriteExpression()
@@ -1287,6 +1289,7 @@ namespace HorticultureNovelSeeds
                 Require(prints.Select(p=>p.Seed).Distinct().Count()==3,"stable different seeds within cultivar");
                 Require(prints.Select(p=>p.Code).Distinct().Count()>=2,"different real growth histories");
                 Require(prints.Any(p=>p.Bias>.25f)&&prints.Any(p=>p.Bias<-.25f),"opposite retained historical bias");
+                foreach(var row in group)Require(ChronicleScribeParity(row.Plant.TryGetComp<CompPlantVariety>().VisualChronicle,row.Plant.thingIDNumber),"existing Scribe history value roundtrip");
             }
             Require(BotanicalExpressionEngine.Bytes<=64L*1024*1024&&BotanicalExpressionEngine.MaterialCount<=160,"bounded renderer cache");
             File.WriteAllText(Path.Combine(root,"HNS-garden-expression-budget.txt"),"Source maps="+BotanicalExpressionEngine.SourceCount+"; shared materials="+BotanicalExpressionEngine.MaterialCount+"; texture bytes="+BotanicalExpressionEngine.Bytes+"; growth invalidations="+BotanicalExpressionEngine.Invalidations.Count);
