@@ -176,3 +176,26 @@ Require(SurfaceFinishMath.Environment(.5f,1f,.01f).Rain==.03125f,"quantized weat
     Require(updated.Leaves.Pixels.Where(c=>c.A>=90).All(c=>c.G>c.R&&c.G>c.B),"no fruit hue in synthesized leaf module");
     Require(old.Fruit.Box==updated.Fruit.Box&&old.Fruit.Pixels.SequenceEqual(updated.Fruit.Pixels),"tip shaping does not change the reproductive module");
 }
+
+
+{
+    foreach(var k in Enum.GetValues<ResponsiveHabitKind>())
+    foreach(var env in new[]{(.375f,1f,0f),(.625f,1f,0f),(.625f,1f,.5f),(0f,0f,0f),(.5f,1f,0f)})
+    {
+        var pose=ResponsiveHabitMath.Controls(k,env.Item1,env.Item2,env.Item3,false,false);
+        for(int y=0;y<=10;y++)for(int x=0;x<=10;x++)
+        {
+            float u=x/10f,v=y/10f;
+            var f=ResponsiveHabitMath.Forward(pose,u,v);
+            var inv=ResponsiveHabitMath.Inverse(pose,f.X,f.Y);
+            if(f.X<-.0001f||f.X>1.0001f||f.Y<-.0001f||f.Y>1.0001f||Math.Abs(inv.X-u)>.0001f||Math.Abs(inv.Y-v)>.0001f)throw new Exception("pose must be bounded and reversible "+k);
+        }
+    }
+    Require(true,"all 3630 sampled forward/inverse poses bounded and reversible");
+    Require(ResponsiveHabitMath.Controls(ResponsiveHabitKind.Nightfold,0,0,0,false,false).Contraction>.5f,"nightfold closes after dark");
+    Require(ResponsiveHabitMath.Controls(ResponsiveHabitKind.Nightbloom,0,0,0,false,false).Contraction==0f,"nightbloom opens after dark");
+    Require(ResponsiveHabitMath.Controls(ResponsiveHabitKind.Sunseeker,.375f,1,0,false,false).Lean<0f&&ResponsiveHabitMath.Controls(ResponsiveHabitKind.Sunseeker,.625f,1,0,false,false).Lean>0f,"solar tracking reverses");
+    Require(ResponsiveHabitMath.Controls(ResponsiveHabitKind.Sunseeker,.625f,1,0,false,true).Lean<0f,"mirrored sprites preserve direction");
+    Require(ResponsiveHabitMath.Controls(ResponsiveHabitKind.Rainbowed,.625f,1,.5f,false,false).Droop>.25f,"rain bows canopy");
+    Require(ResponsiveHabitMath.Controls(ResponsiveHabitKind.Raincup,.625f,1,.5f,true,false).Contraction==0f,"shelter suppresses rain response");
+}

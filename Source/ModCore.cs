@@ -104,6 +104,7 @@ namespace HorticultureNovelSeeds
         public SurfaceFinishKind surfaceFinish;
         public BotanicalDetailKind botanicalDetail;
         public CanopyArchitectureKind canopyArchitecture;
+        public ResponsiveHabitKind responsiveHabit;
         public float visualScale = 1f;
         public float yieldFactor = 1f;
         public float growthRateFactor = 1f;

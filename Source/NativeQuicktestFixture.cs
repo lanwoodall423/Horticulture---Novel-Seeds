@@ -45,6 +45,8 @@ namespace HorticultureNovelSeeds
             expectedPackages = Environment.GetEnvironmentVariable("HNS_NATIVE_PACKAGES");
             expectedDll = Environment.GetEnvironmentVariable("HNS_NATIVE_DLL");
             version = typeof(NativeQuicktestFixture).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+            bool poseGarden = Environment.GetEnvironmentVariable("HNS_NATIVE_POSE_GARDEN") == "1";
+            Environment.SetEnvironmentVariable("HNS_NATIVE_POSE_GARDEN", null);
             bool architectureGarden = Environment.GetEnvironmentVariable("HNS_NATIVE_ARCHITECTURE_GARDEN") == "1";
             Environment.SetEnvironmentVariable("HNS_NATIVE_ARCHITECTURE_GARDEN", null);
             bool detailGarden = Environment.GetEnvironmentVariable("HNS_NATIVE_DETAIL_GARDEN") == "1";
@@ -94,7 +96,7 @@ namespace HorticultureNovelSeeds
                     if (gardenProbe)
                     {
                         Stage("Startup");
-                        NativeGardenProbe.Begin(root, Stage, Finish, proceduralGarden, catalogGarden, creativeGarden, cultivarGarden, formGarden, organGarden, developmentGarden, windGarden, surfaceGarden, detailGarden, architectureGarden);
+                        NativeGardenProbe.Begin(root, Stage, Finish, proceduralGarden, catalogGarden, creativeGarden, cultivarGarden, formGarden, organGarden, developmentGarden, windGarden, surfaceGarden, detailGarden, architectureGarden, poseGarden);
                         return;
                     }
                     if (shaderProbe)

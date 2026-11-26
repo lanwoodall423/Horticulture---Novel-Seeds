@@ -886,4 +886,60 @@
     <exclusionTags><li>canopyArchitecture</li></exclusionTags>
     <canopyArchitecture>AbundantClusters</canopyArchitecture>
   </HorticultureNovelSeeds.VarietyTraitDef>
+  <!-- Experimental environmental posture genetics. -->
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_Nightfold</defName>
+    <label>Nightfold</label>
+    <description>Foliage closes inward when the sky becomes dark.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>responsiveHabit</li></exclusionTags>
+    <responsiveHabit>Nightfold</responsiveHabit>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_Sunseeker</defName>
+    <label>Sunseeker</label>
+    <description>The upper canopy leans gently toward the shifting daytime light.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>responsiveHabit</li></exclusionTags>
+    <responsiveHabit>Sunseeker</responsiveHabit>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_Rainbowed</defName>
+    <label>Rainbowed</label>
+    <description>Foliage bows and droops under rain.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>responsiveHabit</li></exclusionTags>
+    <responsiveHabit>Rainbowed</responsiveHabit>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_Nightbloom</defName>
+    <label>Nightbloom</label>
+    <description>A compact daytime habit that opens into a broad canopy after dark.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>responsiveHabit</li></exclusionTags>
+    <responsiveHabit>Nightbloom</responsiveHabit>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_Raincup</defName>
+    <label>Raincup</label>
+    <description>Foliage cups inward and upward as rain begins.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>responsiveHabit</li></exclusionTags>
+    <responsiveHabit>Raincup</responsiveHabit>
+  </HorticultureNovelSeeds.VarietyTraitDef>
 </Defs>
