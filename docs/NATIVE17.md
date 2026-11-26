@@ -694,3 +694,48 @@ Development inventory SHA256: 8A5533E9E184D55F40A1ED9E99F39531418357CFFDA0BCAE8A
 Reproduce with RimWorld closed:
 
     powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -DevelopmentGarden
+
+## Genetic wind response experiment (2026-11-25)
+
+Source d4f7362fffd764b3b8181de4a9debb47a301526c adds five independent,
+neutral, zero-default-weight wind alleles: Rigid Habit, Supple Habit,
+Flutterleaf, Nodding Habit and Sweeping Habit. A separate vertex stage
+uses native wind phase and anchored exposure weights, with bounded
+amplitude, axis, rate and secondary flutter controls. No extra sprite
+textures, subdivided planes or per-plant CPU animation required.
+Existing pigmentation, morphology, organ and developmental experiments
+retained. Ordinary activation remains disabled.
+
+Native AllPerformance run f7d58d8342114a1a8abf3a0e5ea25bfb on RimWorld
+1.7.5014 rev1195 passed all 15 stages. Same 18 mature plants throughout
+(15 registered cultivars, three controls), corn, cotton and strawberry.
+Native WindManager advanced while gameplay paused, 12 captured phases
+and 180 verified material-phase states. Exactly 15 cached materials,
+no material count increase between phases, zero prepared masks.
+Both builds and all existing rule tests plus eight wind checks passed.
+No relevant HNS error identified in captured log. All preservation and
+cleanup checks passed. Evidence:
+https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/c4aecf402ab23349de9b22e7beead5dcd3e6c412
+
+Corn green-pixel centroid spans (horizontal/vertical screen pixels):
+control 1.549/1.463, rigid .637/.720, supple 7.214/5.833, flutter
+3.696/3.843, nodding 1.868/7.492, sweeping 6.976/2.802. These are
+approximate image-derived measurements, not vertex tracking or a
+same-position controlled trial. Cotton and strawberry motion is
+subtler. The GIF replays actual captures at 150 ms/frame, not real-time
+footage or a seamless wind cycle; a stationary pawn label remains
+visible near one corn plant. No artwork retouched.
+
+This is motion of the existing 2D sprite, not individual leaf physics.
+Ordinary gameplay time progression, preference-off behavior, performance,
+compatibility, season/snow, other species, combinations and save/reload
+remain unqualified. No gameplay balance or historical 1.6 changes.
+
+DLL SHA256: E7BE600841DDA2C2CFF4A5FD02B8306B5048819EE75A4FA7A1D2749F84262ADC.
+Receipt SHA256: 884FF9BEB3A257C6B7146CFE704F6F45AA6C5B3EF89979E6290373FBC43A2176.
+Log SHA256: 49226807DCFA34C10BBE8A8835F2FB22C392B2E27D180F7050BA15D6524F2DA3.
+Wind inventory SHA256: 59A2D5E5E60DE174B2A45B75230BA8264D75271E0FB0A0E186C52BF0F48313DD.
+
+Reproduce with RimWorld closed:
+
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -WindGarden
