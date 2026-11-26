@@ -1,0 +1,106 @@
+{
+    "schemaVersion":  1,
+    "run":  "0e4b5e7b427a4a8591a468f97379cd12",
+    "loadout":  "AllPerformance",
+    "shaderProbe":  false,
+    "gardenProbe":  true,
+    "patternGarden":  false,
+    "catalogGarden":  false,
+    "creativeGarden":  false,
+    "cultivarGarden":  false,
+    "formGarden":  false,
+    "organGarden":  false,
+    "developmentGarden":  false,
+    "windGarden":  false,
+    "surfaceGarden":  false,
+    "detailGarden":  true,
+    "vascularGarden":  false,
+    "lifeSuiteGarden":  false,
+    "lifeSuiteMotion":  false,
+    "sculptureGarden":  false,
+    "forgeGarden":  false,
+    "expressionGarden":  true,
+    "architectureGarden":  false,
+    "poseGarden":  false,
+    "articulationGarden":  false,
+    "mosaicGarden":  false,
+    "neighborhoodGarden":  false,
+    "chronicleGarden":  false,
+    "groundGarden":  false,
+    "status":  "FAIL",
+    "reason":  "System.InvalidOperationException: native laboratory window repainted a selected documented cultivar  [Ref 52DE260D]    at HorticultureNovelSeeds.NativeGardenProbe.Require(Boolean value, String label) in HorticultureNovelSeeds.dll:token 0x600040a+0x9     at HorticultureNovelSeeds.NativeGardenProbe.CheckExpressionLab() in HorticultureNovelSeeds.dll:token 0x60003f7+0x7b     at HorticultureNovelSeeds.NativeGardenProbe.Update() in HorticultureNovelSeeds.dll:token 0x60003dd+0x8f6",
+    "sourceHead":  "340fc36dce547637a5683dd9665918e3b87aa249",
+    "version":  "0.1.0-alpha+g340fc36dce54",
+    "assemblySha256":  "6F3C5BB2D7BE965A7E05D482FF8A3E4945B36E2F30CE3B168FA0EA18FCC4704E",
+    "activePackages":  [
+                           "brrainz.harmony",
+                           "aruclya.rimworldloadingoptimizer",
+                           "taranchuk.fastergameloading",
+                           "ludeon.rimworld",
+                           "lan.horticulture.novelseeds",
+                           "vr.missilegirl"
+                       ],
+    "optimizerIdentities":  [
+                                {
+                                    "packageId":  "aruclya.rimworldloadingoptimizer",
+                                    "workshopId":  "3817423183",
+                                    "version":  "5.4.0",
+                                    "declaredVersions":  [
+                                                             "1.6",
+                                                             "1.7"
+                                                         ],
+                                    "versionFolder":  "1.7",
+                                    "metadataException":  false,
+                                    "aboutSha256":  "B97AF5328C8F01B476FEBDE0AE268D174F6D2775405CAB1EF2460F2B7AF83798",
+                                    "assemblySha256":  "82DBC0F18445D72C6509B5A1907A1AF0E3B470C4FE61E6238D94638C69DE61C3"
+                                },
+                                {
+                                    "packageId":  "taranchuk.fastergameloading",
+                                    "workshopId":  "3652938473",
+                                    "version":  "2026.11.15.1",
+                                    "declaredVersions":  [
+                                                             "1.6",
+                                                             "1.7"
+                                                         ],
+                                    "versionFolder":  "1.7",
+                                    "metadataException":  false,
+                                    "aboutSha256":  "3A6FEF6F4180FAF0809CB1C8C7A8E4BE82A5D441B35343DCFBD1D9322347BA15",
+                                    "assemblySha256":  "189939F39C58A41617DFBA3BD8362243361C16E9368DAD28FB3E2429584D442C"
+                                },
+                                {
+                                    "packageId":  "vr.missilegirl",
+                                    "workshopId":  "3712928623",
+                                    "version":  "",
+                                    "declaredVersions":  [
+                                                             "1.6"
+                                                         ],
+                                    "versionFolder":  "1.6",
+                                    "metadataException":  true,
+                                    "aboutSha256":  "E292D36EEFF64475CF19CC28DCE1EA57835B66FE78A76096FF3543E74B8C14AE",
+                                    "assemblySha256":  "1E9DDB56998F7B963962095944AF3AEABBC90826E55BD53CB8083D3CC7E4B0B3",
+                                    "loadFoldersSha256":  "EB693CECC562ED566B5DDA8195625B1208A8F3A5AC4035C964A9D48D5A027DBA"
+                                }
+                            ],
+    "stages":  [
+                   "Startup",
+                   "GardenSetup",
+                   "GardenPanel1",
+                   "GardenPanel2",
+                   "GardenPanel3",
+                   "GardenPanel4",
+                   "GardenPanel5"
+               ],
+    "fixtureLine":  "2026-11-26 09:40:41.248  INFO [Verse] [HNS NativeFixture] 0e4b5e7b427a4a8591a468f97379cd12 0.1.0-alpha+g340fc36dce54 FAIL System.InvalidOperationException: native laboratory window repainted a selected documented cultivar  [Ref 52DE260D]    at HorticultureNovelSeeds.NativeGardenProbe.Require(Boolean value, String label) in HorticultureNovelSeeds.dll:token 0x600040a+0x9     at HorticultureNovelSeeds.NativeGardenProbe.CheckExpressionLab() in HorticultureNovelSeeds.dll:token 0x60003f7+0x7b     at HorticultureNovelSeeds.NativeGardenProbe.Update() in HorticultureNovelSeeds.dll:token 0x60003dd+0x8f6",
+    "processId":  8380,
+    "testProcessStopped":  true,
+    "testPackageRemoved":  true,
+    "normalConfigUnchanged":  true,
+    "normalPrefsUnchanged":  true,
+    "normalSavesUnchanged":  true,
+    "isolatedSaveDirectory":  "C:\\Users\\Lan\\AppData\\Local\\Temp\\hns-native-0e4b5e7b427a4a8591a468f97379cd12",
+    "startedUtc":  "2026-11-26T14:39:20.7657180Z",
+    "finishedUtc":  "2026-11-26T14:40:44.2509300Z",
+    "gameVersion":  "1.7.5014 rev1195",
+    "retiredManualDefaultNodes":  271,
+    "retiredLegacyVisualNodes":  180
+}

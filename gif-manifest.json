@@ -1,0 +1,32 @@
+[
+  {
+    "file": "corn-identities.gif",
+    "frames": 10,
+    "source_frames": 6,
+    "bytes": 228721
+  },
+  {
+    "file": "cotton-identities.gif",
+    "frames": 10,
+    "source_frames": 6,
+    "bytes": 301994
+  },
+  {
+    "file": "daylily-identities.gif",
+    "frames": 10,
+    "source_frames": 6,
+    "bytes": 309637
+  },
+  {
+    "file": "all-identities.gif",
+    "frames": 10,
+    "source_frames": 6,
+    "bytes": 548372
+  },
+  {
+    "file": "individual-histories.gif",
+    "frames": 10,
+    "source_frames": 6,
+    "bytes": 359137
+  }
+]
