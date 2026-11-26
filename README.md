@@ -52,3 +52,11 @@ natural multi-trait discovery and breeding compatibility are not
 qualified. Dense-field performance, save/reload, map appearance and
 arbitrary genetic combinations remain unqualified. No new gameplay
 mechanics or save fields.
+
+## Follow-up verification
+
+Source 712f4c8738620175e437bd9f22cd0ca90e311570, isolated run 7651faa60355450f9857d6c95e2d2517, status FAIL.
+[Receipt](verification/receipt.json) and [preservation](verification/preservation.json).
+The first run's GIFs above are retained unchanged.
+
+Follow-up did not complete: System.InvalidOperationException: actual neighboring test cell  [Ref E9FFCBE4]    at HorticultureNovelSeeds.NativeGardenProbe.Require(Boolean value, String label) in HorticultureNovelSeeds.dll:token 0x600040e+0x9     at HorticultureNovelSeeds.NativeGardenProbe.AdvanceExpressionGrowth() in HorticultureNovelSeeds.dll:token 0x60003f8+0x13d     at HorticultureNovelSeeds.NativeGardenProbe.MakePanel() in HorticultureNovelSeeds.dll:token 0x60003de+0x4e5     at HorticultureNovelSeeds.NativeGardenProbe.Begin(String path, Action`1 stage, Action`2 completed, Boolean procedural, Boolean catalog, Boolean creative, Boolean cultivar, Boolean form, Boolean organ, Boolean development, Boolean wind, Boolean surface, Boolean detail, Boolean architecture, Boolean pose, Boolean ground, Boolean articulation, Boolean mosaic, Boolean neighborhood, Boolean chronicle, Boolean vascular, Boolean lifeSuite) in HorticultureNovelSeeds.dll:token 0x60003d6+0xe70
