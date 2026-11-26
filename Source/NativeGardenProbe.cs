@@ -71,11 +71,14 @@ namespace HorticultureNovelSeeds
                 var origin = map.mapPawns.FreeColonistsSpawned.First().Position;
                 // Reuse one deliberately cleared, unroofed and obstacle-free test
                 // bed. Remove only vegetation in this disposable map.
-                start = GenRadial.RadialCellsAround(origin, 70, true).First(c =>
-                    Cells(c).All(x => x.InBounds(map) && x.Standable(map) &&
-                        x.GetEdifice(map) == null && !x.Fogged(map) && x.GetZone(map) == null &&
-                        map.roofGrid.RoofAt(x) == null && map.fertilityGrid.FertilityAt(x) > .1f));
-                foreach (var cell in Cells(start))
+                var candidates = GenRadial.RadialCellsAround(origin, 70, true)
+                    .Where(c => Cells(c).All(x => x.InBounds(map)) && PlantCells(c).All(ClearCell))
+                    .Take(120).Select(c => (Cell:c, Score:Cells(c).Count(ClearCell)))
+                    .OrderByDescending(c => c.Score).ToArray();
+                Require(candidates.Length > 0, "a visible unroofed plot with 18 clear plant positions");
+                start = candidates[0].Cell;
+                Log.Message("[HNS Garden] plot clear cells=" + candidates[0].Score);
+                foreach (var cell in Cells(start).Where(ClearCell))
                 {
                     cell.GetPlant(map)?.Destroy(DestroyMode.Vanish);
                     map.terrainGrid.SetTerrain(cell, TerrainDefOf.Soil);
@@ -89,6 +92,15 @@ namespace HorticultureNovelSeeds
                 onStage("GardenSetup");
             }
             catch (Exception e) { End("FAIL", e.ToString()); }
+        }
+
+        private static bool ClearCell(IntVec3 x) => x.InBounds(map) && x.Standable(map) && x.GetEdifice(map) == null && !x.Fogged(map) && x.GetZone(map) == null && map.roofGrid.RoofAt(x) == null;
+
+        private static IEnumerable<IntVec3> PlantCells(IntVec3 c)
+        {
+            for(int z = 0; z < 3; z++)
+                for(int x = 0; x < 6; x++)
+                    yield return c + new IntVec3(x * 3, 0, z * 4);
         }
 
         private static IEnumerable<IntVec3> Cells(IntVec3 c)
