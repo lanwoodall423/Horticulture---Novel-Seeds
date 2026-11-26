@@ -37,6 +37,10 @@ namespace HorticultureNovelSeeds
                 if (!cropDef.inspectorTabs.Contains(varietyTabType)) cropDef.inspectorTabs.Add(varietyTabType);
                 if (cropDef.inspectorTabsResolved != null && !cropDef.inspectorTabsResolved.Any(tab => tab.GetType() == varietyTabType))
                     cropDef.inspectorTabsResolved.Add(InspectTabManager.GetSharedInstance(varietyTabType));
+                Type phenotypeTabType=typeof(ITab_PlantPhenotype);
+                if(!cropDef.inspectorTabs.Contains(phenotypeTabType))cropDef.inspectorTabs.Add(phenotypeTabType);
+                if(cropDef.inspectorTabsResolved!=null&&!cropDef.inspectorTabsResolved.Any(tab=>tab.GetType()==phenotypeTabType))
+                    cropDef.inspectorTabsResolved.Add(InspectTabManager.GetSharedInstance(phenotypeTabType));
             }
 
             HashSet<ThingDef> inheritableProducts = new HashSet<ThingDef>(harvestedProducts);

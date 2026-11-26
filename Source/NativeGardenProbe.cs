@@ -445,8 +445,8 @@ namespace HorticultureNovelSeeds
                 if(r.Cultivar==null)Require(fs.Length==0&&history.Length==0&&potential.Length==0,"no fabricated observations or potential on controls");
                 else
                 {
-                    Require(prose.Length==0||c.CompInspectStringExtra().Contains(prose),"actual plant inspect phenotype");
-                    Require(c.CompGetGizmosExtra().OfType<Command_Action>().Any(g=>g.defaultLabel=="Field notes"),"actual field notes command");
+                    Require(r.Plant.GetInspectTabs().OfType<ITab_PlantPhenotype>().Count()==1,"native phenotype tab registered exactly once");
+                    Require(!c.CompGetGizmosExtra().OfType<Command_Action>().Any(g=>g.defaultLabel=="Field notes"),"no redundant field notes command");
                     Require(potential.Length>0||!formGarden,"documented cultivar potential");
                     string notes=PhenotypeObservation.Notes(c);
                     Require(notes.Contains("Individual phenotype")&&(prose.Length==0||notes.Contains(prose))&&(history.Length==0||notes.Contains(history)),"field notes content");
@@ -527,14 +527,29 @@ namespace HorticultureNovelSeeds
                             var subject=inventory.Where(r=>r.Panel==panel+1&&r.Cultivar!=null)
                                 .OrderByDescending(r=>r.Plant.TryGetComp<CompPlantVariety>().VisualObservation?.Prose().Length??0).First();
                             var c=subject.Plant.TryGetComp<CompPlantVariety>();
-                            var command=c.CompGetGizmosExtra().OfType<Command_Action>().Single(g=>g.defaultLabel=="Field notes");
-                            command.action();notesOpened=true;notesCaptureAge=0;
+                            Find.Selector.ClearSelection();
+                            Find.Selector.Select(subject.Plant);
+                            Find.MainTabsRoot.SetCurrentTab(MainButtonDefOf.Inspect,false);
+                            var inspector=(MainTabWindow_Inspect)MainButtonDefOf.Inspect.TabWindow;
+                            var tab=inspector.CurTabs.OfType<ITab_PlantPhenotype>().Single();
+                            Require(tab.IsVisible,"native phenotype tab visible for selected individual");
+                            inspector.OpenTabType=typeof(ITab_PlantPhenotype);
+                            notesOpened=true;notesCaptureAge=0;
+                            ITab_PlantPhenotype.LastDrawnId=-1;
                             File.WriteAllText(Path.Combine(root,"HNS-garden-field-notes.txt"),subject.Plant.LabelCap+"\n\n"+PhenotypeObservation.Notes(c));
                             return;
                         }
-                        if(++notesCaptureAge==15){ScreenCapture.CaptureScreenshot(notesPath);return;}
+                        if(++notesCaptureAge==15)
+                        {
+                            var selected=Find.Selector.SingleSelectedThing as Plant;
+                            var c=selected?.TryGetComp<CompPlantVariety>();
+                            Require(selected!=null&&ITab_PlantPhenotype.LastDrawnId==selected.thingIDNumber&&ITab_PlantPhenotype.LastFactCount==(c.VisualObservation?.Facts().Length??0)&&ITab_PlantPhenotype.LastHistorySamples==ChronicleMath.Count(c.VisualChronicle)&&ITab_PlantPhenotype.LastPotentialVisible,"native tab actually repainted with specimen facts, growth history and authorized potential");
+                            Log.Message("[HNS PhenotypeTab] rendered selected id="+selected.thingIDNumber+"; facts="+ITab_PlantPhenotype.LastFactCount+"; growth samples="+ITab_PlantPhenotype.LastHistorySamples);
+                            ScreenCapture.CaptureScreenshot(notesPath);return;
+                        }
                         if(notesCaptureAge<30||!File.Exists(notesPath)||new FileInfo(notesPath).Length<1000)return;
-                        Find.WindowStack.TryRemove(typeof(Dialog_PhenotypeNotes),false);
+                        ((MainTabWindow_Inspect)MainButtonDefOf.Inspect.TabWindow).CloseOpenTab();
+                        Find.Selector.ClearSelection();
                     }
                     onStage("GardenPanel" + (panel+1));
                     if (++panel == PanelCount)
