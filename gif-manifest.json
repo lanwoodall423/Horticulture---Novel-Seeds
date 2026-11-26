@@ -1,0 +1,38 @@
+[
+  {
+    "file": "01-circinate-frond.gif",
+    "source_frames": 9,
+    "frames": 16,
+    "bytes": 127910
+  },
+  {
+    "file": "02-climbing-helix.gif",
+    "source_frames": 9,
+    "frames": 16,
+    "bytes": 111701
+  },
+  {
+    "file": "03-umbel-crown.gif",
+    "source_frames": 9,
+    "frames": 16,
+    "bytes": 127282
+  },
+  {
+    "file": "04-pendant-raceme.gif",
+    "source_frames": 9,
+    "frames": 16,
+    "bytes": 127831
+  },
+  {
+    "file": "05-crested-fan.gif",
+    "source_frames": 9,
+    "frames": 16,
+    "bytes": 183306
+  },
+  {
+    "file": "all-five.gif",
+    "source_frames": 9,
+    "frames": 16,
+    "bytes": 381398
+  }
+]

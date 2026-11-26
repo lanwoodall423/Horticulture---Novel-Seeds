@@ -1,0 +1,136 @@
+Frame	Species	Column	Plant ID	Trait	Mode	Material ID	Atlas width	Atlas height	Phase	Native wind head	Description
+1	Plant_Corn	2	25336	CircinateFrond	21	-16980	288	288	0	0	This specimen displays unfurling pinnate lateral fronds.
+1	Plant_Corn	3	25337	ClimbingHelix	22	-16982	288	288	0	0	This specimen displays a winding leafy secondary stem.
+1	Plant_Corn	4	25338	UmbelCrown	23	-16984	288	288	0	0	This specimen displays an umbrella-shaped spray of reproductive stalks.
+1	Plant_Corn	5	25339	PendantRaceme	24	-16986	288	288	0	0	This specimen displays arching stems with hanging reproductive clusters.
+1	Plant_Corn	6	25340	CrestedFan	25	-16993	288	288	0	0	This specimen displays a broad crested fan of leaves and reproductive clusters.
+1	Plant_Cotton	2	25342	CircinateFrond	21	-16972	288	288	0	0	This specimen displays unfurling pinnate lateral fronds.
+1	Plant_Cotton	3	25343	ClimbingHelix	22	-16974	288	288	0	0	This specimen displays a winding leafy secondary stem.
+1	Plant_Cotton	4	25344	UmbelCrown	23	-16976	288	288	0	0	This specimen displays an umbrella-shaped spray of reproductive stalks.
+1	Plant_Cotton	5	25345	PendantRaceme	24	-16978	288	288	0	0	This specimen displays arching stems with hanging reproductive clusters.
+1	Plant_Cotton	6	25346	CrestedFan	25	-16991	288	288	0	0	This specimen displays a broad crested fan of leaves and reproductive clusters.
+1	Plant_Daylily	2	25348	CircinateFrond	21	-16964	288	288	0	0	This specimen displays unfurling pinnate lateral fronds.
+1	Plant_Daylily	3	25349	ClimbingHelix	22	-16966	288	288	0	0	This specimen displays a winding leafy secondary stem.
+1	Plant_Daylily	4	25350	UmbelCrown	23	-16968	288	288	0	0	This specimen displays an umbrella-shaped spray of reproductive stalks.
+1	Plant_Daylily	5	25351	PendantRaceme	24	-16970	288	288	0	0	This specimen displays arching stems with hanging reproductive clusters.
+1	Plant_Daylily	6	25352	CrestedFan	25	-16989	288	288	0	0	This specimen displays a broad crested fan of leaves and reproductive clusters.
+2	Plant_Corn	2	25336	CircinateFrond	21	-16980	288	288	0.125	0	This specimen displays unfurling pinnate lateral fronds.
+2	Plant_Corn	3	25337	ClimbingHelix	22	-16982	288	288	0.125	0	This specimen displays a winding leafy secondary stem.
+2	Plant_Corn	4	25338	UmbelCrown	23	-16984	288	288	0.125	0	This specimen displays an umbrella-shaped spray of reproductive stalks.
+2	Plant_Corn	5	25339	PendantRaceme	24	-16986	288	288	0.125	0	This specimen displays arching stems with hanging reproductive clusters.
+2	Plant_Corn	6	25340	CrestedFan	25	-16993	288	288	0.125	0	This specimen displays a broad crested fan of leaves and reproductive clusters.
+2	Plant_Cotton	2	25342	CircinateFrond	21	-16972	288	288	0.125	0	This specimen displays unfurling pinnate lateral fronds.
+2	Plant_Cotton	3	25343	ClimbingHelix	22	-16974	288	288	0.125	0	This specimen displays a winding leafy secondary stem.
+2	Plant_Cotton	4	25344	UmbelCrown	23	-16976	288	288	0.125	0	This specimen displays an umbrella-shaped spray of reproductive stalks.
+2	Plant_Cotton	5	25345	PendantRaceme	24	-16978	288	288	0.125	0	This specimen displays arching stems with hanging reproductive clusters.
+2	Plant_Cotton	6	25346	CrestedFan	25	-16991	288	288	0.125	0	This specimen displays a broad crested fan of leaves and reproductive clusters.
+2	Plant_Daylily	2	25348	CircinateFrond	21	-16964	288	288	0.125	0	This specimen displays unfurling pinnate lateral fronds.
+2	Plant_Daylily	3	25349	ClimbingHelix	22	-16966	288	288	0.125	0	This specimen displays a winding leafy secondary stem.
+2	Plant_Daylily	4	25350	UmbelCrown	23	-16968	288	288	0.125	0	This specimen displays an umbrella-shaped spray of reproductive stalks.
+2	Plant_Daylily	5	25351	PendantRaceme	24	-16970	288	288	0.125	0	This specimen displays arching stems with hanging reproductive clusters.
+2	Plant_Daylily	6	25352	CrestedFan	25	-16989	288	288	0.125	0	This specimen displays a broad crested fan of leaves and reproductive clusters.
+3	Plant_Corn	2	25336	CircinateFrond	21	-16980	288	288	0.25	0	This specimen displays unfurling pinnate lateral fronds.
+3	Plant_Corn	3	25337	ClimbingHelix	22	-16982	288	288	0.25	0	This specimen displays a winding leafy secondary stem.
+3	Plant_Corn	4	25338	UmbelCrown	23	-16984	288	288	0.25	0	This specimen displays an umbrella-shaped spray of reproductive stalks.
+3	Plant_Corn	5	25339	PendantRaceme	24	-16986	288	288	0.25	0	This specimen displays arching stems with hanging reproductive clusters.
+3	Plant_Corn	6	25340	CrestedFan	25	-16993	288	288	0.25	0	This specimen displays a broad crested fan of leaves and reproductive clusters.
+3	Plant_Cotton	2	25342	CircinateFrond	21	-16972	288	288	0.25	0	This specimen displays unfurling pinnate lateral fronds.
+3	Plant_Cotton	3	25343	ClimbingHelix	22	-16974	288	288	0.25	0	This specimen displays a winding leafy secondary stem.
+3	Plant_Cotton	4	25344	UmbelCrown	23	-16976	288	288	0.25	0	This specimen displays an umbrella-shaped spray of reproductive stalks.
+3	Plant_Cotton	5	25345	PendantRaceme	24	-16978	288	288	0.25	0	This specimen displays arching stems with hanging reproductive clusters.
+3	Plant_Cotton	6	25346	CrestedFan	25	-16991	288	288	0.25	0	This specimen displays a broad crested fan of leaves and reproductive clusters.
+3	Plant_Daylily	2	25348	CircinateFrond	21	-16964	288	288	0.25	0	This specimen displays unfurling pinnate lateral fronds.
+3	Plant_Daylily	3	25349	ClimbingHelix	22	-16966	288	288	0.25	0	This specimen displays a winding leafy secondary stem.
+3	Plant_Daylily	4	25350	UmbelCrown	23	-16968	288	288	0.25	0	This specimen displays an umbrella-shaped spray of reproductive stalks.
+3	Plant_Daylily	5	25351	PendantRaceme	24	-16970	288	288	0.25	0	This specimen displays arching stems with hanging reproductive clusters.
+3	Plant_Daylily	6	25352	CrestedFan	25	-16989	288	288	0.25	0	This specimen displays a broad crested fan of leaves and reproductive clusters.
+4	Plant_Corn	2	25336	CircinateFrond	21	-16980	288	288	0.375	0	This specimen displays unfurling pinnate lateral fronds.
+4	Plant_Corn	3	25337	ClimbingHelix	22	-16982	288	288	0.375	0	This specimen displays a winding leafy secondary stem.
+4	Plant_Corn	4	25338	UmbelCrown	23	-16984	288	288	0.375	0	This specimen displays an umbrella-shaped spray of reproductive stalks.
+4	Plant_Corn	5	25339	PendantRaceme	24	-16986	288	288	0.375	0	This specimen displays arching stems with hanging reproductive clusters.
+4	Plant_Corn	6	25340	CrestedFan	25	-16993	288	288	0.375	0	This specimen displays a broad crested fan of leaves and reproductive clusters.
+4	Plant_Cotton	2	25342	CircinateFrond	21	-16972	288	288	0.375	0	This specimen displays unfurling pinnate lateral fronds.
+4	Plant_Cotton	3	25343	ClimbingHelix	22	-16974	288	288	0.375	0	This specimen displays a winding leafy secondary stem.
+4	Plant_Cotton	4	25344	UmbelCrown	23	-16976	288	288	0.375	0	This specimen displays an umbrella-shaped spray of reproductive stalks.
+4	Plant_Cotton	5	25345	PendantRaceme	24	-16978	288	288	0.375	0	This specimen displays arching stems with hanging reproductive clusters.
+4	Plant_Cotton	6	25346	CrestedFan	25	-16991	288	288	0.375	0	This specimen displays a broad crested fan of leaves and reproductive clusters.
+4	Plant_Daylily	2	25348	CircinateFrond	21	-16964	288	288	0.375	0	This specimen displays unfurling pinnate lateral fronds.
+4	Plant_Daylily	3	25349	ClimbingHelix	22	-16966	288	288	0.375	0	This specimen displays a winding leafy secondary stem.
+4	Plant_Daylily	4	25350	UmbelCrown	23	-16968	288	288	0.375	0	This specimen displays an umbrella-shaped spray of reproductive stalks.
+4	Plant_Daylily	5	25351	PendantRaceme	24	-16970	288	288	0.375	0	This specimen displays arching stems with hanging reproductive clusters.
+4	Plant_Daylily	6	25352	CrestedFan	25	-16989	288	288	0.375	0	This specimen displays a broad crested fan of leaves and reproductive clusters.
+5	Plant_Corn	2	25336	CircinateFrond	21	-16980	288	288	0.5	0	This specimen displays unfurling pinnate lateral fronds.
+5	Plant_Corn	3	25337	ClimbingHelix	22	-16982	288	288	0.5	0	This specimen displays a winding leafy secondary stem.
+5	Plant_Corn	4	25338	UmbelCrown	23	-16984	288	288	0.5	0	This specimen displays an umbrella-shaped spray of reproductive stalks.
+5	Plant_Corn	5	25339	PendantRaceme	24	-16986	288	288	0.5	0	This specimen displays arching stems with hanging reproductive clusters.
+5	Plant_Corn	6	25340	CrestedFan	25	-16993	288	288	0.5	0	This specimen displays a broad crested fan of leaves and reproductive clusters.
+5	Plant_Cotton	2	25342	CircinateFrond	21	-16972	288	288	0.5	0	This specimen displays unfurling pinnate lateral fronds.
+5	Plant_Cotton	3	25343	ClimbingHelix	22	-16974	288	288	0.5	0	This specimen displays a winding leafy secondary stem.
+5	Plant_Cotton	4	25344	UmbelCrown	23	-16976	288	288	0.5	0	This specimen displays an umbrella-shaped spray of reproductive stalks.
+5	Plant_Cotton	5	25345	PendantRaceme	24	-16978	288	288	0.5	0	This specimen displays arching stems with hanging reproductive clusters.
+5	Plant_Cotton	6	25346	CrestedFan	25	-16991	288	288	0.5	0	This specimen displays a broad crested fan of leaves and reproductive clusters.
+5	Plant_Daylily	2	25348	CircinateFrond	21	-16964	288	288	0.5	0	This specimen displays unfurling pinnate lateral fronds.
+5	Plant_Daylily	3	25349	ClimbingHelix	22	-16966	288	288	0.5	0	This specimen displays a winding leafy secondary stem.
+5	Plant_Daylily	4	25350	UmbelCrown	23	-16968	288	288	0.5	0	This specimen displays an umbrella-shaped spray of reproductive stalks.
+5	Plant_Daylily	5	25351	PendantRaceme	24	-16970	288	288	0.5	0	This specimen displays arching stems with hanging reproductive clusters.
+5	Plant_Daylily	6	25352	CrestedFan	25	-16989	288	288	0.5	0	This specimen displays a broad crested fan of leaves and reproductive clusters.
+6	Plant_Corn	2	25336	CircinateFrond	21	-16980	288	288	0.625	0	This specimen displays unfurling pinnate lateral fronds.
+6	Plant_Corn	3	25337	ClimbingHelix	22	-16982	288	288	0.625	0	This specimen displays a winding leafy secondary stem.
+6	Plant_Corn	4	25338	UmbelCrown	23	-16984	288	288	0.625	0	This specimen displays an umbrella-shaped spray of reproductive stalks.
+6	Plant_Corn	5	25339	PendantRaceme	24	-16986	288	288	0.625	0	This specimen displays arching stems with hanging reproductive clusters.
+6	Plant_Corn	6	25340	CrestedFan	25	-16993	288	288	0.625	0	This specimen displays a broad crested fan of leaves and reproductive clusters.
+6	Plant_Cotton	2	25342	CircinateFrond	21	-16972	288	288	0.625	0	This specimen displays unfurling pinnate lateral fronds.
+6	Plant_Cotton	3	25343	ClimbingHelix	22	-16974	288	288	0.625	0	This specimen displays a winding leafy secondary stem.
+6	Plant_Cotton	4	25344	UmbelCrown	23	-16976	288	288	0.625	0	This specimen displays an umbrella-shaped spray of reproductive stalks.
+6	Plant_Cotton	5	25345	PendantRaceme	24	-16978	288	288	0.625	0	This specimen displays arching stems with hanging reproductive clusters.
+6	Plant_Cotton	6	25346	CrestedFan	25	-16991	288	288	0.625	0	This specimen displays a broad crested fan of leaves and reproductive clusters.
+6	Plant_Daylily	2	25348	CircinateFrond	21	-16964	288	288	0.625	0	This specimen displays unfurling pinnate lateral fronds.
+6	Plant_Daylily	3	25349	ClimbingHelix	22	-16966	288	288	0.625	0	This specimen displays a winding leafy secondary stem.
+6	Plant_Daylily	4	25350	UmbelCrown	23	-16968	288	288	0.625	0	This specimen displays an umbrella-shaped spray of reproductive stalks.
+6	Plant_Daylily	5	25351	PendantRaceme	24	-16970	288	288	0.625	0	This specimen displays arching stems with hanging reproductive clusters.
+6	Plant_Daylily	6	25352	CrestedFan	25	-16989	288	288	0.625	0	This specimen displays a broad crested fan of leaves and reproductive clusters.
+7	Plant_Corn	2	25336	CircinateFrond	21	-16980	288	288	0.75	0	This specimen displays unfurling pinnate lateral fronds.
+7	Plant_Corn	3	25337	ClimbingHelix	22	-16982	288	288	0.75	0	This specimen displays a winding leafy secondary stem.
+7	Plant_Corn	4	25338	UmbelCrown	23	-16984	288	288	0.75	0	This specimen displays an umbrella-shaped spray of reproductive stalks.
+7	Plant_Corn	5	25339	PendantRaceme	24	-16986	288	288	0.75	0	This specimen displays arching stems with hanging reproductive clusters.
+7	Plant_Corn	6	25340	CrestedFan	25	-16993	288	288	0.75	0	This specimen displays a broad crested fan of leaves and reproductive clusters.
+7	Plant_Cotton	2	25342	CircinateFrond	21	-16972	288	288	0.75	0	This specimen displays unfurling pinnate lateral fronds.
+7	Plant_Cotton	3	25343	ClimbingHelix	22	-16974	288	288	0.75	0	This specimen displays a winding leafy secondary stem.
+7	Plant_Cotton	4	25344	UmbelCrown	23	-16976	288	288	0.75	0	This specimen displays an umbrella-shaped spray of reproductive stalks.
+7	Plant_Cotton	5	25345	PendantRaceme	24	-16978	288	288	0.75	0	This specimen displays arching stems with hanging reproductive clusters.
+7	Plant_Cotton	6	25346	CrestedFan	25	-16991	288	288	0.75	0	This specimen displays a broad crested fan of leaves and reproductive clusters.
+7	Plant_Daylily	2	25348	CircinateFrond	21	-16964	288	288	0.75	0	This specimen displays unfurling pinnate lateral fronds.
+7	Plant_Daylily	3	25349	ClimbingHelix	22	-16966	288	288	0.75	0	This specimen displays a winding leafy secondary stem.
+7	Plant_Daylily	4	25350	UmbelCrown	23	-16968	288	288	0.75	0	This specimen displays an umbrella-shaped spray of reproductive stalks.
+7	Plant_Daylily	5	25351	PendantRaceme	24	-16970	288	288	0.75	0	This specimen displays arching stems with hanging reproductive clusters.
+7	Plant_Daylily	6	25352	CrestedFan	25	-16989	288	288	0.75	0	This specimen displays a broad crested fan of leaves and reproductive clusters.
+8	Plant_Corn	2	25336	CircinateFrond	21	-16980	288	288	0.875	0	This specimen displays unfurling pinnate lateral fronds.
+8	Plant_Corn	3	25337	ClimbingHelix	22	-16982	288	288	0.875	0	This specimen displays a winding leafy secondary stem.
+8	Plant_Corn	4	25338	UmbelCrown	23	-16984	288	288	0.875	0	This specimen displays an umbrella-shaped spray of reproductive stalks.
+8	Plant_Corn	5	25339	PendantRaceme	24	-16986	288	288	0.875	0	This specimen displays arching stems with hanging reproductive clusters.
+8	Plant_Corn	6	25340	CrestedFan	25	-16993	288	288	0.875	0	This specimen displays a broad crested fan of leaves and reproductive clusters.
+8	Plant_Cotton	2	25342	CircinateFrond	21	-16972	288	288	0.875	0	This specimen displays unfurling pinnate lateral fronds.
+8	Plant_Cotton	3	25343	ClimbingHelix	22	-16974	288	288	0.875	0	This specimen displays a winding leafy secondary stem.
+8	Plant_Cotton	4	25344	UmbelCrown	23	-16976	288	288	0.875	0	This specimen displays an umbrella-shaped spray of reproductive stalks.
+8	Plant_Cotton	5	25345	PendantRaceme	24	-16978	288	288	0.875	0	This specimen displays arching stems with hanging reproductive clusters.
+8	Plant_Cotton	6	25346	CrestedFan	25	-16991	288	288	0.875	0	This specimen displays a broad crested fan of leaves and reproductive clusters.
+8	Plant_Daylily	2	25348	CircinateFrond	21	-16964	288	288	0.875	0	This specimen displays unfurling pinnate lateral fronds.
+8	Plant_Daylily	3	25349	ClimbingHelix	22	-16966	288	288	0.875	0	This specimen displays a winding leafy secondary stem.
+8	Plant_Daylily	4	25350	UmbelCrown	23	-16968	288	288	0.875	0	This specimen displays an umbrella-shaped spray of reproductive stalks.
+8	Plant_Daylily	5	25351	PendantRaceme	24	-16970	288	288	0.875	0	This specimen displays arching stems with hanging reproductive clusters.
+8	Plant_Daylily	6	25352	CrestedFan	25	-16989	288	288	0.875	0	This specimen displays a broad crested fan of leaves and reproductive clusters.
+9	Plant_Corn	2	25336	CircinateFrond	21	-16980	288	288	1	0	This specimen displays unfurling pinnate lateral fronds.
+9	Plant_Corn	3	25337	ClimbingHelix	22	-16982	288	288	1	0	This specimen displays a winding leafy secondary stem.
+9	Plant_Corn	4	25338	UmbelCrown	23	-16984	288	288	1	0	This specimen displays an umbrella-shaped spray of reproductive stalks.
+9	Plant_Corn	5	25339	PendantRaceme	24	-16986	288	288	1	0	This specimen displays arching stems with hanging reproductive clusters.
+9	Plant_Corn	6	25340	CrestedFan	25	-16993	288	288	1	0	This specimen displays a broad crested fan of leaves and reproductive clusters.
+9	Plant_Cotton	2	25342	CircinateFrond	21	-16972	288	288	1	0	This specimen displays unfurling pinnate lateral fronds.
+9	Plant_Cotton	3	25343	ClimbingHelix	22	-16974	288	288	1	0	This specimen displays a winding leafy secondary stem.
+9	Plant_Cotton	4	25344	UmbelCrown	23	-16976	288	288	1	0	This specimen displays an umbrella-shaped spray of reproductive stalks.
+9	Plant_Cotton	5	25345	PendantRaceme	24	-16978	288	288	1	0	This specimen displays arching stems with hanging reproductive clusters.
+9	Plant_Cotton	6	25346	CrestedFan	25	-16991	288	288	1	0	This specimen displays a broad crested fan of leaves and reproductive clusters.
+9	Plant_Daylily	2	25348	CircinateFrond	21	-16964	288	288	1	0	This specimen displays unfurling pinnate lateral fronds.
+9	Plant_Daylily	3	25349	ClimbingHelix	22	-16966	288	288	1	0	This specimen displays a winding leafy secondary stem.
+9	Plant_Daylily	4	25350	UmbelCrown	23	-16968	288	288	1	0	This specimen displays an umbrella-shaped spray of reproductive stalks.
+9	Plant_Daylily	5	25351	PendantRaceme	24	-16970	288	288	1	0	This specimen displays arching stems with hanging reproductive clusters.
+9	Plant_Daylily	6	25352	CrestedFan	25	-16989	288	288	1	0	This specimen displays a broad crested fan of leaves and reproductive clusters.
