@@ -1,0 +1,55 @@
+Panel	Row	Column	Species	Cultivar	Trait IDs	Renderer	Automatic mask sources	Trait labels	Tiers	Motifs	Form mesh
+1	1	1	Plant_Corn	Vanilla control		Vanilla	not styled				Original
+1	1	2	Plant_Corn	Garden corn plant 1	HNS_BronzeFlush	GPU procedural, no mask	0:none, 2:none	Bronze Flush	Uncommon	Copper-bronze juvenile leaves that mature into deep green foliage.	Original
+1	1	3	Plant_Corn	Garden corn plant 2	HNS_Frostbud	GPU procedural, no mask	1:none, 2:none	Frostbud	Rare	Cream-white juvenile tips and pale leaf margins which gradually green as the plant develops.	Original
+1	1	4	Plant_Corn	Garden corn plant 3	HNS_AutumnCrown	GPU procedural, no mask	1:none, 2:none	Autumn Crown	Rare	Green juvenile foliage that develops golden and russet upper growth at maturity.	Original
+1	1	5	Plant_Corn	Garden corn plant 4	HNS_RipeningBlush	GPU procedural, no mask	0:none, 2:none	Ripening Blush	Rare	Contrasting reproductive tissue ripens from pale honey to rose and mulberry tones.	Original
+1	1	6	Plant_Corn	Garden corn plant 5	HNS_MaturingVariegation	GPU procedural, no mask	1:none, 2:none	Maturing Variegation	Rare	Green young leaves gradually develop irregular cream and sage variegation.	Original
+1	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled				Original
+1	2	2	Plant_Cotton	Garden cotton plant 1	HNS_BronzeFlush	GPU procedural, no mask	0:none, 2:none	Bronze Flush	Uncommon	Copper-bronze juvenile leaves that mature into deep green foliage.	Original
+1	2	3	Plant_Cotton	Garden cotton plant 2	HNS_Frostbud	GPU procedural, no mask	0:none, 2:none	Frostbud	Rare	Cream-white juvenile tips and pale leaf margins which gradually green as the plant develops.	Original
+1	2	4	Plant_Cotton	Garden cotton plant 3	HNS_AutumnCrown	GPU procedural, no mask	1:none, 2:none	Autumn Crown	Rare	Green juvenile foliage that develops golden and russet upper growth at maturity.	Original
+1	2	5	Plant_Cotton	Garden cotton plant 4	HNS_RipeningBlush	GPU procedural, no mask	0:none, 2:none	Ripening Blush	Rare	Contrasting reproductive tissue ripens from pale honey to rose and mulberry tones.	Original
+1	2	6	Plant_Cotton	Garden cotton plant 5	HNS_MaturingVariegation	GPU procedural, no mask	1:none, 2:none	Maturing Variegation	Rare	Green young leaves gradually develop irregular cream and sage variegation.	Original
+1	3	1	Plant_Strawberry	Vanilla control		Vanilla	not styled				Original
+1	3	2	Plant_Strawberry	Garden strawberry plant 1	HNS_BronzeFlush	GPU procedural, no mask	0:none, 1:none	Bronze Flush	Uncommon	Copper-bronze juvenile leaves that mature into deep green foliage.	Original
+1	3	3	Plant_Strawberry	Garden strawberry plant 2	HNS_Frostbud	GPU procedural, no mask	0:none, 1:none	Frostbud	Rare	Cream-white juvenile tips and pale leaf margins which gradually green as the plant develops.	Original
+1	3	4	Plant_Strawberry	Garden strawberry plant 3	HNS_AutumnCrown	GPU procedural, no mask	0:none, 1:none	Autumn Crown	Rare	Green juvenile foliage that develops golden and russet upper growth at maturity.	Original
+1	3	5	Plant_Strawberry	Garden strawberry plant 4	HNS_RipeningBlush	GPU procedural, no mask	0:none, 1:none	Ripening Blush	Rare	Contrasting reproductive tissue ripens from pale honey to rose and mulberry tones.	Original
+1	3	6	Plant_Strawberry	Garden strawberry plant 5	HNS_MaturingVariegation	GPU procedural, no mask	0:none, 1:none	Maturing Variegation	Rare	Green young leaves gradually develop irregular cream and sage variegation.	Original
+2	1	1	Plant_Corn	Vanilla control		Vanilla	not styled				Original
+2	1	2	Plant_Corn	Garden corn plant 1	HNS_BronzeFlush	GPU procedural, no mask	0:none, 2:none	Bronze Flush	Uncommon	Copper-bronze juvenile leaves that mature into deep green foliage.	Original
+2	1	3	Plant_Corn	Garden corn plant 2	HNS_Frostbud	GPU procedural, no mask	1:none, 2:none	Frostbud	Rare	Cream-white juvenile tips and pale leaf margins which gradually green as the plant develops.	Original
+2	1	4	Plant_Corn	Garden corn plant 3	HNS_AutumnCrown	GPU procedural, no mask	1:none, 2:none	Autumn Crown	Rare	Green juvenile foliage that develops golden and russet upper growth at maturity.	Original
+2	1	5	Plant_Corn	Garden corn plant 4	HNS_RipeningBlush	GPU procedural, no mask	0:none, 2:none	Ripening Blush	Rare	Contrasting reproductive tissue ripens from pale honey to rose and mulberry tones.	Original
+2	1	6	Plant_Corn	Garden corn plant 5	HNS_MaturingVariegation	GPU procedural, no mask	1:none, 2:none	Maturing Variegation	Rare	Green young leaves gradually develop irregular cream and sage variegation.	Original
+2	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled				Original
+2	2	2	Plant_Cotton	Garden cotton plant 1	HNS_BronzeFlush	GPU procedural, no mask	0:none, 2:none	Bronze Flush	Uncommon	Copper-bronze juvenile leaves that mature into deep green foliage.	Original
+2	2	3	Plant_Cotton	Garden cotton plant 2	HNS_Frostbud	GPU procedural, no mask	0:none, 2:none	Frostbud	Rare	Cream-white juvenile tips and pale leaf margins which gradually green as the plant develops.	Original
+2	2	4	Plant_Cotton	Garden cotton plant 3	HNS_AutumnCrown	GPU procedural, no mask	1:none, 2:none	Autumn Crown	Rare	Green juvenile foliage that develops golden and russet upper growth at maturity.	Original
+2	2	5	Plant_Cotton	Garden cotton plant 4	HNS_RipeningBlush	GPU procedural, no mask	0:none, 2:none	Ripening Blush	Rare	Contrasting reproductive tissue ripens from pale honey to rose and mulberry tones.	Original
+2	2	6	Plant_Cotton	Garden cotton plant 5	HNS_MaturingVariegation	GPU procedural, no mask	1:none, 2:none	Maturing Variegation	Rare	Green young leaves gradually develop irregular cream and sage variegation.	Original
+2	3	1	Plant_Strawberry	Vanilla control		Vanilla	not styled				Original
+2	3	2	Plant_Strawberry	Garden strawberry plant 1	HNS_BronzeFlush	GPU procedural, no mask	0:none, 1:none	Bronze Flush	Uncommon	Copper-bronze juvenile leaves that mature into deep green foliage.	Original
+2	3	3	Plant_Strawberry	Garden strawberry plant 2	HNS_Frostbud	GPU procedural, no mask	0:none, 1:none	Frostbud	Rare	Cream-white juvenile tips and pale leaf margins which gradually green as the plant develops.	Original
+2	3	4	Plant_Strawberry	Garden strawberry plant 3	HNS_AutumnCrown	GPU procedural, no mask	0:none, 1:none	Autumn Crown	Rare	Green juvenile foliage that develops golden and russet upper growth at maturity.	Original
+2	3	5	Plant_Strawberry	Garden strawberry plant 4	HNS_RipeningBlush	GPU procedural, no mask	0:none, 1:none	Ripening Blush	Rare	Contrasting reproductive tissue ripens from pale honey to rose and mulberry tones.	Original
+2	3	6	Plant_Strawberry	Garden strawberry plant 5	HNS_MaturingVariegation	GPU procedural, no mask	0:none, 1:none	Maturing Variegation	Rare	Green young leaves gradually develop irregular cream and sage variegation.	Original
+3	1	1	Plant_Corn	Vanilla control		Vanilla	not styled				Original
+3	1	2	Plant_Corn	Garden corn plant 1	HNS_BronzeFlush	GPU procedural, no mask	0:none, 2:none	Bronze Flush	Uncommon	Copper-bronze juvenile leaves that mature into deep green foliage.	Original
+3	1	3	Plant_Corn	Garden corn plant 2	HNS_Frostbud	GPU procedural, no mask	1:none, 2:none	Frostbud	Rare	Cream-white juvenile tips and pale leaf margins which gradually green as the plant develops.	Original
+3	1	4	Plant_Corn	Garden corn plant 3	HNS_AutumnCrown	GPU procedural, no mask	1:none, 2:none	Autumn Crown	Rare	Green juvenile foliage that develops golden and russet upper growth at maturity.	Original
+3	1	5	Plant_Corn	Garden corn plant 4	HNS_RipeningBlush	GPU procedural, no mask	0:none, 2:none	Ripening Blush	Rare	Contrasting reproductive tissue ripens from pale honey to rose and mulberry tones.	Original
+3	1	6	Plant_Corn	Garden corn plant 5	HNS_MaturingVariegation	GPU procedural, no mask	1:none, 2:none	Maturing Variegation	Rare	Green young leaves gradually develop irregular cream and sage variegation.	Original
+3	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled				Original
+3	2	2	Plant_Cotton	Garden cotton plant 1	HNS_BronzeFlush	GPU procedural, no mask	0:none, 2:none	Bronze Flush	Uncommon	Copper-bronze juvenile leaves that mature into deep green foliage.	Original
+3	2	3	Plant_Cotton	Garden cotton plant 2	HNS_Frostbud	GPU procedural, no mask	0:none, 2:none	Frostbud	Rare	Cream-white juvenile tips and pale leaf margins which gradually green as the plant develops.	Original
+3	2	4	Plant_Cotton	Garden cotton plant 3	HNS_AutumnCrown	GPU procedural, no mask	1:none, 2:none	Autumn Crown	Rare	Green juvenile foliage that develops golden and russet upper growth at maturity.	Original
+3	2	5	Plant_Cotton	Garden cotton plant 4	HNS_RipeningBlush	GPU procedural, no mask	0:none, 2:none	Ripening Blush	Rare	Contrasting reproductive tissue ripens from pale honey to rose and mulberry tones.	Original
+3	2	6	Plant_Cotton	Garden cotton plant 5	HNS_MaturingVariegation	GPU procedural, no mask	1:none, 2:none	Maturing Variegation	Rare	Green young leaves gradually develop irregular cream and sage variegation.	Original
+3	3	1	Plant_Strawberry	Vanilla control		Vanilla	not styled				Original
+3	3	2	Plant_Strawberry	Garden strawberry plant 1	HNS_BronzeFlush	GPU procedural, no mask	0:none, 1:none	Bronze Flush	Uncommon	Copper-bronze juvenile leaves that mature into deep green foliage.	Original
+3	3	3	Plant_Strawberry	Garden strawberry plant 2	HNS_Frostbud	GPU procedural, no mask	0:none, 1:none	Frostbud	Rare	Cream-white juvenile tips and pale leaf margins which gradually green as the plant develops.	Original
+3	3	4	Plant_Strawberry	Garden strawberry plant 3	HNS_AutumnCrown	GPU procedural, no mask	0:none, 1:none	Autumn Crown	Rare	Green juvenile foliage that develops golden and russet upper growth at maturity.	Original
+3	3	5	Plant_Strawberry	Garden strawberry plant 4	HNS_RipeningBlush	GPU procedural, no mask	0:none, 1:none	Ripening Blush	Rare	Contrasting reproductive tissue ripens from pale honey to rose and mulberry tones.	Original
+3	3	6	Plant_Strawberry	Garden strawberry plant 5	HNS_MaturingVariegation	GPU procedural, no mask	0:none, 1:none	Maturing Variegation	Rare	Green young leaves gradually develop irregular cream and sage variegation.	Original
