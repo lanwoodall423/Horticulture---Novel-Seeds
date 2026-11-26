@@ -778,3 +778,44 @@ Surface inventory SHA256: 0C07978CC93E2008D185C02794463F03E0C523ACD573B854ECBA04
 Reproduce with RimWorld closed:
 
     powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -SurfaceGarden
+
+## Botanical topology, procedural structures and night glow (2026-11-25)
+
+Source 16c9dc8644bf11d9cbbe9c89798f394c4033d13c introduces independent
+zero-default-weight neutral visual candidates Lobed Leaf, Windowleaf,
+Side Shoots, Curling Tendrils and Lantern Buds. The first four use
+bounded, explicit prewarming and source-sprite alpha editing: conservative
+green foliage cuts, enclosed windows, new leaflets and hooked tendrils
+on previously transparent pixels. Existing fruit pixels are preserved.
+Lantern Buds uses the original plant wind stage with a separate additive
+post-light fragment shader and current-map sky-glow uniform. No gameplay
+light grid or mechanics changed. Earlier visual capabilities retained.
+
+Native AllPerformance run a93618a6f8b14afba5bd0d99cac1e624 on RimWorld
+1.7.5014 rev1195 passed all six stages. Same 18 mature plants, three controls,
+12 topology cases, three night-overlay cases. Ten topology cases rendered,
+with explicit Lobed Leaf fallbacks on cotton and strawberry. Windowleaf,
+Side Shoots and Curling Tendrils rendered on all three crops. 16 prepared
+textures, three glow materials; sky glow 1/0/1 and shader darkness 0/1/0.
+Both builds clean; all prior rules and 14 added math checks passed.
+Player save/config/preferences preservation and test cleanup passed.
+No relevant HNS errors identified in captured log.
+Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/463d803ff946d48abbf0f3d615df294623224b04
+
+Visual review: foliage edits are very restrained at normal zoom; Lantern
+Buds is visibly effective on reproductive tissue after dark. This is
+2D source-pixel processing and visual-only glow, not exact anatomy,
+true 3D organs or emitted gameplay light. Natural day-night progression,
+other species/growth stages, combined traits, seasonal art, performance,
+editor, save/reload and ordinary activation remain unqualified.
+No legacy 1.6 changes or manual masks.
+
+DLL SHA256: EDD2975910C43C1239AC3F3E89C978BCD448648922D289DB76BAF335BBA42B44.
+Receipt SHA256: 50FB004F391DAA199DA138D34D9246AB1877382EA3655FB2F7D64F3B73584018.
+Log SHA256: DD965E8A2725000E755049A908A59AD6A81836923E588BC8423F04DA393988D2.
+Detail inventory SHA256: 90DF0DEA4107C6B447647882A61C3DFBB5AE430CED85D0861E29987FE14FC257.
+Preparation SHA256: 3A0AF2C56C7D4ED1CEB17EB0B6F2BF357DC947F7246309830C19BB8E6D00638D.
+
+Reproduce with RimWorld closed:
+
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -DetailGarden
