@@ -1,0 +1,73 @@
+Panel	Row	Column	Species	Cultivar	Trait IDs	Renderer	Automatic mask sources
+1	1	1	Plant_Rice	Vanilla control		Vanilla	not styled
+1	1	2	Plant_Rice	Garden rice plant 1	HNS_Variegated	GPU procedural, no mask	0:none
+1	1	3	Plant_Rice	Garden rice plant 2	HNS_Anthocyanin	GPU procedural, no mask	0:none
+1	1	4	Plant_Rice	Garden rice plant 3	HNS_MoonFrost	GPU procedural, no mask	0:none
+1	1	5	Plant_Rice	Garden rice plant 4	HNS_GoldFreckled	GPU procedural, no mask	0:none
+1	1	6	Plant_Rice	Garden rice plant 5	HNS_AuroraVeins	GPU procedural, no mask	0:none
+1	2	1	Plant_Corn	Vanilla control		Vanilla	not styled
+1	2	2	Plant_Corn	Garden corn plant 1	HNS_Variegated	GPU procedural, no mask	1:none
+1	2	3	Plant_Corn	Garden corn plant 2	HNS_Anthocyanin	GPU procedural, no mask	1:none
+1	2	4	Plant_Corn	Garden corn plant 3	HNS_MoonFrost	GPU procedural, no mask	1:none
+1	2	5	Plant_Corn	Garden corn plant 4	HNS_GoldFreckled	GPU procedural, no mask	1:none
+1	2	6	Plant_Corn	Garden corn plant 5	HNS_AuroraVeins	GPU procedural, no mask	0:none
+1	3	1	Plant_Potato	Vanilla control		Vanilla	not styled
+1	3	2	Plant_Potato	Garden potato plant 1	HNS_Variegated	GPU procedural, no mask	0:none
+1	3	3	Plant_Potato	Garden potato plant 2	HNS_Anthocyanin	GPU procedural, no mask	0:none
+1	3	4	Plant_Potato	Garden potato plant 3	HNS_MoonFrost	GPU procedural, no mask	0:none
+1	3	5	Plant_Potato	Garden potato plant 4	HNS_GoldFreckled	GPU procedural, no mask	0:none
+1	3	6	Plant_Potato	Garden potato plant 5	HNS_AuroraVeins	GPU procedural, no mask	0:none
+2	1	1	Plant_Strawberry	Vanilla control		Vanilla	not styled
+2	1	2	Plant_Strawberry	Garden strawberry plant 1	HNS_Variegated	GPU procedural, no mask	0:none
+2	1	3	Plant_Strawberry	Garden strawberry plant 2	HNS_Anthocyanin	GPU procedural, no mask	0:none
+2	1	4	Plant_Strawberry	Garden strawberry plant 3	HNS_MoonFrost	GPU procedural, no mask	0:none
+2	1	5	Plant_Strawberry	Garden strawberry plant 4	HNS_GoldFreckled	GPU procedural, no mask	0:none
+2	1	6	Plant_Strawberry	Garden strawberry plant 5	HNS_AuroraVeins	GPU procedural, no mask	0:none
+2	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled
+2	2	2	Plant_Cotton	Garden cotton plant 1	HNS_Variegated	GPU procedural, no mask	1:none
+2	2	3	Plant_Cotton	Garden cotton plant 2	HNS_Anthocyanin	GPU procedural, no mask	1:none
+2	2	4	Plant_Cotton	Garden cotton plant 3	HNS_MoonFrost	GPU procedural, no mask	1:none
+2	2	5	Plant_Cotton	Garden cotton plant 4	HNS_GoldFreckled	GPU procedural, no mask	1:none
+2	2	6	Plant_Cotton	Garden cotton plant 5	HNS_AuroraVeins	GPU procedural, no mask	0:none
+2	3	1	Plant_Healroot	Vanilla control		Vanilla	not styled
+2	3	2	Plant_Healroot	Garden healroot 1	HNS_Variegated	GPU procedural, no mask	0:none
+2	3	3	Plant_Healroot	Garden healroot 2	HNS_Anthocyanin	GPU procedural, no mask	0:none
+2	3	4	Plant_Healroot	Garden healroot 3	HNS_MoonFrost	GPU procedural, no mask	0:none
+2	3	5	Plant_Healroot	Garden healroot 4	HNS_GoldFreckled	GPU procedural, no mask	0:none
+2	3	6	Plant_Healroot	Garden healroot 5	HNS_AuroraVeins	GPU procedural, no mask	0:none
+3	1	1	Plant_Hops	Vanilla control		Vanilla	not styled
+3	1	2	Plant_Hops	Garden hop plant 1	HNS_Variegated	GPU procedural, no mask	0:none
+3	1	3	Plant_Hops	Garden hop plant 2	HNS_Anthocyanin	GPU procedural, no mask	0:none
+3	1	4	Plant_Hops	Garden hop plant 3	HNS_MoonFrost	GPU procedural, no mask	0:none
+3	1	5	Plant_Hops	Garden hop plant 4	HNS_GoldFreckled	GPU procedural, no mask	0:none
+3	1	6	Plant_Hops	Garden hop plant 5	HNS_AuroraVeins	GPU procedural, no mask	0:none
+3	2	1	Plant_Smokeleaf	Vanilla control		Vanilla	not styled
+3	2	2	Plant_Smokeleaf	Garden smokeleaf plant 1	HNS_Variegated	GPU procedural, no mask	0:none
+3	2	3	Plant_Smokeleaf	Garden smokeleaf plant 2	HNS_Anthocyanin	GPU procedural, no mask	0:none
+3	2	4	Plant_Smokeleaf	Garden smokeleaf plant 3	HNS_MoonFrost	GPU procedural, no mask	0:none
+3	2	5	Plant_Smokeleaf	Garden smokeleaf plant 4	HNS_GoldFreckled	GPU procedural, no mask	0:none
+3	2	6	Plant_Smokeleaf	Garden smokeleaf plant 5	HNS_AuroraVeins	GPU procedural, no mask	0:none
+3	3	1	Plant_Psychoid	Vanilla control		Vanilla	not styled
+3	3	2	Plant_Psychoid	Garden psychoid plant 1	HNS_Variegated	GPU procedural, no mask	0:none
+3	3	3	Plant_Psychoid	Garden psychoid plant 2	HNS_Anthocyanin	GPU procedural, no mask	0:none
+3	3	4	Plant_Psychoid	Garden psychoid plant 3	HNS_MoonFrost	GPU procedural, no mask	0:none
+3	3	5	Plant_Psychoid	Garden psychoid plant 4	HNS_GoldFreckled	GPU procedural, no mask	0:none
+3	3	6	Plant_Psychoid	Garden psychoid plant 5	HNS_AuroraVeins	GPU procedural, no mask	0:none
+4	1	1	Plant_Devilstrand	Vanilla control		Vanilla	not styled
+4	1	2	Plant_Devilstrand	Garden devilstrand 1	HNS_Variegated	GPU procedural, no mask	1:none
+4	1	3	Plant_Devilstrand	Garden devilstrand 2	HNS_Anthocyanin	GPU procedural, no mask	1:none
+4	1	4	Plant_Devilstrand	Garden devilstrand 3	HNS_MoonFrost	GPU procedural, no mask	0:none
+4	1	5	Plant_Devilstrand	Garden devilstrand 4	HNS_GoldFreckled	GPU procedural, no mask	0:none
+4	1	6	Plant_Devilstrand	Garden devilstrand 5	HNS_AuroraVeins	GPU procedural, no mask	1:none
+4	2	1	Plant_Haygrass	Vanilla control		Vanilla	not styled
+4	2	2	Plant_Haygrass	Garden haygrass 1	HNS_Variegated	GPU procedural, no mask	0:none
+4	2	3	Plant_Haygrass	Garden haygrass 2	HNS_Anthocyanin	GPU procedural, no mask	0:none
+4	2	4	Plant_Haygrass	Garden haygrass 3	HNS_MoonFrost	GPU procedural, no mask	0:none
+4	2	5	Plant_Haygrass	Garden haygrass 4	HNS_GoldFreckled	GPU procedural, no mask	0:none
+4	2	6	Plant_Haygrass	Garden haygrass 5	HNS_AuroraVeins	GPU procedural, no mask	0:none
+4	3	1	Plant_TreeCocoa	Vanilla control		Vanilla	not styled
+4	3	2	Plant_TreeCocoa	Garden cocoa tree 1	HNS_Variegated	GPU procedural, no mask	0:none
+4	3	3	Plant_TreeCocoa	Garden cocoa tree 2	HNS_Anthocyanin	GPU procedural, no mask	0:none
+4	3	4	Plant_TreeCocoa	Garden cocoa tree 3	HNS_MoonFrost	GPU procedural, no mask	0:none
+4	3	5	Plant_TreeCocoa	Garden cocoa tree 4	HNS_GoldFreckled	GPU procedural, no mask	0:none
+4	3	6	Plant_TreeCocoa	Garden cocoa tree 5	HNS_AuroraVeins	GPU procedural, no mask	0:none
