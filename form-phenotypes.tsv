@@ -1,0 +1,37 @@
+Panel	Species	Column	Plant ID	Cultivar	Facts	Individual phenotype	Botanical observations	Recorded history	Cultivar potential
+1	Plant_Corn	1	49118	Vanilla	0				
+1	Plant_Corn	2	49119	HNS_Plant_Corn_1	1	This specimen displays an arching stem habit.	Growth habit: an arching stem habit.		Growth habit: an arching stem habit.
+1	Plant_Corn	3	49120	HNS_Plant_Corn_2	1	This specimen displays a fan-shaped crown.	Growth habit: a fan-shaped crown.		Growth habit: a fan-shaped crown.
+1	Plant_Corn	4	49121	HNS_Plant_Corn_3	1	This specimen displays a broad rounded canopy.	Growth habit: a broad rounded canopy.		Growth habit: a broad rounded canopy.
+1	Plant_Corn	5	49122	HNS_Plant_Corn_4	1	This specimen displays a drooping canopy.	Growth habit: a drooping canopy.		Growth habit: a drooping canopy.
+1	Plant_Corn	6	49123	HNS_Plant_Corn_5	1	This specimen displays a tall narrow habit.	Growth habit: a tall narrow habit.		Growth habit: a tall narrow habit.
+1	Plant_Cotton	1	49124	Vanilla	0				
+1	Plant_Cotton	2	49125	HNS_Plant_Cotton_6	1	This specimen displays an arching stem habit.	Growth habit: an arching stem habit.		Growth habit: an arching stem habit.
+1	Plant_Cotton	3	49126	HNS_Plant_Cotton_7	1	This specimen displays a fan-shaped crown.	Growth habit: a fan-shaped crown.		Growth habit: a fan-shaped crown.
+1	Plant_Cotton	4	49127	HNS_Plant_Cotton_8	1	This specimen displays a broad rounded canopy.	Growth habit: a broad rounded canopy.		Growth habit: a broad rounded canopy.
+1	Plant_Cotton	5	49128	HNS_Plant_Cotton_9	1	This specimen displays a drooping canopy.	Growth habit: a drooping canopy.		Growth habit: a drooping canopy.
+1	Plant_Cotton	6	49129	HNS_Plant_Cotton_10	1	This specimen displays a tall narrow habit.	Growth habit: a tall narrow habit.		Growth habit: a tall narrow habit.
+1	Plant_Strawberry	1	49130	Vanilla	0				
+1	Plant_Strawberry	2	49131	HNS_Plant_Strawberry_11	1	This specimen displays an arching stem habit.	Growth habit: an arching stem habit.		Growth habit: an arching stem habit.
+1	Plant_Strawberry	3	49132	HNS_Plant_Strawberry_12	1	This specimen displays a fan-shaped crown.	Growth habit: a fan-shaped crown.		Growth habit: a fan-shaped crown.
+1	Plant_Strawberry	4	49133	HNS_Plant_Strawberry_13	1	This specimen displays a broad rounded canopy.	Growth habit: a broad rounded canopy.		Growth habit: a broad rounded canopy.
+1	Plant_Strawberry	5	49134	HNS_Plant_Strawberry_14	1	This specimen displays a drooping canopy.	Growth habit: a drooping canopy.		Growth habit: a drooping canopy.
+1	Plant_Strawberry	6	49135	HNS_Plant_Strawberry_15	1	This specimen displays a tall narrow habit.	Growth habit: a tall narrow habit.		Growth habit: a tall narrow habit.
+2	Plant_Corn	1	49136	Vanilla	0				
+2	Plant_Corn	2	49137	HNS_Plant_Corn_16	2	This specimen displays an arching stem habit and rose reproductive pigment.	Growth habit: an arching stem habit; Reproductive structures: rose reproductive pigment.		Growth habit: an arching stem habit; Reproductive structures: rose reproductive pigment.
+2	Plant_Corn	3	49138	HNS_Plant_Corn_17	2	This specimen displays a fan-shaped crown and cream-and-sage variegation.	Growth habit: a fan-shaped crown; Foliage: cream-and-sage variegation.		Growth habit: a fan-shaped crown; Foliage: cream-and-sage variegation.
+2	Plant_Corn	4	49139	HNS_Plant_Corn_18	2	This specimen displays a broad rounded canopy and copper-colored tips.	Growth habit: a broad rounded canopy; Foliage: copper-colored tips.		Growth habit: a broad rounded canopy; Foliage: copper-colored tips.
+2	Plant_Corn	5	49140	HNS_Plant_Corn_19	2	This specimen displays a drooping canopy and ruby-colored stalks.	Growth habit: a drooping canopy; Stems: ruby-colored stalks.		Growth habit: a drooping canopy; Stems: ruby-colored stalks.
+2	Plant_Corn	6	49141	HNS_Plant_Corn_20	2	This specimen displays a tall narrow habit and blue-jade foliage.	Growth habit: a tall narrow habit; Foliage: blue-jade foliage.		Growth habit: a tall narrow habit; Foliage: blue-jade foliage.
+2	Plant_Cotton	1	49142	Vanilla	0				
+2	Plant_Cotton	2	49143	HNS_Plant_Cotton_21	2	This specimen displays an arching stem habit and rose reproductive pigment.	Growth habit: an arching stem habit; Reproductive structures: rose reproductive pigment.		Growth habit: an arching stem habit; Reproductive structures: rose reproductive pigment.
+2	Plant_Cotton	3	49144	HNS_Plant_Cotton_22	2	This specimen displays a fan-shaped crown and cream-and-sage variegation.	Growth habit: a fan-shaped crown; Foliage: cream-and-sage variegation.		Growth habit: a fan-shaped crown; Foliage: cream-and-sage variegation.
+2	Plant_Cotton	4	49145	HNS_Plant_Cotton_23	2	This specimen displays a broad rounded canopy and copper-colored tips.	Growth habit: a broad rounded canopy; Foliage: copper-colored tips.		Growth habit: a broad rounded canopy; Foliage: copper-colored tips.
+2	Plant_Cotton	5	49146	HNS_Plant_Cotton_24	2	This specimen displays a drooping canopy and ruby-colored stalks.	Growth habit: a drooping canopy; Stems: ruby-colored stalks.		Growth habit: a drooping canopy; Stems: ruby-colored stalks.
+2	Plant_Cotton	6	49147	HNS_Plant_Cotton_25	2	This specimen displays a tall narrow habit and blue-jade foliage.	Growth habit: a tall narrow habit; Foliage: blue-jade foliage.		Growth habit: a tall narrow habit; Foliage: blue-jade foliage.
+2	Plant_Strawberry	1	49148	Vanilla	0				
+2	Plant_Strawberry	2	49149	HNS_Plant_Strawberry_26	2	This specimen displays an arching stem habit and rose reproductive pigment.	Growth habit: an arching stem habit; Reproductive structures: rose reproductive pigment.		Growth habit: an arching stem habit; Reproductive structures: rose reproductive pigment.
+2	Plant_Strawberry	3	49150	HNS_Plant_Strawberry_27	2	This specimen displays a fan-shaped crown and cream-and-sage variegation.	Growth habit: a fan-shaped crown; Foliage: cream-and-sage variegation.		Growth habit: a fan-shaped crown; Foliage: cream-and-sage variegation.
+2	Plant_Strawberry	4	49151	HNS_Plant_Strawberry_28	2	This specimen displays a broad rounded canopy and copper-colored tips.	Growth habit: a broad rounded canopy; Foliage: copper-colored tips.		Growth habit: a broad rounded canopy; Foliage: copper-colored tips.
+2	Plant_Strawberry	5	49152	HNS_Plant_Strawberry_29	2	This specimen displays a drooping canopy and ruby-colored stalks.	Growth habit: a drooping canopy; Stems: ruby-colored stalks.		Growth habit: a drooping canopy; Stems: ruby-colored stalks.
+2	Plant_Strawberry	6	49153	HNS_Plant_Strawberry_30	2	This specimen displays a tall narrow habit and blue-jade foliage.	Growth habit: a tall narrow habit; Foliage: blue-jade foliage.		Growth habit: a tall narrow habit; Foliage: blue-jade foliage.
