@@ -1,0 +1,37 @@
+Panel	Row	Column	Species	Cultivar	Trait IDs	Renderer	Automatic mask sources	Trait labels	Tiers	Motifs	Form mesh
+1	1	1	Plant_Corn	Vanilla control		Vanilla	not styled				Original
+1	1	2	Plant_Corn	Garden corn plant 1	HNS_Arching	Geometry/effects only	not styled	Arching	Uncommon	A gently curved, asymmetric upright growth habit.	Deformed
+1	1	3	Plant_Corn	Garden corn plant 2	HNS_FanCrowned	Geometry/effects only	not styled	Fan-Crowned	Uncommon	A broad spreading upper canopy with a narrower base.	Deformed
+1	1	4	Plant_Corn	Garden corn plant 3	HNS_Rounded	Geometry/effects only	not styled	Rounded	Common	A fuller middle canopy with compact rounded upper growth.	Deformed
+1	1	5	Plant_Corn	Garden corn plant 4	HNS_Weeping	Geometry/effects only	not styled	Weeping	Rare	A spreading canopy with drooping outer foliage.	Deformed
+1	1	6	Plant_Corn	Garden corn plant 5	HNS_Spired	Geometry/effects only	not styled	Spired	Rare	A tapered, elongated upright canopy with narrow upper growth.	Deformed
+1	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled				Original
+1	2	2	Plant_Cotton	Garden cotton plant 1	HNS_Arching	Geometry/effects only	not styled	Arching	Uncommon	A gently curved, asymmetric upright growth habit.	Deformed
+1	2	3	Plant_Cotton	Garden cotton plant 2	HNS_FanCrowned	Geometry/effects only	not styled	Fan-Crowned	Uncommon	A broad spreading upper canopy with a narrower base.	Deformed
+1	2	4	Plant_Cotton	Garden cotton plant 3	HNS_Rounded	Geometry/effects only	not styled	Rounded	Common	A fuller middle canopy with compact rounded upper growth.	Deformed
+1	2	5	Plant_Cotton	Garden cotton plant 4	HNS_Weeping	Geometry/effects only	not styled	Weeping	Rare	A spreading canopy with drooping outer foliage.	Deformed
+1	2	6	Plant_Cotton	Garden cotton plant 5	HNS_Spired	Geometry/effects only	not styled	Spired	Rare	A tapered, elongated upright canopy with narrow upper growth.	Deformed
+1	3	1	Plant_Strawberry	Vanilla control		Vanilla	not styled				Original
+1	3	2	Plant_Strawberry	Garden strawberry plant 1	HNS_Arching	Geometry/effects only	not styled	Arching	Uncommon	A gently curved, asymmetric upright growth habit.	Deformed
+1	3	3	Plant_Strawberry	Garden strawberry plant 2	HNS_FanCrowned	Geometry/effects only	not styled	Fan-Crowned	Uncommon	A broad spreading upper canopy with a narrower base.	Deformed
+1	3	4	Plant_Strawberry	Garden strawberry plant 3	HNS_Rounded	Geometry/effects only	not styled	Rounded	Common	A fuller middle canopy with compact rounded upper growth.	Deformed
+1	3	5	Plant_Strawberry	Garden strawberry plant 4	HNS_Weeping	Geometry/effects only	not styled	Weeping	Rare	A spreading canopy with drooping outer foliage.	Deformed
+1	3	6	Plant_Strawberry	Garden strawberry plant 5	HNS_Spired	Geometry/effects only	not styled	Spired	Rare	A tapered, elongated upright canopy with narrow upper growth.	Deformed
+2	1	1	Plant_Corn	Vanilla control		Vanilla	not styled				Original
+2	1	2	Plant_Corn	Garden corn plant 1	HNS_Arching, HNS_RoseHarvest	GPU procedural, no mask	1:none	Arching + Rose Harvest	Uncommon + Rare	A gently curved, asymmetric upright growth habit. + Soft rose-colored fruit and flower tissue, distinct from green foliage.	Deformed
+2	1	3	Plant_Corn	Garden corn plant 2	HNS_FanCrowned, HNS_Variegated	GPU procedural, no mask	1:none	Fan-Crowned + Ivory Variegation	Uncommon + Exceptional	A broad spreading upper canopy with a narrower base. + Cream and sage sectors concentrated on foliage; contrasting fruit and stems remain recognizable.	Deformed
+2	1	4	Plant_Corn	Garden corn plant 3	HNS_Rounded, HNS_CopperTips	GPU procedural, no mask	1:none	Rounded + Copper Tips	Common + Uncommon	A fuller middle canopy with compact rounded upper growth. + Bronze and copper pigmentation concentrated in upper foliage.	Deformed
+2	1	5	Plant_Corn	Garden corn plant 4	HNS_Weeping, HNS_RubyStalk	GPU procedural, no mask	1:none	Weeping + Ruby Stalk	Rare + Uncommon	A spreading canopy with drooping outer foliage. + Wine-red pigmentation concentrated in lower central green tissue; approximate stalk targeting.	Deformed
+2	1	6	Plant_Corn	Garden corn plant 5	HNS_Spired, HNS_BlueJade	GPU procedural, no mask	0:none	Spired + Blue Jade	Rare + Uncommon	A tapered, elongated upright canopy with narrow upper growth. + Muted blue-green foliage with jade highlights, retaining original fruit colors.	Deformed
+2	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled				Original
+2	2	2	Plant_Cotton	Garden cotton plant 1	HNS_Arching, HNS_RoseHarvest	GPU procedural, no mask	0:none	Arching + Rose Harvest	Uncommon + Rare	A gently curved, asymmetric upright growth habit. + Soft rose-colored fruit and flower tissue, distinct from green foliage.	Deformed
+2	2	3	Plant_Cotton	Garden cotton plant 2	HNS_FanCrowned, HNS_Variegated	GPU procedural, no mask	1:none	Fan-Crowned + Ivory Variegation	Uncommon + Exceptional	A broad spreading upper canopy with a narrower base. + Cream and sage sectors concentrated on foliage; contrasting fruit and stems remain recognizable.	Deformed
+2	2	4	Plant_Cotton	Garden cotton plant 3	HNS_Rounded, HNS_CopperTips	GPU procedural, no mask	0:none	Rounded + Copper Tips	Common + Uncommon	A fuller middle canopy with compact rounded upper growth. + Bronze and copper pigmentation concentrated in upper foliage.	Deformed
+2	2	5	Plant_Cotton	Garden cotton plant 4	HNS_Weeping, HNS_RubyStalk	GPU procedural, no mask	1:none	Weeping + Ruby Stalk	Rare + Uncommon	A spreading canopy with drooping outer foliage. + Wine-red pigmentation concentrated in lower central green tissue; approximate stalk targeting.	Deformed
+2	2	6	Plant_Cotton	Garden cotton plant 5	HNS_Spired, HNS_BlueJade	GPU procedural, no mask	1:none	Spired + Blue Jade	Rare + Uncommon	A tapered, elongated upright canopy with narrow upper growth. + Muted blue-green foliage with jade highlights, retaining original fruit colors.	Deformed
+2	3	1	Plant_Strawberry	Vanilla control		Vanilla	not styled				Original
+2	3	2	Plant_Strawberry	Garden strawberry plant 1	HNS_Arching, HNS_RoseHarvest	GPU procedural, no mask	0:none	Arching + Rose Harvest	Uncommon + Rare	A gently curved, asymmetric upright growth habit. + Soft rose-colored fruit and flower tissue, distinct from green foliage.	Deformed
+2	3	3	Plant_Strawberry	Garden strawberry plant 2	HNS_FanCrowned, HNS_Variegated	GPU procedural, no mask	0:none	Fan-Crowned + Ivory Variegation	Uncommon + Exceptional	A broad spreading upper canopy with a narrower base. + Cream and sage sectors concentrated on foliage; contrasting fruit and stems remain recognizable.	Deformed
+2	3	4	Plant_Strawberry	Garden strawberry plant 3	HNS_Rounded, HNS_CopperTips	GPU procedural, no mask	0:none	Rounded + Copper Tips	Common + Uncommon	A fuller middle canopy with compact rounded upper growth. + Bronze and copper pigmentation concentrated in upper foliage.	Deformed
+2	3	5	Plant_Strawberry	Garden strawberry plant 4	HNS_Weeping, HNS_RubyStalk	GPU procedural, no mask	0:none	Weeping + Ruby Stalk	Rare + Uncommon	A spreading canopy with drooping outer foliage. + Wine-red pigmentation concentrated in lower central green tissue; approximate stalk targeting.	Deformed
+2	3	6	Plant_Strawberry	Garden strawberry plant 5	HNS_Spired, HNS_BlueJade	GPU procedural, no mask	0:none	Spired + Blue Jade	Rare + Uncommon	A tapered, elongated upright canopy with narrow upper growth. + Muted blue-green foliage with jade highlights, retaining original fruit colors.	Deformed
