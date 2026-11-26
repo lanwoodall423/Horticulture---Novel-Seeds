@@ -84,6 +84,8 @@
   <HNS_NicePlantsMenuBullet>- {0}</HNS_NicePlantsMenuBullet>
   <HNS_VarietyTab>Cultivar</HNS_VarietyTab>
   <HNS_PhenotypeTab>Phenotype</HNS_PhenotypeTab>
+  <HNS_EcologyTab>Ecology</HNS_EcologyTab>
+  <HNS_HarvestTab>Harvest</HNS_HarvestTab>
   <HNS_Lineage>Lineage</HNS_Lineage>
   <HNS_LineageTitle>{0} lineage</HNS_LineageTitle>
   <HNS_LineageSubtitle>Recorded cross-pollination history</HNS_LineageSubtitle>

@@ -472,6 +472,78 @@ namespace HorticultureNovelSeeds
             Log.Message("[HNS Language] panel="+(panel+1)+"; observation rows="+(DescriptionEvidence.Count-1));
         }
 
+        private static int botanicalTabIndex,botanicalTabAge;
+        private static bool botanicalTabsStarted;
+        private static readonly Type[] BotanicalTabs={typeof(ITab_PlantVariety),typeof(ITab_PlantEcology),typeof(ITab_PlantHarvest)};
+        private static readonly string[] BotanicalNames={"cultivar","ecology","harvest"};
+        private static readonly List<string> BotanicalEvidence=new(){"Tab\tPlant ID\tVerified live data"};
+        private static bool CaptureBotanicalTabs(MainTabWindow_Inspect inspector)
+        {
+            var p=Find.Selector.SingleSelectedThing as Plant;
+            Require(p!=null&&p.Spawned,"native botanical inspector selected plant");
+            var c=p.TryGetComp<CompPlantVariety>();
+            var a=HorticulturePresentationPolicy.ForCultivar(c.Variety);
+            Require(a!=null&&!c.PendingDiscovery,"documented native selected specimen");
+            if(!botanicalTabsStarted)
+            {
+                foreach(var t in BotanicalTabs.Append(typeof(ITab_PlantPhenotype)))
+                    Require(inspector.CurTabs.Count(tab=>tab.GetType()==t&&tab.IsVisible)==1,"exactly one visible "+t.Name);
+                // Read models without harvesting or altering the selection.
+                var sample=inventory.Where(r=>r.Panel==panel+1&&r.Cultivar==null&&r.Plant.def==p.def).First().Plant;
+                var sc=sample.TryGetComp<CompPlantVariety>();
+                var vf=PlantInspectionFacts.ReadHarvest(sample,sc,null);
+                Require(vf.Known&&vf.Factor==1f&&vf.Estimate==vf.Base,"ordinary plant species estimate");
+                // A detached specimen exercises the pending authority gate.
+                // No game output, random rounding or new persistent state.
+                var probe=(Plant)ThingMaker.MakeThing(p.def);
+                var pc=probe.TryGetComp<CompPlantVariety>();
+                pc.SetPendingTraits(new(){Trait("HighYield")});probe.Growth=1f;probe.HitPoints=probe.MaxHitPoints;
+                var pf=PlantInspectionFacts.ReadHarvest(probe,pc,null);
+                Require(pc.PendingDiscovery&&!pf.Known&&pf.Factor==1f&&pf.Estimate==pf.Base&&pf.SeedEligible,"pending traits withheld from estimate; seed eligibility derived");
+                probe.Growth=.01f;
+                var young=PlantInspectionFacts.ReadHarvest(probe,pc,null);
+                Require(!young.Ready&&young.Estimate==0&&!young.SeedEligible,"immature crop and seed recovery not ready");
+                probe.Destroy(DestroyMode.Vanish);
+                BotanicalEvidence.Add("Authority checks\t"+p.thingIDNumber+"\tVanilla estimate, pending yield factor withheld, mature seed eligibility, immature no yield");
+                botanicalTabsStarted=true;
+            }
+            if(botanicalTabIndex>=BotanicalTabs.Length)return true;
+            var type=BotanicalTabs[botanicalTabIndex];string path=Path.Combine(root,"HNS-garden-"+BotanicalNames[botanicalTabIndex]+"-tab.png");
+            if(botanicalTabAge==0)
+            {
+                if(chronicleGarden&&type==typeof(ITab_PlantEcology))PlaceCompanions(new(1,0));
+                if(chronicleGarden&&type==typeof(ITab_PlantHarvest))PlaceCompanions(default);
+                inspector.OpenTabType=type;botanicalTabAge=1;return false;
+            }
+            if(++botanicalTabAge==15)
+            {
+                int id=p.thingIDNumber;
+                if(type==typeof(ITab_PlantVariety))
+                {
+                    Require(ITab_PlantVariety.LastDrawn==id&&ITab_PlantVariety.LastAuthorized&&ITab_PlantVariety.LastTraits==a.AuthorizedTraits.Count&&ITab_PlantVariety.LastParents==a.Parents.Count,"actual cultivar tab repaint with authorized traits/parents");
+                    BotanicalEvidence.Add("Cultivar\t"+id+"\tTraits="+a.AuthorizedTraits.Count+"; documented parents="+a.Parents.Count);
+                }
+                else if(type==typeof(ITab_PlantEcology))
+                {
+                    var f=ITab_PlantEcology.LastFacts;var actual=PlantInspectionFacts.ReadEcology(p);
+                    Require(ITab_PlantEcology.LastDrawn==id&&Math.Abs(f.Fertility-actual.Fertility)<.001f&&Math.Abs(f.Glow-actual.Glow)<.001f&&f.Pressure==actual.Pressure&&f.Occupied==actual.Occupied,"actual ecological tab repaint with live map conditions");
+                    if(chronicleGarden)Require(f.Pressure==new NeighborhoodMath.Pressure(1,0)&&f.Occupied==1,"real west companion and open east");
+                    BotanicalEvidence.Add("Ecology\t"+id+"\tFertility="+f.Fertility+"; glow="+f.Glow+"; temperature="+f.Temperature+"; growth="+f.GrowthRate+"; west="+f.Pressure.Left+"; east="+f.Pressure.Right+"; occupied="+f.Occupied);
+                }
+                else
+                {
+                    var f=ITab_PlantHarvest.LastFacts;
+                    Require(ITab_PlantHarvest.LastDrawn==id&&ITab_PlantHarvest.LastAuthorized&&f==PlantInspectionFacts.ReadHarvest(p,c,a)&&f.Ready==p.CanYieldNow(),"actual harvest tab repaint with authorized read-only estimate");
+                    BotanicalEvidence.Add("Harvest\t"+id+"\tReady="+f.Ready+"; species expectation="+f.Base+"; estimated="+f.Estimate+"; known factor="+f.Factor+"; seed eligible="+f.SeedEligible);
+                }
+                ScreenCapture.CaptureScreenshot(path);return false;
+            }
+            if(botanicalTabAge<30||!File.Exists(path)||new FileInfo(path).Length<1000)return false;
+            botanicalTabIndex++;botanicalTabAge=0;
+            File.WriteAllLines(Path.Combine(root,"HNS-garden-botanical-tabs.tsv"),BotanicalEvidence);
+            return botanicalTabIndex>=BotanicalTabs.Length;
+        }
+
         internal static void Update()
         {
             if (!active) return;
@@ -548,7 +620,9 @@ namespace HorticultureNovelSeeds
                             ScreenCapture.CaptureScreenshot(notesPath);return;
                         }
                         if(notesCaptureAge<30||!File.Exists(notesPath)||new FileInfo(notesPath).Length<1000)return;
-                        ((MainTabWindow_Inspect)MainButtonDefOf.Inspect.TabWindow).CloseOpenTab();
+                        var nativeInspector=(MainTabWindow_Inspect)MainButtonDefOf.Inspect.TabWindow;
+                        if(!CaptureBotanicalTabs(nativeInspector))return;
+                        nativeInspector.CloseOpenTab();
                         Find.Selector.ClearSelection();
                     }
                     onStage("GardenPanel" + (panel+1));

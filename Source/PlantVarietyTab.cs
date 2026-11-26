@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System;
 using System.Linq;
 using RimWorld;
 using UnityEngine;
@@ -6,95 +6,76 @@ using Verse;
 
 namespace HorticultureNovelSeeds
 {
-    public class ITab_PlantVariety : ITab
+    public sealed class ITab_PlantVariety : ITab_Botanical
     {
-        private HorticultureInspectorDocument document;
-        private Thing lastThing;
-
-        public ITab_PlantVariety()
+        public ITab_PlantVariety():base("HNS_VarietyTab"){}
+        protected override string TabTitle=>"Cultivar dossier";
+        public override bool IsVisible=>base.IsVisible&&SelThing.TryGetComp<CompPlantVariety>().HasAnyTraits;
+#if HNS_NATIVE_FIXTURE
+        internal static int LastDrawn=-1,LastTraits,LastParents;
+        internal static bool LastAuthorized;
+#endif
+        private static string Factor(float x)=>((x-1f)*100f).ToString("+0.#;-0.#;0")+"%";
+        protected override void DrawBody(Plant p,CompPlantVariety c,HorticultureCultivarPresentation a,float w,ref float y)
         {
-            size = new Vector2(500f, 440f);
-            labelKey = "HNS_VarietyTab";
-        }
-
-        public override bool IsVisible
-        {
-            get
+            if(a==null)
             {
-                CompPlantVariety comp = SelThing?.TryGetComp<CompPlantVariety>();
-                return comp != null && comp.HasAnyTraits;
+                Heading(w,ref y,"UNDOCUMENTED VARIATION");
+                Body(w,ref y,"This individual has not been documented as a cultivar. Genetic identity, modifiers and lineage remain unknown.",Muted);
+                if(Widgets.ButtonText(new Rect(0,y,w,28),"Open species in Horticulture"))MainTabWindow_CultivarRegistry.OpenPlant(p.def);
+                y+=34;
             }
-        }
-
-        protected override void FillTab()
-        {
-            CompPlantVariety comp = SelThing?.TryGetComp<CompPlantVariety>();
-            if (comp == null || !comp.HasAnyTraits)
+            else
             {
-                EnsureDocument();
-                document.Refresh(new HorticultureInspectorSnapshot
+                Heading(w,ref y,"GENETIC PROFILE");
+                var traits=a.AuthorizedTraits;
+                float cardW=(w-6)/2;
+                var stats=new[]{("Yield",NovelSeedUtility.YieldFactor(traits)),("Growth rate",NovelSeedUtility.GrowthRateFactor(traits)),("Sow work",ExpandedTraitUtility.SowWorkFactor(traits)),("Harvest work",ExpandedTraitUtility.HarvestWorkFactor(traits))};
+                for(int i=0;i<stats.Length;i++)
                 {
-                    Title = "Cultivar details",
-                    Subtitle = "No Cultivar data is available for this plant.",
-                    PrimaryHeader = "Traits",
-                    SecondaryHeader = "Effects",
-                    PrimaryEmpty = "No traits",
-                    SecondaryEmpty = "No effects"
-                });
-                document.Draw(ContentRect());
-                return;
-            }
-
-            EnsureDocument();
-            VarietyRecord variety = comp.PendingDiscovery ? null : comp.Variety;
-            HorticultureCultivarPresentation authority = variety == null ? null :
-                HorticulturePresentationPolicy.ForCultivar(variety, null, true);
-            List<VarietyTraitDef> traits = authority?.AuthorizedTraits?.Where(trait => trait != null).ToList()
-                ?? new List<VarietyTraitDef>();
-            List<string> statLines = authority == null ? new List<string> { "Cultivar is not documented yet." } :
-                new List<string> { authority.ModifierText };
-            string subtitle = variety == null ? "Observable novel variation is not a documented cultivar." :
-                "Named cultivar traits and genetic modifiers.";
-            document.Refresh(new HorticultureInspectorSnapshot
-            {
-                Title = "Cultivar: " + comp.DisplayVarietyName,
-                Subtitle = subtitle,
-                PrimaryHeader = "Traits",
-                SecondaryHeader = "Stat changes",
-                PrimaryEmpty = authority == null ? "Trait identity is unknown." : "No documented traits",
-                SecondaryEmpty = "No documented genetic modifiers",
-                PrimaryRows = authority == null
-                    ? new[] { new HorticultureInspectorRow { Id = "unknown-traits", Label = "Traits unknown", Detail = string.Empty } }
-                    : traits.Select((trait, index) => new HorticultureInspectorRow
-                {
-                    Id = trait.defName ?? "trait-" + index,
-                    Label = TraitColorUI.Label(trait),
-                    Detail = TraitColorUI.Description(trait)
-                }).ToArray(),
-                SecondaryRows = statLines.Select((line, index) => new HorticultureInspectorRow
-                {
-                    Id = "stat-" + index,
-                    Label = line,
-                    Detail = string.Empty
-                }).ToArray(),
-                ActionLabel = "Open in Horticulture",
-                Action = () =>
-                {
-                    if (variety != null) MainTabWindow_CultivarRegistry.OpenLineage(variety);
-                    else MainTabWindow_CultivarRegistry.OpenPlant(SelThing?.def);
+                    var r=new Rect((i%2)*(cardW+6),y+(i/2)*57,cardW,51);
+                    Fill(r,Tile);Label(new(r.x+9,r.y+4,r.width-18,19),stats[i].Item1,GameFont.Tiny,Muted);
+                    bool good=i>=2?stats[i].Item2<1:stats[i].Item2>1;
+                    Label(new(r.x+9,r.y+21,r.width-18,26),Factor(stats[i].Item2),GameFont.Medium,Mathf.Approximately(stats[i].Item2,1)?Ink:good?Accent:Gold);
                 }
-            });
-            document.Draw(ContentRect());
+                y+=116;
+                Heading(w,ref y,"DOCUMENTED TRAITS  /  "+traits.Count);
+                foreach(var t in traits)
+                {
+                    float h=Mathf.Max(48,Height(t.description,w-31)+31);
+                    Fill(new(0,y,w,h),Tile);Fill(new(0,y,3,h),Accent);
+                    Label(new(10,y+4,w-20,22),TraitColorUI.Label(t),GameFont.Small,Ink);
+                    Label(new(10,y+25,w-20,h-26),t.description,GameFont.Small,Muted);
+                    y+=h+4;
+                }
+                Heading(w,ref y,"LINEAGE");
+                if(a.Parents.Count==0)Body(w,ref y,a.Origin,Muted);
+                else
+                {
+                    int n=Math.Min(a.Parents.Count,3);float pw=(w-(n-1)*6)/n;
+                    for(int i=0;i<n;i++)
+                    {
+                        var parent=a.Parents[i];Rect r=new(i*(pw+6),y,pw,35);
+                        Fill(r,Tile);Text.Font=GameFont.Small;
+                        Label(r.ContractedBy(4),parent.Label.Truncate(pw-8),GameFont.Small,parent.IsKnown?Ink:Muted,TextAnchor.MiddleCenter);
+                        TooltipHandler.TipRegion(r,parent.Label);
+                        Fill(new(r.center.x,y+35,1,13),Rule);
+                    }
+                    if(n>1)Fill(new(pw/2,y+47,w-pw,1),Rule);
+                    Fill(new(w/2,y+47,1,10),Rule);
+                    y+=57;
+                }
+                Fill(new(0,y,w,34),Panel);
+                Label(new(5,y+4,w-10,26),a.Generation.HasValue?"Generation "+a.Generation.Value+"  |  "+a.Authority.Label:"Generation unknown  |  "+a.Authority.Label,GameFont.Small,Accent,TextAnchor.MiddleCenter);
+                y+=44;
+                if(a.Parents.Count>3)Body(w,ref y,"Additional documented parent references are available in the registry.",Muted);
+                if(!string.IsNullOrEmpty(a.Authority.FirstDiscoveredInfo))Body(w,ref y,a.Authority.FirstDiscoveredInfo,Muted);
+                if(Widgets.ButtonText(new Rect(0,y,w,30),"Open lineage in Horticulture"))MainTabWindow_CultivarRegistry.OpenLineage(a.Authority);
+                y+=36;
+            }
+#if HNS_NATIVE_FIXTURE
+            if(Event.current.type==EventType.Repaint){LastDrawn=p.thingIDNumber;LastTraits=a?.AuthorizedTraits.Count??0;LastParents=a?.Parents.Count??0;LastAuthorized=a!=null;}
+#endif
         }
-
-        private void EnsureDocument()
-        {
-            if (document != null && ReferenceEquals(lastThing, SelThing)) return;
-            document?.PostClose();
-            document = new HorticultureInspectorDocument("hns.inspector.plant");
-            lastThing = SelThing;
-        }
-
-        private Rect ContentRect() => new Rect(0f, 0f, size.x, size.y).ContractedBy(12f);
     }
 }
