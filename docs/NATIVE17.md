@@ -1201,3 +1201,35 @@ Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/8baf1
 Reproduce with RimWorld closed:
 
     powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -ChronicleGarden
+
+### Botanical field notes: renderer-backed phenotype language
+
+The native plant-print path now creates a transient observation record, reset
+when the plant is reprinted or its genetics change. Each successful renderer
+reports semantic region/slot/phrase facts rather than printing trait labels.
+The deterministic vocabulary resolves duplicates and incompatible values by
+slot/priority. Individual inspect prose and a scrollable Field notes window
+combine habit, foliage, reproductive structures, stem, surface, ground, motion,
+light and general appearance. Documented cultivar pages separately show potential
+expression, without granting knowledge of undiscovered genetics. Recorded growth
+history uses existing Chronicle samples; missing data is not fabricated.
+
+Geometry, procedural/region pigment, organ forms, canopy modules, botanical
+details, ground structures, responsive pose, wind and surface hooks are
+included. Dynamic pose/surface/glow facts use live accepted material controls;
+atlas preparation also records actual per-frame changed pixel counts and mosaic
+organ-state bits. Neutral atlas frames and failed renderer paths are not reported
+as expressed effects. No additional serialized state or per-plant textures.
+
+Native Form Garden ad0673df78e0483bbe98346ac1fadb82 (source 194aab8):
+36 plants, 15 pure forms, 15 combined form/pigment cases and six controls.
+Native Mosaic Garden 47b7d834100145f0948c9398a2d897df (source 54676c8):
+90 plants, 75 seed-selected mosaic instances and 15 controls; real Field notes
+command opened and captured. Both runs passed and preserved normal saves,
+config and preferences. Builds and vocabulary regression rules passed.
+All other native renderer families have hooks and vocabulary but need their
+own description-enabled fixture reruns; no pixel-level anatomical oracle.
+Legacy 1.6 data unchanged. The separate historical frost/recovery/wind/seasonal
+extensions are not included in this commit.
+
+Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/522f51061b4bdbc0ecc8fb544c19ce8fc5ddc03f
