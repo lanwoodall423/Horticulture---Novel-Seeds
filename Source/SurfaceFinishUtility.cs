@@ -53,9 +53,9 @@ namespace HorticultureNovelSeeds
     {
         internal static void Postfix(SkyManager __instance)
         {
-            if(!SurfaceFinishUtility.Enabled&&!BotanicalDetailExperiment.Enabled&&!ResponsiveHabitExperiment.Enabled)return;
+            if(!BotanicalExpressionEngine.Enabled&&!SurfaceFinishUtility.Enabled&&!BotanicalDetailExperiment.Enabled&&!ResponsiveHabitExperiment.Enabled)return;
             var map=Find.CurrentMap;
-            if(map?.skyManager==__instance){SurfaceFinishUtility.Refresh(map);BotanicalDetailExperiment.Refresh(map);VascularExperiment.Refresh(map);LifeSuiteExperiment.Refresh(map);ResponsiveHabitExperiment.Refresh(map);}
+            if(map?.skyManager==__instance){SurfaceFinishUtility.Refresh(map);BotanicalDetailExperiment.Refresh(map);VascularExperiment.Refresh(map);LifeSuiteExperiment.Refresh(map);BotanicalExpressionEngine.Refresh(map);ResponsiveHabitExperiment.Refresh(map);}
         }
     }
 }

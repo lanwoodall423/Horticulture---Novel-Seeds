@@ -446,3 +446,22 @@ Require(SurfaceFinishMath.Environment(.5f,1f,.01f).Rain==.03125f,"quantized weat
         finalFrames.Add(frames[8]);
     }
 }
+
+{
+    foreach(int r in Enumerable.Range(0,3))foreach(int v in Enumerable.Range(0,3))
+    {
+        var ids=ExpressionMath.Recipe(r,v);var family=(ExpressionMath.Family)(r+1);
+        var d=ExpressionMath.Resolve(ids,family,3);
+        Require(d.Plan.Count==5&&d.Accepted.Length==5&&d.Rejected.Length==0,"five coordinated channels");
+        Require(d.Plan==ExpressionMath.Resolve(ids.Reverse(),family,3).Plan,"order-independent plan");
+        var poor=ExpressionMath.Resolve(ids,family,0);
+        Require(poor.Plan.Reproductive==0&&poor.Rejected.Length>0,"unqualified source organ fallback");
+    }
+    Require(ExpressionMath.Resolve(new[]{"UmbelCrown"},ExpressionMath.Family.Cereal,3).Plan.Architecture==0,"species incompatibility");
+    Require(ExpressionMath.Resolve(new[]{"IvoryNerves","CrimsonNetwork"},ExpressionMath.Family.Broadleaf,3).Rejected.Length==1,"one effect per channel");
+    Require(ExpressionMath.Resolve(new[]{"unpromoted"},ExpressionMath.Family.Flower,3).Unknown,"unknown trait defers to old renderer");
+    Require(ExpressionMath.Band(.4f)==3&&ExpressionMath.Band(1)==8&&ExpressionMath.Seed(17)==1,"stable growth and seed payload");
+    int left=ChronicleMath.Record(0,.25f,1f,new NeighborhoodMath.Pressure(1,0));
+    int right=ChronicleMath.Record(0,.25f,1f,new NeighborhoodMath.Pressure(0,1));
+    Require(ExpressionMath.HistoryBias(left)==1&&ExpressionMath.HistoryBias(right)==-1,"real history maps to opposite crown bias");
+}

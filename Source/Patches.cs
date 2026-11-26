@@ -375,6 +375,9 @@ namespace HorticultureNovelSeeds
             var observationComp=__instance.TryGetComp<CompPlantVariety>();
             if(observationComp!=null)observationComp.VisualObservation=null;
 #if HNS_NATIVE_FIXTURE
+            if(BotanicalExpressionEngine.Enabled){BotanicalExpressionEngine.Prints.Remove(__instance.thingIDNumber);BotanicalExpressionEngine.MeshPayload.Remove(__instance.thingIDNumber);}
+#endif
+#if HNS_NATIVE_FIXTURE
             if (NativeShaderProbe.TryGetVisual(__instance, out var probeVisual))
                 return PlantVisualUtility.PrintScaledPlant(__instance, layer, probeVisual);
 #endif
@@ -388,7 +391,7 @@ namespace HorticultureNovelSeeds
             }
             PlantVisualParameters visual = NovelSeedUtility.ResolveVisualParameters(comp);
             bool procedural = WaylithPhenotypeShader.Enabled && ProceduralPhenotypeUtility.Resolve(comp).x > 0f;
-            if (!procedural && GroundHabitExperiment.Resolve(comp)==GroundHabitKind.None && ResponsiveHabitExperiment.Resolve(comp)==ResponsiveHabitKind.None && CanopyArchitectureExperiment.Resolve(comp)==CanopyArchitectureKind.None && BotanicalDetailExperiment.Resolve(comp)==BotanicalDetailKind.None && SurfaceFinishUtility.Resolve(comp)==SurfaceFinishKind.None && WindHabitUtility.Resolve(comp)==WindHabitKind.None && !PlantFormMesh.Resolve(comp).Valid && OrganSpriteExperiment.Resolve(comp)==OrganFormKind.None && visual.IsDefault && (!NovelSeedUtility.HasPlantMaskVisual(comp) || !PlantMaskUtility.HasActiveMasks(__instance.def)))
+            if (!BotanicalExpressionEngine.CanAttempt(comp) && !procedural && GroundHabitExperiment.Resolve(comp)==GroundHabitKind.None && ResponsiveHabitExperiment.Resolve(comp)==ResponsiveHabitKind.None && CanopyArchitectureExperiment.Resolve(comp)==CanopyArchitectureKind.None && BotanicalDetailExperiment.Resolve(comp)==BotanicalDetailKind.None && SurfaceFinishUtility.Resolve(comp)==SurfaceFinishKind.None && WindHabitUtility.Resolve(comp)==WindHabitKind.None && !PlantFormMesh.Resolve(comp).Valid && OrganSpriteExperiment.Resolve(comp)==OrganFormKind.None && visual.IsDefault && (!NovelSeedUtility.HasPlantMaskVisual(comp) || !PlantMaskUtility.HasActiveMasks(__instance.def)))
             {
 #if HNS_NATIVE_FIXTURE
                 NativeGardenProbe.RecordPrint(__instance, false);

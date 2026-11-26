@@ -80,7 +80,10 @@ namespace HorticultureNovelSeeds
                     Material originalMaterial=material;
                     groundSource??=originalMaterial;
                     Vector2[] uvs = null;
-                    if(ResponsiveHabitExperiment.TryMaterial(plant,material,pose,flipped,out var poseMaterial))
+                    bool expression=false;
+                    if(!wantSnowOverlay&&visual.IsDefault&&BotanicalExpressionEngine.TryMaterial(plant,material,flipped,WorkingColors,out var composed,out bool expanded))
+                    {material=composed;expression=true;if(expanded)planeSize*=SculptureMath.Expansion;}
+                    else if(ResponsiveHabitExperiment.TryMaterial(plant,material,pose,flipped,out var poseMaterial))
                     { material=poseMaterial; PlantUtility.SetWindExposureColors(WorkingColors,plant); comp?.VisualObservation?.AddPose(pose,material,plant.HashOffset()%1024); }
                     else if(LifeSuiteExperiment.TryMaterial(plant,material,detail,flipped,WorkingColors,out var lifeMaterial))
                     {material=lifeMaterial;if(SculptureMath.Valid(detail)||SculptureMath.ForgeValid(detail))planeSize*=SculptureMath.Expansion;else LifeSuiteExperiment.PrintExtra(plant,layer,originalMaterial,detail,adjustedCenter,planeSize,rotation,flipped,WorkingColors);}
@@ -106,7 +109,10 @@ namespace HorticultureNovelSeeds
                         PlantUtility.SetWindExposureColors(WorkingColors, plant);
                     }
 
-                    PlantFormMesh.Print(plant, layer, adjustedCenter, planeSize, material, rotation, flipped, uvs, WorkingColors, Plant.TopVerticesAltitudeBias, plant.HashOffset() % 1024, form);
+                    PlantFormMesh.Print(plant, layer, adjustedCenter, planeSize, material, rotation, flipped, uvs, WorkingColors, Plant.TopVerticesAltitudeBias, plant.HashOffset() % 1024, expression?default:form);
+#if HNS_NATIVE_FIXTURE
+                    if(expression)BotanicalExpressionEngine.RecordMesh(plant,layer,material);
+#endif
                     BotanicalDetailExperiment.PrintGlow(plant,layer,originalMaterial,detail,adjustedCenter,planeSize,rotation,flipped,WorkingColors);
                     CanopyArchitectureExperiment.Print(plant,layer,originalMaterial,architecture,adjustedCenter,planeSize,rotation,flipped,WorkingColors);
 

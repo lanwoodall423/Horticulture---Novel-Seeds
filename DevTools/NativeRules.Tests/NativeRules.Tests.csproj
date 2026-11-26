@@ -15,6 +15,7 @@
     <Compile Include="../../Source/DevelopmentalPhenotype.cs" Link="DevelopmentalPhenotype.cs" />
     <Compile Include="../../Source/WindHabitMath.cs" Link="WindHabitMath.cs" />
     <Compile Include="../../Source/SurfaceFinishMath.cs" Link="SurfaceFinishMath.cs" />
+    <Compile Include="../../Source/ExpressionMath.cs" Link="ExpressionMath.cs" />
     <Compile Include="../../Source/SculptureMath.cs" Link="SculptureMath.cs" />
     <Compile Include="../../Source/LifeSuiteMath.cs" Link="LifeSuiteMath.cs" />
     <Compile Include="../../Source/VascularMath.cs" Link="VascularMath.cs" />

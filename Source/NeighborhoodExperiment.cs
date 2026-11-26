@@ -25,6 +25,7 @@ namespace HorticultureNovelSeeds
         }
         internal static void Changed(Map map,IntVec3 cell)
         {
+            BotanicalExpressionEngine.NeighborChanged(map,cell);
             if(!Enabled||map==null)return;
             for(int dx=-1;dx<=1;dx+=2)
             {
@@ -41,7 +42,7 @@ namespace HorticultureNovelSeeds
         }
         internal static void GrowthChanged(Plant plant,float before)
         {
-            if(Enabled&&plant.Spawned&&NeighborhoodMath.Band(before)!=NeighborhoodMath.Band(plant.Growth))
+            if((Enabled||BotanicalExpressionEngine.Enabled)&&plant.Spawned&&NeighborhoodMath.Band(before)!=NeighborhoodMath.Band(plant.Growth))
                 Changed(plant.Map,plant.Position);
         }
     }
@@ -53,7 +54,7 @@ namespace HorticultureNovelSeeds
         private static System.Reflection.MethodBase TargetMethod()=>AccessTools.Method(typeof(Plant),nameof(Plant.SpawnSetup));
         private static void Postfix(Thing __instance)
         {
-            if(NeighborhoodExperiment.Enabled&&__instance is Plant plant&&plant.Spawned)
+            if((NeighborhoodExperiment.Enabled||BotanicalExpressionEngine.Enabled)&&__instance is Plant plant&&plant.Spawned)
                 NeighborhoodExperiment.Changed(plant.Map,plant.Position);
         }
     }
@@ -62,7 +63,7 @@ namespace HorticultureNovelSeeds
     {
         private static System.Reflection.MethodBase TargetMethod()=>AccessTools.Method(typeof(Plant),nameof(Plant.DeSpawn));
         private static void Prefix(Thing __instance,out (Map Map,IntVec3 Cell) __state)
-            =>__state=NeighborhoodExperiment.Enabled&&__instance is Plant plant&&plant.Spawned?(plant.Map,plant.Position):default;
+            =>__state=(NeighborhoodExperiment.Enabled||BotanicalExpressionEngine.Enabled)&&__instance is Plant plant&&plant.Spawned?(plant.Map,plant.Position):default;
         private static void Postfix((Map Map,IntVec3 Cell) __state)
         {
             if(__state.Map!=null)NeighborhoodExperiment.Changed(__state.Map,__state.Cell);
