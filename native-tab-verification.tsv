@@ -1,0 +1,5 @@
+Tab	Plant ID	Verified live data
+Authority checks	9159	Vanilla estimate, pending yield factor withheld, mature seed eligibility, immature no yield
+Cultivar	9159	Traits=1; documented parents=0
+Ecology	9159	Fertility=1; glow=1; temperature=10.07587; growth=1; west=1; east=0; occupied=1
+Harvest	9159	Ready=True; species expectation=22; estimated=22; known factor=1; seed eligible=False
