@@ -50,12 +50,12 @@ namespace HorticultureNovelSeeds
             }
             prepared.Add(key,new(parts,w,h,Make(parts.Leaves,"Leaves"),Make(parts.Fruit,"Fruit")));
 #if HNS_NATIVE_FIXTURE
-            Preparation.Add(string.Join("\t",def.defName,variation,source.name,w,h,parts.Leaves.Box.W,parts.Leaves.Box.H,parts.Fruit?.Box.W??0,parts.Fruit?.Box.H??0,parts.Anchors.Length,parts.Leaves.Reconstructed,parts.Leaves.RemainingOcclusion));
-            // Test-only diagnostic: the same source sprite and both extracted
+            Preparation.Add(string.Join("\t",def.defName,variation,source.name,w,h,parts.Leaves.Box.W,parts.Leaves.Box.H,parts.Fruit?.Box.W??0,parts.Fruit?.Box.H??0,parts.Anchors.Length,parts.Leaves.Reconstructed,parts.Leaves.RemainingOcclusion,parts.Leaves.Trimmed));
+            // Test-only diagnostic: the same source sprite and both reconstructed
             // modules at their original UV coordinates. No scene image retouch.
             if(!string.IsNullOrEmpty(DiagnosticRoot))
             {
-                var legacy=CanopyArchitectureMath.Extract(p,w,h,false);
+                var legacy=CanopyArchitectureMath.Extract(p,w,h,true,false);
                 if(legacy?.Leaves!=null)
                 {
                     var strip=new Color32[3*w*h];

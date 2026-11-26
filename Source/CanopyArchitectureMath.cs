@@ -10,12 +10,12 @@ namespace HorticultureNovelSeeds
     {
         internal static bool Valid(CanopyArchitectureKind k)=>k>=CanopyArchitectureKind.ForkedCrown&&k<=CanopyArchitectureKind.AbundantClusters;
         internal readonly record struct Bounds(int X,int Y,int W,int H);
-        internal sealed record Module(Pixel[] Pixels,Bounds Box,int Reconstructed=0,int RemainingOcclusion=0);
+        internal sealed record Module(Pixel[] Pixels,Bounds Box,int Reconstructed=0,int RemainingOcclusion=0,int Trimmed=0);
         internal sealed record Parts(Bounds Body,Module Leaves,Module Fruit,(float X,float Y)[] Anchors);
         // Placement is normalized to the visible source silhouette, not its
         // transparent margins. Each module retains the source artwork.
         internal readonly record struct Placement(bool Fruit,float X,float Y,float Scale,float Angle,bool Front);
-        internal static Parts Extract(Pixel[] p,int w,int h,bool repairOcclusion=true)
+        internal static Parts Extract(Pixel[] p,int w,int h,bool repairOcclusion=true,bool leafSynthesis=true)
         {
             if(w<16||h<16||p.Length!=w*h)return null;
             var body=Enumerable.Range(0,p.Length).Where(i=>p[i].A>=100).ToArray();
@@ -51,16 +51,40 @@ namespace HorticultureNovelSeeds
                             c.R>=c.G*.83f&&Math.Abs(c.R-p[i].R)+Math.Abs(c.G-p[i].G)+Math.Abs(c.B-p[i].B)<175)selected.Add(j);
                     }
                 var reconstructed=new Dictionary<int,Pixel>();
-                int unresolved=0;
+                int unresolved=0,trimmed=0;
                 if(leaf&&repairOcclusion)
                 {
                     // Recover attached opaque crown tissue; never traverse air.
                     int floorY=(int)MathF.Ceiling(b.Y+b.H*.27f);
                     int limit=Math.Clamp((int)MathF.Ceiling(Math.Max(b.W,b.H)*.40f),6,128);
+                    // A small exclusion halo around real reproductive
+                    // components removes pale fruit-colored fringe pixels
+                    // from the sample set, not from the final crown.
+                    if(leafSynthesis)
+                    {
+                        int r=Math.Clamp((int)MathF.Round(Math.Min(b.W,b.H)*.025f),2,6);
+                        var halo=new HashSet<int>();
+                        var fruitParts=OrganSpriteMath.Parts(p.Select(OrganSpriteMath.Reproductive).ToArray(),w,h,body.Length,false);
+                        foreach(var part in fruitParts)
+                            foreach(int i in part.Indices)
+                            {
+                                int x=i%w,y=i/w;
+                                for(int dy=-r;dy<=r;dy++)for(int dx=-r;dx<=r;dx++)
+                                {
+                                    int xx=x+dx,yy=y+dy;
+                                    if(dx*dx+dy*dy<=r*r&&xx>=0&&xx<w&&yy>=floorY&&yy<h)halo.Add(yy*w+xx);
+                                }
+                            }
+                        var clean=selected.Where(i=>!halo.Contains(i)&&!OrganSpriteMath.Reproductive(p[i])&&p[i].A>=90).ToArray();
+                        if(clean.Length>=24&&clean.Length>=selected.Count*.22f)
+                            selected.ExceptWith(halo);
+                    }
+                    var trusted=new HashSet<int>(selected.Where(i=>p[i].A>=90&&!OrganSpriteMath.Reproductive(p[i])));
+                    if(trusted.Count<8)trusted=new HashSet<int>(selected);
                     var owner=new int[p.Length];Array.Fill(owner,-1);
                     var distance=new int[p.Length];Array.Fill(distance,int.MaxValue);
                     var queue=new Queue<int>();
-                    foreach(int i in selected.OrderBy(i=>i))
+                    foreach(int i in (leafSynthesis?trusted:selected).OrderBy(i=>i))
                     {
                         if(p[i].A<90||i/w<floorY-1)continue;
                         owner[i]=i;distance[i]=0;queue.Enqueue(i);
@@ -97,10 +121,23 @@ namespace HorticultureNovelSeeds
                         if(total<=0)continue;
                         rr/=total;gg/=total;bb/=total;
                         float reference=.299f*rr+.587f*gg+.114f*bb;
-                        float shade=Math.Clamp(.85f+.20f*(Lum(original)/Math.Max(15f,reference)),.78f,1.17f);
-                        byte C(float v)=>(byte)Math.Clamp((int)MathF.Round(v*shade),0,255);
-                        reconstructed[i]=new Pixel(C(rr),C(gg),C(bb),original.A);
+                        // Reflect the target offset back into the nearest
+                        // surviving leaf. This transfers painted texture and
+                        // shadows from the source rather than from the fruit.
+                        int donor=owner[i];
+                        if(leafSynthesis)
+                        {
+                            int sx=donor%w,sy=donor/w;
+                            int xx=(int)MathF.Round(sx+(sx-x)*.65f),yy=(int)MathF.Round(sy+(sy-y)*.65f);
+                            if(xx>=0&&xx<w&&yy>=floorY&&yy<h&&trusted.Contains(yy*w+xx))donor=yy*w+xx;
+                        }
+                        var exemplar=p[donor];
+                        float shade=leafSynthesis?1f:Math.Clamp(.85f+.20f*(Lum(original)/Math.Max(15f,reference)),.78f,1.17f);
+                        float blend=leafSynthesis?.64f:0f;
+                        byte C(float v,byte example)=>(byte)Math.Clamp((int)MathF.Round((v*(1-blend)+example*blend)*shade),0,255);
+                        reconstructed[i]=new Pixel(C(rr,exemplar.R),C(gg,exemplar.G),C(bb,exemplar.B),original.A);
                     }
+                    if(leafSynthesis)trimmed=RefineTips(p,w,h,selected,reconstructed,distance,floorY);
                     foreach(int i in reconstructed.Keys)selected.Add(i);
                     // Recover antialiasing only where source alpha exists.
                     foreach(int i in reconstructed.Keys.ToArray())
@@ -119,7 +156,7 @@ namespace HorticultureNovelSeeds
                 if(box.W<2||box.H<2)return null;
                 var pixels=new Pixel[box.W*box.H];
                 foreach(int i in selected)pixels[(i/w-box.Y)*box.W+i%w-box.X]=reconstructed.TryGetValue(i,out var value)?value:p[i];
-                return new(pixels,box,reconstructed.Count,unresolved);
+                return new(pixels,box,reconstructed.Count,unresolved,trimmed);
             }
             var leaves=Crop(leafset,true);
             var fruitMask=p.Select(OrganSpriteMath.Reproductive).ToArray();
@@ -137,6 +174,110 @@ namespace HorticultureNovelSeeds
             }
             return new(b,leaves,fruit,anchors.ToArray());
         }
+        // Replace source-organ brightness with actual leaf texture. Where an
+        // attached occlusion projects beyond the canopy, taper its silhouette
+        // into a leaf tip. Only remove pixels reachable from existing air.
+        private static int RefineTips(Pixel[] p,int w,int h,HashSet<int> seeds,
+            Dictionary<int,Pixel> restored,int[] distance,int floorY)
+        {
+            var visited=new HashSet<int>();var remove=new HashSet<int>();
+            var directions=new[]{(-1,0),(1,0),(0,-1),(0,1)};
+            // Separate exterior air from enclosed natural windows. Only
+            // exterior-connected occlusions can change the outline.
+            var exterior=new bool[p.Length];var airQueue=new Queue<int>();
+            void MarkAir(int x,int y)
+            {
+                if(x<0||x>=w||y<0||y>=h)return;
+                int i=y*w+x;if(exterior[i]||p[i].A>=90)return;
+                exterior[i]=true;airQueue.Enqueue(i);
+            }
+            for(int x=0;x<w;x++){MarkAir(x,0);MarkAir(x,h-1);}
+            for(int y=0;y<h;y++){MarkAir(0,y);MarkAir(w-1,y);}
+            while(airQueue.Count>0)
+            {
+                int i=airQueue.Dequeue(),x=i%w,y=i/w;
+                foreach(var (dx,dy) in directions)MarkAir(x+dx,y+dy);
+            }
+            bool Air(int i)=>exterior[i];
+            IEnumerable<int> Neighbors(int i)
+            {
+                int x=i%w,y=i/w;
+                foreach(var (dx,dy) in directions)
+                {
+                    int xx=x+dx,yy=y+dy;
+                    if(xx>=0&&xx<w&&yy>=floorY&&yy<h)yield return yy*w+xx;
+                }
+            }
+            foreach(int start in restored.Keys.OrderBy(i=>i))
+            {
+                if(p[start].A<90||!visited.Add(start))continue;
+                var group=new List<int>();var contacts=new HashSet<int>();var edges=new List<int>();
+                var queue=new Queue<int>();queue.Enqueue(start);
+                while(queue.Count>0)
+                {
+                    int i=queue.Dequeue();group.Add(i);
+                    bool edge=false;
+                    foreach(int j in Neighbors(i))
+                    {
+                        if(Air(j))edge=true;
+                        else if(seeds.Contains(j))contacts.Add(j);
+                        else if(restored.ContainsKey(j)&&visited.Add(j))queue.Enqueue(j);
+                    }
+                    if(edge||i%w==0||i%w==w-1||i/w==h-1)edges.Add(i);
+                }
+                // Embedded organ: do not change its alpha. Small edge areas
+                // and broad attachment zones also retain their silhouette.
+                if(group.Count<32||edges.Count<4||contacts.Count<3)continue;
+                float ax=(float)contacts.Average(i=>i%w),ay=(float)contacts.Average(i=>i/w);
+                float cx=(float)group.Average(i=>i%w),cy=(float)group.Average(i=>i/w);
+                float dx=cx-ax,dy=cy-ay,len=MathF.Sqrt(dx*dx+dy*dy);
+                float radius=MathF.Sqrt(group.Count/MathF.PI);
+                if(len<Math.Max(2.5f,radius*.43f))continue;
+                dx/=len;dy/=len;
+                float Along(int i)=>(i%w-ax)*dx+(i/w-ay)*dy;
+                float Across(int i)=>-(i%w-ax)*dy+(i/w-ay)*dx;
+                float reach=group.Max(Along);
+                if(reach<5f)continue;
+                float contactSpread=contacts.Max(Along)-contacts.Min(Along);
+                if(contactSpread>reach*.58f)continue;
+                float width=Math.Max(2f,Math.Min(group.Max(i=>Math.Abs(Across(i)))*.90f,radius*.80f));
+                bool Outside(int i)
+                {
+                    float t=Along(i)/reach;
+                    if(t<.13f||distance[i]<=2)return false;
+                    // Lanceolate shape: broad near its base, pointed tip.
+                    float half=width*MathF.Pow(MathF.Sin(MathF.PI*Math.Clamp(t,0f,1f)),.72f);
+                    return Math.Abs(Across(i))>Math.Max(.65f,half);
+                }
+                var groupSet=new HashSet<int>(group);
+                var trimmed=new HashSet<int>();
+                foreach(int i in edges)if(Outside(i)&&trimmed.Add(i))queue.Enqueue(i);
+                while(queue.Count>0)
+                {
+                    int i=queue.Dequeue();
+                    foreach(int j in Neighbors(i))
+                        if(groupSet.Contains(j)&&Outside(j)&&trimmed.Add(j))queue.Enqueue(j);
+                }
+                // Never erase a majority of a component; that would create
+                // an obviously missing branch instead of a smaller leaf.
+                if(trimmed.Count>group.Count*.48f)continue;
+                foreach(int i in trimmed)remove.Add(i);
+                // Add restrained midrib shading to the new lamina, based on
+                // its constructed axis and not the old fruit's lightness.
+                foreach(int i in group)
+                {
+                    if(trimmed.Contains(i))continue;
+                    var c=restored[i];float t=Math.Clamp(Along(i)/reach,0f,1f);
+                    float q=Math.Abs(Across(i))/Math.Max(1f,width);
+                    float factor=1f+.12f*MathF.Exp(-q*q*14f)*MathF.Sin(MathF.PI*t)-.11f*Math.Clamp(q,0f,1f);
+                    byte C(byte v)=>(byte)Math.Clamp((int)MathF.Round(v*factor),0,255);
+                    restored[i]=new Pixel(C(c.R),C(c.G),C(c.B),c.A);
+                }
+            }
+            foreach(int i in remove)restored.Remove(i);
+            return remove.Count;
+        }
+
         internal static Placement[] Recipe(CanopyArchitectureKind k,Parts p)
         {
             if(!Valid(k)||p?.Leaves==null)return Array.Empty<Placement>();

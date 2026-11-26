@@ -157,3 +157,22 @@ Require(SurfaceFinishMath.Environment(.5f,1f,.01f).Rain==.03125f,"quantized weat
     Require(p.SequenceEqual(original),"source artwork untouched");
     Require(before.Fruit.Box==after.Fruit.Box&&before.Fruit.Pixels.SequenceEqual(after.Fruit.Pixels),"independent reproductive module unchanged");
 }
+
+{
+    const int n=64;
+    var green=new OrganSpriteMath.Pixel(38,138,46,255);
+    var gold=new OrganSpriteMath.Pixel(216,172,30,255);
+    var white=new OrganSpriteMath.Pixel(240,240,240,255);
+    var p=new OrganSpriteMath.Pixel[n*n];
+    for(int y=10;y<=34;y++)for(int x=20;x<=43;x++)p[y*n+x]=green;
+    for(int y=34;y<=51;y++)for(int x=20;x<=44;x++)
+        if((x-32)*(x-32)+(y-41)*(y-41)<=100)p[y*n+x]=gold;
+    var light=p.Select(c=>c==gold?white:c).ToArray();
+    var old=CanopyArchitectureMath.Extract(p,n,n,true,false);
+    var updated=CanopyArchitectureMath.Extract(p,n,n);
+    var alternate=CanopyArchitectureMath.Extract(light,n,n);
+    Require(updated.Leaves.Trimmed>0&&updated.Leaves.Trimmed<old.Leaves.Reconstructed,"exposed reproductive tip tapered, not erased");
+    Require(updated.Leaves.Box==alternate.Leaves.Box&&updated.Leaves.Pixels.SequenceEqual(alternate.Leaves.Pixels),"reconstructed foliage independent of fruit brightness");
+    Require(updated.Leaves.Pixels.Where(c=>c.A>=90).All(c=>c.G>c.R&&c.G>c.B),"no fruit hue in synthesized leaf module");
+    Require(old.Fruit.Box==updated.Fruit.Box&&old.Fruit.Pixels.SequenceEqual(updated.Fruit.Pixels),"tip shaping does not change the reproductive module");
+}
