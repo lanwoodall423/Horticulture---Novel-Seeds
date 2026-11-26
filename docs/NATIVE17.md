@@ -1258,3 +1258,35 @@ individual portrait. Other UI scales and translated body text remain
 unqualified. Legacy 1.6 assembly untouched (shared English key added).
 
 Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/dd3fc1bb88533839732ba8cc9e4603639218279d
+
+### Botanical Dossier: Cultivar, Phenotype, Ecology and Harvest
+
+Native Cultivar redesigned with botanical typography, modifier tiles,
+authorized traits, compact lineage and registry navigation. Existing
+Phenotype retained. Ecology and Harvest native tabs are available on
+supported spawned plants with the genetics component, including ordinary
+crops. Ecology reads fertility, glow, temperature, actual growth factors,
+growing season and real nearby vegetation, with an eight-cell map and
+the separate lateral growth-band pressure model. Harvest presents
+readiness, species product, side-effect-free primary yield expectation,
+authorized genetic/synergy factors, seed recovery status, documented
+produce modifiers/appearance swatches and confirmed harvest history
+where available. Undocumented genetic modifiers are withheld. No new
+breeding mechanics, save state or harvest transactions. No invented
+rarity probabilities or guaranteed yield.
+
+Native Chronicle Garden e8f6822bc560487bb2f796310ba802d7, source
+c7f4430c0aaae4892e6ba51fb3172b95d5f95225, passed all eight stages.
+All four real tabs repainted on the same selected documented corn
+specimen (ID 9159). Actual ecology west pressure 100%, east 0%, one
+occupied neighbor, 100% fertility/light/growth. Harvest expected 22
+units, neutral genetic factor. Authority checks passed for ordinary,
+pending and immature model cases. Existing 90-plant, 75 historical
+morphology and 225 growth observation checks passed. Both builds and
+rule tests passed; player data and temporary test cleanup verified.
+
+Only initial viewports are captured; nontrivial lineage, non-neutral
+yield, seed/produce detail UI, other scales and translated body text
+remain separately unqualified. Reference art remains reference art.
+
+Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/15464abc2bf88f45240b8e715c7f148a7532fc83
