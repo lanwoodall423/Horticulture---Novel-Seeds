@@ -147,7 +147,7 @@ namespace HorticultureNovelSeeds
             {
                 map = Find.CurrentMap;
                 Require(map != null, "current map");
-                WaylithPhenotypeShader.Enabled = !organGarden;
+                WaylithPhenotypeShader.Enabled = !organGarden && !architectureGarden;
                 PlantFormMesh.Enabled = formGarden;
                 OrganSpriteExperiment.Enabled = organGarden;
                 WindHabitUtility.Enabled=windGarden;

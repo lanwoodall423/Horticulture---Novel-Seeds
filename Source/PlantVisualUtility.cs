@@ -81,7 +81,7 @@ namespace HorticultureNovelSeeds
                         material=organMaterial;
                         PlantUtility.SetWindExposureColors(WorkingColors,plant);
                     }
-                    else if (procedural || wind || surface || NeedsStyledMaterial(visual) || (NovelSeedUtility.HasPlantMaskVisual(comp) && PlantMaskUtility.HasActiveMasks(plant.def)))
+                    else if (architecture==CanopyArchitectureKind.None && (procedural || wind || surface || NeedsStyledMaterial(visual) || (NovelSeedUtility.HasPlantMaskVisual(comp) && PlantMaskUtility.HasActiveMasks(plant.def))))
                     {
                         material = GetStyledMaterial(material, visual, plant, out bool preservesWind, -2, variationIndex);
                         if (preservesWind) PlantUtility.SetWindExposureColors(WorkingColors, plant);
