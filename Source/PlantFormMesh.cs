@@ -11,12 +11,14 @@ namespace HorticultureNovelSeeds
     internal static class PlantFormMesh
     {
         internal static bool Enabled { get; set; }
-        internal readonly record struct Form(PlantFormKind Kind,float Strength)
+        internal readonly record struct Form(PlantFormKind Kind,float Strength,NeighborhoodMath.Pressure Pressure=default)
         {
             internal bool Valid => PlantFormMath.IsValid(Kind,Strength);
         }
 #if HNS_NATIVE_FIXTURE
         internal static readonly HashSet<int> PrintedPlants = new();
+        internal sealed record NeighborhoodPrint(NeighborhoodMath.Pressure Pressure,int Prints,bool RootFixed,float TipShift,float TipHeight,float Width,bool GeometryChanged);
+        internal static readonly Dictionary<int,NeighborhoodPrint> NeighborhoodPrints=new();
         internal static int Meshes, Vertices, Triangles;
         internal sealed record MosaicPrint(float Payload,int MaterialId,int Prints,bool Valid);
         internal static readonly Dictionary<int,MosaicPrint> MosaicPrints=new();
@@ -27,7 +29,7 @@ namespace HorticultureNovelSeeds
             VarietyTraitDef chosen=null;
             foreach(var trait in comp.ActiveTraits)
             {
-                if (trait == null || trait.produceOnlyVisual || !PlantFormMath.IsValid(trait.plantForm,trait.plantFormStrength)) continue;
+                if (trait == null || trait.produceOnlyVisual || !PlantFormMath.IsValid(trait.plantForm,trait.plantFormStrength)||NeighborhoodMath.Valid(trait.plantForm)!=NeighborhoodExperiment.Enabled) continue;
                 if (chosen==null || trait.plantFormStrength>chosen.plantFormStrength ||
                     trait.plantFormStrength==chosen.plantFormStrength && string.CompareOrdinal(trait.defName,chosen.defName)<0)
                     chosen=trait;
@@ -84,7 +86,7 @@ namespace HorticultureNovelSeeds
                 for(int i=0;i<=n;i++)
                 {
                     float u=i/(float)n,v=j/(float)n;
-                    var warped=PlantFormMath.Warp(form.Kind,form.Strength,u,v,flipped);
+                    var warped=PlantFormMath.Warp(form.Kind,form.Strength,u,v,flipped,form.Pressure);
                     Vector3 pos=Bilerp(a,b,c,d,warped.X,warped.Y);
                     pos.y=Bilerp(a,b,c,d,u,v).y;
                     sub.verts.Add(pos);
@@ -102,6 +104,19 @@ namespace HorticultureNovelSeeds
                 }
 #if HNS_NATIVE_FIXTURE
             PrintedPlants.Add(plant.thingIDNumber); Meshes++; Vertices+=count; Triangles+=2*n*n;
+            if(NeighborhoodMath.Valid(form.Kind))
+            {
+                bool fixedRoot=true,changed=false;
+                for(int i=0;i<=n;i++)fixedRoot&=(sub.verts[start+i]-Bilerp(a,b,c,d,i/(float)n,0)).sqrMagnitude<1e-8f;
+                for(int j=0;j<=n;j++)for(int i=0;i<=n;i++)
+                    changed|=(sub.verts[start+j*stride+i]-Bilerp(a,b,c,d,i/(float)n,j/(float)n)).sqrMagnitude>1e-7f;
+                Vector3 tip=sub.verts[start+n*stride+n/2],originalTip=Bilerp(a,b,c,d,.5f,1f);
+                float tipShift=(tip.x-originalTip.x)/size.x;
+                float tipHeight=(tip.z-Bilerp(a,b,c,d,.5f,0f).z)/size.y;
+                float width=(sub.verts[start+n*stride+n]-sub.verts[start+n*stride]).magnitude/size.x;
+                int id=plant.thingIDNumber;NeighborhoodPrints.TryGetValue(id,out var old);
+                NeighborhoodPrints[id]=new(form.Pressure,(old?.Prints??0)+1,fixedRoot&&(old?.RootFixed??true),tipShift,tipHeight,width,changed);
+            }
 #endif
         }
     }

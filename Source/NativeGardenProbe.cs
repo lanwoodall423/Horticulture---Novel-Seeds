@@ -54,7 +54,11 @@ namespace HorticultureNovelSeeds
         private static bool patternGarden, catalogGarden, creativeGarden, cultivarGarden, formGarden, organGarden, developmentGarden, windGarden, surfaceGarden, detailGarden, architectureGarden, poseGarden, groundGarden;
         private static readonly string[] GroundTraits={"Rootflare","RunnerHabit","BasalCarpet","LeafLitter","PetalDrift"};
         private static bool previousGroundWind;
-        private static bool articulationGarden,mosaicGarden;
+        private static bool articulationGarden,mosaicGarden,neighborhoodGarden;
+        private static readonly string[] NeighborhoodTraits={"GapSeeker","CompanionBow","CrownPartition","StandSpire","FreeRosette"};
+        private static readonly List<Plant> NeighborhoodCompanions=new();
+        private static int neighborhoodSampledPanel=-1;
+        private static bool previousNeighborhoodWind;
         private static readonly string[] MosaicTraits={"SuccessionBloom","SectorSport","BiformHarvest","SisterBuds","RipeningMosaic"};
         private static int mosaicReprintPanel=-1;
         private static readonly string[] ArticulationTraits={"DawnPetals","DuskPetals","RainPendant","SolarTilt","SilkFlutter"};
@@ -93,7 +97,7 @@ namespace HorticultureNovelSeeds
         private static readonly string[] CreativeTraits = { "Velvetleaf", "Lacquered", "Dustbloom", "Silvered", "HaloEdged", "Netveined", "Tigerstriped", "Marbled", "Opaline", "Crystalline", "Bioluminescent", "NebulaMottle", "Coralbranch", "Prismatic", "Saltbloom", "Ashen", "Boggloss", "Waxbound", "Peatstained", "ScorchedMargins", "Variegated", "Anthocyanin", "MoonFrost", "GoldFreckled", "AuroraVeins" };
         private static readonly string[] CreativeCrops = { "Plant_Corn", "Plant_Cotton", "Plant_Strawberry" };
         private static List<List<VarietyTraitDef>> catalogCases;
-        private static int PanelCount => groundGarden ? 2 : poseGarden ? PoseFrames : architectureGarden ? 2 : detailGarden ? 3 : surfaceGarden ? SurfaceFrames : windGarden ? WindFrames : developmentGarden ? 3 : organGarden ? 2 : formGarden ? 2 : catalogGarden ? 6 : cultivarGarden ? 3 : creativeGarden ? 5 : SpeciesOptions.Length;
+        private static int PanelCount => neighborhoodGarden?5:groundGarden ? 2 : poseGarden ? PoseFrames : architectureGarden ? 2 : detailGarden ? 3 : surfaceGarden ? SurfaceFrames : windGarden ? WindFrames : developmentGarden ? 3 : organGarden ? 2 : formGarden ? 2 : catalogGarden ? 6 : cultivarGarden ? 3 : creativeGarden ? 5 : SpeciesOptions.Length;
         private static readonly string[] CatalogCrops = {
             "Plant_Rice","Plant_Cotton","Plant_Corn", "Plant_Potato","Plant_Cotton","Plant_Hops",
             "Plant_Cotton","Plant_Healroot","Plant_Strawberry", "Plant_Corn","Plant_Corn","Plant_Corn",
@@ -153,16 +157,18 @@ namespace HorticultureNovelSeeds
             if (active) legacy.Add(plant.thingIDNumber);
         }
 
-        internal static void Begin(string path, Action<string> stage, Action<string,string> completed, bool procedural = false, bool catalog = false, bool creative = false, bool cultivar = false, bool form = false, bool organ = false, bool development = false, bool wind = false, bool surface = false, bool detail = false, bool architecture = false,bool pose = false,bool ground = false,bool articulation = false,bool mosaic = false)
+        internal static void Begin(string path, Action<string> stage, Action<string,string> completed, bool procedural = false, bool catalog = false, bool creative = false, bool cultivar = false, bool form = false, bool organ = false, bool development = false, bool wind = false, bool surface = false, bool detail = false, bool architecture = false,bool pose = false,bool ground = false,bool articulation = false,bool mosaic = false,bool neighborhood=false)
         {
-            patternGarden = procedural || creative || cultivar || form || organ || development || wind || surface || detail || architecture || pose || ground; catalogGarden = catalog; creativeGarden = creative; cultivarGarden = cultivar; formGarden = form; organGarden = organ; developmentGarden = development; windGarden = wind; surfaceGarden=surface; detailGarden=detail; architectureGarden=architecture;poseGarden=pose;groundGarden=ground;articulationGarden=articulation;mosaicGarden=mosaic;
+            patternGarden = procedural || creative || cultivar || form || organ || development || wind || surface || detail || architecture || pose || ground; catalogGarden = catalog; creativeGarden = creative; cultivarGarden = cultivar; formGarden = form; organGarden = organ; developmentGarden = development; windGarden = wind; surfaceGarden=surface; detailGarden=detail; architectureGarden=architecture;poseGarden=pose;groundGarden=ground;articulationGarden=articulation;mosaicGarden=mosaic;neighborhoodGarden=neighborhood;
             root = path; onStage = stage; finish = completed;
             try
             {
                 map = Find.CurrentMap;
                 Require(map != null, "current map");
-                WaylithPhenotypeShader.Enabled = !organGarden && !architectureGarden && !poseGarden && !groundGarden;
+                WaylithPhenotypeShader.Enabled = !organGarden && !architectureGarden && !poseGarden && !groundGarden && !neighborhoodGarden;
                 PlantFormMesh.Enabled = formGarden;
+                NeighborhoodExperiment.Enabled=neighborhoodGarden;
+                if(neighborhoodGarden){previousNeighborhoodWind=Prefs.PlantWindSway;Prefs.PlantWindSway=false;}
                 OrganSpriteExperiment.Enabled = organGarden;
                 WindHabitUtility.Enabled=windGarden;
                 SurfaceFinishUtility.Enabled=surfaceGarden;
@@ -235,7 +241,7 @@ namespace HorticultureNovelSeeds
                 }
                 if (formGarden)
                 {
-                    var defs=DefDatabase<VarietyTraitDef>.AllDefsListForReading.Where(t=>t.plantForm!=PlantFormKind.None).ToList();
+                    var defs=DefDatabase<VarietyTraitDef>.AllDefsListForReading.Where(t=>t.plantForm!=PlantFormKind.None&&NeighborhoodMath.Valid(t.plantForm)==neighborhoodGarden).ToList();
                     Require(defs.Count==5 && defs.All(t=>t.commonality==0f && PlantFormMath.IsValid(t.plantForm,t.plantFormStrength) && TraitAppearanceCatalog.TryGet(t,out _)), "five neutral form alleles");
                     Require(TraitCatalogValidation.Validate(DefDatabase<VarietyTraitDef>.AllDefsListForReading).Count==0,"trait catalog validation");
                 }
@@ -345,6 +351,7 @@ namespace HorticultureNovelSeeds
             if (windGarden) return col==0 ? new() : new() { Trait(WindTraits[col-1]) };
             if (developmentGarden) return col==0 ? new() : new() { Trait(DevelopmentTraits[col-1]) };
             if (organGarden) return col==0 ? new() : new() { Trait(OrganTraits[col-1]) };
+            if(neighborhoodGarden)return col==0?new():new(){Trait(NeighborhoodTraits[col-1])};
             if (formGarden) return col==0 ? new() : row<3 ? new() { Trait(FormTraits[col-1]) } : new() { Trait(FormTraits[col-1]), Trait(FormPigments[col-1]) };
             if (cultivarGarden) return col == 0 ? new() : new() { Trait(CultivarTraits[(row / 3) * 5 + col - 1]) };
             if (creativeGarden) return col == 0 ? new() : new() { Trait(CreativeTraits[(row / 3) * 5 + col - 1]) };
@@ -369,7 +376,7 @@ namespace HorticultureNovelSeeds
             Require(registry != null, "registry");
             for (int r = 0; r < 3; r++)
             {
-                var def = poseGarden ? DefDatabase<ThingDef>.GetNamed(PoseCrops[r]) : (groundGarden || architectureGarden || organGarden) ? Choose(OrganCrops[panel*3+r]) : (creativeGarden || cultivarGarden || formGarden || developmentGarden || windGarden || surfaceGarden || detailGarden) ? DefDatabase<ThingDef>.GetNamed(CreativeCrops[r]) : catalogGarden ? DefDatabase<ThingDef>.GetNamed(CatalogCrops[panel*3+r]) : Choose(patternGarden && panel == 3 && r == 1 ? "Plant_Haygrass" : SpeciesOptions[panel][r]);
+                var def = (poseGarden||neighborhoodGarden) ? DefDatabase<ThingDef>.GetNamed(PoseCrops[r]) : (groundGarden || architectureGarden || organGarden) ? Choose(OrganCrops[panel*3+r]) : (creativeGarden || cultivarGarden || formGarden || developmentGarden || windGarden || surfaceGarden || detailGarden) ? DefDatabase<ThingDef>.GetNamed(CreativeCrops[r]) : catalogGarden ? DefDatabase<ThingDef>.GetNamed(CatalogCrops[panel*3+r]) : Choose(patternGarden && panel == 3 && r == 1 ? "Plant_Haygrass" : SpeciesOptions[panel][r]);
                 Require(HorticulturePlantPolicy.IsSupported(def), "supported garden crop");
                 if (catalogGarden || creativeGarden || cultivarGarden || formGarden || developmentGarden || windGarden || surfaceGarden || detailGarden || poseGarden) chosen.Add(def);
                 // Prewarm actual resolved masks before rendering. If shared
@@ -425,6 +432,8 @@ namespace HorticultureNovelSeeds
             {
                 frames++;
                 if (Find.WindowStack.TryRemove(typeof(EditWindow_Log), false)) { frames = 0; return; }
+                if(neighborhoodGarden&&neighborhoodSampledPanel!=panel&&frames>=100)
+                {SampleNeighborhood();neighborhoodSampledPanel=panel;frames=92;return;}
                 if(mosaicGarden&&mosaicReprintPanel!=panel&&frames>=100&&inventory.Where(r=>r.Panel==panel+1&&r.Cultivar!=null).All(r=>PlantFormMesh.MosaicPrints.ContainsKey(r.Plant.thingIDNumber)))
                 {
                     foreach(var plant in current)plant.DirtyMapMesh(map);
@@ -449,7 +458,7 @@ namespace HorticultureNovelSeeds
                     frames=92; // let the real renderer consume updated uniforms
                     return;
                 }
-                if (capture == null && frames >= 100 && (!windGarden || windSampledPanel==panel) && (!surfaceGarden || surfaceSampledPanel==panel) && (!detailGarden||detailSampledPanel==panel) && (!poseGarden||poseSampledPanel==panel) && current.All(p => custom.Contains(p.thingIDNumber) || vanilla.Contains(p.thingIDNumber)) &&
+                if (capture == null && frames >= 100 && (!windGarden || windSampledPanel==panel) && (!surfaceGarden || surfaceSampledPanel==panel) && (!detailGarden||detailSampledPanel==panel) && (!poseGarden||poseSampledPanel==panel) && (!neighborhoodGarden||neighborhoodSampledPanel==panel) && current.All(p => custom.Contains(p.thingIDNumber) || vanilla.Contains(p.thingIDNumber)) &&
                     (!developmentGarden || inventory.Where(r=>r.Panel==panel+1 && r.Cultivar!=null).All(r=>WaylithPhenotypeShader.DevelopmentalPrints.Contains((r.Plant.thingIDNumber,panel)))))
                 {
                     capture = Path.Combine(root, "HNS-garden-panel-" + (panel+1) + ".png");
@@ -465,8 +474,14 @@ namespace HorticultureNovelSeeds
                     {
                         WriteInventory();
                         onStage("GardenInventory");
-                        End("PASS", mosaicGarden ? "90 plants; 75 same-cultivar instances; per-organ mosaics, native mesh seed and remesh stability" : articulationGarden ? "18 same plants; five native light/rain/wind states; local organ atlas material checks; explicit fallbacks" : groundGarden ? "36 plants; 26 ground detail planes, four explicit nonflower fallbacks; two daylight screenshots" : poseGarden ? "18 same plants; five actual light/rain states; 75 pose material checks and stable IDs" : architectureGarden ? "36 plants; 30 modular canopy cases on six species; two daylight screenshots; explicit fallback for unsupported modules" : detailGarden ? "18 same plants; 12 topology cases and three night overlays; day-night-day screenshots" : surfaceGarden ? "18 same mature plants; 15 surface finishes; four native lighting/weather states; 60 verified material states" : windGarden ? "18 same mature plants; 15 genetic wind materials; 12 actual wind-phase captures; 180 material-phase checks" : developmentGarden ? "18 same plants across three growth stages; 45 verified cultivar-stage GPU prints; 30 automatic mesh invalidations; three daylight screenshots" : organGarden ? "36 plants; 30 organ-form cases; eligible components composited; uncertain organs fall back; two daylight screenshots" : formGarden ? "36 plants; 30 genetically deformed cultivars; 15 pure morphology and 15 morphology plus pigmentation; two daylight screenshots" : cultivarGarden ? "54 plants; 15 organ-aware botanical candidates across three species; three daylight screenshots; 45 mask-free GPU cultivars" : creativeGarden ? "90 garden plants; 25 refined botanical traits across three species; five daylight screenshots; 75 mask-free GPU cultivars" : catalogGarden ? "108 garden plants; 90 baseline trait cases; six daylight screenshots; every loaded HNS appearance rule covered" : "72 garden plants, 60 registered cultivars, 12 species, four daylight screenshots");
+                        End("PASS", neighborhoodGarden ? "18 same plants; five lateral neighbor states; native rooted mesh response and automatic invalidation" : mosaicGarden ? "90 plants; 75 same-cultivar instances; per-organ mosaics, native mesh seed and remesh stability" : articulationGarden ? "18 same plants; five native light/rain/wind states; local organ atlas material checks; explicit fallbacks" : groundGarden ? "36 plants; 26 ground detail planes, four explicit nonflower fallbacks; two daylight screenshots" : poseGarden ? "18 same plants; five actual light/rain states; 75 pose material checks and stable IDs" : architectureGarden ? "36 plants; 30 modular canopy cases on six species; two daylight screenshots; explicit fallback for unsupported modules" : detailGarden ? "18 same plants; 12 topology cases and three night overlays; day-night-day screenshots" : surfaceGarden ? "18 same mature plants; 15 surface finishes; four native lighting/weather states; 60 verified material states" : windGarden ? "18 same mature plants; 15 genetic wind materials; 12 actual wind-phase captures; 180 material-phase checks" : developmentGarden ? "18 same plants across three growth stages; 45 verified cultivar-stage GPU prints; 30 automatic mesh invalidations; three daylight screenshots" : organGarden ? "36 plants; 30 organ-form cases; eligible components composited; uncertain organs fall back; two daylight screenshots" : formGarden ? "36 plants; 30 genetically deformed cultivars; 15 pure morphology and 15 morphology plus pigmentation; two daylight screenshots" : cultivarGarden ? "54 plants; 15 organ-aware botanical candidates across three species; three daylight screenshots; 45 mask-free GPU cultivars" : creativeGarden ? "90 garden plants; 25 refined botanical traits across three species; five daylight screenshots; 75 mask-free GPU cultivars" : catalogGarden ? "108 garden plants; 90 baseline trait cases; six daylight screenshots; every loaded HNS appearance rule covered" : "72 garden plants, 60 registered cultivars, 12 species, four daylight screenshots");
                         return;
+                    }
+                    if(neighborhoodGarden)
+                    {
+                        frames=0;captureAge=0;capture=null;
+                        foreach(var row in inventory.Where(r=>r.Panel==1).ToArray())inventory.Add(row with {Panel=panel+1});
+                        SetNeighborhood();return;
                     }
                     if(poseGarden&&!mosaicGarden)
                     {
@@ -527,6 +542,69 @@ namespace HorticultureNovelSeeds
             map.skyManager.SkyManagerUpdate();map.windManager.WindManagerTick();
         }
         private static readonly List<string> MosaicEvidence=new(){"Panel\tSpecies\tColumn\tPlant ID\tTrait\tNative mesh seed\tVariant frame\tMaterial ID\tPrint count\tSource atlas\tSame cultivar"};
+        private static readonly List<string> NeighborhoodEvidence=new(){"Panel\tSpecies\tColumn\tPlant ID\tTrait\tLeft pressure\tRight pressure\tNative mesh prints\tNeighbor invalidations\tRoot fixed\tTip X shift\tTip height\tTop width\tGeometry changed"};
+        private static readonly Dictionary<int,PlantFormMesh.NeighborhoodPrint> NeighborhoodInitial=new(),NeighborhoodPrevious=new();
+        private static readonly Dictionary<int,int> NeighborhoodPreviousInvalidations=new();
+        private static NeighborhoodMath.Pressure ExpectedNeighborhood()=>panel switch{1=>new(1,0),2=>new(0,1),3=>new(1,1),_=>default};
+        private static void SetNeighborhood()
+        {
+            foreach(var p in NeighborhoodCompanions)if(p.Spawned)p.Destroy(DestroyMode.Vanish);
+            NeighborhoodCompanions.Clear();
+            var target=ExpectedNeighborhood();
+            foreach(var subject in current)
+                for(int dx=-1;dx<=1;dx+=2)
+                {
+                    if((dx<0?target.Left:target.Right)==0f)continue;
+                    var cell=subject.Position+new IntVec3(dx,0,0);
+                    Require(cell.GetPlant(map)==null&&ClearCell(cell),"clear companion position");
+                    var neighbor=(Plant)ThingMaker.MakeThing(DefDatabase<ThingDef>.GetNamed("Plant_Rice"));
+                    neighbor.Growth=1f;neighbor.sown=true;GenSpawn.Spawn(neighbor,cell,map);
+                    NeighborhoodCompanions.Add(neighbor);
+                }
+            Log.Message("[HNS Neighborhood] state="+(panel+1)+"; actual neighbors="+NeighborhoodCompanions.Count);
+        }
+        private static void SampleNeighborhood()
+        {
+            var expected=ExpectedNeighborhood();
+            var styled=inventory.Where(r=>r.Panel==panel+1&&r.Cultivar!=null).ToArray();
+            Require(styled.Length==15&&NeighborhoodCompanions.Count==(int)(18*(expected.Left+expected.Right)),"real neighborhood state");
+            foreach(var row in styled)
+            {
+                var p=row.Plant;int id=p.thingIDNumber;var kind=row.Cultivar.traits.Single().plantForm;
+                Require(NeighborhoodExperiment.Current(p)==expected,"actual neighbor sampling");
+                Require(PlantFormMesh.NeighborhoodPrints.TryGetValue(id,out var print)&&print.Pressure==expected&&print.RootFixed,"actual root-anchored native mesh and current neighbor state");
+                NeighborhoodExperiment.Invalidations.TryGetValue(id,out int invalidations);
+                if(panel==0)NeighborhoodInitial[id]=print;
+                else
+                {
+                    var previous=NeighborhoodPrevious[id];
+                    Require(print.Prints>previous.Prints&&invalidations>NeighborhoodPreviousInvalidations[id],"automatic neighbor invalidation and fresh mesh");
+                }
+                var initial=NeighborhoodInitial[id];
+                if(panel==1||panel==2)
+                {
+                    float dir=expected.Difference;
+                    if(kind==PlantFormKind.GapSeeker)Require(print.TipShift*dir>.30f,"actual gap-facing crown");
+                    if(kind==PlantFormKind.CompanionBow)Require(print.TipShift*dir<-.27f,"actual companion-facing crown");
+                    Require(print.GeometryChanged,"single neighbor changes actual geometry");
+                }
+                if(panel==3&&kind==PlantFormKind.StandSpire)Require(print.TipHeight>initial.TipHeight+.24f&&print.Width<initial.Width*.55f,"actual tall narrow crowded canopy");
+                if(panel==3&&kind==PlantFormKind.CrownPartition)Require(print.Width<initial.Width*.58f,"both neighbors narrow actual canopy");
+                if(panel==3&&kind==PlantFormKind.FreeRosette)Require(print.Width<initial.Width*.50f&&print.TipHeight>initial.TipHeight+.20f,"solitary rosette contracts");
+                if(panel==4)Require(Math.Abs(print.TipShift-initial.TipShift)<.0001f&&Math.Abs(print.TipHeight-initial.TipHeight)<.0001f&&Math.Abs(print.Width-initial.Width)<.0001f,"actual original shape restored");
+                NeighborhoodPrevious[id]=print;NeighborhoodPreviousInvalidations[id]=invalidations;
+                NeighborhoodEvidence.Add(string.Join("\t",panel+1,p.def.defName,row.Column,id,kind,expected.Left,expected.Right,print.Prints,invalidations,print.RootFixed,print.TipShift,print.TipHeight,print.Width,print.GeometryChanged));
+            }
+            Log.Message("[HNS Neighborhood] verified state="+(panel+1)+"; 15 rooted meshes; neighbor count="+NeighborhoodCompanions.Count);
+        }
+        private static void WriteNeighborhood()
+        {
+            Require(inventory.Count==90&&inventory.Select(r=>r.Plant.thingIDNumber).Distinct().Count()==18&&NeighborhoodEvidence.Count==76,"same 18 individuals, 75 contextual states");
+            Require(inventory.Where(r=>r.Cultivar==null).All(r=>Backend(r.Plant)=="Vanilla")&&PlantFormMesh.NeighborhoodPrints.Count==15,"three untouched controls");
+            Require(WaylithPhenotypeShader.MaterialCount==0&&WaylithPhenotypeShader.MaskCount==0&&PlantFormMesh.Vertices==PlantFormMesh.Meshes*25&&PlantFormMesh.Triangles==PlantFormMesh.Meshes*32,"bounded original material mesh path");
+            File.WriteAllLines(Path.Combine(root,"HNS-garden-neighborhood.tsv"),NeighborhoodEvidence);
+            Log.Message("[HNS Neighborhood] verified=75; contextual plants=15; mesh prints="+PlantFormMesh.Meshes+"; vertices="+PlantFormMesh.Vertices+"; invalidations="+NeighborhoodExperiment.Invalidations.Values.Sum());
+        }
         private static void SampleMosaic()
         {
             var styled=inventory.Where(r=>r.Panel==panel+1&&r.Cultivar!=null).ToArray();
@@ -817,6 +895,7 @@ namespace HorticultureNovelSeeds
                 File.WriteAllLines(Path.Combine(root,"HNS-garden-ground.tsv"),evidence);
                 Log.Message("[HNS Ground] rendered="+expected+"; fallback="+(styled.Count-expected)+"; materials="+GroundHabitExperiment.MaterialCount+"; one plane per eligible plant");return;
             }
+            if(neighborhoodGarden){WriteNeighborhood();return;}
             if(mosaicGarden){WriteMosaic();return;}
             if(poseGarden)
             {
@@ -937,6 +1016,8 @@ namespace HorticultureNovelSeeds
             active = false;
             WaylithPhenotypeShader.Enabled = false;
             PlantFormMesh.Enabled = false;
+            NeighborhoodExperiment.Enabled=false;
+            if(neighborhoodGarden)Prefs.PlantWindSway=previousNeighborhoodWind;
             OrganSpriteExperiment.Enabled = false;
             WindHabitUtility.Enabled=false;
             SurfaceFinishUtility.Enabled=false;

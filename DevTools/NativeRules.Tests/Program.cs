@@ -30,7 +30,7 @@ Console.WriteLine("Native rule tests passed. JSON round-trip is not RimWorld Scr
 
 // Verify the geometry contract independently of Unity, including orientation,
 // base anchoring and non-folding triangles at maximum strength.
-foreach (PlantFormKind kind in Enum.GetValues<PlantFormKind>().Where(k=>k!=PlantFormKind.None))
+foreach (PlantFormKind kind in Enum.GetValues<PlantFormKind>().Where(k=>k!=PlantFormKind.None&&!NeighborhoodMath.Valid(k)))
 {
     foreach(bool flip in new[]{false,true})
     {
@@ -265,4 +265,33 @@ Require(SurfaceFinishMath.Environment(.5f,1f,.01f).Rain==.03125f,"quantized weat
         Require(frames.Skip(1).Any(f=>!f.SequenceEqual(frames[0])),k+" different individual variants");
     }
     Require(Enumerable.Range(0,1024).Select(MosaicMath.Frame).Distinct().Count()==8&&MosaicMath.Frame(-7)==8&&MosaicMath.Frame(0)==1,"bounded native seed selection");
+}
+
+{
+    var l=new NeighborhoodMath.Pressure(1,0);var r=new NeighborhoodMath.Pressure(0,1);var both=new NeighborhoodMath.Pressure(1,1);
+    Require(NeighborhoodMath.Band(.1f)==0f&&NeighborhoodMath.Band(.5f)==.5f&&NeighborhoodMath.Band(1f)==1f,"quantized neighbor growth");
+    foreach(var k in Enum.GetValues<PlantFormKind>().Where(NeighborhoodMath.Valid))
+    {
+        foreach(var p in new[]{default(NeighborhoodMath.Pressure),l,r,both,new NeighborhoodMath.Pressure(.25f,.75f)})
+        {
+            for(int i=0;i<=4;i++)Require(NeighborhoodMath.Warp(k,1f,i/4f,0,p)==(i/4f,0f),k+" stationary base");
+            for(int y=0;y<4;y++)for(int x=0;x<4;x++)
+            {
+                var a=NeighborhoodMath.Warp(k,1f,x/4f,y/4f,p);
+                var b=NeighborhoodMath.Warp(k,1f,(x+1)/4f,y/4f,p);
+                var c=NeighborhoodMath.Warp(k,1f,x/4f,(y+1)/4f,p);
+                var d=NeighborhoodMath.Warp(k,1f,(x+1)/4f,(y+1)/4f,p);
+                float Area((float X,float Y)a,(float X,float Y)b,(float X,float Y)c)=>(b.X-a.X)*(c.Y-a.Y)-(b.Y-a.Y)*(c.X-a.X);
+                Require(Area(a,b,c)>0f&&Area(b,d,c)>0f,k+" positive mesh triangles");
+            }
+        }
+        for(int y=0;y<=4;y++)for(int x=0;x<=4;x++)
+        {
+            var a=NeighborhoodMath.Warp(k,1f,x/4f,y/4f,l);var b=NeighborhoodMath.Warp(k,1f,1f-x/4f,y/4f,r);
+            Require(Math.Abs(a.X+b.X-1f)<.0001f&&Math.Abs(a.Y-b.Y)<.0001f,k+" mirror world-side response");
+        }
+    }
+    Require(NeighborhoodMath.Warp(PlantFormKind.GapSeeker,1f,.5f,1f,l).X>.8f&&NeighborhoodMath.Warp(PlantFormKind.CompanionBow,1f,.5f,1f,l).X<.2f,"different directional responses");
+    Require(NeighborhoodMath.Warp(PlantFormKind.StandSpire,1f,.5f,1f,both).Y>1.25f,"crowd elongation");
+    Require(NeighborhoodMath.Warp(PlantFormKind.FreeRosette,1f,1f,1f,default).X>1.3f,"isolated crown spread");
 }

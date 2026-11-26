@@ -65,6 +65,8 @@ namespace HorticultureNovelSeeds
             Environment.SetEnvironmentVariable("HNS_NATIVE_DEVELOPMENT_GARDEN", null);
             bool organGarden = Environment.GetEnvironmentVariable("HNS_NATIVE_ORGAN_GARDEN") == "1";
             Environment.SetEnvironmentVariable("HNS_NATIVE_ORGAN_GARDEN", null);
+            bool neighborhoodGarden=Environment.GetEnvironmentVariable("HNS_NATIVE_NEIGHBORHOOD_GARDEN")=="1";
+            Environment.SetEnvironmentVariable("HNS_NATIVE_NEIGHBORHOOD_GARDEN",null);
             bool formGarden = Environment.GetEnvironmentVariable("HNS_NATIVE_FORM_GARDEN") == "1";
             Environment.SetEnvironmentVariable("HNS_NATIVE_FORM_GARDEN", null);
             bool cultivarGarden = Environment.GetEnvironmentVariable("HNS_NATIVE_CULTIVAR_GARDEN") == "1";
@@ -102,7 +104,7 @@ namespace HorticultureNovelSeeds
                     if (gardenProbe)
                     {
                         Stage("Startup");
-                        NativeGardenProbe.Begin(root, Stage, Finish, proceduralGarden, catalogGarden, creativeGarden, cultivarGarden, formGarden, organGarden, developmentGarden, windGarden, surfaceGarden, detailGarden, architectureGarden, poseGarden, groundGarden, articulationGarden,mosaicGarden);
+                        NativeGardenProbe.Begin(root, Stage, Finish, proceduralGarden, catalogGarden, creativeGarden, cultivarGarden, formGarden, organGarden, developmentGarden, windGarden, surfaceGarden, detailGarden, architectureGarden, poseGarden, groundGarden, articulationGarden,mosaicGarden,neighborhoodGarden);
                         return;
                     }
                     if (shaderProbe)

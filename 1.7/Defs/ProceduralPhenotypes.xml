@@ -1108,4 +1108,64 @@
     <exclusionTags><li>responsiveHabit</li></exclusionTags>
     <responsiveHabit>RipeningMosaic</responsiveHabit>
   </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_GapSeeker</defName>
+    <label>Gap Seeker</label>
+    <description>Upper growth bends away from occupied lateral cells toward a gap.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>plantForm</li></exclusionTags>
+    <plantForm>GapSeeker</plantForm>
+    <plantFormStrength>1</plantFormStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_CompanionBow</defName>
+    <label>Companion Bow</label>
+    <description>Upper growth inclines toward a neighboring plant.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>plantForm</li></exclusionTags>
+    <plantForm>CompanionBow</plantForm>
+    <plantFormStrength>1</plantFormStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_CrownPartition</defName>
+    <label>Crown Partition</label>
+    <description>Crowns restrict the occupied side and expand into the opposite open space.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>plantForm</li></exclusionTags>
+    <plantForm>CrownPartition</plantForm>
+    <plantFormStrength>1</plantFormStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_StandSpire</defName>
+    <label>Stand Spire</label>
+    <description>Crowded individuals form narrow, elongated crowns.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>plantForm</li></exclusionTags>
+    <plantForm>StandSpire</plantForm>
+    <plantFormStrength>1</plantFormStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_FreeRosette</defName>
+    <label>Free Rosette</label>
+    <description>Isolated plants form broad low rosettes that become compact beside neighbors.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>plantForm</li></exclusionTags>
+    <plantForm>FreeRosette</plantForm>
+    <plantFormStrength>1</plantFormStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
 </Defs>

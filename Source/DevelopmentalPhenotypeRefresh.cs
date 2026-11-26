@@ -27,12 +27,12 @@ namespace HorticultureNovelSeeds
     internal static class DevelopmentalGrowthSetterPatch
     {
         internal static void Prefix(Plant __instance,out float __state)=>__state=__instance.Growth;
-        internal static void Postfix(Plant __instance,float __state)=>DevelopmentalPhenotypeRefresh.Refresh(__instance,__state);
+        internal static void Postfix(Plant __instance,float __state){DevelopmentalPhenotypeRefresh.Refresh(__instance,__state);NeighborhoodExperiment.GrowthChanged(__instance,__state);}
     }
     [HarmonyPatch(typeof(Plant),nameof(Plant.TickLong))]
     internal static class DevelopmentalGrowthTickPatch
     {
         internal static void Prefix(Plant __instance,out float __state)=>__state=__instance.Growth;
-        internal static void Postfix(Plant __instance,float __state)=>DevelopmentalPhenotypeRefresh.Refresh(__instance,__state);
+        internal static void Postfix(Plant __instance,float __state){DevelopmentalPhenotypeRefresh.Refresh(__instance,__state);NeighborhoodExperiment.GrowthChanged(__instance,__state);}
     }
 }

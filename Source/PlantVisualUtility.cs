@@ -32,6 +32,7 @@ namespace HorticultureNovelSeeds
             // Snow-overlay alignment and independently transformed mask layers
             // are deliberately outside this initial form proof.
             var form = wantSnowOverlay ? default : PlantFormMesh.Resolve(comp);
+            if(NeighborhoodMath.Valid(form.Kind))form=form with {Pressure=NeighborhoodExperiment.Current(plant)};
             var pose=wantSnowOverlay||procedural||wind||surface||!visual.IsDefault||NovelSeedUtility.HasRegionalPlantColor(comp)||form.Valid?ResponsiveHabitKind.None:ResponsiveHabitExperiment.Resolve(comp);
             var architecture=pose!=ResponsiveHabitKind.None||wantSnowOverlay||procedural||wind||surface||!visual.IsDefault||NovelSeedUtility.HasRegionalPlantColor(comp)||form.Valid||plant.Growth<.8f||plant.def.plant.maxMeshCount!=1?CanopyArchitectureKind.None:CanopyArchitectureExperiment.Resolve(comp);
             var detail=pose!=ResponsiveHabitKind.None||architecture!=CanopyArchitectureKind.None||wantSnowOverlay||procedural||wind||surface||!visual.IsDefault||NovelSeedUtility.HasRegionalPlantColor(comp)||form.Valid?BotanicalDetailKind.None:BotanicalDetailExperiment.Resolve(comp);
