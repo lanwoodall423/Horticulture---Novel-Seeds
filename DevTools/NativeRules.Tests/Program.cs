@@ -380,3 +380,28 @@ Require(SurfaceFinishMath.Environment(.5f,1f,.01f).Rain==.03125f,"quantized weat
     Require(VascularMath.Build(new OrganSpriteMath.Pixel[w*h],w,h)==null,"blank art rejected");
     Require(VascularMath.Light(0f)==0f&&VascularMath.Light(1f)==1f&&VascularMath.Light(float.NaN)==0f&&VascularMath.Wet(0f)==0f&&VascularMath.Wet(1f)==1f,"bounded environmental response");
 }
+
+{
+    Require(Enum.GetValues<BotanicalDetailKind>().Count(LifeSuiteMath.Valid)==20,"twenty unique botanical life modes");
+    Require(Enumerable.Range(1,20).Count(LifeSuiteMath.Overlay)==5&&Enumerable.Range(1,20).Count(LifeSuiteMath.AtlasMode)==3,"bounded extra planes and structural atlases");
+    Require(LifeSuiteMath.Lateral(1,0)==1&&LifeSuiteMath.Lateral(0,1)==2&&LifeSuiteMath.Lateral(1,1)==3,"directional local connections");
+    Require(LifeSuiteMath.Stress(3,43,1)>.9f&&LifeSuiteMath.Stress(17,-8,1)==1&&LifeSuiteMath.Stress(3,20,1)==0,"bounded stress");
+    Require(!LifeSuiteMath.Active(10,1,0,.5f,0,1,0,0)&&LifeSuiteMath.Active(10,0,0,0,0,1,0,0),"night-only signaling");
+    Require(!LifeSuiteMath.Active(18,1,0,.5f,0,1,0,0)&&LifeSuiteMath.Active(18,1,0,.5f,0,1,0,2),"relay requires actual compatible connection");
+    const int w=80,h=80;var image=new OrganSpriteMath.Pixel[w*h];
+    for(int y=6;y<68;y++)for(int x=7;x<74;x++)
+    {
+        if((x-28)*(x-28)/280f+(y-31)*(y-31)/480f<1||(x-50)*(x-50)/260f+(y-44)*(y-44)/430f<1)
+            image[y*w+x]=new(55,132,38,255);
+    }
+    for(int y=30;y<42;y++)for(int x=25;x<34;x++)image[y*w+x]=new(210,171,58,255);
+    for(int y=48;y<58;y++)for(int x=47;x<55;x++)image[y*w+x]=new(238,222,205,255);
+    var a=LifeSuiteMath.Analyze(image,w,h);Require(a!=null&&a.Leaves>=2&&a.Organs>=1&&a.OrganPixels>0,"derived combined leaf and reproductive anatomy");
+    Require(a.Mask.Where(p=>p.A==128).Any()&&a.Mask.Where(p=>p.A==255).Any(),"separate anatomy classes");
+    Require(Enumerable.Range(0,image.Length).All(i=>a.Mask[i].A==0||image[i].A>=90),"air excluded from atlas");
+    foreach(int mode in new[]{2,11,19})foreach(int frame in new[]{0,4,8})
+    {
+        var result=LifeSuiteMath.Frame(a,image,mode,frame);
+        Require(result.Length==image.Length&&Enumerable.Range(0,image.Length).All(i=>result[i].A>=image[i].A),"structural atlas preserves native alpha");
+    }
+}

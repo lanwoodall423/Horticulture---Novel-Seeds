@@ -55,7 +55,7 @@ namespace HorticultureNovelSeeds
         {
             if(!SurfaceFinishUtility.Enabled&&!BotanicalDetailExperiment.Enabled&&!ResponsiveHabitExperiment.Enabled)return;
             var map=Find.CurrentMap;
-            if(map?.skyManager==__instance){SurfaceFinishUtility.Refresh(map);BotanicalDetailExperiment.Refresh(map);VascularExperiment.Refresh(map);ResponsiveHabitExperiment.Refresh(map);}
+            if(map?.skyManager==__instance){SurfaceFinishUtility.Refresh(map);BotanicalDetailExperiment.Refresh(map);VascularExperiment.Refresh(map);LifeSuiteExperiment.Refresh(map);ResponsiveHabitExperiment.Refresh(map);}
         }
     }
 }

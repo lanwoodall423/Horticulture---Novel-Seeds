@@ -23,17 +23,19 @@ namespace HorticultureNovelSeeds
         internal static readonly Dictionary<int,Material> GlowPlants=new();
         internal static readonly List<string> Preparation=new();
 #endif
+        internal static bool ModeMatches(BotanicalDetailKind k)=>LifeSuiteExperiment.Enabled?LifeSuiteMath.Valid(k):VascularExperiment.Enabled?VascularMath.Valid(k):!LifeSuiteMath.Valid(k)&&!VascularMath.Valid(k);
         internal static BotanicalDetailKind Resolve(CompPlantVariety comp)
         {
             if(!Enabled||comp?.ActiveTraits==null)return BotanicalDetailKind.None;
             VarietyTraitDef chosen=null;
             foreach(var t in comp.ActiveTraits)
-                if(t!=null&&!t.produceOnlyVisual&&BotanicalDetailMath.Valid(t.botanicalDetail)&&VascularMath.Valid(t.botanicalDetail)==VascularExperiment.Enabled&&
+                if(t!=null&&!t.produceOnlyVisual&&BotanicalDetailMath.Valid(t.botanicalDetail)&&ModeMatches(t.botanicalDetail)&&
                     (chosen==null||string.CompareOrdinal(t.defName,chosen.defName)<0))chosen=t;
             return chosen?.botanicalDetail??BotanicalDetailKind.None;
         }
         internal static void Prepare(ThingDef def,int variation)
         {
+            if(LifeSuiteExperiment.Enabled){LifeSuiteExperiment.Prepare(def,variation);return;}
             if(VascularExperiment.Enabled){VascularExperiment.Prepare(def,variation);return;}
             if(!Enabled||PlantMaskUtility.TextureForVariation(def,variation) is not Texture2D source)return;
             string label=PlantMaskUtility.VariationLabel(def,variation)??"";

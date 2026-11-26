@@ -1283,4 +1283,224 @@
     <exclusionTags><li>botanicalDetail</li></exclusionTags>
     <botanicalDetail>BronzeReticulum</botanicalDetail>
   </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_PhotosyntheticPulse</defName>
+    <label>Photosynthetic Pulse</label>
+    <description>Daylight-sensitive waves of pigment travel along inferred vascular paths.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>PhotosyntheticPulse</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_NyctinasticFolding</defName>
+    <label>Nyctinastic Folding</label>
+    <description>The crown contracts at night; qualified reproductive components fold independently.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>NyctinasticFolding</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_HydraulicWilt</defName>
+    <label>Hydraulic Wilt</label>
+    <description>Heat and damage produce reversible contracted and drooping growth.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>HydraulicWilt</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_CrystalDewLensing</defName>
+    <label>Crystal Dew Lensing</label>
+    <description>Tiny dew or rain highlights follow foliage and locally shift its sampled color.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>CrystalDewLensing</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_PollinationCloud</defName>
+    <label>Pollination Cloud</label>
+    <description>Mature reproductive plants emit a sparse decorative pollen field in dry daylight.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>PollinationCloud</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_MosaicOrganism</defName>
+    <label>Mosaic Organism</label>
+    <description>Stable individual seeds give separate foliage and reproductive regions contrasting pigments.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>MosaicOrganism</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_SeasonalColorFront</defName>
+    <label>Seasonal Color Front</label>
+    <description>Seasonal coloration advances unevenly through local foliage territories.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>SeasonalColorFront</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_SubsurfaceRootHalo</defName>
+    <label>Subsurface Root Halo</label>
+    <description>Subtle branching soil-colored traces surround the base.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>SubsurfaceRootHalo</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_LeafSkeletonization</defName>
+    <label>Leaf Skeletonization</label>
+    <description>Late-season lamina recedes in selected territories while veins and organs remain.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>LeafSkeletonization</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_BioluminescentSignaling</defName>
+    <label>Bioluminescent Signaling</label>
+    <description>A post-light layer reveals softly pulsing inferred veins and reproductive regions at night.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>BioluminescentSignaling</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_WindDifferentialAnatomy</defName>
+    <label>Wind Differential Anatomy</label>
+    <description>Reproductive components rotate and lag independently while the canopy flexes.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>WindDifferentialAnatomy</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_FractalVenationBloom</defName>
+    <label>Fractal Venation Bloom</label>
+    <description>Branching vascular highlights are progressively revealed in daylight.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>FractalVenationBloom</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_TranslucentPetalTissue</defName>
+    <label>Translucent Petal Tissue</label>
+    <description>Thin classified reproductive tissue brightens with the sky.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>TranslucentPetalTissue</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_CanopyVolumeParallax</defName>
+    <label>Canopy Volume Parallax</label>
+    <description>A separated foliage layer shifts subtly with its screen position.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>CanopyVolumeParallax</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_MicroHabitatResponse</defName>
+    <label>Micro-Habitat Response</label>
+    <description>The crown bends away from stronger lateral vegetation pressure.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>MicroHabitatResponse</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_FruitRipeningCascade</defName>
+    <label>Fruit Ripening Cascade</label>
+    <description>Source-art reproductive regions change from green toward amber at different growth thresholds.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>FruitRipeningCascade</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_FrostEtching</defName>
+    <label>Frost Etching</label>
+    <description>Low temperature reveals pale fine markings on thinner foliage and veins.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>FrostEtching</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_MycelialRelay</defName>
+    <label>Mycelial Relay</label>
+    <description>Decorative pulses follow actual lateral connections to mature plants of the same visual allele.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>MycelialRelay</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_MorphogeneticReconfiguration</defName>
+    <label>Morphogenetic Reconfiguration</label>
+    <description>Native foliage modules expand from the growing canopy as maturity increases.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>MorphogeneticReconfiguration</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_EventDrivenExpression</defName>
+    <label>Event-Driven Expression</label>
+    <description>The canopy opens and darkens when rain arrives.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>EventDrivenExpression</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
 </Defs>

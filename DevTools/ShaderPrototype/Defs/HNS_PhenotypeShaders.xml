@@ -61,4 +61,24 @@
       <renderQueue>2900</renderQueue>
     </shaderProgram>
   </ShaderDef>
+  <ShaderDef>
+    <defName>HNS_LifeSuite</defName>
+    <shaderProgram>
+      <vertexShaderFileName>HNS_LifeSuite.vert.glsl</vertexShaderFileName>
+      <fragmentShaderFileName>HNS_LifeSuite.frag.glsl</fragmentShaderFileName>
+      <transparent>true</transparent>
+      <depthWrite>true</depthWrite>
+      <renderQueue>2900</renderQueue>
+    </shaderProgram>
+  </ShaderDef>
+  <ShaderDef>
+    <defName>HNS_LifeSuiteGlow</defName>
+    <shaderProgram>
+      <vertexShaderFileName>HNS_LifeSuite.vert.glsl</vertexShaderFileName>
+      <fragmentShaderFileName>HNS_LifeSuite.frag.glsl</fragmentShaderFileName>
+      <blendMode>Additive</blendMode>
+      <depthWrite>false</depthWrite>
+      <renderQueue>3151</renderQueue>
+    </shaderProgram>
+  </ShaderDef>
 </Defs>

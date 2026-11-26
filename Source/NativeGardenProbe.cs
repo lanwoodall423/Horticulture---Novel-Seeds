@@ -56,7 +56,8 @@ namespace HorticultureNovelSeeds
         private static bool patternGarden, catalogGarden, creativeGarden, cultivarGarden, formGarden, organGarden, developmentGarden, windGarden, surfaceGarden, detailGarden, architectureGarden, poseGarden, groundGarden;
         private static readonly string[] GroundTraits={"Rootflare","RunnerHabit","BasalCarpet","LeafLitter","PetalDrift"};
         private static bool previousGroundWind;
-        private static bool articulationGarden,mosaicGarden,neighborhoodGarden,chronicleGarden,vascularGarden;
+        private static bool articulationGarden,mosaicGarden,neighborhoodGarden,chronicleGarden,vascularGarden,lifeSuiteGarden;
+        private static readonly string[] LifeSuiteTraits={"PhotosyntheticPulse","NyctinasticFolding","HydraulicWilt","CrystalDewLensing","PollinationCloud","MosaicOrganism","SeasonalColorFront","SubsurfaceRootHalo","LeafSkeletonization","BioluminescentSignaling","WindDifferentialAnatomy","FractalVenationBloom","TranslucentPetalTissue","CanopyVolumeParallax","MicroHabitatResponse","FruitRipeningCascade","FrostEtching","MycelialRelay","MorphogeneticReconfiguration","EventDrivenExpression"};
         private static readonly string[] VascularTraits={"IvoryNerves","CrimsonNetwork","LivingGlass","VascularChimera","BronzeReticulum"};
         private static readonly string[] ChronicleTraits={"CrookedChronicle","RingedHabit","AsymmetricWhorls","ReleaseCrown","StretchBands"};
         private static int chronicleSampledPanel=-1;
@@ -102,7 +103,7 @@ namespace HorticultureNovelSeeds
         private static readonly string[] CreativeTraits = { "Velvetleaf", "Lacquered", "Dustbloom", "Silvered", "HaloEdged", "Netveined", "Tigerstriped", "Marbled", "Opaline", "Crystalline", "Bioluminescent", "NebulaMottle", "Coralbranch", "Prismatic", "Saltbloom", "Ashen", "Boggloss", "Waxbound", "Peatstained", "ScorchedMargins", "Variegated", "Anthocyanin", "MoonFrost", "GoldFreckled", "AuroraVeins" };
         private static readonly string[] CreativeCrops = { "Plant_Corn", "Plant_Cotton", "Plant_Strawberry" };
         private static List<List<VarietyTraitDef>> catalogCases;
-        private static int PanelCount => chronicleGarden||neighborhoodGarden?5:groundGarden ? 2 : poseGarden ? PoseFrames : architectureGarden ? 2 : detailGarden ? 3 : surfaceGarden ? SurfaceFrames : windGarden ? WindFrames : developmentGarden ? 3 : organGarden ? 2 : formGarden ? 2 : catalogGarden ? 6 : cultivarGarden ? 3 : creativeGarden ? 5 : SpeciesOptions.Length;
+        private static int PanelCount => lifeSuiteGarden?8:chronicleGarden||neighborhoodGarden?5:groundGarden ? 2 : poseGarden ? PoseFrames : architectureGarden ? 2 : detailGarden ? 3 : surfaceGarden ? SurfaceFrames : windGarden ? WindFrames : developmentGarden ? 3 : organGarden ? 2 : formGarden ? 2 : catalogGarden ? 6 : cultivarGarden ? 3 : creativeGarden ? 5 : SpeciesOptions.Length;
         private static readonly string[] CatalogCrops = {
             "Plant_Rice","Plant_Cotton","Plant_Corn", "Plant_Potato","Plant_Cotton","Plant_Hops",
             "Plant_Cotton","Plant_Healroot","Plant_Strawberry", "Plant_Corn","Plant_Corn","Plant_Corn",
@@ -162,9 +163,9 @@ namespace HorticultureNovelSeeds
             if (active) legacy.Add(plant.thingIDNumber);
         }
 
-        internal static void Begin(string path, Action<string> stage, Action<string,string> completed, bool procedural = false, bool catalog = false, bool creative = false, bool cultivar = false, bool form = false, bool organ = false, bool development = false, bool wind = false, bool surface = false, bool detail = false, bool architecture = false,bool pose = false,bool ground = false,bool articulation = false,bool mosaic = false,bool neighborhood=false,bool chronicle=false,bool vascular=false)
+        internal static void Begin(string path, Action<string> stage, Action<string,string> completed, bool procedural = false, bool catalog = false, bool creative = false, bool cultivar = false, bool form = false, bool organ = false, bool development = false, bool wind = false, bool surface = false, bool detail = false, bool architecture = false,bool pose = false,bool ground = false,bool articulation = false,bool mosaic = false,bool neighborhood=false,bool chronicle=false,bool vascular=false,bool lifeSuite=false)
         {
-            patternGarden = procedural || creative || cultivar || form || organ || development || wind || surface || detail || architecture || pose || ground; catalogGarden = catalog; creativeGarden = creative; cultivarGarden = cultivar; formGarden = form; organGarden = organ; developmentGarden = development; windGarden = wind; surfaceGarden=surface; detailGarden=detail; architectureGarden=architecture;poseGarden=pose;groundGarden=ground;articulationGarden=articulation;mosaicGarden=mosaic;neighborhoodGarden=neighborhood;chronicleGarden=chronicle;vascularGarden=vascular;
+            patternGarden = procedural || creative || cultivar || form || organ || development || wind || surface || detail || architecture || pose || ground; catalogGarden = catalog; creativeGarden = creative; cultivarGarden = cultivar; formGarden = form; organGarden = organ; developmentGarden = development; windGarden = wind; surfaceGarden=surface; detailGarden=detail; architectureGarden=architecture;poseGarden=pose;groundGarden=ground;articulationGarden=articulation;mosaicGarden=mosaic;neighborhoodGarden=neighborhood;chronicleGarden=chronicle;vascularGarden=vascular;lifeSuiteGarden=lifeSuite;
             root = path; onStage = stage; finish = completed;
             try
             {
@@ -180,6 +181,7 @@ namespace HorticultureNovelSeeds
                 SurfaceFinishUtility.Enabled=surfaceGarden;
                 BotanicalDetailExperiment.Enabled=detailGarden;
                 VascularExperiment.Enabled=vascularGarden;
+                LifeSuiteExperiment.Enabled=lifeSuiteGarden;
                 CanopyArchitectureExperiment.Enabled=architectureGarden;
                 ResponsiveHabitExperiment.Enabled=poseGarden;
                 ResponsiveHabitExperiment.ArticulationEnabled=articulationGarden;
@@ -211,9 +213,9 @@ namespace HorticultureNovelSeeds
                 }
                 if(detailGarden)
                 {
-                    previousDetailWind=Prefs.PlantWindSway;Prefs.PlantWindSway=false;
-                    var defs=DefDatabase<VarietyTraitDef>.AllDefsListForReading.Where(t=>BotanicalDetailMath.Valid(t.botanicalDetail)&&VascularMath.Valid(t.botanicalDetail)==vascularGarden).ToList();
-                    Require(defs.Count==5 && defs.All(t=>t.commonality==0f && TraitAppearanceCatalog.TryGet(t,out _)),"five neutral detail alleles");
+                    previousDetailWind=Prefs.PlantWindSway;Prefs.PlantWindSway=lifeSuiteGarden;
+                    var defs=DefDatabase<VarietyTraitDef>.AllDefsListForReading.Where(t=>BotanicalDetailMath.Valid(t.botanicalDetail)&&BotanicalDetailExperiment.ModeMatches(t.botanicalDetail)).ToList();
+                    Require(defs.Count==(lifeSuiteGarden?20:5) && defs.All(t=>t.commonality==0f && TraitAppearanceCatalog.TryGet(t,out _)),"neutral detail alleles");
                     Require(TraitCatalogValidation.Validate(DefDatabase<VarietyTraitDef>.AllDefsListForReading).Count==0,"trait catalog validation");
                     DetailEvidence.Add("Panel\tSpecies\tColumn\tPlant ID\tTrait\tSky glow\tDarkness\tGlow material ID\tRenderer");
                 }
@@ -307,7 +309,7 @@ namespace HorticultureNovelSeeds
                 Find.CameraDriver.JumpToCurrentMapLoc(start + new IntVec3(8,0,4));
                 Find.CameraDriver.SetRootSize(8.4f);
                 if(surfaceGarden) SetSurfaceWeather();
-                if(detailGarden)SetDetailTime();
+                if(lifeSuiteGarden)SetLifeSuiteTime();else if(detailGarden)SetDetailTime();
                 if(poseGarden)SetPoseWeather();
                 active = true;
                 MakePanel();
@@ -353,6 +355,7 @@ namespace HorticultureNovelSeeds
             if (mosaicGarden) return col==0 ? new() : new() { Trait(MosaicTraits[panel]) };
             if (poseGarden) return col==0 ? new() : new() { Trait((articulationGarden?ArticulationTraits:PoseTraits)[col-1]) };
             if (architectureGarden) return col==0 ? new() : new() { Trait(ArchitectureTraits[col-1]) };
+            if(lifeSuiteGarden)return col==0?new():new(){Trait(LifeSuiteTraits[(panel/2)*5+col-1])};
             if (detailGarden) return col==0 ? new() : new() { Trait((vascularGarden?VascularTraits:DetailTraits)[col-1]) };
             if (surfaceGarden) return col==0 ? new() : new() { Trait(SurfaceTraits[col-1]) };
             if (windGarden) return col==0 ? new() : new() { Trait(WindTraits[col-1]) };
@@ -384,7 +387,7 @@ namespace HorticultureNovelSeeds
             Require(registry != null, "registry");
             for (int r = 0; r < 3; r++)
             {
-                var def = (poseGarden||neighborhoodGarden||chronicleGarden) ? DefDatabase<ThingDef>.GetNamed(PoseCrops[r]) : (groundGarden || architectureGarden || organGarden) ? Choose(OrganCrops[panel*3+r]) : (creativeGarden || cultivarGarden || formGarden || developmentGarden || windGarden || surfaceGarden || detailGarden) ? DefDatabase<ThingDef>.GetNamed(CreativeCrops[r]) : catalogGarden ? DefDatabase<ThingDef>.GetNamed(CatalogCrops[panel*3+r]) : Choose(patternGarden && panel == 3 && r == 1 ? "Plant_Haygrass" : SpeciesOptions[panel][r]);
+                var def = (poseGarden||neighborhoodGarden||chronicleGarden||lifeSuiteGarden) ? DefDatabase<ThingDef>.GetNamed(PoseCrops[r]) : (groundGarden || architectureGarden || organGarden) ? Choose(OrganCrops[panel*3+r]) : (creativeGarden || cultivarGarden || formGarden || developmentGarden || windGarden || surfaceGarden || detailGarden) ? DefDatabase<ThingDef>.GetNamed(CreativeCrops[r]) : catalogGarden ? DefDatabase<ThingDef>.GetNamed(CatalogCrops[panel*3+r]) : Choose(patternGarden && panel == 3 && r == 1 ? "Plant_Haygrass" : SpeciesOptions[panel][r]);
                 Require(HorticulturePlantPolicy.IsSupported(def), "supported garden crop");
                 if (catalogGarden || creativeGarden || cultivarGarden || formGarden || developmentGarden || windGarden || surfaceGarden || detailGarden || poseGarden) chosen.Add(def);
                 // Prewarm actual resolved masks before rendering. If shared
@@ -421,7 +424,7 @@ namespace HorticultureNovelSeeds
                         Require(comp.Variety == cultivar && comp.ActiveTraits.Count == traits.Count, "assigned real genetics");
                     }
                     else comp.SetVariety(null);
-                    plant.sown = true; plant.Growth = chronicleGarden?.25f:developmentGarden ? DevelopmentGrowth[0] : 1f;
+                    plant.sown = true; plant.Growth = lifeSuiteGarden&&panel==6?.72f:chronicleGarden?.25f:developmentGarden ? DevelopmentGrowth[0] : 1f;
                     plant.HitPoints = plant.MaxHitPoints;
                     // Row A on top, columns left-to-right.
                     GenSpawn.Spawn(plant, start + new IntVec3(c * 3,0,(2-r)*4), map);
@@ -431,6 +434,7 @@ namespace HorticultureNovelSeeds
                 }
             }
             if(chronicleGarden)GrowChronicle();
+            if(lifeSuiteGarden)ApplyLifeSuiteContext();
             Log.Message("[HNS Garden] panel=" + (panel+1) + "; species=" + string.Join(", ",current.Select(p=>p.def.defName).Distinct()));
         }
 
@@ -568,7 +572,7 @@ namespace HorticultureNovelSeeds
                 }
                 if(detailGarden && detailSampledPanel!=panel && frames>=100 && inventory.Where(r=>r.Panel==1&&r.Cultivar?.traits.Any(t=>t.botanicalDetail==BotanicalDetailKind.LanternBuds)==true).All(r=>BotanicalDetailExperiment.GlowPlants.ContainsKey(r.Plant.thingIDNumber)))
                 {
-                    if(vascularGarden)SampleVascular();else SampleDetail();detailSampledPanel=panel;frames=92;return;
+                    if(lifeSuiteGarden)SampleLifeSuite();else if(vascularGarden)SampleVascular();else SampleDetail();detailSampledPanel=panel;frames=92;return;
                 }
                 if(surfaceGarden && surfaceSampledPanel!=panel && frames>=100 && inventory.Where(r=>r.Panel==1 && r.Cultivar!=null).All(r=>WaylithPhenotypeShader.SurfacePrints.ContainsKey(r.Plant.thingIDNumber)))
                 {
@@ -632,7 +636,7 @@ namespace HorticultureNovelSeeds
                     {
                         WriteInventory();
                         onStage("GardenInventory");
-                        End("PASS", vascularGarden ? "18 same plants; 45 live tissue render states; bounded anatomy maps; native day/night/day controls" : chronicleGarden ? "90 mature plants in identical empty plots; 75 historical morphologies; 225 actual growth-band observations; Scribe values" : neighborhoodGarden ? "18 same plants; five lateral neighbor states; native rooted mesh response and automatic invalidation" : mosaicGarden ? "90 plants; 75 same-cultivar instances; per-organ mosaics, native mesh seed and remesh stability" : articulationGarden ? "18 same plants; five native light/rain/wind states; local organ atlas material checks; explicit fallbacks" : groundGarden ? "36 plants; 26 ground detail planes, four explicit nonflower fallbacks; two daylight screenshots" : poseGarden ? "18 same plants; five actual light/rain states; 75 pose material checks and stable IDs" : architectureGarden ? "36 plants; 30 modular canopy cases on six species; two daylight screenshots; explicit fallback for unsupported modules" : detailGarden ? "18 same plants; 12 topology cases and three night overlays; day-night-day screenshots" : surfaceGarden ? "18 same mature plants; 15 surface finishes; four native lighting/weather states; 60 verified material states" : windGarden ? "18 same mature plants; 15 genetic wind materials; 12 actual wind-phase captures; 180 material-phase checks" : developmentGarden ? "18 same plants across three growth stages; 45 verified cultivar-stage GPU prints; 30 automatic mesh invalidations; three daylight screenshots" : organGarden ? "36 plants; 30 organ-form cases; eligible components composited; uncertain organs fall back; two daylight screenshots" : formGarden ? "36 plants; 30 genetically deformed cultivars; 15 pure morphology and 15 morphology plus pigmentation; two daylight screenshots" : cultivarGarden ? "54 plants; 15 organ-aware botanical candidates across three species; three daylight screenshots; 45 mask-free GPU cultivars" : creativeGarden ? "90 garden plants; 25 refined botanical traits across three species; five daylight screenshots; 75 mask-free GPU cultivars" : catalogGarden ? "108 garden plants; 90 baseline trait cases; six daylight screenshots; every loaded HNS appearance rule covered" : "72 garden plants, 60 registered cultivars, 12 species, four daylight screenshots");
+                        End("PASS", lifeSuiteGarden ? "20 experimental visual candidates; 4 paired gardens; actual renderer and layer acceptance" : vascularGarden ? "18 same plants; 45 live tissue render states; bounded anatomy maps; native day/night/day controls" : chronicleGarden ? "90 mature plants in identical empty plots; 75 historical morphologies; 225 actual growth-band observations; Scribe values" : neighborhoodGarden ? "18 same plants; five lateral neighbor states; native rooted mesh response and automatic invalidation" : mosaicGarden ? "90 plants; 75 same-cultivar instances; per-organ mosaics, native mesh seed and remesh stability" : articulationGarden ? "18 same plants; five native light/rain/wind states; local organ atlas material checks; explicit fallbacks" : groundGarden ? "36 plants; 26 ground detail planes, four explicit nonflower fallbacks; two daylight screenshots" : poseGarden ? "18 same plants; five actual light/rain states; 75 pose material checks and stable IDs" : architectureGarden ? "36 plants; 30 modular canopy cases on six species; two daylight screenshots; explicit fallback for unsupported modules" : detailGarden ? "18 same plants; 12 topology cases and three night overlays; day-night-day screenshots" : surfaceGarden ? "18 same mature plants; 15 surface finishes; four native lighting/weather states; 60 verified material states" : windGarden ? "18 same mature plants; 15 genetic wind materials; 12 actual wind-phase captures; 180 material-phase checks" : developmentGarden ? "18 same plants across three growth stages; 45 verified cultivar-stage GPU prints; 30 automatic mesh invalidations; three daylight screenshots" : organGarden ? "36 plants; 30 organ-form cases; eligible components composited; uncertain organs fall back; two daylight screenshots" : formGarden ? "36 plants; 30 genetically deformed cultivars; 15 pure morphology and 15 morphology plus pigmentation; two daylight screenshots" : cultivarGarden ? "54 plants; 15 organ-aware botanical candidates across three species; three daylight screenshots; 45 mask-free GPU cultivars" : creativeGarden ? "90 garden plants; 25 refined botanical traits across three species; five daylight screenshots; 75 mask-free GPU cultivars" : catalogGarden ? "108 garden plants; 90 baseline trait cases; six daylight screenshots; every loaded HNS appearance rule covered" : "72 garden plants, 60 registered cultivars, 12 species, four daylight screenshots");
                         return;
                     }
                     if(neighborhoodGarden)
@@ -646,6 +650,10 @@ namespace HorticultureNovelSeeds
                         frames=0;captureAge=0;capture=null;
                         foreach(var row in inventory.Where(r=>r.Panel==1).ToArray())inventory.Add(row with {Panel=panel+1});
                         SetPoseWeather();return;
+                    }
+                    if(lifeSuiteGarden)
+                    {
+                        AdvanceLifeSuite();return;
                     }
                     if(detailGarden)
                     {
@@ -979,6 +987,110 @@ namespace HorticultureNovelSeeds
             File.WriteAllLines(Path.Combine(root,"HNS-garden-articulation-preparation.tsv"),new[]{"Species\tVariation\tSource\tTrait\tWidth\tHeight\tOrgans\tRecovered pixels\tMin change\tMax change\tAlpha preserved"}.Concat(ArticulationAtlas.Preparation));
             Log.Message("[HNS Articulation] rendered="+ResponsiveHabitExperiment.PrintedPlants.Count+"; verified="+(ArticulationEvidence.Count-1)+"; materials="+poseInitialMaterials+"; atlases="+ArticulationAtlas.Count);
         }
+        private static readonly List<Plant> LifeSuiteNeighbors=new();
+        private static readonly List<string> LifeSuiteEvidence=new(){"Panel\tSpecies\tColumn\tPlant ID\tTrait\tMode\tMaterial ID\tExtra material ID\tAtlas\tExtra planes\tFoliage territories\tReproductive components\tLight\tWetness\tDay\tSeason input\tGrowth\tStress input\tLateral links\tActive\tDescription"};
+        private static readonly HashSet<int> LifeSuiteAcceptedModes=new(),LifeSuiteActiveModes=new(),LifeSuiteAtlasModes=new();
+        private static void SetLifeSuiteTime()
+        {
+            int group=panel/2;bool second=panel%2==1;
+            float target=group==0?(second?0f:.27f):group==1?(second?0f:.50f):group==2?(second?.64f:.40f):.50f;
+            int advance=Mathf.RoundToInt(Mathf.Repeat(target-GenLocalDate.DayPercent(map),1f)*60000f);
+            Find.TickManager.DebugSetTicksGame(Find.TickManager.TicksGame+advance);
+            var weather=group==3&&second?DefDatabase<WeatherDef>.GetNamed("Rain"):WeatherDefOf.Clear;
+            map.weatherManager.TransitionTo(weather);map.weatherManager.lastWeather=weather;map.weatherManager.curWeatherAge=4000;
+            LifeSuiteExperiment.TemperatureOverride=group==0&&!second?43f:group==3&&second?-8f:20f;
+            LifeSuiteExperiment.SeasonOverride=group==1?(second?.98f:.87f):0f;
+            map.skyManager.SkyManagerUpdate();map.windManager.WindManagerTick();
+            LifeSuiteExperiment.Refresh(map);
+        }
+        private static void ApplyLifeSuiteContext()
+        {
+            foreach(var p in LifeSuiteNeighbors)if(p.Spawned)p.Destroy(DestroyMode.Vanish);
+            LifeSuiteNeighbors.Clear();
+            int group=panel/2;bool second=panel%2==1;
+            if(group==3||group==2&&second)
+            {
+                var rice=DefDatabase<ThingDef>.GetNamed("Plant_Rice");
+                VarietyRecord relay=null;
+                if(group==3)relay=GameComponent_NovelSeeds.Instance.UnlockVariety(rice,new(){Trait("MycelialRelay")},"Relay neighbor",originKind:"debug-visual-fixture");
+                foreach(var row in inventory.Where(r=>r.Panel==panel+1&&r.Cultivar!=null).ToArray())
+                {
+                    var mode=LifeSuiteMath.Mode(row.Cultivar.traits.Single().botanicalDetail);
+                    if(mode!=15&&mode!=18)continue;
+                    int dx=mode==15?-1:1;
+                    var pos=row.Plant.Position+new IntVec3(dx,0,0);
+                    Require(pos.GetPlant(map)==null&&ClearCell(pos),"clear living context neighbor cell");
+                    var companion=(Plant)ThingMaker.MakeThing(rice);
+                    companion.Growth=1f;companion.sown=true;
+                    companion.TryGetComp<CompPlantVariety>().SetVariety(mode==18?relay:null);
+                    GenSpawn.Spawn(companion,pos,map);
+                    LifeSuiteNeighbors.Add(companion);
+                }
+            }
+            foreach(var p in current)p.DirtyMapMesh(map);
+        }
+        private static void AdvanceLifeSuite()
+        {
+            foreach(var p in LifeSuiteNeighbors)if(p.Spawned)p.Destroy(DestroyMode.Vanish);
+            LifeSuiteNeighbors.Clear();
+            SetLifeSuiteTime();
+            if(panel%2==1)
+            {
+                frames=0;captureAge=0;capture=null;
+                foreach(var row in inventory.Where(r=>r.Panel==panel).ToArray())
+                {
+                    if(panel==7)row.Plant.Growth=1f;
+                    inventory.Add(row with{Panel=panel+1});
+                }
+                ApplyLifeSuiteContext();return;
+            }
+            foreach(var p in current)if(p.Spawned)p.Destroy(DestroyMode.Vanish);
+            current.Clear();MakePanel();
+        }
+        private static void SampleLifeSuite()
+        {
+            var rows=inventory.Where(r=>r.Panel==panel+1&&r.Cultivar!=null).ToArray();
+            Require(rows.Length==15,"15 experimental specimens in each paired garden");
+            var e=LifeSuiteExperiment.Environment(map);
+            LifeSuiteExperiment.Refresh(map);
+            foreach(var r in rows)
+            {
+                var p=r.Plant;int id=p.thingIDNumber;
+                var kind=r.Cultivar.traits.Single().botanicalDetail;int mode=LifeSuiteMath.Mode(kind);
+                string description=p.TryGetComp<CompPlantVariety>().VisualObservation?.Prose()??"";
+                if(!LifeSuiteExperiment.Prints.TryGetValue(id,out var pr))
+                {
+                    Require(LifeSuiteExperiment.Fallback.Contains(id),"explicit anatomy fallback "+kind+" "+p.def.defName);
+                    Require(!description.Contains(PhenotypeVocabulary.Detail(kind).Phrase),"no invented fallback appearance");
+                    LifeSuiteEvidence.Add(string.Join("\t",panel+1,p.def.defName,r.Column,id,kind,mode,0,0,false,0,0,0,e.x,e.y,e.z,e.w,p.Growth,0,0,false,description));
+                    continue;
+                }
+                Require(pr.Mode==mode&&pr.Base.shader==DefDatabase<ShaderDef>.GetNamed(LifeSuiteExperiment.ShaderName).Shader&&pr.Base.GetTexture("_HnsAnatomy")!=null,"native shared anatomy material "+kind);
+                var c=pr.Base.GetVector("_HnsLife");var live=pr.Base.GetVector("_HnsLifeEnv");
+                Require(c.x==mode&&c.y==0&&c.z==(pr.Atlas?1f:0f)&&(live-e).sqrMagnitude<.00001f,"native shader mode and real environment controls");
+                Require(pr.Territories>=2&&(!LifeSuiteMath.NeedsOrgan(mode)||pr.Organs>=1),"qualified source anatomy");
+                Require(pr.Planes==(LifeSuiteMath.Overlay(mode)?1:0)&&(!LifeSuiteMath.Overlay(mode)||pr.Extra!=null),"bounded actual extra plane "+kind);
+                Require(Math.Abs(pr.Growth-p.Growth)<.002f,"actual plant maturity encoded");
+                if(mode==15&&panel==5)Require(pr.Lateral==1,"actual west vegetation context");
+                if(mode==18)Require(pr.Lateral==2,"actual compatible east relay");
+                if(mode==3&&panel==0||mode==17&&panel==7)Require(pr.Stress>.85f,"controlled temperature sample encoded");
+                bool active=LifeSuiteMath.Active(mode,e.x,e.y,e.z,e.w,pr.Growth,pr.Stress,pr.Lateral);
+                Require(active==description.Contains(PhenotypeVocabulary.Detail(kind).Phrase),"phenotype language matches active expression "+kind);
+                LifeSuiteAcceptedModes.Add(mode);if(active)LifeSuiteActiveModes.Add(mode);if(pr.Atlas)LifeSuiteAtlasModes.Add(mode);
+                LifeSuiteEvidence.Add(string.Join("\t",panel+1,p.def.defName,r.Column,id,kind,mode,pr.Base.GetInstanceID(),pr.Extra?.GetInstanceID()??0,pr.Atlas,pr.Planes,pr.Territories,pr.Organs,e.x,e.y,e.z,e.w,pr.Growth,pr.Stress,pr.Lateral,active,description));
+            }
+            Log.Message("[HNS LifeSuite] panel="+(panel+1)+"; accepted modes="+LifeSuiteAcceptedModes.Count+"; active="+LifeSuiteActiveModes.Count+"; atlas modes="+LifeSuiteAtlasModes.Count+"; maps="+LifeSuiteExperiment.MapCount+"; materials="+LifeSuiteExperiment.MaterialCount);
+        }
+        private static void WriteLifeSuite()
+        {
+            Require(inventory.Count==144&&inventory.Select(r=>r.Plant.thingIDNumber).Distinct().Count()==72&&LifeSuiteEvidence.Count==121,"four paired 18-plant gardens");
+            Require(inventory.Where(r=>r.Cultivar==null).All(r=>Backend(r.Plant)=="Vanilla"),"original controls");
+            Require(LifeSuiteAcceptedModes.Count==20&&LifeSuiteActiveModes.Count==20,"all twenty modes accepted and active in at least one native specimen");
+            Require(LifeSuiteAtlasModes.SetEquals(new[]{2,11,19}),"three atlas-driven structural modes");
+            File.WriteAllLines(Path.Combine(root,"HNS-garden-life-suite.tsv"),LifeSuiteEvidence);
+            File.WriteAllLines(Path.Combine(root,"HNS-garden-life-suite-preparation.tsv"),new[]{"Species\tVariation\tSource\tAtlas mode\tFoliage territories\tOrgan count\tOrgan pixels\tDistinct frames\tChanged pixels"}.Concat(LifeSuiteExperiment.Preparation));
+            Log.Message("[HNS LifeSuite] 20 modes; "+LifeSuiteExperiment.MapCount+" maps; "+LifeSuiteExperiment.MaterialCount+" materials; "+LifeSuiteEvidence.Count+" evidence lines");
+        }
         private static void SetDetailTime()
         {
             float target=panel==1?0f:.5f;
@@ -1113,6 +1225,8 @@ namespace HorticultureNovelSeeds
         private static string Backend(Plant p)
         {
             int id = p.thingIDNumber;
+            if(LifeSuiteExperiment.Prints.ContainsKey(id))return "GPU botanical life suite";
+            if(LifeSuiteExperiment.Fallback.Contains(id))return "Life suite unavailable, original path";
             if(VascularExperiment.Printed.ContainsKey(id))return "GPU living tissue atlas";
             if(VascularExperiment.Fallback.Contains(id))return "Tissue unavailable, original path";
             if(GroundHabitExperiment.PrintedPlants.ContainsKey(id))return "Botanical ground plane";
@@ -1199,6 +1313,7 @@ namespace HorticultureNovelSeeds
                 File.WriteAllLines(Path.Combine(root,"HNS-garden-architecture.tsv"),new[]{"Panel\tRow\tColumn\tSpecies\tPlant ID\tTrait\tRenderer\tAdditional planes"}.Concat(inventory.Select(r=>string.Join("\t",r.Panel,r.RowNumber,r.Column,r.Plant.def.defName,r.Plant.thingIDNumber,r.Cultivar?.traits.Single().defName??"Control",Backend(r.Plant),CanopyArchitectureExperiment.PlaneCounts.TryGetValue(r.Plant.thingIDNumber,out int n)?n:0))));
                 Log.Message("[HNS Architecture] rendered="+CanopyArchitectureExperiment.PrintedPlants.Count+"; fallback="+(styled.Count-CanopyArchitectureExperiment.PrintedPlants.Count)+"; source modules="+CanopyArchitectureExperiment.PreparedCount+"; materials="+CanopyArchitectureExperiment.MaterialCount+"; additional planes="+CanopyArchitectureExperiment.PlaneCounts.Values.Sum());return;
             }
+            if(lifeSuiteGarden){WriteLifeSuite();return;}
             if(vascularGarden){WriteVascular();return;}
             if(detailGarden)
             {
@@ -1303,6 +1418,7 @@ namespace HorticultureNovelSeeds
             SurfaceFinishUtility.Enabled=false;
             BotanicalDetailExperiment.Enabled=false;
             VascularExperiment.Enabled=false;
+            LifeSuiteExperiment.Enabled=false;LifeSuiteExperiment.TemperatureOverride=null;LifeSuiteExperiment.SeasonOverride=null;
             CanopyArchitectureExperiment.Enabled=false;
             ResponsiveHabitExperiment.Enabled=false;
             ResponsiveHabitExperiment.ArticulationEnabled=false;
