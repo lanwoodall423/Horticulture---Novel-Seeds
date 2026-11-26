@@ -1,0 +1,55 @@
+Panel	Species	Column	Plant ID	Cultivar	Facts	Individual phenotype	Botanical observations	Recorded history	Cultivar potential
+1	Plant_Corn	1	11716	Vanilla	0				
+1	Plant_Corn	2	11717	HNS_Plant_Corn_1	1	This specimen displays cream-colored internal veins.	Foliage: cream-colored internal veins.		Foliage: cream-colored internal veins.
+1	Plant_Corn	3	11718	HNS_Plant_Corn_2	1	This specimen displays wine-red branching veins and localized blush.	Foliage: wine-red branching veins and localized blush.		Foliage: wine-red branching veins and localized blush.
+1	Plant_Corn	4	11719	HNS_Plant_Corn_3	1	This specimen displays light-sensitive thin foliage with shaded veins.	Foliage: light-sensitive thin foliage with shaded veins.		Foliage: light-sensitive thin foliage with shaded veins.
+1	Plant_Corn	5	11720	HNS_Plant_Corn_4	1	This specimen displays localized cream-green foliage sectors.	Foliage: localized cream-green foliage sectors.		Foliage: localized cream-green foliage sectors.
+1	Plant_Corn	6	11721	HNS_Plant_Corn_5	1	This specimen displays bronze capillary-like markings.	Foliage: bronze capillary-like markings.		Foliage: bronze capillary-like markings.
+1	Plant_Cotton	1	11722	Vanilla	0				
+1	Plant_Cotton	2	11723	HNS_Plant_Cotton_6	1	This specimen displays cream-colored internal veins.	Foliage: cream-colored internal veins.		Foliage: cream-colored internal veins.
+1	Plant_Cotton	3	11724	HNS_Plant_Cotton_7	1	This specimen displays wine-red branching veins and localized blush.	Foliage: wine-red branching veins and localized blush.		Foliage: wine-red branching veins and localized blush.
+1	Plant_Cotton	4	11725	HNS_Plant_Cotton_8	1	This specimen displays light-sensitive thin foliage with shaded veins.	Foliage: light-sensitive thin foliage with shaded veins.		Foliage: light-sensitive thin foliage with shaded veins.
+1	Plant_Cotton	5	11726	HNS_Plant_Cotton_9	1	This specimen displays localized cream-green foliage sectors.	Foliage: localized cream-green foliage sectors.		Foliage: localized cream-green foliage sectors.
+1	Plant_Cotton	6	11727	HNS_Plant_Cotton_10	1	This specimen displays bronze capillary-like markings.	Foliage: bronze capillary-like markings.		Foliage: bronze capillary-like markings.
+1	Plant_Strawberry	1	11728	Vanilla	0				
+1	Plant_Strawberry	2	11729	HNS_Plant_Strawberry_11	1	This specimen displays cream-colored internal veins.	Foliage: cream-colored internal veins.		Foliage: cream-colored internal veins.
+1	Plant_Strawberry	3	11730	HNS_Plant_Strawberry_12	1	This specimen displays wine-red branching veins and localized blush.	Foliage: wine-red branching veins and localized blush.		Foliage: wine-red branching veins and localized blush.
+1	Plant_Strawberry	4	11731	HNS_Plant_Strawberry_13	1	This specimen displays light-sensitive thin foliage with shaded veins.	Foliage: light-sensitive thin foliage with shaded veins.		Foliage: light-sensitive thin foliage with shaded veins.
+1	Plant_Strawberry	5	11732	HNS_Plant_Strawberry_14	1	This specimen displays localized cream-green foliage sectors.	Foliage: localized cream-green foliage sectors.		Foliage: localized cream-green foliage sectors.
+1	Plant_Strawberry	6	11733	HNS_Plant_Strawberry_15	1	This specimen displays bronze capillary-like markings.	Foliage: bronze capillary-like markings.		Foliage: bronze capillary-like markings.
+2	Plant_Corn	1	11716	Vanilla	0				
+2	Plant_Corn	2	11717	HNS_Plant_Corn_1	1	This specimen displays cream-colored internal veins.	Foliage: cream-colored internal veins.		Foliage: cream-colored internal veins.
+2	Plant_Corn	3	11718	HNS_Plant_Corn_2	1	This specimen displays wine-red branching veins and localized blush.	Foliage: wine-red branching veins and localized blush.		Foliage: wine-red branching veins and localized blush.
+2	Plant_Corn	4	11719	HNS_Plant_Corn_3	0				Foliage: light-sensitive thin foliage with shaded veins.
+2	Plant_Corn	5	11720	HNS_Plant_Corn_4	1	This specimen displays localized cream-green foliage sectors.	Foliage: localized cream-green foliage sectors.		Foliage: localized cream-green foliage sectors.
+2	Plant_Corn	6	11721	HNS_Plant_Corn_5	1	This specimen displays bronze capillary-like markings.	Foliage: bronze capillary-like markings.		Foliage: bronze capillary-like markings.
+2	Plant_Cotton	1	11722	Vanilla	0				
+2	Plant_Cotton	2	11723	HNS_Plant_Cotton_6	1	This specimen displays cream-colored internal veins.	Foliage: cream-colored internal veins.		Foliage: cream-colored internal veins.
+2	Plant_Cotton	3	11724	HNS_Plant_Cotton_7	1	This specimen displays wine-red branching veins and localized blush.	Foliage: wine-red branching veins and localized blush.		Foliage: wine-red branching veins and localized blush.
+2	Plant_Cotton	4	11725	HNS_Plant_Cotton_8	0				Foliage: light-sensitive thin foliage with shaded veins.
+2	Plant_Cotton	5	11726	HNS_Plant_Cotton_9	1	This specimen displays localized cream-green foliage sectors.	Foliage: localized cream-green foliage sectors.		Foliage: localized cream-green foliage sectors.
+2	Plant_Cotton	6	11727	HNS_Plant_Cotton_10	1	This specimen displays bronze capillary-like markings.	Foliage: bronze capillary-like markings.		Foliage: bronze capillary-like markings.
+2	Plant_Strawberry	1	11728	Vanilla	0				
+2	Plant_Strawberry	2	11729	HNS_Plant_Strawberry_11	1	This specimen displays cream-colored internal veins.	Foliage: cream-colored internal veins.		Foliage: cream-colored internal veins.
+2	Plant_Strawberry	3	11730	HNS_Plant_Strawberry_12	1	This specimen displays wine-red branching veins and localized blush.	Foliage: wine-red branching veins and localized blush.		Foliage: wine-red branching veins and localized blush.
+2	Plant_Strawberry	4	11731	HNS_Plant_Strawberry_13	0				Foliage: light-sensitive thin foliage with shaded veins.
+2	Plant_Strawberry	5	11732	HNS_Plant_Strawberry_14	1	This specimen displays localized cream-green foliage sectors.	Foliage: localized cream-green foliage sectors.		Foliage: localized cream-green foliage sectors.
+2	Plant_Strawberry	6	11733	HNS_Plant_Strawberry_15	1	This specimen displays bronze capillary-like markings.	Foliage: bronze capillary-like markings.		Foliage: bronze capillary-like markings.
+3	Plant_Corn	1	11716	Vanilla	0				
+3	Plant_Corn	2	11717	HNS_Plant_Corn_1	1	This specimen displays cream-colored internal veins.	Foliage: cream-colored internal veins.		Foliage: cream-colored internal veins.
+3	Plant_Corn	3	11718	HNS_Plant_Corn_2	1	This specimen displays wine-red branching veins and localized blush.	Foliage: wine-red branching veins and localized blush.		Foliage: wine-red branching veins and localized blush.
+3	Plant_Corn	4	11719	HNS_Plant_Corn_3	1	This specimen displays light-sensitive thin foliage with shaded veins.	Foliage: light-sensitive thin foliage with shaded veins.		Foliage: light-sensitive thin foliage with shaded veins.
+3	Plant_Corn	5	11720	HNS_Plant_Corn_4	1	This specimen displays localized cream-green foliage sectors.	Foliage: localized cream-green foliage sectors.		Foliage: localized cream-green foliage sectors.
+3	Plant_Corn	6	11721	HNS_Plant_Corn_5	1	This specimen displays bronze capillary-like markings.	Foliage: bronze capillary-like markings.		Foliage: bronze capillary-like markings.
+3	Plant_Cotton	1	11722	Vanilla	0				
+3	Plant_Cotton	2	11723	HNS_Plant_Cotton_6	1	This specimen displays cream-colored internal veins.	Foliage: cream-colored internal veins.		Foliage: cream-colored internal veins.
+3	Plant_Cotton	3	11724	HNS_Plant_Cotton_7	1	This specimen displays wine-red branching veins and localized blush.	Foliage: wine-red branching veins and localized blush.		Foliage: wine-red branching veins and localized blush.
+3	Plant_Cotton	4	11725	HNS_Plant_Cotton_8	1	This specimen displays light-sensitive thin foliage with shaded veins.	Foliage: light-sensitive thin foliage with shaded veins.		Foliage: light-sensitive thin foliage with shaded veins.
+3	Plant_Cotton	5	11726	HNS_Plant_Cotton_9	1	This specimen displays localized cream-green foliage sectors.	Foliage: localized cream-green foliage sectors.		Foliage: localized cream-green foliage sectors.
+3	Plant_Cotton	6	11727	HNS_Plant_Cotton_10	1	This specimen displays bronze capillary-like markings.	Foliage: bronze capillary-like markings.		Foliage: bronze capillary-like markings.
+3	Plant_Strawberry	1	11728	Vanilla	0				
+3	Plant_Strawberry	2	11729	HNS_Plant_Strawberry_11	1	This specimen displays cream-colored internal veins.	Foliage: cream-colored internal veins.		Foliage: cream-colored internal veins.
+3	Plant_Strawberry	3	11730	HNS_Plant_Strawberry_12	1	This specimen displays wine-red branching veins and localized blush.	Foliage: wine-red branching veins and localized blush.		Foliage: wine-red branching veins and localized blush.
+3	Plant_Strawberry	4	11731	HNS_Plant_Strawberry_13	1	This specimen displays light-sensitive thin foliage with shaded veins.	Foliage: light-sensitive thin foliage with shaded veins.		Foliage: light-sensitive thin foliage with shaded veins.
+3	Plant_Strawberry	5	11732	HNS_Plant_Strawberry_14	1	This specimen displays localized cream-green foliage sectors.	Foliage: localized cream-green foliage sectors.		Foliage: localized cream-green foliage sectors.
+3	Plant_Strawberry	6	11733	HNS_Plant_Strawberry_15	1	This specimen displays bronze capillary-like markings.	Foliage: bronze capillary-like markings.		Foliage: bronze capillary-like markings.

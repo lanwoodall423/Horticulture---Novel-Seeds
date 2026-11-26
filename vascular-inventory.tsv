@@ -1,0 +1,46 @@
+Panel	Species	Column	Plant ID	Trait	Regions	Tissue pixels	Vein pixels	Thin pixels	Sky glow	Light	Wetness	Material ID	Renderer	Description
+1	Plant_Corn	2	11717	IvoryNerves	15	827	403	380	1	1	0	-16019	GPU living tissue atlas	This specimen displays cream-colored internal veins.
+1	Plant_Corn	3	11718	CrimsonNetwork	15	827	403	380	1	1	0	-16021	GPU living tissue atlas	This specimen displays wine-red branching veins and localized blush.
+1	Plant_Corn	4	11719	LivingGlass	15	827	403	380	1	1	0	-16023	GPU living tissue atlas	This specimen displays light-sensitive thin foliage with shaded veins.
+1	Plant_Corn	5	11720	VascularChimera	13	811	389	388	1	1	0	-16025	GPU living tissue atlas	This specimen displays localized cream-green foliage sectors.
+1	Plant_Corn	6	11721	BronzeReticulum	15	827	403	380	1	1	0	-16032	GPU living tissue atlas	This specimen displays bronze capillary-like markings.
+1	Plant_Cotton	2	11723	IvoryNerves	21	1243	611	611	1	1	0	-16011	GPU living tissue atlas	This specimen displays cream-colored internal veins.
+1	Plant_Cotton	3	11724	CrimsonNetwork	17	1222	553	631	1	1	0	-16013	GPU living tissue atlas	This specimen displays wine-red branching veins and localized blush.
+1	Plant_Cotton	4	11725	LivingGlass	21	1243	611	611	1	1	0	-16015	GPU living tissue atlas	This specimen displays light-sensitive thin foliage with shaded veins.
+1	Plant_Cotton	5	11726	VascularChimera	21	1243	611	611	1	1	0	-16017	GPU living tissue atlas	This specimen displays localized cream-green foliage sectors.
+1	Plant_Cotton	6	11727	BronzeReticulum	17	1222	553	631	1	1	0	-16030	GPU living tissue atlas	This specimen displays bronze capillary-like markings.
+1	Plant_Strawberry	2	11729	IvoryNerves	21	1533	721	905	1	1	0	-16002	GPU living tissue atlas	This specimen displays cream-colored internal veins.
+1	Plant_Strawberry	3	11730	CrimsonNetwork	21	1533	721	905	1	1	0	-16004	GPU living tissue atlas	This specimen displays wine-red branching veins and localized blush.
+1	Plant_Strawberry	4	11731	LivingGlass	21	1533	721	905	1	1	0	-16006	GPU living tissue atlas	This specimen displays light-sensitive thin foliage with shaded veins.
+1	Plant_Strawberry	5	11732	VascularChimera	21	1533	721	905	1	1	0	-16008	GPU living tissue atlas	This specimen displays localized cream-green foliage sectors.
+1	Plant_Strawberry	6	11733	BronzeReticulum	21	1533	721	905	1	1	0	-16028	GPU living tissue atlas	This specimen displays bronze capillary-like markings.
+2	Plant_Corn	2	11717	IvoryNerves	15	827	403	380	0	0	0	-16019	GPU living tissue atlas	This specimen displays cream-colored internal veins.
+2	Plant_Corn	3	11718	CrimsonNetwork	15	827	403	380	0	0	0	-16021	GPU living tissue atlas	This specimen displays wine-red branching veins and localized blush.
+2	Plant_Corn	4	11719	LivingGlass	15	827	403	380	0	0	0	-16023	GPU living tissue atlas	
+2	Plant_Corn	5	11720	VascularChimera	13	811	389	388	0	0	0	-16025	GPU living tissue atlas	This specimen displays localized cream-green foliage sectors.
+2	Plant_Corn	6	11721	BronzeReticulum	15	827	403	380	0	0	0	-16032	GPU living tissue atlas	This specimen displays bronze capillary-like markings.
+2	Plant_Cotton	2	11723	IvoryNerves	21	1243	611	611	0	0	0	-16011	GPU living tissue atlas	This specimen displays cream-colored internal veins.
+2	Plant_Cotton	3	11724	CrimsonNetwork	17	1222	553	631	0	0	0	-16013	GPU living tissue atlas	This specimen displays wine-red branching veins and localized blush.
+2	Plant_Cotton	4	11725	LivingGlass	21	1243	611	611	0	0	0	-16015	GPU living tissue atlas	
+2	Plant_Cotton	5	11726	VascularChimera	21	1243	611	611	0	0	0	-16017	GPU living tissue atlas	This specimen displays localized cream-green foliage sectors.
+2	Plant_Cotton	6	11727	BronzeReticulum	17	1222	553	631	0	0	0	-16030	GPU living tissue atlas	This specimen displays bronze capillary-like markings.
+2	Plant_Strawberry	2	11729	IvoryNerves	21	1533	721	905	0	0	0	-16002	GPU living tissue atlas	This specimen displays cream-colored internal veins.
+2	Plant_Strawberry	3	11730	CrimsonNetwork	21	1533	721	905	0	0	0	-16004	GPU living tissue atlas	This specimen displays wine-red branching veins and localized blush.
+2	Plant_Strawberry	4	11731	LivingGlass	21	1533	721	905	0	0	0	-16006	GPU living tissue atlas	
+2	Plant_Strawberry	5	11732	VascularChimera	21	1533	721	905	0	0	0	-16008	GPU living tissue atlas	This specimen displays localized cream-green foliage sectors.
+2	Plant_Strawberry	6	11733	BronzeReticulum	21	1533	721	905	0	0	0	-16028	GPU living tissue atlas	This specimen displays bronze capillary-like markings.
+3	Plant_Corn	2	11717	IvoryNerves	15	827	403	380	1	1	0	-16019	GPU living tissue atlas	This specimen displays cream-colored internal veins.
+3	Plant_Corn	3	11718	CrimsonNetwork	15	827	403	380	1	1	0	-16021	GPU living tissue atlas	This specimen displays wine-red branching veins and localized blush.
+3	Plant_Corn	4	11719	LivingGlass	15	827	403	380	1	1	0	-16023	GPU living tissue atlas	This specimen displays light-sensitive thin foliage with shaded veins.
+3	Plant_Corn	5	11720	VascularChimera	13	811	389	388	1	1	0	-16025	GPU living tissue atlas	This specimen displays localized cream-green foliage sectors.
+3	Plant_Corn	6	11721	BronzeReticulum	15	827	403	380	1	1	0	-16032	GPU living tissue atlas	This specimen displays bronze capillary-like markings.
+3	Plant_Cotton	2	11723	IvoryNerves	21	1243	611	611	1	1	0	-16011	GPU living tissue atlas	This specimen displays cream-colored internal veins.
+3	Plant_Cotton	3	11724	CrimsonNetwork	17	1222	553	631	1	1	0	-16013	GPU living tissue atlas	This specimen displays wine-red branching veins and localized blush.
+3	Plant_Cotton	4	11725	LivingGlass	21	1243	611	611	1	1	0	-16015	GPU living tissue atlas	This specimen displays light-sensitive thin foliage with shaded veins.
+3	Plant_Cotton	5	11726	VascularChimera	21	1243	611	611	1	1	0	-16017	GPU living tissue atlas	This specimen displays localized cream-green foliage sectors.
+3	Plant_Cotton	6	11727	BronzeReticulum	17	1222	553	631	1	1	0	-16030	GPU living tissue atlas	This specimen displays bronze capillary-like markings.
+3	Plant_Strawberry	2	11729	IvoryNerves	21	1533	721	905	1	1	0	-16002	GPU living tissue atlas	This specimen displays cream-colored internal veins.
+3	Plant_Strawberry	3	11730	CrimsonNetwork	21	1533	721	905	1	1	0	-16004	GPU living tissue atlas	This specimen displays wine-red branching veins and localized blush.
+3	Plant_Strawberry	4	11731	LivingGlass	21	1533	721	905	1	1	0	-16006	GPU living tissue atlas	This specimen displays light-sensitive thin foliage with shaded veins.
+3	Plant_Strawberry	5	11732	VascularChimera	21	1533	721	905	1	1	0	-16008	GPU living tissue atlas	This specimen displays localized cream-green foliage sectors.
+3	Plant_Strawberry	6	11733	BronzeReticulum	21	1533	721	905	1	1	0	-16028	GPU living tissue atlas	This specimen displays bronze capillary-like markings.

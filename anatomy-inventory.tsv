@@ -1,0 +1,6 @@
+Species	Variation	Source	Width	Height	Territories	Tissue pixels	Vein pixels	Thin pixels
+Plant_Corn	0	CornPlantA	64	64	13	811	389	388
+Plant_Corn	1	CornPlantB	64	64	15	827	403	380
+Plant_Cotton	0	CottonPlantA	64	64	17	1222	553	631
+Plant_Cotton	1	CottonPlantB	64	64	21	1243	611	611
+Plant_Strawberry	0	StrawberryPlant	64	64	21	1533	721	905
