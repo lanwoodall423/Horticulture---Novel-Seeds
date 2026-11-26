@@ -1349,3 +1349,13 @@ performance. Some fine effects remain subtle at game scale. Existing visual
 families retained; separate unfinished historical-growth extensions excluded.
 
 Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/1c6222ac71dc896fe0c15787a84b0de0f1f43325
+
+### Paired-state GIFs and motion capture limitation
+
+Twenty individual and four group two-frame GIFs assembled from the
+previous verified eight native captures, no interpolated motion.
+Fresh multi-frame fixture 28a2adb timed out at first screenshot in
+run e164fcfe4d584245a6adb6383cdeddd4; no new animation evidence.
+Normal game data preserved. Multi-frame path remains unqualified.
+
+Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/5c43ca65373a5724a00384786b5ed6a2c5919aa7
