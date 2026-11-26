@@ -81,7 +81,7 @@ namespace HorticultureNovelSeeds
                     groundSource??=originalMaterial;
                     Vector2[] uvs = null;
                     bool expression=false;
-                    if(!wantSnowOverlay&&visual.IsDefault&&BotanicalExpressionEngine.TryMaterial(plant,material,flipped,WorkingColors,out var composed,out bool expanded))
+                    if(!wantSnowOverlay&&BotanicalExpressionEngine.CompatibleVisual(comp,visual)&&BotanicalExpressionEngine.TryMaterial(plant,material,flipped,WorkingColors,out var composed,out bool expanded))
                     {material=composed;expression=true;if(expanded)planeSize*=SculptureMath.Expansion;}
                     else if(ResponsiveHabitExperiment.TryMaterial(plant,material,pose,flipped,out var poseMaterial))
                     { material=poseMaterial; PlantUtility.SetWindExposureColors(WorkingColors,plant); comp?.VisualObservation?.AddPose(pose,material,plant.HashOffset()%1024); }

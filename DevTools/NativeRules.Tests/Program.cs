@@ -465,3 +465,15 @@ Require(SurfaceFinishMath.Environment(.5f,1f,.01f).Rain==.03125f,"quantized weat
     int right=ChronicleMath.Record(0,.25f,1f,new NeighborhoodMath.Pressure(0,1));
     Require(ExpressionMath.HistoryBias(left)==1&&ExpressionMath.HistoryBias(right)==-1,"real history maps to opposite crown bias");
 }
+
+{
+    var tags=new[]{"botanicalDetail"};
+    var architecture=ExpressionMath.EffectiveTags("WingedPetioles",tags,true).ToHashSet();
+    var tissue=ExpressionMath.EffectiveTags("BronzeReticulum",tags,true).ToHashSet();
+    Require(!architecture.Overlaps(tissue),"promoted different channels can be inherited together");
+    Require(architecture.Overlaps(ExpressionMath.EffectiveTags("CandelabraTips",tags,true)),"promoted same channel conflicts");
+    Require(architecture.Overlaps(ExpressionMath.EffectiveTags("LobedLeaf",tags,true))&&tissue.Overlaps(ExpressionMath.EffectiveTags("LobedLeaf",tags,true)),"legacy botanical exclusion retained");
+    Require(ExpressionMath.EffectiveTags("WingedPetioles",tags,false).SequenceEqual(tags),"disabled beta retains legacy exclusions");
+    Require(!ExpressionMath.Eligible("UmbelCrown","Plant_Corn")&&!ExpressionMath.Eligible("IvoryNerves","Plant_Rice")&&ExpressionMath.Eligible("WingedPetioles","Plant_Corn"),"qualified species gate");
+    Require(ExpressionMath.DefaultWeight("SatinCuticle")>ExpressionMath.DefaultWeight("CrookedChronicle")&&ExpressionMath.DefaultWeight("CrookedChronicle")>ExpressionMath.DefaultWeight("CrimsonNetwork")&&ExpressionMath.DefaultWeight("CrimsonNetwork")>ExpressionMath.DefaultWeight("PearlCuticle"),"conservative tier weights");
+}

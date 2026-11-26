@@ -42,7 +42,29 @@ namespace HorticultureNovelSeeds
         }
         internal sealed record Decision(Plan Plan,string[] Accepted,string[] Rejected,bool Unknown);
         internal static string Id(string id)=>id!=null&&id.StartsWith("HNS_",StringComparison.Ordinal)?id.Substring(4):id??"";
-        internal static bool Known(string id)=>Library.Any(a=>a.Id==Id(id));
+        private static readonly Dictionary<string,Allele> byId=Library.ToDictionary(a=>a.Id,StringComparer.Ordinal);
+        internal static bool Known(string id)=>byId.ContainsKey(Id(id));
+        internal static bool QualifiedSpecies(string def)=>def is "Plant_Corn" or "Plant_Cotton" or "Plant_Daylily";
+        internal static bool Eligible(string id,string def)=>byId.TryGetValue(Id(id),out var a)&&QualifiedSpecies(def)&&a.Families.Contains(FamilyOf(def));
+        internal static float DefaultWeight(string id)=>byId.TryGetValue(Id(id),out var a)?a.Tier switch{Tier.Natural=>.12f,Tier.Living=>.075f,Tier.Exceptional=>.035f,_=>.008f}:0f;
+        internal static string ChannelTag(string id)=>byId.TryGetValue(Id(id),out var a)?"HNSExpression_"+a.Channel:null;
+        internal static IEnumerable<string> EffectiveTags(string id,IEnumerable<string> tags,bool enabled)
+        {
+            string channel=enabled?ChannelTag(id):null;
+            foreach(var t in tags??Enumerable.Empty<string>())
+            {
+                if(!enabled){yield return t;continue;}
+                if(channel!=null&&t is "botanicalDetail" or "responsiveHabit" or "surfaceFinish" or "plantForm")continue;
+                yield return t;
+                // Unpromoted old rendering families conflict with promoted channels
+                // that would otherwise suppress the old effect.
+                if(channel==null&&t=="botanicalDetail"){yield return "HNSExpression_Architecture";yield return "HNSExpression_Tissue";}
+                if(channel==null&&t=="responsiveHabit")yield return "HNSExpression_Reproductive";
+                if(channel==null&&t=="surfaceFinish")yield return "HNSExpression_Surface";
+                if(channel==null&&t=="plantForm")yield return "HNSExpression_Context";
+            }
+            if(channel!=null)yield return channel;
+        }
         internal static Family FamilyOf(string def)=>def switch
         {
             "Plant_Corn" or "Plant_Rice" or "Plant_Haygrass"=>Family.Cereal,

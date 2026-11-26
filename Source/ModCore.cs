@@ -58,6 +58,7 @@ namespace HorticultureNovelSeeds
         {
             Settings?.Normalize();
             Settings?.ClearVisualCache();
+            if(BotanicalExpressionEngine.Enabled)BotanicalExpressionEngine.ScanMapPlants();else BotanicalExpressionEngine.ClearPending();
             ProduceMaskRenderer.ClearAll();
             base.WriteSettings();
             if (Current.Game != null)
@@ -359,7 +360,10 @@ namespace HorticultureNovelSeeds
         {
             base.FinalizeInit();
             EnsureSpeciesColorPalettes();
+            BotanicalExpressionEngine.ScanMapPlants();
         }
+
+        public override void GameComponentUpdate(){BotanicalExpressionEngine.Pump();}
 
         public IReadOnlyList<SpeciesColorPaletteRecord> SpeciesColorPalettes
         {

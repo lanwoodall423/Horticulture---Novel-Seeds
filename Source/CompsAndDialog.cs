@@ -116,6 +116,7 @@ namespace HorticultureNovelSeeds
             crossPollinationParentVarietyId = null;
             InvalidateTraitCache();
             ExpandedTraitUtility.RegisterSelfSeedingPlant(this);
+            BotanicalExpressionEngine.Request(parent as Plant);
         }
 
         public void SetPendingTraits(List<VarietyTraitDef> traits)
@@ -134,6 +135,12 @@ namespace HorticultureNovelSeeds
             crossPollinationParentVarietyId = null;
             InvalidateTraitCache();
             ExpandedTraitUtility.RegisterSelfSeedingPlant(this);
+            BotanicalExpressionEngine.Request(parent as Plant);
+        }
+
+        public override void PostSpawnSetup(bool respawningAfterLoad)
+        {
+            base.PostSpawnSetup(respawningAfterLoad);BotanicalExpressionEngine.Request(parent as Plant);
         }
 
         public void SetCrossPollinatedTraits(List<VarietyTraitDef> traits, VarietyRecord donor)

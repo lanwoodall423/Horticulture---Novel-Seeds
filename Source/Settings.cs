@@ -22,6 +22,7 @@ namespace HorticultureNovelSeeds
         public int allowedTraitImbalance = 1;
         public float exceptionalVarietyChance = 0.08f;
         public bool enableProduceVisuals = true;
+        public bool enableBotanicalExpression = false;
         public int minimumPaletteSize = 2;
         public int maximumPaletteSize = 5;
         public float allowedHueRangeDegrees = 140f;
@@ -65,6 +66,7 @@ namespace HorticultureNovelSeeds
             Scribe_Values.Look(ref allowedTraitImbalance, "allowedTraitImbalance", 1);
             Scribe_Values.Look(ref exceptionalVarietyChance, "exceptionalVarietyChance", 0.08f);
             Scribe_Values.Look(ref enableProduceVisuals, "enableProduceVisuals", true);
+            Scribe_Values.Look(ref enableBotanicalExpression, "enableBotanicalExpression", false);
             Scribe_Values.Look(ref minimumPaletteSize, "minimumPaletteSize", 2);
             Scribe_Values.Look(ref maximumPaletteSize, "maximumPaletteSize", 5);
             Scribe_Values.Look(ref allowedHueRangeDegrees, "allowedHueRangeDegrees", 140f);
@@ -114,6 +116,7 @@ namespace HorticultureNovelSeeds
             allowedTraitImbalance = other.allowedTraitImbalance;
             exceptionalVarietyChance = other.exceptionalVarietyChance;
             enableProduceVisuals = other.enableProduceVisuals;
+            enableBotanicalExpression = other.enableBotanicalExpression;
             minimumPaletteSize = other.minimumPaletteSize;
             maximumPaletteSize = other.maximumPaletteSize;
             allowedHueRangeDegrees = other.allowedHueRangeDegrees;
@@ -754,7 +757,7 @@ namespace HorticultureNovelSeeds
 
         public static float DefaultWeight(VarietyTraitDef traitDef)
         {
-            return traitDef == null ? 1f : Mathf.Max(0f, traitDef.commonality);
+            return traitDef == null ? 1f : ExpressionMath.Known(traitDef.defName)?ExpressionMath.DefaultWeight(traitDef.defName):Mathf.Max(0f, traitDef.commonality);
         }
     }
 

@@ -147,9 +147,9 @@ namespace HorticultureNovelSeeds
         private static List<VarietyTraitDef> RandomWildTraitSet(ThingDef cropDef, NovelSeedsSettings settings)
         {
             List<VarietyTraitDef> defs = TraitConfigUtility.TopLevelTraits()
-                .Where(trait => settings == null
+                .Where(trait => ExpressionEligible(trait,cropDef,settings)&&(settings == null
                     ? trait.commonality > 0f
-                    : settings.IsWildTraitAllowed(trait) && settings.WildTraitWeight(trait) > 0f)
+                    : settings.IsWildTraitAllowed(trait) && settings.WildTraitWeight(trait) > 0f))
                 .ToList();
             List<VarietyTraitDef> result = new List<VarietyTraitDef>();
             HashSet<string> blockedTags = new HashSet<string>();
@@ -260,7 +260,7 @@ namespace HorticultureNovelSeeds
             return count;
         }
 
-        private static bool TryAssignCrossPollination(Plant plant, CompPlantVariety comp, VarietyRecord selected)
+        internal static bool TryAssignCrossPollination(Plant plant, CompPlantVariety comp, VarietyRecord selected)
         {
             if (plant?.Map == null || comp == null || selected?.traits == null) return false;
             NovelSeedsSettings settings = HorticultureNovelSeedsMod.Settings;
@@ -281,7 +281,7 @@ namespace HorticultureNovelSeeds
             replacements.AddRange(CrossPollinationCosmeticTraits(selected.traits, donor.traits, plant.def));
 
             List<VarietyTraitDef> candidates = donor.traits
-                .Where(trait => trait != null && !IsCosmeticCrossPollinationTrait(trait)
+                .Where(trait => trait != null && ExpressionEligible(trait,plant.def,settings) && !IsCosmeticCrossPollinationTrait(trait)
                     && !selected.traits.Any(existing => SameConfigGroup(existing, trait))
                     && !replacements.Any(existing => SameConfigGroup(existing, trait))).Distinct().ToList();
             int usedMechanicalSlots = MechanicalCrossPollinationTraitCount(new[] { nutritious });
@@ -579,7 +579,7 @@ namespace HorticultureNovelSeeds
 
         private static float TraitSelectionWeight(NovelSeedsSettings settings, ThingDef cropDef, VarietyTraitDef trait)
         {
-            if (trait == null)
+            if (trait == null||!ExpressionEligible(trait,cropDef,settings))
             {
                 return 0f;
             }
@@ -1597,13 +1597,15 @@ namespace HorticultureNovelSeeds
             return true;
         }
 
+        internal static bool ExpressionEligible(VarietyTraitDef trait,ThingDef cropDef,NovelSeedsSettings settings)=>trait!=null&&(!ExpressionMath.Known(trait.defName)||settings?.enableBotanicalExpression==true&&ExpressionMath.Eligible(trait.defName,cropDef?.defName));
+        private static IEnumerable<string> EffectiveTags(VarietyTraitDef trait)=>ExpressionMath.EffectiveTags(trait?.defName,trait?.exclusionTags,HorticultureNovelSeedsMod.Settings?.enableBotanicalExpression==true);
         private static void AddBlockedTags(VarietyTraitDef trait, HashSet<string> blockedTags)
         {
             if (trait?.exclusionTags == null)
             {
                 return;
             }
-            foreach (string tag in trait.exclusionTags)
+            foreach (string tag in EffectiveTags(trait))
             {
                 blockedTags.Add(tag);
             }
@@ -1615,7 +1617,7 @@ namespace HorticultureNovelSeeds
             {
                 return false;
             }
-            return trait.exclusionTags.Any(blockedTags.Contains);
+            return EffectiveTags(trait).Any(blockedTags.Contains);
         }
     }
 }

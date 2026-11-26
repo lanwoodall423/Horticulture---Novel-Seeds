@@ -13,7 +13,15 @@ namespace HorticultureNovelSeeds
     // unknown traits, texture transforms, seasonal material or budgets fail.
     internal static class BotanicalExpressionEngine
     {
-        internal static bool Enabled {get;set;}
+        private static bool? testOverride;
+        internal static bool Enabled {get=>testOverride??HorticultureNovelSeedsMod.Settings?.enableBotanicalExpression==true;set=>testOverride=value;}
+        private readonly record struct WorkKey(ThingDef Def,string Architecture);
+        private static readonly Queue<WorkKey> work=new();
+        private static readonly Dictionary<WorkKey,HashSet<Plant>> waiting=new();
+        private static readonly HashSet<WorkKey> ready=new();
+        internal static int PendingCount=>work.Count;
+        internal static int PrepareJobs{get;private set;}
+        internal static double MaxPrepareMilliseconds{get;private set;}
         private const long Budget=64L*1024*1024;
         private const int MaterialLimit=160;
         private sealed record SourceData(Texture2D Mask,LifeSuiteMath.Anatomy Anatomy,OrganSpriteMath.Pixel[] Pixels,Dictionary<int,Texture2D> Atlases);
@@ -35,7 +43,48 @@ namespace HorticultureNovelSeeds
             MeshPayload[p.thingIDNumber]=sub.colors.Count>=4&&sub.colors.Skip(sub.colors.Count-4).All(c=>c.r==print.Payload.r&&c.g==print.Payload.g&&c.b==print.Payload.b)&&sub.uvs.Skip(sub.uvs.Count-4).All(u=>u.z==p.HashOffset()%1024);
         }
 #endif
-        internal static bool CanAttempt(CompPlantVariety comp)=>Enabled&&comp?.HasAnyTraits==true&&comp.ActiveTraits.All(t=>t!=null&&!t.produceOnlyVisual&&E.Known(t.defName));
+        private static bool LegacyCompatible(VarietyTraitDef t)=>t!=null&&(t.produceOnlyVisual||E.Known(t.defName)||t.proceduralPhenotype==0&&t.plantForm==0&&t.organForm==0&&t.windHabit==0&&t.surfaceFinish==0&&t.botanicalDetail==0&&t.canopyArchitecture==0&&t.responsiveHabit==0&&t.groundHabit==0&&t.visualMaskIndex<0);
+        private static IEnumerable<string> Promoted(CompPlantVariety c)=>c.ActiveTraits.Where(t=>t!=null&&!t.produceOnlyVisual&&E.Known(t.defName)).Select(t=>t.defName);
+        internal static bool CanAttempt(CompPlantVariety comp)=>Enabled&&comp?.HasAnyTraits==true&&E.QualifiedSpecies(comp.parent.def.defName)&&comp.ActiveTraits.All(LegacyCompatible)&&comp.ActiveTraits.Any(t=>!t.produceOnlyVisual&&E.Known(t.defName));
+        internal static bool CompatibleVisual(CompPlantVariety c,PlantVisualParameters v)
+        {
+            if(!CanAttempt(c)||NovelSeedUtility.HasRegionalPlantColor(c)||NovelSeedUtility.HasPlantMaskVisual(c))return false;
+            // Geometry is already applied by the native plane construction.
+            // Never discard legacy texture/overlay coloration or custom masks.
+            v.scale=v.width=v.height=v.density=v.spread=v.shadowScale=1f;
+            v.rotation=v.rotationVariation=v.scaleVariation=v.offsetX=v.offsetZ=0f;
+            return v.IsDefault;
+        }
+        internal static void Request(Plant p)
+        {
+            if(testOverride.HasValue||p?.Spawned!=true)return;
+            var c=p.TryGetComp<CompPlantVariety>();if(!CanAttempt(c))return;
+            var d=E.Resolve(Promoted(c),E.FamilyOf(p.def.defName),int.MaxValue);
+            var arch=d.Accepted.FirstOrDefault(id=>E.ChannelTag(id)=="HNSExpression_Architecture")??"";
+            var key=new WorkKey(p.def,arch);if(ready.Contains(key))return;
+            if(!waiting.TryGetValue(key,out var set))
+            {
+                if(work.Count>=128)return;
+                waiting.Add(key,set=new());work.Enqueue(key);
+            }
+            if(set.Count<8192)set.Add(p);
+        }
+        internal static void ScanMapPlants()
+        {
+            if(!Enabled||testOverride.HasValue||Current.Game==null)return;
+            foreach(var map in Find.Maps)foreach(var p in map.listerThings.AllThings.OfType<Plant>())Request(p);
+        }
+        internal static void Pump()
+        {
+            if(!Enabled||testOverride.HasValue||work.Count==0)return;
+            var key=work.Dequeue();if(!waiting.Remove(key,out var set))return;
+            var watch=System.Diagnostics.Stopwatch.StartNew();
+            try{Prepare(key.Def,key.Architecture.Length==0?Array.Empty<string>():new[]{key.Architecture});}
+            catch(Exception ex){Log.Warning("[HNS Expression] Deferred source preparation: "+key.Def.defName+" "+ex.Message);}
+            finally{watch.Stop();PrepareJobs++;MaxPrepareMilliseconds=Math.Max(MaxPrepareMilliseconds,watch.Elapsed.TotalMilliseconds);ready.Add(key);}
+            foreach(var p in set)if(p?.Spawned==true&&CanAttempt(p.TryGetComp<CompPlantVariety>()))p.DirtyMapMesh(p.Map);
+        }
+        internal static void ClearPending(){work.Clear();waiting.Clear();}
         internal static void Prepare(ThingDef def,IEnumerable<string> ids)
         {
             var names=ids.ToArray();
@@ -100,7 +149,7 @@ namespace HorticultureNovelSeeds
             if(!CanAttempt(comp)||source==null||source.shader!=ShaderDatabase.CutoutPlant||!source.HasProperty("_FallBehaviorEnabled")||
                 source.GetFloat("_FallBehaviorEnabled")!=0||source.mainTextureScale!=Vector2.one||source.mainTextureOffset!=Vector2.zero||
                 !sources.TryGetValue(source.mainTexture,out var a))return false;
-            var d=E.Resolve(comp.ActiveTraits.Select(t=>t.defName),E.FamilyOf(p.def.defName),a.Anatomy.Organs);
+            var d=E.Resolve(Promoted(comp),E.FamilyOf(p.def.defName),a.Anatomy.Organs);
             if(d.Unknown||!d.Plan.Valid)return false;
             mat=GetMaterial(source.mainTexture,a,d.Plan);if(mat==null)return false;
             int band=E.Band(p.Growth),seed=E.Seed(p.thingIDNumber),code=comp.VisualChronicle;
