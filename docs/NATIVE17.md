@@ -600,3 +600,50 @@ Inventory SHA256: BB5F4D2E541821E2A0310673EAEE1C93798862CCE925BD52290CF23E5593DD
 Reproduce with RimWorld closed:
 
     powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -FormGarden
+
+## Experimental localized organ compositing (2026-11-25)
+
+Source e2a43148e6ff5449e0ce3d01710b32dd5f10c5f3 introduces
+OrganSpriteMath and OrganSpriteExperiment. Connected candidate regions
+from reproductive-color classification and existing automatic masks
+are resampled and source-over composited onto the original artwork.
+Four reproductive modes (Plump Fruit, Long Fruit, Broad Fruit,
+Clustered Fruit) and one stem mode (Thick Stalk) are neutral cosmetic
+alleles with zero default mutation weight. No manual artwork or new
+shader required. Preprocessing is explicit, outside Print; bounded
+texture/material caches, original plant shader, conservative fallback.
+This is localized 2D sprite compositing, not accurate anatomical
+recognition or true independent 3D geometry.
+
+AllPerformance native run da6439b696e2455bb4e4bd4386eb8d89 on
+RimWorld 1.7.5014 rev1195 passed all five stages. 36 plants on corn,
+cotton, strawberry, rose, daylily and hops: six controls, 24 rendered
+reproductive-form cultivars, six explicit original-path fallbacks.
+All Thick Stalk cases fell back because no credible stem region was
+prepared. 36 prepared textures over nine source variants; no custom
+shader materials or GPU masks. Two real daylight screenshots. Both
+ordinary and fixture builds clean, existing rule/form tests and eight
+new organ math checks passed. Player save/config/preferences preservation,
+test package removal and process cleanup passed.
+
+Evidence:
+https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/b2b40fc6951aa2718802ff70a24b94ca2d54a6e4
+
+Visual review: plump strawberries, cotton bolls, larger corn kernels
+and fuller blossoms are promising; long/broad flowers can be unnaturally
+stretched, adjacent lobes can merge and hops are barely distinguishable.
+Thick Stalk is not visually qualified. Overlays may cover neighboring
+foliage. Pigment combinations, other growth states, snow, editor,
+inheritance, save/reload, texture memory, batching and field performance
+remain unqualified. Production activation remains disabled. No changes
+to existing trait mechanics, weights or historical 1.6 assets.
+
+DLL SHA256: 5FE9C8A73DF837341DEB4114F63E6D0C836DFEA2DFD69063B66420AF85C66EF2.
+Receipt SHA256: C6CADB100CF54AF0795F445ED7CA86280CF040E98D9F5DD802C7098328073570.
+Log SHA256: 2FCDAAAB09F086CEC148BF3B0F11EA043E78EAAA418E70A8FED4DB18FAD28F73.
+Inventory SHA256: 51CF5FD2EC99D45C9A5E1800C3E330B03E166E34F7DB76549843625F53342E9B.
+Preparation SHA256: 2C19D2739844E1A8ECC46C2B55A29FD57FF3BB0B0611C1291033530F40E692E7.
+
+Reproduce with RimWorld closed:
+
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -OrganGarden
