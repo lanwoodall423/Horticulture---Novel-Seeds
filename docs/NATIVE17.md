@@ -441,3 +441,54 @@ Inventory SHA256: FEED7511C2C122DD4404C200F2B8FAE731018B16431C4BC74AD74C6AA1984A
 Reproduce with RimWorld closed:
 
     powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -CreativeGarden
+
+## Botanical refinement of procedural visuals (2026-11-25)
+
+Owner requested recognizable plant varieties rather than uniform, extreme
+fantasy recoloring. Commits 3012adfd6698bcafd4d012409d0e48f8e7ec6ee9 and
+5dd60e5cbe3a5abfeb9cabbc1030b8c327d45b6d refine all 25 explicit procedural
+trait profiles and shader motifs. The shader uses continuous original-color
+affinity, attenuation of pale/warm contrasting tissue, source value
+retention and irregular local expression. Where validated automatic regions
+are already active, they guide the pattern affinity. No manual masks,
+new anatomy classifier, additional light emission, or trait mechanics
+introduced. Stronger accents remain possible on green foliage; this is
+not exact organ recognition and non-green or similarly colored organs
+may need further treatment. The shared compositor also affects existing
+mechanical trait motifs; the full catalog has not been rerun in this pass.
+
+First native run 23b407b415714f90a7517c41f918cabd passed eight stages,
+but visual inspection found the strongest motifs excessively subdued.
+The second iteration restores localized contrast with botanical palettes.
+Final AllPerformance run 6b22c5f4e58c4701b2202c4caf2d4444 on RimWorld
+1.7.5014 rev1195 passed all eight stages: 90 plants, 75 registered
+single-trait cultivars, 15 controls, all 25 explicit traits on corn,
+cotton and strawberry. 75/75 mask-free procedural GPU, 75 materials,
+zero prepared masks, five actual daylight screenshots. No relevant HNS
+errors identified in captured log. Both fixture and ordinary builds
+compiled cleanly after the first revision; final shader-only refinement
+was built by the runner. All 12 journal rules passed after first revision.
+Normal save inventory, configuration, preferences, owned process shutdown
+and temporary package removal verified unchanged/complete in both runs.
+
+Gallery and before/after screenshots:
+https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/5b742ee75ae034e973c88dc7ded515e61ab05b67
+
+Before images are from the earlier creative garden, with identical crop
+and trait assignments but distinct randomized maps/sprite instances.
+This is qualitative visual comparison, not pixel-matched. No plant
+artwork retouched; the gallery is crops and labels. Some subtle finishes
+remain difficult to distinguish at normal zoom. Production renderer,
+other species/palettes, automatic masked combinations, growth stages,
+harvested produce, designer previews and performance remain unqualified.
+All new candidates remain zero-default-weight cosmetics; trait identity,
+mechanical values, mutation probabilities and historical 1.6 assets unchanged.
+
+DLL SHA256: D5FF7B83AB6B66C18E8D0D26AFB5574E28F3045AF556E8B784B19BB424135816.
+Receipt SHA256: 9E4F228BF2616A71C433B4E0323A1F6DAA517F40DBD8A1593403B332E2135F50.
+Player log SHA256: F37180D7E7C3CED63BCD06F691C33760A4DE340062353EB97595101C6D67AE84.
+Inventory SHA256: 53DF2752229EDC7B733397C9D85BA3A96668B154F482D400B839ADBEF301AAB6.
+
+Reproduce with RimWorld closed:
+
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -CreativeGarden
