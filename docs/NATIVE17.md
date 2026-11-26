@@ -543,3 +543,60 @@ Inventory SHA256: F0106B07F9358D56320611A1A511C981DF619F88FA9C1BBBBD0D529963CFF2
 Reproduce with RimWorld closed:
 
     powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -CultivarGarden
+
+## Independent genetic plant morphology (2026-11-25)
+
+Technology pass introduced a genuinely separate visual axis: nonlinear
+deformation of subdivided batched plant planes at map mesh construction.
+Commit 607690ec5e5ab4ddaa72262b84d29b016bae9a4a adds PlantFormMath and
+PlantFormMesh. Each eligible plane becomes a 4x4-cell grid (25 vertices,
+32 triangles) instead of 4 vertices and 2 triangles. The original
+texture, atlas UVs, flip, altitude bias, wind colors and UV.z payload
+are retained/interpolated. The bottom row is anchored. The five
+zero-default-weight neutral appearance alleles (Arching, Fan-Crowned,
+Rounded, Weeping, Spired) use a separate exclusion group from pigmentation.
+No new materials or textures are required for pure shape deformation.
+The method is CPU mesh construction, not a new vertex shader, nor true
+3D or per-leaf geometry. Ordinary activation remains disabled.
+
+Native AllPerformance run 688f88b8428747af8fc456fbd10000ec, RimWorld
+1.7.5014 rev1195: all five stages passed. 36 plants: 6 vanilla controls,
+15 morphology-only cultivars, 15 independent morphology+pigment cultivars,
+five forms on corn, cotton and strawberry. 30 actual mesh prints, 750
+vertices and 960 triangles. First plot zero custom shader materials;
+second plot 15 mask-free GPU pigment materials. Zero prepared masks.
+Two real noon screenshots, sky glow 1. Both builds clean; existing 12
+journal checks and normalized grid geometry checks passed, including
+base anchoring, bounds, triangle orientation at maximum strength and
+both flips, and invalid-input fallback. No relevant HNS error identified.
+Normal player preservation and test cleanup all passed.
+
+Gallery, untouched screenshots and inventory:
+https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/2fcbf2e35b5065b0c4c863ec158af43732c2f9a4
+
+Arching and Spired are most readable on corn, Rounded on strawberry.
+Weeping is subtler. This is a sprite deformation, so individual leaves
+and fruit cannot be moved independently. No measured animation parity
+or performance benchmark. Snow/independent mask geometry use the
+existing renderer; nonstandard vertex streams and large mesh bounds
+are guarded. Field performance, culling, growth stages, shadow alignment,
+save/reload, natural breeding, editor parity, compatibility and
+production activation remain open. Mechanical traits and weights unchanged.
+
+Technology directions beyond this proof: state-driven appearance by
+growth/season/health; independently layered organ geometry from validated
+automatic segmentation; bounded GPU vertex deformation and animation;
+shared material/instance data to avoid per-cultivar batching overhead;
+selective authored/procedural silhouettes only where source art permits.
+Real emission, particles, lighting, translucent materials and true
+geometry require separate technical and artistic qualification; prefer
+biologically credible effects over blanket recoloring.
+
+DLL SHA256: E2C498AD0FF1E6380DBE5B5406616A8CE2228DD310EF2F577FD8A2E03DF09922.
+Receipt SHA256: 155B76562F80A39ECE100D50AFF0FB2F3BD3F06641DB661D03B4FF7259757847.
+Player log SHA256: 79137C145D5119F14BC0A1F608D51EB426909C4491D75F9D6C38647BA33C0908.
+Inventory SHA256: BB5F4D2E541821E2A0310673EAEE1C93798862CCE925BD52290CF23E5593DD5E.
+
+Reproduce with RimWorld closed:
+
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -FormGarden
