@@ -39,9 +39,10 @@ namespace HorticultureNovelSeeds
         private static long lastStamp;
         private static void Require(bool ok,string text){if(!ok)throw new InvalidOperationException(text);}
         private static bool Clear(IntVec3 p)=>p.InBounds(map)&&p.Standable(map)&&p.GetEdifice(map)==null&&p.GetZone(map)==null&&!p.Fogged(map)&&map.roofGrid.RoofAt(p)==null;
+        private static bool Candidate(IntVec3 p)=>p.InBounds(map)&&p.GetEdifice(map)==null&&p.GetZone(map)==null&&!p.Fogged(map)&&map.roofGrid.RoofAt(p)==null&&(p.Standable(map)||p.GetPlant(map)!=null);
         private static IEnumerable<IntVec3> Plot(IntVec3 c)
         {
-            for(int z=-2;z<=15;z++)for(int x=-2;x<=21;x++)yield return c+new IntVec3(x,0,z);
+            for(int z=0;z<15;z++)for(int x=0;x<20;x++)yield return c+new IntVec3(x,0,z);
         }
         private static VarietyTraitDef Trait(string id)=>DefDatabase<VarietyTraitDef>.GetNamed("HNS_"+id);
         private static Plant Spawn(ThingDef def,IntVec3 cell,float g,VarietyRecord variety=null)
@@ -81,7 +82,7 @@ namespace HorticultureNovelSeeds
                 int advance=Mathf.RoundToInt(Mathf.Repeat(.5f-GenLocalDate.DayPercent(map),1f)*60000f);
                 Find.TickManager.DebugSetTicksGame(Find.TickManager.TicksGame+advance);
                 Find.TickManager.CurTimeSpeed=TimeSpeed.Paused;SetWeather(false);
-                var locations=GenRadial.RadialCellsAround(farmer.Position,85,true).Where(c=>Plot(c).All(Clear)).Take(1).ToArray();
+                var locations=GenRadial.RadialCellsAround(farmer.Position,75,true).Where(c=>Plot(c).All(Candidate)).Take(1).ToArray();
                 Require(locations.Length==1,"large clear unroofed field plot");origin=locations[0];
                 var area=Plot(origin).ToHashSet();
                 foreach(var t in map.listerThings.AllThings.Where(t=>t is Plant||t.def.category==ThingCategory.Item).Where(t=>area.Contains(t.Position)).ToArray())
