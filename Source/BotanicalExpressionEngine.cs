@@ -15,7 +15,7 @@ namespace HorticultureNovelSeeds
     {
         private static bool? testOverride;
         internal static bool Enabled {get=>testOverride??HorticultureNovelSeedsMod.Settings?.enableBotanicalExpression==true;set=>testOverride=value;}
-        private readonly record struct WorkKey(ThingDef Def,string Architecture);
+        private readonly record struct WorkKey(ThingDef Def,string Architecture,bool Fuller);
         private static readonly Queue<WorkKey> work=new();
         private static readonly Dictionary<WorkKey,HashSet<Plant>> waiting=new();
         private static readonly HashSet<WorkKey> ready=new();
@@ -26,14 +26,14 @@ namespace HorticultureNovelSeeds
         private const int MaterialLimit=160;
         private sealed record SourceData(Texture2D Mask,LifeSuiteMath.Anatomy Anatomy,OrganSpriteMath.Pixel[] Pixels,Dictionary<int,Texture2D> Atlases);
         private static readonly Dictionary<Texture,SourceData> sources=new();
-        private static readonly Dictionary<(Texture,E.Plan),Material> materials=new();
+        private static readonly Dictionary<(Texture,E.Plan,AdaptivePhenotypeMath.State),Material> materials=new();
         private static long bytes;
         private static Vector4 last=new(-1,-1,-1,-1);
         internal static long Bytes=>bytes;
         internal static int SourceCount=>sources.Count;
         internal static int MaterialCount=>materials.Count;
 #if HNS_NATIVE_FIXTURE
-        internal sealed record Print(Material Material,E.Decision Decision,int Band,int Seed,float Bias,int Code,Color32 Payload,bool Flipped);
+        internal sealed record Print(Material Material,E.Decision Decision,int Band,int Seed,float Bias,int Code,Color32 Payload,bool Flipped,AdaptivePhenotypeMath.State Function);
         internal static readonly Dictionary<int,Print> Prints=new();
         internal static readonly HashSet<(int,int)> Invalidations=new();
         internal static readonly Dictionary<int,bool> MeshPayload=new();
@@ -45,7 +45,21 @@ namespace HorticultureNovelSeeds
 #endif
         private static bool LegacyCompatible(VarietyTraitDef t)=>t!=null&&(t.produceOnlyVisual||E.Known(t.defName)||t.proceduralPhenotype==0&&t.plantForm==0&&t.organForm==0&&t.windHabit==0&&t.surfaceFinish==0&&t.botanicalDetail==0&&t.canopyArchitecture==0&&t.responsiveHabit==0&&t.groundHabit==0&&t.visualMaskIndex<0);
         private static IEnumerable<string> Promoted(CompPlantVariety c)=>c.ActiveTraits.Where(t=>t!=null&&!t.produceOnlyVisual&&E.Known(t.defName)).Select(t=>t.defName);
-        internal static bool CanAttempt(CompPlantVariety comp)=>Enabled&&comp?.HasAnyTraits==true&&E.QualifiedSpecies(comp.parent.def.defName)&&comp.ActiveTraits.All(LegacyCompatible)&&comp.ActiveTraits.Any(t=>!t.produceOnlyVisual&&E.Known(t.defName));
+        internal static AdaptivePhenotypeMath.Cue FunctionalCues(CompPlantVariety comp)
+        {
+            if(comp?.HasAnyTraits!=true)return 0;
+            // The new layer must not replace a custom visual or unrelated
+            // legacy pigmentation. Keep their established paths intact.
+            var traits=comp.ActiveTraits.Where(t=>t!=null&&!t.produceOnlyVisual).ToArray();
+            if(traits.Any(t=>!E.Known(t.defName)&&AdaptivePhenotypeMath.ForTrait(t.defName)==0))return 0;
+            if(traits.Any(t=>HorticultureNovelSeedsMod.Settings?.VisualOverrideFor(comp.parent.def,t)!=null))return 0;
+            return AdaptivePhenotypeMath.From(traits.Select(t=>t.defName));
+        }
+        internal static bool CanAttempt(CompPlantVariety comp)=>Enabled&&comp?.HasAnyTraits==true&&E.QualifiedSpecies(comp.parent.def.defName)&&comp.ActiveTraits.All(LegacyCompatible)&&(comp.ActiveTraits.Any(t=>!t.produceOnlyVisual&&E.Known(t.defName))||FunctionalCues(comp)!=0);
+        internal static void ResourceChanged(CompPlantVariety c)
+        {
+            if(Enabled&&c?.parent is Plant p&&p.Spawned&&FunctionalCues(c)!=0)p.DirtyMapMesh(p.Map);
+        }
         internal static bool CompatibleVisual(CompPlantVariety c,PlantVisualParameters v)
         {
             if(!CanAttempt(c)||NovelSeedUtility.HasRegionalPlantColor(c)||NovelSeedUtility.HasPlantMaskVisual(c))return false;
@@ -53,6 +67,10 @@ namespace HorticultureNovelSeeds
             // Never discard legacy texture/overlay coloration or custom masks.
             v.scale=v.width=v.height=v.density=v.spread=v.shadowScale=1f;
             v.rotation=v.rotationVariation=v.scaleVariation=v.offsetX=v.offsetZ=0f;
+            // Retain the native geometry of existing gameplay traits. Replace
+            // only their default catalog brightness/saturation with the new
+            // anatomical cue; explicit user visual overrides are excluded.
+            if(FunctionalCues(c)!=0){v.brightness=v.saturation=1f;}
             return v.IsDefault;
         }
         internal static void Request(Plant p)
@@ -61,7 +79,7 @@ namespace HorticultureNovelSeeds
             var c=p.TryGetComp<CompPlantVariety>();if(!CanAttempt(c))return;
             var d=E.Resolve(Promoted(c),E.FamilyOf(p.def.defName),int.MaxValue);
             var arch=d.Accepted.FirstOrDefault(id=>E.ChannelTag(id)=="HNSExpression_Architecture")??"";
-            var key=new WorkKey(p.def,arch);if(ready.Contains(key))return;
+            var key=new WorkKey(p.def,arch,arch.Length==0&&(FunctionalCues(c)&AdaptivePhenotypeMath.Cue.Yield)!=0);if(ready.Contains(key))return;
             if(!waiting.TryGetValue(key,out var set))
             {
                 if(work.Count>=128)return;
@@ -79,22 +97,22 @@ namespace HorticultureNovelSeeds
             if(!Enabled||testOverride.HasValue||work.Count==0)return;
             var key=work.Dequeue();if(!waiting.Remove(key,out var set))return;
             var watch=System.Diagnostics.Stopwatch.StartNew();
-            try{Prepare(key.Def,key.Architecture.Length==0?Array.Empty<string>():new[]{key.Architecture});}
+            try{Prepare(key.Def,key.Architecture.Length==0?Array.Empty<string>():new[]{key.Architecture},key.Fuller);}
             catch(Exception ex){Log.Warning("[HNS Expression] Deferred source preparation: "+key.Def.defName+" "+ex.Message);}
             finally{watch.Stop();PrepareJobs++;MaxPrepareMilliseconds=Math.Max(MaxPrepareMilliseconds,watch.Elapsed.TotalMilliseconds);ready.Add(key);}
             foreach(var p in set)if(p?.Spawned==true&&CanAttempt(p.TryGetComp<CompPlantVariety>()))p.DirtyMapMesh(p.Map);
         }
         internal static void ClearPending(){work.Clear();waiting.Clear();}
-        internal static void Prepare(ThingDef def,IEnumerable<string> ids)
+        internal static void Prepare(ThingDef def,IEnumerable<string> ids,bool fuller=false)
         {
             var names=ids.ToArray();
             for(int v=0;v<PlantMaskUtility.VariationCount(def);v++)
             {
                 if(PlantMaskUtility.TextureForVariation(def,v) is not Texture2D source)continue;
-                PrepareTexture(source,E.FamilyOf(def.defName),names);
+                PrepareTexture(source,E.FamilyOf(def.defName),names,fuller);
             }
         }
-        private static SourceData PrepareTexture(Texture2D source,E.Family family,string[] ids)
+        private static SourceData PrepareTexture(Texture2D source,E.Family family,string[] ids,bool fuller)
         {
             if(!sources.TryGetValue(source,out var a))
             {
@@ -107,14 +125,17 @@ namespace HorticultureNovelSeeds
                 a=new(mask,anatomy,pixels,new());sources.Add(source,a);bytes+=4L*w*h;
             }
             var decision=E.Resolve(ids,family,a.Anatomy.Organs);int arch=decision.Plan.Architecture;
+            if(arch==0&&fuller&&a.Anatomy.Organs>0)arch=AdaptivePhenotypeMath.FullerArchitecture;
             if(decision.Unknown||arch==0||a.Atlases.ContainsKey(arch))return a;
             int W=SculptureMath.Side(a.Anatomy.W),H=SculptureMath.Side(a.Anatomy.H),w0=a.Anatomy.W,h0=a.Anatomy.H;
             long needed=36L*W*H;if(bytes+needed>Budget)return a;
             var data=new Color32[9*W*H];int ox=(W-w0)/2,oy=(H-h0)/2;
+            bool fullerChanged=false;int originalOccupied=a.Pixels.Count(p=>p.A>0);
             for(int f=0;f<9;f++)
             {
-                var frame=SculptureMath.Frame(a.Pixels,w0,h0,a.Anatomy,arch,f);
+                var frame=arch==AdaptivePhenotypeMath.FullerArchitecture?AdaptivePhenotypeMath.Fuller(a.Pixels,a.Anatomy,f):SculptureMath.Frame(a.Pixels,w0,h0,a.Anatomy,arch,f);
                 if(frame==null)return a;
+                if(arch==AdaptivePhenotypeMath.FullerArchitecture&&f==8)fullerChanged=frame.Count(p=>p.A>0)>originalOccupied;
                 for(int y=0;y<H;y++)for(int x=0;x<W;x++)
                 {
                     var c=frame[y*W+x];if(x>=ox&&x<ox+w0&&y>=oy&&y<oy+h0)
@@ -125,13 +146,14 @@ namespace HorticultureNovelSeeds
                     data[(y+f/3*H)*3*W+x+f%3*W]=new(c.R,c.G,c.B,c.A);
                 }
             }
+            if(arch==AdaptivePhenotypeMath.FullerArchitecture&&!fullerChanged)return a;
             var atlas=new Texture2D(W*3,H*3,TextureFormat.RGBA32,false){name=source.name+"_HNS_ExpressionArchitecture_"+arch,filterMode=source.filterMode,wrapMode=TextureWrapMode.Clamp};
             atlas.SetPixels32(data);atlas.Apply(false,true);a.Atlases.Add(arch,atlas);bytes+=needed;
             return a;
         }
-        private static Material GetMaterial(Texture source,SourceData a,E.Plan plan)
+        private static Material GetMaterial(Texture source,SourceData a,E.Plan plan,AdaptivePhenotypeMath.State function=default)
         {
-            if(materials.TryGetValue((source,plan),out var mat))return mat;
+            if(materials.TryGetValue((source,plan,function),out var mat))return mat;
             if(materials.Count>=MaterialLimit||plan.Architecture>0&&!a.Atlases.ContainsKey(plan.Architecture))return null;
             var shader=DefDatabase<ShaderDef>.GetNamedSilentFail("HNS_BotanicalExpression")?.Shader;
             if(shader==null||!shader.HasProperty(Shader.PropertyToID("_HnsExpression")))return null;
@@ -141,7 +163,8 @@ namespace HorticultureNovelSeeds
             mat.SetVector("_HnsExpression",new Vector4(plan.Architecture>0?1:0,plan.Tissue,plan.Reproductive,plan.Surface));
             mat.SetVector("_HnsExpressionEnv",SurfaceFinishUtility.Current(Find.CurrentMap));
             mat.SetVector("_HnsPreview",Vector4.zero);
-            WindManager.Notify_PlantMaterialCreated(mat);materials.Add((source,plan),mat);return mat;
+            mat.SetVector("_HnsFunctional",new Vector4((int)function.Cues,function.Blocked?1:0,function.Regrown?1:0,0));
+            WindManager.Notify_PlantMaterialCreated(mat);materials.Add((source,plan,function),mat);return mat;
         }
         internal static bool TryMaterial(Plant p,Material source,bool flipped,Color32[] colors,out Material mat,out bool expanded)
         {
@@ -150,19 +173,34 @@ namespace HorticultureNovelSeeds
                 source.GetFloat("_FallBehaviorEnabled")!=0||source.mainTextureScale!=Vector2.one||source.mainTextureOffset!=Vector2.zero||
                 !sources.TryGetValue(source.mainTexture,out var a))return false;
             var d=E.Resolve(Promoted(comp),E.FamilyOf(p.def.defName),a.Anatomy.Organs);
-            if(d.Unknown||!d.Plan.Valid)return false;
-            mat=GetMaterial(source.mainTexture,a,d.Plan);if(mat==null)return false;
+            var function=AdaptivePhenotypeMath.Resolve(FunctionalCues(comp),a.Anatomy.Leaves,a.Anatomy.Organs,comp.NeedsResource,comp.HarvestCycle,d.Plan.Architecture>0);
+            if(function.Has(AdaptivePhenotypeMath.Cue.Yield)&&!a.Atlases.ContainsKey(AdaptivePhenotypeMath.FullerArchitecture))function=function with{Cues=function.Cues&~AdaptivePhenotypeMath.Cue.Yield};
+            if(d.Unknown||!d.Plan.Valid&&!function.Valid)return false;
+            var renderPlan=d.Plan;
+            if(function.Has(AdaptivePhenotypeMath.Cue.Yield))renderPlan=renderPlan with{Architecture=AdaptivePhenotypeMath.FullerArchitecture};
+            mat=GetMaterial(source.mainTexture,a,renderPlan,function);if(mat==null)return false;
             int band=E.Band(p.Growth),seed=E.Seed(p.thingIDNumber),code=comp.VisualChronicle;
             float bias=d.Plan.Context==1?E.HistoryBias(code):d.Plan.Context==2?NeighborhoodExperiment.Current(p).Difference:0f;
             float localBias=flipped?-bias:bias;
             PlantUtility.SetWindExposureColors(colors,p);
             for(int i=0;i<colors.Length;i++){var c=colors[i];c.r=(byte)Mathf.RoundToInt(band*255f/8);c.g=(byte)Mathf.RoundToInt(seed*255f/7);c.b=(byte)Mathf.RoundToInt((localBias+1)*127.5f);colors[i]=c;}
-            expanded=d.Plan.Architecture>0;
-            Observe(p,d,band,bias);
+            expanded=renderPlan.Architecture>0;
+            if(d.Plan.Valid)Observe(p,d,band,bias);
+            ObserveFunction(p,function,band);
 #if HNS_NATIVE_FIXTURE
-            Prints[p.thingIDNumber]=new(mat,d,band,seed,bias,code,colors[0],flipped);
+            Prints[p.thingIDNumber]=new(mat,d,band,seed,bias,code,colors[0],flipped,function);
 #endif
             return true;
+        }
+        private static void ObserveFunction(Plant p,AdaptivePhenotypeMath.State f,int band)
+        {
+            var o=PhenotypeObservation.For(p);if(o==null||!f.Valid)return;
+            o.Functional=f;
+            if(f.Has(AdaptivePhenotypeMath.Cue.Yield)&&band>=5)o.Add(V.F(V.Region.Reproductive,"functional-yield","fuller reproductive outlines",25));
+            if(f.Has(AdaptivePhenotypeMath.Cue.Cold))o.Add(V.F(V.Region.Surface,"functional-cold","cool silvery margins on green tissue",25));
+            if(f.Has(AdaptivePhenotypeMath.Cue.Heat))o.Add(V.F(V.Region.Surface,"functional-heat","warm wax-like leaf highlights",25));
+            if(f.Has(AdaptivePhenotypeMath.Cue.Resource)&&f.Blocked)o.Add(V.F(V.Region.Foliage,"functional-resource","muted ochre leaf margins",25));
+            if(f.Has(AdaptivePhenotypeMath.Cue.Perennial)&&f.Regrown)o.Add(V.F(V.Region.Foliage,"functional-regrowth","bronzed lower tissue and fresh green upper growth",25));
         }
         private static void Observe(Plant p,E.Decision d,int band,float bias)
         {

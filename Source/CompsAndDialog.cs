@@ -84,7 +84,7 @@ namespace HorticultureNovelSeeds
             if (harvestCycle < int.MaxValue) harvestCycle++;
             return harvestCycle;
         }
-        public void SatisfyResource() { resourceSatisfied = true; }
+        public void SatisfyResource() { if(resourceSatisfied)return;resourceSatisfied = true; BotanicalExpressionEngine.ResourceChanged(this); }
         public bool TryMarkSelfSeededAtMaturity(bool mature)
         {
             if (!mature) { selfSeededAtMaturity = false; return false; }

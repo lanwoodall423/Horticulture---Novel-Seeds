@@ -159,6 +159,12 @@ namespace HorticultureNovelSeeds
             string context=f.Pressure.Left==0&&f.Pressure.Right==0?"No significant lateral plant pressure.":f.Pressure.Difference>0?"More mature vegetation to the west.":f.Pressure.Difference<0?"More mature vegetation to the east.":"Similar vegetation pressure on both lateral sides.";
             Body(w,ref y,context,Ink);
             Body(w,ref y,"Green: specimen. Ochre: nearby vegetation. Lateral pressure is the growth-band model used by Contextual Botany, not a simulated root or light network.",Muted);
+            if(a!=null&&c.VisualObservation?.Functional.Has(AdaptivePhenotypeMath.Cue.Resource)==true)
+            {
+                Heading(w,ref y,"RESOURCE RESPONSE");
+                Row(w,ref y,"Growth supply",c.NeedsResource?"Awaiting "+c.RequiredResourceTrait.requiredResourceDef.LabelCap:"Requirement fulfilled",c.NeedsResource?Gold:Accent);
+                Body(w,ref y,c.NeedsResource?"Ochre foliage margins reflect the existing resource gate. Supply the required material to resume growth.":"The resource gate is satisfied; the ochre margin cue has cleared.",Muted);
+            }
             Heading(w,ref y,"GROWTH MULTIPLIERS");
             Meter(w,ref y,"Fertility factor",f.FertilityFactor,1.4f,Accent);
             Meter(w,ref y,"Light factor",f.LightFactor,1f,Gold);

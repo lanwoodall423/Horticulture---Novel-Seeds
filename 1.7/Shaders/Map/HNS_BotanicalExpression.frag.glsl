@@ -11,6 +11,7 @@ layout(set=2,binding=0) uniform MaterialUniforms
     vec4 _HnsExpression; // @default = vec4(0,0,0,0)
     vec4 _HnsExpressionEnv; // @default = vec4(0,1,1,0)
     vec4 _HnsPreview; // @default = vec4(0,0,0,0)
+    vec4 _HnsFunctional; // @default = vec4(0,0,0,0)
 } uMaterial;
 layout(set=2,binding=1) uniform sampler2D _MainTex;
 layout(set=2,binding=2) uniform sampler2D _HnsAnatomy;
@@ -78,5 +79,19 @@ void main()
             c=mix(c,vec3(.89,.98,1.),leaf*bead*env.w*.82);
         }
     }
+    // Functional visual cues are read-only consequences of existing traits
+    // and saved resource/harvest states. Alpha and unrelated tissue intact.
+    int flags=int(uMaterial._HnsFunctional.x+.5);
+    float edge=smoothstep(.16,.70,thin);
+    if((flags&2)!=0)c=mix(c,vec3(.55,.76,.83)*tone,leaf*(.18+.62*edge)*(.65+.35*individual));
+    if((flags&4)!=0)c=mix(c,vec3(.90,.81,.38)*tone,leaf*(.14+.61*edge)*(.70+.30*individual));
+    if((flags&16)!=0&&uMaterial._HnsFunctional.z>.5)
+    {
+        float lower=smoothstep(.46,.88,base.y);
+        c=mix(c,vec3(.83,.55,.25)*tone,leaf*lower*.68);
+        c=mix(c,vec3(.57,.88,.31)*tone,leaf*(1.-lower)*(.42+.22*edge)*(1.-.50*growth));
+    }
+    if((flags&8)!=0&&uMaterial._HnsFunctional.y>.5)
+        c=mix(c,vec3(.85,.64,.25)*tone,leaf*(.25+.65*edge)*(.72+.28*individual));
     outColor=vec4(clamp(c,0.,1.),src.a);
 }

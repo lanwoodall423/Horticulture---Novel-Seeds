@@ -13,6 +13,7 @@ namespace HorticultureNovelSeeds
     // controls on inspection rather than guessing from genotype or weather.
     internal sealed class PhenotypeObservation
     {
+        internal AdaptivePhenotypeMath.State Functional;
         private readonly List<V.Fact> facts=new();
         private readonly List<(ResponsiveHabitKind Kind,Material Material,int Seed)> poses=new();
         private readonly List<(SurfaceFinishKind Kind,Material Material)> surfaces=new();

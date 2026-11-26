@@ -107,6 +107,10 @@ namespace HorticultureNovelSeeds
                         Require(hash == "1E9DDB56998F7B963962095944AF3AEABBC90826E55BD53CB8083D3CC7E4B0B3", "Missile Girl assembly identity");
                         Require(Harmony.GetAllPatchedMethods().Any(m => Harmony.GetPatchInfo(m)?.Owners.Any(o => o.StartsWith("VR.MissileGirl", StringComparison.OrdinalIgnoreCase)) == true), "Missile Girl patches");
                     }
+                    if(Environment.GetEnvironmentVariable("HNS_NATIVE_ADAPTIVE")=="1")
+                    {
+                        Environment.SetEnvironmentVariable("HNS_NATIVE_ADAPTIVE",null);Stage("Startup");AdaptiveCultivationProbe.Begin(root,Stage,Finish);return;
+                    }
                     if(Environment.GetEnvironmentVariable("HNS_NATIVE_FIELD_GUIDE")=="1")
                     {
                         Environment.SetEnvironmentVariable("HNS_NATIVE_FIELD_GUIDE",null);Stage("Startup");FieldGuideProbe.Begin(root,Stage,Finish);return;
@@ -164,7 +168,7 @@ namespace HorticultureNovelSeeds
             Path.GetFullPath(GenFilePaths.SaveDataFolderPath).TrimEnd(Path.DirectorySeparatorChar).Equals(Path.GetFullPath(root).TrimEnd(Path.DirectorySeparatorChar), StringComparison.OrdinalIgnoreCase) &&
             string.Join(",", LoadedModManager.RunningModsListForReading.Select(m => m.PackageIdPlayerFacing)).Equals(expectedPackages, StringComparison.OrdinalIgnoreCase);
 
-        public override void GameComponentUpdate() { NativeShaderProbe.Update(); NativeGardenProbe.Update(); ProductionExpressionProbe.Update(); FieldGuideProbe.Update(); }
+        public override void GameComponentUpdate() { NativeShaderProbe.Update(); NativeGardenProbe.Update(); ProductionExpressionProbe.Update(); FieldGuideProbe.Update(); AdaptiveCultivationProbe.Update(); }
 
         public override void GameComponentTick()
         {

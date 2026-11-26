@@ -477,3 +477,20 @@ Require(SurfaceFinishMath.Environment(.5f,1f,.01f).Rain==.03125f,"quantized weat
     Require(!ExpressionMath.Eligible("UmbelCrown","Plant_Corn")&&!ExpressionMath.Eligible("IvoryNerves","Plant_Rice")&&ExpressionMath.Eligible("WingedPetioles","Plant_Corn"),"qualified species gate");
     Require(ExpressionMath.DefaultWeight("SatinCuticle")>ExpressionMath.DefaultWeight("CrookedChronicle")&&ExpressionMath.DefaultWeight("CrookedChronicle")>ExpressionMath.DefaultWeight("CrimsonNetwork")&&ExpressionMath.DefaultWeight("CrimsonNetwork")>ExpressionMath.DefaultWeight("PearlCuticle"),"conservative tier weights");
 }
+
+{
+    var C=AdaptivePhenotypeMath.From(new[]{"HNS_HighYield","HNS_ColdResistant","HNS_ResourceDependent_Mulch","HNS_Perennial"});
+    var s=AdaptivePhenotypeMath.Resolve(C,2,3,true,1,false);
+    Require(s.Has(AdaptivePhenotypeMath.Cue.Yield)&&s.Blocked&&s.Regrown,"functional channels and existing states");
+    var unqualified=AdaptivePhenotypeMath.Resolve(C,2,0,false,0,false);
+    Require(!unqualified.Has(AdaptivePhenotypeMath.Cue.Yield)&&!unqualified.Blocked&&!unqualified.Regrown,"immature organ and actual condition guard");
+    Require(!AdaptivePhenotypeMath.Resolve(C,2,3,false,0,true).Has(AdaptivePhenotypeMath.Cue.Yield),"ornamental architecture takes precedence");
+    const int w=64,h=64;var art=new OrganSpriteMath.Pixel[w*h];
+    for(int y=7;y<51;y++)for(int x=10;x<54;x++)if((x-31)*(x-31)/380f+(y-28)*(y-28)/500f<1)art[y*w+x]=new(55,132,38,255);
+    for(int y=40;y<56;y++)for(int x=27;x<36;x++)art[y*w+x]=new(229,182,48,255);
+    var a=LifeSuiteMath.Analyze(art,w,h);Require(a!=null&&a.Organs>0,"functional art-derived reproductive organs");
+    var early=AdaptivePhenotypeMath.Fuller(art,a,0);var late=AdaptivePhenotypeMath.Fuller(art,a,8);
+    int W=SculptureMath.Side(w),ox=(W-w)/2,oy=(SculptureMath.Side(h)-h)/2;
+    Require(Enumerable.Range(0,art.Length).All(i=>art[i].A==0||late[(i/w+oy)*W+i%w+ox]==art[i]),"functional atlas preserves occupied original RGBA");
+    Require(late.Count(p=>p.A>0)>early.Count(p=>p.A>0),"mature fuller organs add native sampled pixels");
+}
