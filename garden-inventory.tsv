@@ -1,0 +1,91 @@
+Panel	Row	Column	Species	Cultivar	Trait IDs	Renderer	Automatic mask sources	Trait labels	Tiers	Motifs	Form mesh
+1	1	1	Plant_Corn	Vanilla control		Vanilla	not styled				Original
+1	1	2	Plant_Corn	Garden corn plant 1	HNS_CrookedChronicle	Geometry/effects only	not styled	Crooked Chronicle	Rare	Older stem bends remain as later growth records new growing space.	Deformed
+1	1	3	Plant_Corn	Garden corn plant 2	HNS_RingedHabit	Geometry/effects only	not styled	Ringed Habit	Rare	Canopy layers retain the compression of earlier crowded growing stages.	Deformed
+1	1	4	Plant_Corn	Garden corn plant 3	HNS_AsymmetricWhorls	Geometry/effects only	not styled	Asymmetric Whorls	Rare	Separate growth layers spread toward the open side that existed when they developed.	Deformed
+1	1	5	Plant_Corn	Garden corn plant 4	HNS_ReleaseCrown	Geometry/effects only	not styled	Release Crown	Rare	A compressed older canopy develops a broad upper crown when later growth has open space.	Deformed
+1	1	6	Plant_Corn	Garden corn plant 5	HNS_StretchBands	Geometry/effects only	not styled	Stretch Bands	Rare	Earlier crowded growth retains elongated internode-like sections after the competition is gone.	Deformed
+1	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled				Original
+1	2	2	Plant_Cotton	Garden cotton plant 1	HNS_CrookedChronicle	Geometry/effects only	not styled	Crooked Chronicle	Rare	Older stem bends remain as later growth records new growing space.	Deformed
+1	2	3	Plant_Cotton	Garden cotton plant 2	HNS_RingedHabit	Geometry/effects only	not styled	Ringed Habit	Rare	Canopy layers retain the compression of earlier crowded growing stages.	Deformed
+1	2	4	Plant_Cotton	Garden cotton plant 3	HNS_AsymmetricWhorls	Geometry/effects only	not styled	Asymmetric Whorls	Rare	Separate growth layers spread toward the open side that existed when they developed.	Deformed
+1	2	5	Plant_Cotton	Garden cotton plant 4	HNS_ReleaseCrown	Geometry/effects only	not styled	Release Crown	Rare	A compressed older canopy develops a broad upper crown when later growth has open space.	Deformed
+1	2	6	Plant_Cotton	Garden cotton plant 5	HNS_StretchBands	Geometry/effects only	not styled	Stretch Bands	Rare	Earlier crowded growth retains elongated internode-like sections after the competition is gone.	Deformed
+1	3	1	Plant_Daylily	Vanilla control		Vanilla	not styled				Original
+1	3	2	Plant_Daylily	Garden daylily 1	HNS_CrookedChronicle	Geometry/effects only	not styled	Crooked Chronicle	Rare	Older stem bends remain as later growth records new growing space.	Deformed
+1	3	3	Plant_Daylily	Garden daylily 2	HNS_RingedHabit	Geometry/effects only	not styled	Ringed Habit	Rare	Canopy layers retain the compression of earlier crowded growing stages.	Deformed
+1	3	4	Plant_Daylily	Garden daylily 3	HNS_AsymmetricWhorls	Geometry/effects only	not styled	Asymmetric Whorls	Rare	Separate growth layers spread toward the open side that existed when they developed.	Deformed
+1	3	5	Plant_Daylily	Garden daylily 4	HNS_ReleaseCrown	Geometry/effects only	not styled	Release Crown	Rare	A compressed older canopy develops a broad upper crown when later growth has open space.	Deformed
+1	3	6	Plant_Daylily	Garden daylily 5	HNS_StretchBands	Geometry/effects only	not styled	Stretch Bands	Rare	Earlier crowded growth retains elongated internode-like sections after the competition is gone.	Deformed
+2	1	1	Plant_Corn	Vanilla control		Vanilla	not styled				Original
+2	1	2	Plant_Corn	Garden corn plant 1	HNS_CrookedChronicle	Geometry/effects only	not styled	Crooked Chronicle	Rare	Older stem bends remain as later growth records new growing space.	Deformed
+2	1	3	Plant_Corn	Garden corn plant 2	HNS_RingedHabit	Geometry/effects only	not styled	Ringed Habit	Rare	Canopy layers retain the compression of earlier crowded growing stages.	Deformed
+2	1	4	Plant_Corn	Garden corn plant 3	HNS_AsymmetricWhorls	Geometry/effects only	not styled	Asymmetric Whorls	Rare	Separate growth layers spread toward the open side that existed when they developed.	Deformed
+2	1	5	Plant_Corn	Garden corn plant 4	HNS_ReleaseCrown	Geometry/effects only	not styled	Release Crown	Rare	A compressed older canopy develops a broad upper crown when later growth has open space.	Deformed
+2	1	6	Plant_Corn	Garden corn plant 5	HNS_StretchBands	Geometry/effects only	not styled	Stretch Bands	Rare	Earlier crowded growth retains elongated internode-like sections after the competition is gone.	Deformed
+2	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled				Original
+2	2	2	Plant_Cotton	Garden cotton plant 1	HNS_CrookedChronicle	Geometry/effects only	not styled	Crooked Chronicle	Rare	Older stem bends remain as later growth records new growing space.	Deformed
+2	2	3	Plant_Cotton	Garden cotton plant 2	HNS_RingedHabit	Geometry/effects only	not styled	Ringed Habit	Rare	Canopy layers retain the compression of earlier crowded growing stages.	Deformed
+2	2	4	Plant_Cotton	Garden cotton plant 3	HNS_AsymmetricWhorls	Geometry/effects only	not styled	Asymmetric Whorls	Rare	Separate growth layers spread toward the open side that existed when they developed.	Deformed
+2	2	5	Plant_Cotton	Garden cotton plant 4	HNS_ReleaseCrown	Geometry/effects only	not styled	Release Crown	Rare	A compressed older canopy develops a broad upper crown when later growth has open space.	Deformed
+2	2	6	Plant_Cotton	Garden cotton plant 5	HNS_StretchBands	Geometry/effects only	not styled	Stretch Bands	Rare	Earlier crowded growth retains elongated internode-like sections after the competition is gone.	Deformed
+2	3	1	Plant_Daylily	Vanilla control		Vanilla	not styled				Original
+2	3	2	Plant_Daylily	Garden daylily 1	HNS_CrookedChronicle	Geometry/effects only	not styled	Crooked Chronicle	Rare	Older stem bends remain as later growth records new growing space.	Deformed
+2	3	3	Plant_Daylily	Garden daylily 2	HNS_RingedHabit	Geometry/effects only	not styled	Ringed Habit	Rare	Canopy layers retain the compression of earlier crowded growing stages.	Deformed
+2	3	4	Plant_Daylily	Garden daylily 3	HNS_AsymmetricWhorls	Geometry/effects only	not styled	Asymmetric Whorls	Rare	Separate growth layers spread toward the open side that existed when they developed.	Deformed
+2	3	5	Plant_Daylily	Garden daylily 4	HNS_ReleaseCrown	Geometry/effects only	not styled	Release Crown	Rare	A compressed older canopy develops a broad upper crown when later growth has open space.	Deformed
+2	3	6	Plant_Daylily	Garden daylily 5	HNS_StretchBands	Geometry/effects only	not styled	Stretch Bands	Rare	Earlier crowded growth retains elongated internode-like sections after the competition is gone.	Deformed
+3	1	1	Plant_Corn	Vanilla control		Vanilla	not styled				Original
+3	1	2	Plant_Corn	Garden corn plant 1	HNS_CrookedChronicle	Geometry/effects only	not styled	Crooked Chronicle	Rare	Older stem bends remain as later growth records new growing space.	Deformed
+3	1	3	Plant_Corn	Garden corn plant 2	HNS_RingedHabit	Geometry/effects only	not styled	Ringed Habit	Rare	Canopy layers retain the compression of earlier crowded growing stages.	Deformed
+3	1	4	Plant_Corn	Garden corn plant 3	HNS_AsymmetricWhorls	Geometry/effects only	not styled	Asymmetric Whorls	Rare	Separate growth layers spread toward the open side that existed when they developed.	Deformed
+3	1	5	Plant_Corn	Garden corn plant 4	HNS_ReleaseCrown	Geometry/effects only	not styled	Release Crown	Rare	A compressed older canopy develops a broad upper crown when later growth has open space.	Deformed
+3	1	6	Plant_Corn	Garden corn plant 5	HNS_StretchBands	Geometry/effects only	not styled	Stretch Bands	Rare	Earlier crowded growth retains elongated internode-like sections after the competition is gone.	Deformed
+3	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled				Original
+3	2	2	Plant_Cotton	Garden cotton plant 1	HNS_CrookedChronicle	Geometry/effects only	not styled	Crooked Chronicle	Rare	Older stem bends remain as later growth records new growing space.	Deformed
+3	2	3	Plant_Cotton	Garden cotton plant 2	HNS_RingedHabit	Geometry/effects only	not styled	Ringed Habit	Rare	Canopy layers retain the compression of earlier crowded growing stages.	Deformed
+3	2	4	Plant_Cotton	Garden cotton plant 3	HNS_AsymmetricWhorls	Geometry/effects only	not styled	Asymmetric Whorls	Rare	Separate growth layers spread toward the open side that existed when they developed.	Deformed
+3	2	5	Plant_Cotton	Garden cotton plant 4	HNS_ReleaseCrown	Geometry/effects only	not styled	Release Crown	Rare	A compressed older canopy develops a broad upper crown when later growth has open space.	Deformed
+3	2	6	Plant_Cotton	Garden cotton plant 5	HNS_StretchBands	Geometry/effects only	not styled	Stretch Bands	Rare	Earlier crowded growth retains elongated internode-like sections after the competition is gone.	Deformed
+3	3	1	Plant_Daylily	Vanilla control		Vanilla	not styled				Original
+3	3	2	Plant_Daylily	Garden daylily 1	HNS_CrookedChronicle	Geometry/effects only	not styled	Crooked Chronicle	Rare	Older stem bends remain as later growth records new growing space.	Deformed
+3	3	3	Plant_Daylily	Garden daylily 2	HNS_RingedHabit	Geometry/effects only	not styled	Ringed Habit	Rare	Canopy layers retain the compression of earlier crowded growing stages.	Deformed
+3	3	4	Plant_Daylily	Garden daylily 3	HNS_AsymmetricWhorls	Geometry/effects only	not styled	Asymmetric Whorls	Rare	Separate growth layers spread toward the open side that existed when they developed.	Deformed
+3	3	5	Plant_Daylily	Garden daylily 4	HNS_ReleaseCrown	Geometry/effects only	not styled	Release Crown	Rare	A compressed older canopy develops a broad upper crown when later growth has open space.	Deformed
+3	3	6	Plant_Daylily	Garden daylily 5	HNS_StretchBands	Geometry/effects only	not styled	Stretch Bands	Rare	Earlier crowded growth retains elongated internode-like sections after the competition is gone.	Deformed
+4	1	1	Plant_Corn	Vanilla control		Vanilla	not styled				Original
+4	1	2	Plant_Corn	Garden corn plant 1	HNS_CrookedChronicle	Geometry/effects only	not styled	Crooked Chronicle	Rare	Older stem bends remain as later growth records new growing space.	Deformed
+4	1	3	Plant_Corn	Garden corn plant 2	HNS_RingedHabit	Geometry/effects only	not styled	Ringed Habit	Rare	Canopy layers retain the compression of earlier crowded growing stages.	Deformed
+4	1	4	Plant_Corn	Garden corn plant 3	HNS_AsymmetricWhorls	Geometry/effects only	not styled	Asymmetric Whorls	Rare	Separate growth layers spread toward the open side that existed when they developed.	Deformed
+4	1	5	Plant_Corn	Garden corn plant 4	HNS_ReleaseCrown	Geometry/effects only	not styled	Release Crown	Rare	A compressed older canopy develops a broad upper crown when later growth has open space.	Deformed
+4	1	6	Plant_Corn	Garden corn plant 5	HNS_StretchBands	Geometry/effects only	not styled	Stretch Bands	Rare	Earlier crowded growth retains elongated internode-like sections after the competition is gone.	Deformed
+4	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled				Original
+4	2	2	Plant_Cotton	Garden cotton plant 1	HNS_CrookedChronicle	Geometry/effects only	not styled	Crooked Chronicle	Rare	Older stem bends remain as later growth records new growing space.	Deformed
+4	2	3	Plant_Cotton	Garden cotton plant 2	HNS_RingedHabit	Geometry/effects only	not styled	Ringed Habit	Rare	Canopy layers retain the compression of earlier crowded growing stages.	Deformed
+4	2	4	Plant_Cotton	Garden cotton plant 3	HNS_AsymmetricWhorls	Geometry/effects only	not styled	Asymmetric Whorls	Rare	Separate growth layers spread toward the open side that existed when they developed.	Deformed
+4	2	5	Plant_Cotton	Garden cotton plant 4	HNS_ReleaseCrown	Geometry/effects only	not styled	Release Crown	Rare	A compressed older canopy develops a broad upper crown when later growth has open space.	Deformed
+4	2	6	Plant_Cotton	Garden cotton plant 5	HNS_StretchBands	Geometry/effects only	not styled	Stretch Bands	Rare	Earlier crowded growth retains elongated internode-like sections after the competition is gone.	Deformed
+4	3	1	Plant_Daylily	Vanilla control		Vanilla	not styled				Original
+4	3	2	Plant_Daylily	Garden daylily 1	HNS_CrookedChronicle	Geometry/effects only	not styled	Crooked Chronicle	Rare	Older stem bends remain as later growth records new growing space.	Deformed
+4	3	3	Plant_Daylily	Garden daylily 2	HNS_RingedHabit	Geometry/effects only	not styled	Ringed Habit	Rare	Canopy layers retain the compression of earlier crowded growing stages.	Deformed
+4	3	4	Plant_Daylily	Garden daylily 3	HNS_AsymmetricWhorls	Geometry/effects only	not styled	Asymmetric Whorls	Rare	Separate growth layers spread toward the open side that existed when they developed.	Deformed
+4	3	5	Plant_Daylily	Garden daylily 4	HNS_ReleaseCrown	Geometry/effects only	not styled	Release Crown	Rare	A compressed older canopy develops a broad upper crown when later growth has open space.	Deformed
+4	3	6	Plant_Daylily	Garden daylily 5	HNS_StretchBands	Geometry/effects only	not styled	Stretch Bands	Rare	Earlier crowded growth retains elongated internode-like sections after the competition is gone.	Deformed
+5	1	1	Plant_Corn	Vanilla control		Vanilla	not styled				Original
+5	1	2	Plant_Corn	Garden corn plant 1	HNS_CrookedChronicle	Geometry/effects only	not styled	Crooked Chronicle	Rare	Older stem bends remain as later growth records new growing space.	Deformed
+5	1	3	Plant_Corn	Garden corn plant 2	HNS_RingedHabit	Geometry/effects only	not styled	Ringed Habit	Rare	Canopy layers retain the compression of earlier crowded growing stages.	Deformed
+5	1	4	Plant_Corn	Garden corn plant 3	HNS_AsymmetricWhorls	Geometry/effects only	not styled	Asymmetric Whorls	Rare	Separate growth layers spread toward the open side that existed when they developed.	Deformed
+5	1	5	Plant_Corn	Garden corn plant 4	HNS_ReleaseCrown	Geometry/effects only	not styled	Release Crown	Rare	A compressed older canopy develops a broad upper crown when later growth has open space.	Deformed
+5	1	6	Plant_Corn	Garden corn plant 5	HNS_StretchBands	Geometry/effects only	not styled	Stretch Bands	Rare	Earlier crowded growth retains elongated internode-like sections after the competition is gone.	Deformed
+5	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled				Original
+5	2	2	Plant_Cotton	Garden cotton plant 1	HNS_CrookedChronicle	Geometry/effects only	not styled	Crooked Chronicle	Rare	Older stem bends remain as later growth records new growing space.	Deformed
+5	2	3	Plant_Cotton	Garden cotton plant 2	HNS_RingedHabit	Geometry/effects only	not styled	Ringed Habit	Rare	Canopy layers retain the compression of earlier crowded growing stages.	Deformed
+5	2	4	Plant_Cotton	Garden cotton plant 3	HNS_AsymmetricWhorls	Geometry/effects only	not styled	Asymmetric Whorls	Rare	Separate growth layers spread toward the open side that existed when they developed.	Deformed
+5	2	5	Plant_Cotton	Garden cotton plant 4	HNS_ReleaseCrown	Geometry/effects only	not styled	Release Crown	Rare	A compressed older canopy develops a broad upper crown when later growth has open space.	Deformed
+5	2	6	Plant_Cotton	Garden cotton plant 5	HNS_StretchBands	Geometry/effects only	not styled	Stretch Bands	Rare	Earlier crowded growth retains elongated internode-like sections after the competition is gone.	Deformed
+5	3	1	Plant_Daylily	Vanilla control		Vanilla	not styled				Original
+5	3	2	Plant_Daylily	Garden daylily 1	HNS_CrookedChronicle	Geometry/effects only	not styled	Crooked Chronicle	Rare	Older stem bends remain as later growth records new growing space.	Deformed
+5	3	3	Plant_Daylily	Garden daylily 2	HNS_RingedHabit	Geometry/effects only	not styled	Ringed Habit	Rare	Canopy layers retain the compression of earlier crowded growing stages.	Deformed
+5	3	4	Plant_Daylily	Garden daylily 3	HNS_AsymmetricWhorls	Geometry/effects only	not styled	Asymmetric Whorls	Rare	Separate growth layers spread toward the open side that existed when they developed.	Deformed
+5	3	5	Plant_Daylily	Garden daylily 4	HNS_ReleaseCrown	Geometry/effects only	not styled	Release Crown	Rare	A compressed older canopy develops a broad upper crown when later growth has open space.	Deformed
+5	3	6	Plant_Daylily	Garden daylily 5	HNS_StretchBands	Geometry/effects only	not styled	Stretch Bands	Rare	Earlier crowded growth retains elongated internode-like sections after the competition is gone.	Deformed
