@@ -192,10 +192,25 @@ namespace HorticultureNovelSeeds
         {
             if(shot==null)
             {
-                shot=Path.Combine(root,"HNS-garden-production-"+name+".png");ScreenCapture.CaptureScreenshot(shot);shotAge=0;return false;
+                shot=Path.Combine(root,"HNS-garden-production-"+name+".png");
+                // Native screen capture is optional in unattended Windows sessions.
+                // Always retain real GPU readbacks of the live, validated specimens.
+                for(int i=0;i<samples.Count;i++)
+                {
+                    var p=samples[i];
+                    if(!BotanicalExpressionEngine.Prints.TryGetValue(p.thingIDNumber,out var pr))continue;
+                    var tex=BotanicalExpressionEngine.Readback(pr.Material,pr.Band,pr.Seed,pr.Flipped?-pr.Bias:pr.Bias,pr.Material.GetVector("_HnsExpressionEnv"));
+                    try
+                    {
+                        Require(tex.GetPixels32().Count(c=>c.r+c.g+c.b>24)>30,"nonblank production GPU render");
+                        File.WriteAllBytes(Path.Combine(root,"HNS-garden-production-gpu-"+name+"-"+i.ToString("D2")+".png"),tex.EncodeToPNG());
+                    }
+                    finally{UnityEngine.Object.Destroy(tex);}
+                }
+                ScreenCapture.CaptureScreenshot(shot);shotAge=0;return false;
             }
             shotAge++;
-            return shotAge>=10&&File.Exists(shot)&&new FileInfo(shot).Length>1000;
+            return shotAge>=60||(shotAge>=10&&File.Exists(shot)&&new FileInfo(shot).Length>1000);
         }
         private static void MakeDense()
         {
@@ -253,7 +268,7 @@ namespace HorticultureNovelSeeds
                         var p=all.Single(q=>q.thingIDNumber==s.ID);var c=p.TryGetComp<CompPlantVariety>();
                         Require(c.VarietyId==s.Cultivar&&NovelSeedUtility.TraitKey(c.ActiveTraits)==s.Key&&c.VisualChronicle==s.History&&E.Seed(p.thingIDNumber)==s.Seed&&Math.Abs(p.Growth-s.Growth)<.001f&&p.Position.x==s.X&&p.Position.z==s.Z,"full save/reload plant identity/history "+s.ID);
                     }
-                    stage("ExpressionSaveReload");active=false;finish("PASS","actual sowing cross-pollination, promoted mutation draws, six map growth captures, 300 plant mixed field, full colony reload");
+                    stage("ExpressionSaveReload");active=false;finish("PASS","actual sowing cross-pollination, promoted mutation draws, six live-map growth stages with native GPU readbacks, 300 plant mixed field, full colony reload");
                 }
             }
             catch(Exception e){Fail(e);}
