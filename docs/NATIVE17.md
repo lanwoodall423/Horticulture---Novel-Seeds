@@ -291,3 +291,56 @@ prerequisite. No production release/default renderer activation.
 DLL SHA256: C9BDA5909985404C72409C5C9B15410A94869099C8B465C237C9D77680E5C60E.
 Receipt SHA256: 7E24971F77E0D8138DF1BFA9E0DC24842DB18D500DF6542DB7ECA242419AAF70.
 Player log SHA256: 5190B4B591281255C8548FC1D3B11ADDEC5A6697348CBDEED641054D0119C78C.
+
+## Five mask-free procedural phenotypes (2026-11-25)
+
+Native 1.7 trait definitions in 1.7/Defs/ProceduralPhenotypes.xml:
+Ivory Variegation (cream organic sectors), Crimson Blush (wine/pink
+gradient), Moonfrost (blue-silver wax bloom and alpha-edge highlights),
+Goldfreckled (gold spots and mottling), Aurora Veins (jade with bright
+turquoise branching motifs, not emitted light). These are real cosmetic
+cultivar traits, not debug visual overrides. A deterministic species/trait
+seed and local UVs drive the shader; the source alpha, wind vertex stage
+and existing fallback remain. Pattern-only cultivars bypass anatomical
+mask preparation and sampling; when other regional color genetics exist,
+validated automatic masks may still participate. The material cache key
+includes pattern parameters. No additional texture bake/readback in the
+GPU pattern path. One pattern per cultivar via exclusion tag; conflicting
+legacy/custom records resolve deterministically. Catalog validation
+requires neutral mechanical fields for procedural cosmetics.
+
+The five traits have default mutation weight zero; the test-only shader
+asset staging/activation is retained pending production lifecycle,
+ordinary player setting, inheritance/mutation, combined phenotype,
+seasonal/translucent, produce, editor and performance qualification.
+Do not mistake registry assignment for a natural mutation or breeding pass.
+
+First run 8f801716793640209ad9d946580dd325, commit 4dfba9e, passed the
+seven garden stages (60/60 mask-free GPU), but reported five cosmetic
+catalog tradeoff errors and had obstructing trees. Corrected validation,
+refined frost shading, and cleared foreground vegetation in the isolated
+fixture. Final clean candidate 662da1294fe5f440b6c2ed14ff316336a210622f,
+AllPerformance run ad56abd8b279415ca45b8b10b149e411, passed all seven
+garden stages at RimWorld 1.7.5014 rev1195. 12 species (rice, corn, potato,
+strawberry, cotton, healroot, hops, smokeleaf, psychoid, devilstrand,
+haygrass, cocoa), 12 vanilla controls, 60 registered single-pattern
+cultivars. All 60 used the mask-free procedural GPU path; 60 shader
+materials and zero prepared mask textures. The startup automatic mask
+classifier still generated 87 variations; these were not used in the
+pattern garden. No HNS-specific error identified in final captured log.
+Four actual noon captures, sky glow 0.962347. The screenshot review shows
+clear patterns and some colonist/item occlusion in plot 2. This is not a
+performance benchmark or full visual acceptance. All cleanup and player
+data preservation booleans true. Both fixture and ordinary builds
+compiled with no errors/warnings; 12 journal rules passed.
+
+Evidence gallery, raw PNG captures and exact per-plant inventory:
+https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/e4040974f395eb1d845c95894f31fcfc2debe786
+
+DLL SHA256: 0C809F7AF091C3E1CE90D98B6534674544167F81C2BCA3CD79746F3FEACBECEF.
+Receipt SHA256: 0DB18884E449DF46C9C79B64AC06DB1C8FF0A9C7FF8225F888A92E31E34841DF.
+Player log SHA256: 9F8459281A8328060A9760D008ED1715425630DF280848C784490A3A27C41491.
+
+Reproduce with RimWorld closed:
+
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -PatternGarden
