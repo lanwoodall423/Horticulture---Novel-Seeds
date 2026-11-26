@@ -207,3 +207,40 @@ measure batching, VRAM and frame time before making performance claims.
 Procedural patterns and shader-driven anatomical classification remain
 unimplemented. Keep the existing CPU renderer and the 1.6 release intact.
 Artifacts remain local under DevTools/TestResults/native-<run>.
+
+## Daylight genetic garden (2026-11-25)
+
+Run c4a5133f1be143c59469791a0a994020, clean commit
+360a33c058ba734c1597319a0ec4d6e9b42b9bf1, RimWorld 1.7.5014 rev1195,
+AllPerformance. All seven stages passed with complete preservation receipt.
+The first attempt dd61d413b3134cbf930080cc6f4f095c stopped safely when its
+strict plot-selection condition found no large enough clear rectangle.
+The corrected fixture selects viable plant positions and clears only
+vegetation on an isolated, unroofed test map.
+
+72 mature plants across rice, corn, potato, strawberry, cotton, healroot,
+hops, smokeleaf, psychoid, devilstrand, oak and cocoa: 12 unmodified controls
+and 60 registered cultivars with intentionally selected real trait definitions.
+Extreme pigment selections bypass ordinary mutation weights and species
+palettes for visual stress-testing. No production trait settings were changed.
+The four captures were made at local hour 12, clear weather, sky glow 1.
+55 cultivars used GPU semantic masks; five oak cultivars used legacy material
+fallback. The final experimental cache had 47 materials and 29 prepared masks.
+No relevant Horticulture-specific errors were identified in the captured log.
+This is visual coverage, not a natural mutation test or a performance benchmark.
+Not all traits have visible effects on every crop; region availability and
+the intentionally exaggerated colors warrant further art-direction review.
+
+Screenshots, labeled contact sheet and exact per-plant trait/backend inventory:
+https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/6adda917b50f20fcd836fad713549ec511506fe9
+
+DLL SHA256: 02D4EEB3335FCF4A354AF31218B004C970A8FD0DB7A24E127A55B1B1E904EA86.
+Receipt SHA256: 00D050B9CFC1C2E5F5DC15EB85F234D6388A538582C634C6A1C95EE808B3BB82.
+Player log SHA256: 596363491511EE3D2EE876AD738393123AB672126C017124AFAB97E511DC9F71.
+Raw screenshots and full evidence remain in ignored DevTools/TestResults.
+Only screenshot artifacts and the test inventory were placed in a separate
+evidence branch for owner review. No release metadata or ordinary saves changed.
+
+Reproduce, only with the game closed:
+
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -GardenProbe
