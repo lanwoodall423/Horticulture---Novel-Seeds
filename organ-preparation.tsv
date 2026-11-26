@@ -1,0 +1,10 @@
+Species	Variation	Label	Texture	Width	Height	Reproductive parts	Stem parts	Reproductive pixels	Stem pixels
+Plant_Corn	0	Normal 1 of 2	CornPlantA	256	256	6	0	2552	0
+Plant_Corn	1	Normal 2 of 2	CornPlantB	256	256	6	0	2867	0
+Plant_Cotton	0	Normal 1 of 2	CottonPlantA	256	256	8	0	8619	0
+Plant_Cotton	1	Normal 2 of 2	CottonPlantB	256	256	9	0	7961	0
+Plant_Strawberry	0	Normal	StrawberryPlant	256	256	9	0	4568	0
+Plant_Rose	0	Normal	RoseA	256	256	10	0	13839	0
+Plant_Daylily	0	Normal 1 of 2	DaylilyA	256	256	12	0	16917	0
+Plant_Daylily	1	Normal 2 of 2	DaylilyB	256	256	12	0	16723	0
+Plant_Hops	0	Normal	HopsPlantA	256	256	6	0	200	0
