@@ -103,7 +103,7 @@ void main()
     vec4 s=texture(_MainTex,uv*uMaterial._MainTex_ST.zw+uMaterial._MainTex_ST.xy);
     if(role==0&&uMaterial._HnsLife.z>.5)
     {
-        float f=mode==2?light:mode==11?phase:sat((growth-.60)/.40);
+        float f=mode>=21?sat(e.w):mode==2?light:mode==11?phase:sat((growth-.60)/.40);
         s=atlas(uv,floor(f*8.+.5));
     }
     if(s.a<.35)discard;

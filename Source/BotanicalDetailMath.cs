@@ -5,10 +5,10 @@ using Pixel = HorticultureNovelSeeds.OrganSpriteMath.Pixel;
 
 namespace HorticultureNovelSeeds
 {
-    public enum BotanicalDetailKind { None,LobedLeaf,Windowleaf,SideShoots,CurlingTendrils,LanternBuds,IvoryNerves,CrimsonNetwork,LivingGlass,VascularChimera,BronzeReticulum,PhotosyntheticPulse,NyctinasticFolding,HydraulicWilt,CrystalDewLensing,PollinationCloud,MosaicOrganism,SeasonalColorFront,SubsurfaceRootHalo,LeafSkeletonization,BioluminescentSignaling,WindDifferentialAnatomy,FractalVenationBloom,TranslucentPetalTissue,CanopyVolumeParallax,MicroHabitatResponse,FruitRipeningCascade,FrostEtching,MycelialRelay,MorphogeneticReconfiguration,EventDrivenExpression }
+    public enum BotanicalDetailKind { None,LobedLeaf,Windowleaf,SideShoots,CurlingTendrils,LanternBuds,IvoryNerves,CrimsonNetwork,LivingGlass,VascularChimera,BronzeReticulum,PhotosyntheticPulse,NyctinasticFolding,HydraulicWilt,CrystalDewLensing,PollinationCloud,MosaicOrganism,SeasonalColorFront,SubsurfaceRootHalo,LeafSkeletonization,BioluminescentSignaling,WindDifferentialAnatomy,FractalVenationBloom,TranslucentPetalTissue,CanopyVolumeParallax,MicroHabitatResponse,FruitRipeningCascade,FrostEtching,MycelialRelay,MorphogeneticReconfiguration,EventDrivenExpression,CircinateFrond,ClimbingHelix,UmbelCrown,PendantRaceme,CrestedFan }
     internal static class BotanicalDetailMath
     {
-        internal static bool Valid(BotanicalDetailKind k)=>k>=BotanicalDetailKind.LobedLeaf&&k<=BotanicalDetailKind.EventDrivenExpression;
+        internal static bool Valid(BotanicalDetailKind k)=>k>=BotanicalDetailKind.LobedLeaf&&k<=BotanicalDetailKind.CrestedFan;
         internal static bool Topology(BotanicalDetailKind k)=>k>=BotanicalDetailKind.LobedLeaf&&k<=BotanicalDetailKind.CurlingTendrils;
         internal static bool Green(Pixel p)=>p.A>=100&&p.G>=p.R*1.035f&&p.G>=p.B*1.16f&&p.G>45;
         internal static float Darkness(float sky)=>1f-Math.Clamp((float.IsFinite(sky)?sky:1f)-.12f,0f,.48f)/.48f;

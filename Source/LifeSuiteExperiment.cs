@@ -10,6 +10,7 @@ namespace HorticultureNovelSeeds
     internal static class LifeSuiteExperiment
     {
         internal static bool Enabled {get;set;}
+        internal static bool SculptureEnabled {get;set;}
         internal const string ShaderName="HNS_LifeSuite",OverlayShader="HNS_LifeSuiteGlow";
         private sealed record Prepared(Texture2D Mask,LifeSuiteMath.Anatomy Anatomy,Dictionary<int,Texture2D> Atlases);
         private static readonly Dictionary<Texture,Prepared> prepared=new();
@@ -19,6 +20,7 @@ namespace HorticultureNovelSeeds
         internal static int MaterialCount=>materials.Count;
 #if HNS_NATIVE_FIXTURE
         internal static float? TemperatureOverride,SeasonOverride;
+        internal static float SculpturePhase;
         internal sealed record Print(Material Base,Material Extra,int Mode,int Organs,int Territories,bool Atlas,int Planes,float Growth,float Stress,int Lateral);
         internal static readonly Dictionary<int,Print> Prints=new();
         internal static readonly HashSet<int> Fallback=new();
@@ -36,23 +38,35 @@ namespace HorticultureNovelSeeds
             var mask=new Texture2D(w,h,TextureFormat.RGBA32,false,true){name=source.name+"_HNS_LifeAnatomy",filterMode=FilterMode.Point,wrapMode=TextureWrapMode.Clamp};
             mask.SetPixels32(a.Mask.Select(c=>new Color32(c.R,c.G,c.B,c.A)).ToArray());mask.Apply(false,true);
             var atlases=new Dictionary<int,Texture2D>();
-            foreach(int mode in new[]{2,11,19})
+            foreach(int mode in SculptureEnabled?new[]{21,22,23,24,25}:new[]{2,11,19})
             {
-                var cells=new Color32[9*w*h];int changed=0,unique=0;var previous=new List<OrganSpriteMath.Pixel[]>();
+                int aw=SculptureEnabled?SculptureMath.Side(w):w,ah=SculptureEnabled?SculptureMath.Side(h):h;
+                var cells=new Color32[9*aw*ah];int changed=0,unique=0;var previous=new List<OrganSpriteMath.Pixel[]>();
                 for(int f=0;f<9;f++)
                 {
-                    var frame=LifeSuiteMath.Frame(a,pixels,mode,f);
+                    var frame=SculptureEnabled?SculptureMath.Frame(pixels,w,h,a,mode,f):LifeSuiteMath.Frame(a,pixels,mode,f);
+                    if(frame==null)break;
                     if(!previous.Any(x=>x.SequenceEqual(frame))){unique++;previous.Add(frame);}
-                    for(int y=0;y<h;y++)for(int x=0;x<w;x++)
+                    if(SculptureEnabled)
                     {
-                        int i=y*w+x;var c=frame[i];
-                        if(c.A<pixels[i].A)throw new InvalidOperationException("Life suite atlas lost native alpha");
-                        if(c!=pixels[i])changed++;
-                        cells[(y+f/3*h)*3*w+x+f%3*w]=new(c.R,c.G,c.B,c.A);
+                        int ox=(aw-w)/2,oy=(ah-h)/2;
+                        for(int y=0;y<h;y++)for(int x=0;x<w;x++)
+                            if(pixels[y*w+x].A>0&&frame[(y+oy)*aw+x+ox]!=pixels[y*w+x])throw new InvalidOperationException("Sculpture changed original foreground");
+                        changed+=frame.Count(p=>p.A>0)-pixels.Count(p=>p.A>0);
+                    }
+                    for(int y=0;y<ah;y++)for(int x=0;x<aw;x++)
+                    {
+                        int i=y*aw+x;var c=frame[i];
+                        if(!SculptureEnabled)
+                        {
+                            if(c.A<pixels[i].A)throw new InvalidOperationException("Life suite atlas lost native alpha");
+                            if(c!=pixels[i])changed++;
+                        }
+                        cells[(y+f/3*ah)*3*aw+x+f%3*aw]=new(c.R,c.G,c.B,c.A);
                     }
                 }
                 if(changed<12||unique<2)continue;
-                var atlas=new Texture2D(w*3,h*3,TextureFormat.RGBA32,false){name=source.name+"_HNS_LifeAtlas_"+mode,filterMode=source.filterMode,wrapMode=TextureWrapMode.Clamp};
+                var atlas=new Texture2D(aw*3,ah*3,TextureFormat.RGBA32,false){name=source.name+"_HNS_LifeAtlas_"+mode,filterMode=source.filterMode,wrapMode=TextureWrapMode.Clamp};
                 atlas.SetPixels32(cells);atlas.Apply(false,true);atlases.Add(mode,atlas);
 #if HNS_NATIVE_FIXTURE
                 Preparation.Add(string.Join("\t",def.defName,variation,source.name,mode,a.Leaves,a.Organs,a.OrganPixels,unique,changed));
@@ -68,6 +82,7 @@ namespace HorticultureNovelSeeds
             float season=GenLocalDate.Season(map).ToString() switch{"Fall"=>.82f,"Winter"=>1f,"PermanentWinter"=>1f,_=>0f};
 #if HNS_NATIVE_FIXTURE
             if(SeasonOverride.HasValue)season=SeasonOverride.Value;
+            if(SculptureEnabled)season=SculpturePhase;
 #endif
             return new(VascularMath.Light(map.skyManager.CurSkyGlow),VascularMath.Wet(map.weatherManager.RainRate),GenLocalDate.DayPercent(map),season);
         }
@@ -114,11 +129,11 @@ namespace HorticultureNovelSeeds
         }
         internal static bool TryMaterial(Plant p,Material source,BotanicalDetailKind kind,bool flipped,Color32[] colors,out Material mat)
         {
-            mat=null;if(!Enabled||!LifeSuiteMath.Valid(kind))return false;
-            int mode=LifeSuiteMath.Mode(kind);
+            mat=null;if(!Enabled||(SculptureEnabled?!SculptureMath.Valid(kind):!LifeSuiteMath.Valid(kind)))return false;
+            int mode=SculptureEnabled?SculptureMath.Mode(kind):LifeSuiteMath.Mode(kind);
             if(source==null||source.shader!=ShaderDatabase.CutoutPlant||!source.HasProperty("_FallBehaviorEnabled")||source.GetFloat("_FallBehaviorEnabled")!=0f||
                 source.mainTextureScale!=Vector2.one||source.mainTextureOffset!=Vector2.zero||!prepared.TryGetValue(source.mainTexture,out var a)||
-                (LifeSuiteMath.NeedsOrgan(mode)&&a.Anatomy.Organs==0)||((mode==11||mode==19)&&!a.Atlases.ContainsKey(mode)))
+                (LifeSuiteMath.NeedsOrgan(mode)&&a.Anatomy.Organs==0)||((mode==11||mode==19||mode>=21)&&!a.Atlases.ContainsKey(mode))||(mode is 23 or 24 or 25)&&a.Anatomy.Organs==0)
             {
 #if HNS_NATIVE_FIXTURE
                 Prints.Remove(p.thingIDNumber);Fallback.Add(p.thingIDNumber);

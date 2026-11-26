@@ -23,7 +23,7 @@ namespace HorticultureNovelSeeds
         internal static readonly Dictionary<int,Material> GlowPlants=new();
         internal static readonly List<string> Preparation=new();
 #endif
-        internal static bool ModeMatches(BotanicalDetailKind k)=>LifeSuiteExperiment.Enabled?LifeSuiteMath.Valid(k):VascularExperiment.Enabled?VascularMath.Valid(k):!LifeSuiteMath.Valid(k)&&!VascularMath.Valid(k);
+        internal static bool ModeMatches(BotanicalDetailKind k)=>LifeSuiteExperiment.SculptureEnabled?SculptureMath.Valid(k):LifeSuiteExperiment.Enabled?LifeSuiteMath.Valid(k):VascularExperiment.Enabled?VascularMath.Valid(k):!SculptureMath.Valid(k)&&!LifeSuiteMath.Valid(k)&&!VascularMath.Valid(k);
         internal static BotanicalDetailKind Resolve(CompPlantVariety comp)
         {
             if(!Enabled||comp?.ActiveTraits==null)return BotanicalDetailKind.None;

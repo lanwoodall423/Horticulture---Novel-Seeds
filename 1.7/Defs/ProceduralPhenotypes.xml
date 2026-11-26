@@ -1503,4 +1503,59 @@
     <exclusionTags><li>botanicalDetail</li></exclusionTags>
     <botanicalDetail>EventDrivenExpression</botanicalDetail>
   </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_CircinateFrond</defName>
+    <label>Circinate Frond</label>
+    <description>Paired fiddlehead-like shoots extend and unfurl into pinnate lateral fronds.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>CircinateFrond</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_ClimbingHelix</defName>
+    <label>Climbing Helix</label>
+    <description>A secondary climbing shoot follows a winding stem path and carries alternate leaf blades.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>ClimbingHelix</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_UmbelCrown</defName>
+    <label>Umbel Crown</label>
+    <description>Individual pedicels radiate from a common crown junction, carrying source-derived reproductive organs.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>UmbelCrown</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_PendantRaceme</defName>
+    <label>Pendant Raceme</label>
+    <description>Arched secondary stems bear hanging chains of reproductive organs.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>PendantRaceme</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_CrestedFan</defName>
+    <label>Crested Fan</label>
+    <description>A broad curved crown rib supports fan-like leaves and reproductive clusters.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>CrestedFan</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
 </Defs>

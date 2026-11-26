@@ -405,3 +405,23 @@ Require(SurfaceFinishMath.Environment(.5f,1f,.01f).Rain==.03125f,"quantized weat
         Require(result.Length==image.Length&&Enumerable.Range(0,image.Length).All(i=>result[i].A>=image[i].A),"structural atlas preserves native alpha");
     }
 }
+
+{
+    Require(Enum.GetValues<BotanicalDetailKind>().Count(SculptureMath.Valid)==5,"five distinct sculpture traits");
+    const int w=64,h=64;var art=new OrganSpriteMath.Pixel[w*h];
+    for(int y=6;y<54;y++)for(int x=8;x<56;x++)
+        if((x-31)*(x-31)/390f+(y-30)*(y-30)/520f<1)
+            art[y*w+x]=new((byte)(45+x/3),(byte)(106+y),(byte)(32+x/4),255);
+    for(int y=39;y<47;y++)for(int x=25;x<32;x++)art[y*w+x]=new(229,182,48,255);
+    var a=LifeSuiteMath.Analyze(art,w,h);Require(a!=null&&a.Organs>0,"sculpture source anatomy");
+    int W=SculptureMath.Side(w),H=SculptureMath.Side(h),ox=(W-w)/2,oy=(H-h)/2;
+    for(int mode=21;mode<=25;mode++)
+    {
+        var frames=Enumerable.Range(0,9).Select(f=>SculptureMath.Frame(art,w,h,a,mode,f)).ToArray();
+        Require(frames.All(f=>f!=null&&f.Length==W*H),"expanded rig frames");
+        Require(frames.All(f=>Enumerable.Range(0,art.Length).All(i=>art[i].A==0||f[(i/w+oy)*W+i%w+ox]==art[i])),"all original RGBA preserved");
+        Require(frames.All(f=>f.Count(p=>p.A>0)>=art.Count(p=>p.A>0)),"no source holes");
+        Require(frames[8].Count(p=>p.A>0)>art.Count(p=>p.A>0)+20,"visible added structural growth");
+        Require(!frames[0].SequenceEqual(frames[8])&&Enumerable.Range(1,8).Count(i=>!frames[i].SequenceEqual(frames[i-1]))>=6,"distinct progressive developmental frames");
+    }
+}
