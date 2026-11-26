@@ -1439,3 +1439,5 @@ unqualified. No new mutation weights or mechanics. Normal player data
 unchanged, test process and package removed.
 
 Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/d227237137b57af356a2b475b3518440a085a3ec
+
+Final expression fixture retry: source 68c599ac1ca7517c750839d8195442d2c3045257; run 7a7570c2ac4b4fe599f28b1eba679aa9; nine native stages PASS. History-value Scribe round trips, not full save reload. Normal config/prefs/saves unchanged, temporary package and process removed. Laboratory: Native selected/edited GPU preview API: PASS; Window contents executed: True; GUI repaint verified: True; If false, GUI remains separately unqualified. Budget: Source maps=8; shared materials=16; texture bytes=7430144; growth invalidations=90 Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/264ea90e104065ddd88422c7ff6448d37844f4c5 . Dense-field performance, production activation, natural cross-channel breeding, and map-scale presentation remain unqualified.
