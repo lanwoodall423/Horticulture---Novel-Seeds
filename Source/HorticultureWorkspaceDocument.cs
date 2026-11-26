@@ -8,7 +8,7 @@ using Verse;
 namespace HorticultureNovelSeeds
 {
     // Native field guide; journal facts and registry remain outside this window.
-    public sealed class HorticultureWorkspaceDocument
+    public sealed partial class HorticultureWorkspaceDocument
     {
         public const int MaximumComparisonCount = 8;
         public const int MaximumLineageDepth = 12;
@@ -32,7 +32,15 @@ namespace HorticultureNovelSeeds
                 leftScroll = rightScroll = Vector2.zero;
             }
         }
-        public void PostClose() { }
+        public void PostClose() { FieldGuideIndex.Close(); }
+        internal void Opened(){PreOpen();FieldGuideIndex.Open();}
+        internal void PrepareDiscoveries()=>PreparePage("Discoveries");
+        internal void PrepareBreeding()=>PreparePage("Breeding");
+#if HNS_NATIVE_FIXTURE
+        internal static string LastDrawnPage;internal static int LastDrawnCount;
+        internal void FixtureOverview()=>PreparePage("Overview");
+        internal void FixtureCompare(IEnumerable<VarietyRecord> vs){PreparePage("Cultivars");comparisonIds.Clear();foreach(var v in vs)comparisonIds.Add(v.id);OpenCompare();}
+#endif
         public void PrepareKnowledge(Pawn pawn) { PreparePage("Overview"); }
         public void PreparePlant(ThingDef plant)
         {
@@ -59,37 +67,24 @@ namespace HorticultureNovelSeeds
             var all = component.AllVarieties.Where(HorticulturePresentationPolicy.IsDocumented).ToList();
             comparisonIds.RemoveWhere(id => !all.Any(v => v.id == id));
             if (!HorticulturePresentationPolicy.IsDocumented(selectedCultivar)) selectedCultivar = null;
-            string[] tabs = { "Overview", "Plants", "Cultivars", "Breeding" };
+            string[] tabs = { "Overview", "Discoveries", "Plants", "Cultivars", "Breeding" };
             float width = rect.width / tabs.Length;
             for (int i = 0; i < tabs.Length; i++)
-                if (Widgets.ButtonText(new Rect(rect.x + width * i, rect.y, width - 4, 32), tabs[i])) PreparePage(tabs[i]);
+            {
+                Rect tab=new(rect.x+width*i,rect.y,width-4,32);if(page==tabs[i])Fill(tab,Tile);
+                if(Widgets.ButtonText(tab,tabs[i]))PreparePage(tabs[i]);
+                if(page==tabs[i])Fill(new(tab.x,tab.yMax-3,tab.width,3),Accent);
+            }
             var content = new Rect(rect.x, rect.y + 40, rect.width, rect.height - 40);
-            if (page == "Overview")
+            if (Event.current.type==EventType.Repaint)
             {
-                float y = content.y;
-                NativeUi.Label(content, ref y, "Discover, preserve, name and breed unusual plants.", 42);
-                NativeUi.Label(content, ref y, "Documented cultivars: " + all.Count);
-                NativeUi.Label(content, ref y, "Observed species: " + (GameComponent_CultivationJournal.Instance?.ObservedSpecies.Count() ?? 0));
-                NativeUi.Button(content, ref y, "Browse plants", () => PreparePage("Plants"));
-                NativeUi.Button(content, ref y, "Browse cultivars", () => PreparePage("Cultivars"));
-                foreach (var variety in all.OrderByDescending(v => v.firstDiscoveredTick).Take(8))
-                    NativeUi.Button(content, ref y, variety.Label, () => PrepareCultivar(variety));
-                return;
+#if HNS_NATIVE_FIXTURE
+                LastDrawnPage=compare?"Compare":page;LastDrawnCount++;
+#endif
             }
-            if (page == "Breeding")
-            {
-                var view = NativeUi.Scroll(content, ref rightScroll, 80 + component.BreedingPrograms.Count * 64);
-                try
-                {
-                    float y = 0;
-                    NativeUi.Label(view, ref y, "Choose multiple documented cultivars in a growing zone's breeding mix. Their offspring can inherit traits.", 64);
-                    foreach (var program in component.BreedingPrograms.Take(128))
-                        NativeUi.Label(view, ref y, "Legacy program: " + program.name + " (" + (program.active ? "active" : "inactive") + ")", 60);
-                    NativeUi.Button(view, ref y, "Cultivar pedigrees", () => PreparePage("Cultivars"));
-                }
-                finally { Widgets.EndScrollView(); }
-                return;
-            }
+            if(page=="Overview"){DrawOverview(content,all);return;}
+            if(page=="Discoveries"){DrawDiscoveries(content);return;}
+            if(page=="Breeding"){DrawBreeding(content,all);return;}
             float leftWidth = Mathf.Clamp(content.width * .34f, 170, 360);
             Rect left = new Rect(content.x, content.y, leftWidth, content.height);
             Rect right = new Rect(left.xMax + 12, content.y, content.width - leftWidth - 12, content.height);
@@ -164,14 +159,15 @@ namespace HorticultureNovelSeeds
             string potential=info.PotentialAppearance;
             string potentialText=string.IsNullOrEmpty(potential)?null:"Potential appearance (genetic tendencies; expression varies):\n"+potential;
             float potentialHeight=potentialText==null?0f:Mathf.Max(48f,Text.CalcHeight(potentialText,Mathf.Max(1f,rect.width-18f))+8f);
-            var view = NativeUi.Scroll(rect, ref rightScroll, 580 + potentialHeight + info.AuthorizedTraits.Count * 66 + (lineage ? 128 * 34 : 0));
+            var view = NativeUi.Scroll(rect, ref rightScroll, 960 + potentialHeight + info.AuthorizedTraits.Count * 66 + (lineage ? 128 * 34 : 0));
             try
             {
                 float y = 0;
-                NativeUi.Label(view, ref y, v.Label + " ? " + v.cropDef.LabelCap);
+                DrawCultivarHeader(view,ref y,v,info);
                 NativeUi.Label(view, ref y, v.FirstDiscoveredInfo, 42);
-                NativeUi.Label(view, ref y, info.Origin);
-                NativeUi.Label(view, ref y, info.ModifierText, 64);
+                if(Widgets.ButtonText(new(0,y,view.width,30),"Locate specimen / produce"))Locate(v);y+=38;
+                if(Widgets.ButtonText(new(0,y,view.width,30),"View growing zones / breeding"))PrepareBreeding();y+=38;
+                Section(view,ref y,"DOCUMENTED GENETIC TENDENCIES");
                 if(potentialText!=null)NativeUi.Label(view,ref y,potentialText,potentialHeight);
                 foreach (var trait in info.AuthorizedTraits)
                     NativeUi.Label(view, ref y, TraitColorUI.Label(trait) + ": " + TraitColorUI.Description(trait), 62);
@@ -204,23 +200,30 @@ namespace HorticultureNovelSeeds
                 }
             }
         }
-        private void DrawComparison(Rect rect, List<VarietyRecord> all)
+        private void DrawComparison(Rect rect,List<VarietyRecord> all)
         {
-            var selected = all.Where(v => comparisonIds.Contains(v.id)).Take(MaximumComparisonCount).ToArray();
-            var view = NativeUi.Scroll(rect, ref rightScroll, 40 + selected.Length * 158);
+            var chosen=all.Where(v=>comparisonIds.Contains(v.id)).Take(MaximumComparisonCount).ToArray();
+            int cols=rect.width>=650?2:1;
+            var view=NativeUi.Scroll(rect,ref rightScroll,100+Mathf.CeilToInt((float)chosen.Length/cols)*290);
             try
             {
-                float y = 0;
-                NativeUi.Button(view, ref y, "Back to cultivar", () => compare = false);
-                foreach (var v in selected)
+                float y=0;Title(view,ref y,"Compare cultivars","Genetic modifiers, not measured harvest predictions.");
+                if(Widgets.ButtonText(new(0,y,view.width,30),"Back to cultivar"))compare=false;y+=38;
+                float w=(view.width-8*(cols-1))/cols;
+                for(int i=0;i<chosen.Length;i++)
                 {
-                    var info = HorticulturePresentationPolicy.ForCultivar(v);
-                    NativeUi.Label(view, ref y, v.Label);
-                    NativeUi.Label(view, ref y, info?.TraitText, 48);
-                    NativeUi.Label(view, ref y, info?.ModifierText, 70);
+                    var v=chosen[i];var info=HorticulturePresentationPolicy.ForCultivar(v);if(info==null)continue;
+                    Rect r=new((i%cols)*(w+8),y+(i/cols)*290,w,282);Fill(r,Tile);
+                    Art(new(r.x+8,r.y+8,80,76),FieldGuideIndex.Portrait(v,out bool rendered));
+                    Label(new(r.x+8,r.y+85,80,18),rendered?"PREVIEW":"SPECIES ART",GameFont.Tiny,Muted,TextAnchor.MiddleCenter);
+                    Label(new(r.x+96,r.y+10,r.width-104,34),v.Label,GameFont.Small,Ink);
+                    Label(new(r.x+96,r.y+48,r.width-104,40),v.cropDef.LabelCap.ToString(),GameFont.Small,Muted);
+                    Label(new(r.x+9,r.y+108,r.width-18,64),info.ModifierText,GameFont.Small,Accent);
+                    Label(new(r.x+9,r.y+176,r.width-18,58),info.TraitText,GameFont.Small,Ink);
+                    if(Widgets.ButtonText(new(r.x+8,r.yMax-35,r.width-16,28),"Open cultivar"))PrepareCultivar(v);
                 }
             }
-            finally { Widgets.EndScrollView(); }
+            finally{Widgets.EndScrollView();}
         }
         private static void DrawJournal(Rect view, ref float y, CultivationJournalRecord facts)
         {

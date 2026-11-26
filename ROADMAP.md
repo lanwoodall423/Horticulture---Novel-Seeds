@@ -1,10 +1,36 @@
 # Horticulture - Novel Seeds: development roadmap
 
-**Updated:** 2026-11-25
+**Updated:** 2026-11-26
 **Target:** standalone RimWorld 1.7 / Waylith development
-**Status:** standalone .NET 10 candidate compiles; native UI and journal implemented in first pass; five-stage native gameplay fixture and full preservation receipt passed; isolated whole-plant and RGB semantic-mask shader proofs passed GPU swatch parity and field rendering; manual masking retired in native candidate; automatic-only 72-plant garden passed; five mask-free procedural traits passed a separate 72-plant visual garden; complete initial standing-plant appearance catalog passed a 108-plant, 90-case native garden with six labeled screenshots; 20 additional creative cosmetic candidates passed a separate 72-plant, mask-free comparison garden; all 25 explicit procedural motifs then received a botanical refinement pass and passed a 90-plant, 75-cultivar comparison garden; 15 additional organ-selective botanical candidates passed a separate 54-plant, 45-cultivar native garden; independent nonlinear sprite-mesh morphology passed a 36-plant, 30-cultivar garden with five forms alone and combined with pigmentation; localized organ compositing passed a six-species, 36-plant garden with 24 rendered reproductive variants and six explicit stem fallbacks; developmental pigmentation passed a same-plant, three-growth-stage garden with 45 verified GPU states and 30 growth-setter mesh refreshes; independent genetic wind response passed a 12-phase, 18-plant garden with 180 verified material-phase states and actual animated screenshot replay; environment-responsive surface finish passed a four-environment, 18-plant garden with 60 verified material states and stable material count; botanical detail and post-light luminescence passed an 18-plant day/night/day garden with ten topology renders, two explicit fallbacks and three localized night overlays; modular canopy architecture passed a six-species, 36-plant garden with 28 rendered variants, 98 extra planes and two explicit hops reproductive fallbacks; occlusion-aware foliage reconstruction removed fruit-shaped canopy cutouts and passed the same six-species garden with nine source-aligned diagnostics; source-leaf texture synthesis and bounded exterior tapering reduced reproductive color echoes and passed the six-species garden with exact source comparisons; live environmental posture passed a five-environment garden with 75 verified material states, stable material IDs and exact morning pose restoration; ground-level botanical structure passed a six-species garden with 26 verified visual-only ground planes, 39 prepared textures/materials and four intended nonflower fallbacks; local reproductive-organ articulation passed an 18-plant five-environment garden, with 75 verified states and nine-frame GPU parity after correcting atlas row orientation; local sprite orientation corrected and verified against all 30 neutral source poses; individual living mosaics passed a 90-plant garden with 75 stable native mesh-seeded variants and 240 qualified non-neutral slots across 30 shared atlases; classifier quality, production shader integration and full runtime/rendering qualification pending. See [native development notes](docs/NATIVE17.md).
+**Status:** Native 1.7 candidate; experimental phenotype library and opt-in composed expression beta qualified for three species, including native map rendering and full colony reload. Player experience integration is now the leading workstream. See [native development notes](docs/NATIVE17.md) for technical history and evidence.
 
 This is the canonical forward-looking development plan. [The release checklist](RELEASE_CHECKLIST.md), [current architecture](architect.md), [compatibility policy](docs/COMPATIBILITY.md), and [RC test plan](docs/RC_TEST_PLAN.md) describe the existing 1.6 release baseline unless explicitly updated for 1.7. Do not interpret this roadmap as a support declaration, completed implementation, or permission to publish a release.
+
+## Player-experience roadmap (2026-11-26)
+
+The next priority is a cohesive living botanical collection, not expanding
+the experimental effects library. Cultivate -> discover -> preserve ->
+document -> breed -> establish lineages -> observe and compare. Keep ordinary
+RimWorld farming and actual gameplay jobs authoritative. Preserve unknown
+genotypes until documentation. Appearance, genetic potential, and measured
+performance are distinct facts.
+
+| Order | Workstream | Status / acceptance gate |
+| --- | --- | --- |
+| 1 | Botanical Field Guide and Discovery Inbox | In implementation: actionable current-home-map overview; visible pending plants and recovered packs; locate, mature preservation, actual documentation jobs; collection cards; existing growing-zone links. Verify empty/populated native UI and real harvest/documentation flow, no hidden trait disclosure. Later add optional maturity reminders, explicit dismissal and zone preservation policy only after their persistence/harvest semantics are tested. |
+| 2 | Breeding Studio | Planned: compare documented parents, explain possible and conflicting traits, link to existing growing-zone mixes, track outcomes. No guaranteed designer offspring or hidden-donor disclosure. |
+| 3 | Unified specimen presentation | Planned: shared visual language for Cultivar, Phenotype, Ecology and Harvest; exact individual portrait where native renderer can faithfully reproduce it, otherwise clearly labeled reference/potential preview; contextual links. |
+| 4 | Visual lineage atlas | Planned: bounded interactive pedigree with documented ancestry, meaningful visual/trait divergence and navigation. Unknown parents stay unknown. |
+| 5 | Cultivation Chronicle | Planned: expand real journal events into colony timeline; notable harvests, discoveries, hybridizations and lineage milestones; no separate XP or invented measurements. |
+| 6 | Produce and production refinement | Ongoing: actual inherited item effects and use cases; meaningful comparison; simplify settings; expand species/trait qualification; benchmark 100/1000/10000 plant workloads against matched baseline; migration and package QA before release. |
+
+The first native production-expression beta (18 curated traits; corn, cotton
+and daylily) passed all five isolated stages with 300 live plants, 243
+expression-rendered plants, 16 shared materials and full save/reload.
+Native map captures and GPU parity: [evidence](https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/d94bae7e6553230e85c6f6687f607f4f9de99512).
+It remains opt-in. Do not interpret this as universal renderer, migration,
+performance or release qualification. The 1.6 release baseline is unchanged.
+
 
 ## 1. Product direction and decisions
 

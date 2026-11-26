@@ -113,7 +113,7 @@ namespace HorticultureNovelSeeds
         {
             base.PreOpen();
             EnsureWorkspace();
-            workspace.PreOpen();
+            workspace.Opened();
         }
 
         public override void DoWindowContents(Rect inRect)
@@ -133,6 +133,11 @@ namespace HorticultureNovelSeeds
             if (workspace == null) workspace = new HorticultureWorkspaceDocument();
         }
 
+        public static void OpenDiscoveries()=>OpenRegistry()?.workspace.PrepareDiscoveries();
+        public static void OpenBreeding()=>OpenRegistry()?.workspace.PrepareBreeding();
+#if HNS_NATIVE_FIXTURE
+        internal static HorticultureWorkspaceDocument FixtureWorkspace()=>OpenRegistry()?.workspace;
+#endif
         private static MainTabWindow_CultivarRegistry OpenRegistry()
         {
             MainButtonDef button = DefDatabase<MainButtonDef>.GetNamedSilentFail("HNS_CultivarRegistry");

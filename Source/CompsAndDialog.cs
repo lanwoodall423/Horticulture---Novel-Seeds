@@ -156,12 +156,14 @@ namespace HorticultureNovelSeeds
             crossPollinationParentVarietyId = null;
         }
 
-        private void RequestSaveSeeds()
+        private void RequestSaveSeeds()=>TryRequestSaveSeeds();
+
+        internal bool TryRequestSaveSeeds()
         {
             Plant plant = parent as Plant;
-            if (!PendingDiscovery || plant?.Spawned != true || plant.Growth < 0.999f || plant.Blighted)
+            if (!PendingDiscovery || plant?.Spawned != true || plant.Growth < 0.999f || plant.Blighted || SaveSeedsRequested)
             {
-                return;
+                return false;
             }
 
             saveSeedsRequested = true;
@@ -171,6 +173,7 @@ namespace HorticultureNovelSeeds
             {
                 designations.AddDesignation(new Designation(plant, designationDef));
             }
+            FieldGuideIndex.RequestRefresh();return true;
         }
 
         public override IEnumerable<Gizmo> CompGetGizmosExtra()
