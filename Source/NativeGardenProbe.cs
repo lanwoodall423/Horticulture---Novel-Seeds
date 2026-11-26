@@ -156,6 +156,7 @@ namespace HorticultureNovelSeeds
                 CanopyArchitectureExperiment.Enabled=architectureGarden;
                 if(architectureGarden)
                 {
+                    CanopyArchitectureExperiment.DiagnosticRoot=root;
                     previousArchitectureWind=Prefs.PlantWindSway;Prefs.PlantWindSway=false;
                     var defs=DefDatabase<VarietyTraitDef>.AllDefsListForReading.Where(t=>CanopyArchitectureMath.Valid(t.canopyArchitecture)).ToList();
                     Require(defs.Count==5 && defs.All(t=>t.commonality==0f && TraitAppearanceCatalog.TryGet(t,out _)),"five neutral architecture alleles");
@@ -577,9 +578,10 @@ namespace HorticultureNovelSeeds
                 Require(inventory.Where(r=>r.Cultivar==null).All(r=>Backend(r.Plant)=="Vanilla"),"six original controls");
                 Require(styled.All(r=>Backend(r.Plant)=="Modular canopy planes"||Backend(r.Plant)=="Architecture unavailable, original path"),"every architecture case accounted for");
                 Require(CanopyArchitectureExperiment.PrintedPlants.Count>=15,"at least 15 actual modular variants");
+                Require(Directory.GetFiles(root,"HNS-garden-module-*.png").Length==CanopyArchitectureExperiment.PreparedCount,"same-source module diagnostics");
                 Require(CanopyArchitectureExperiment.PlaneCounts.Values.All(n=>n>0&&n<=5),"bounded extra planes");
                 Require(WaylithPhenotypeShader.MaterialCount==0&&WaylithPhenotypeShader.MaskCount==0,"original shader and no GPU masks");
-                File.WriteAllLines(Path.Combine(root,"HNS-garden-architecture-preparation.tsv"),new[]{"Species\tVariation\tTexture\tWidth\tHeight\tLeaf W\tLeaf H\tFruit W\tFruit H\tAnchors"}.Concat(CanopyArchitectureExperiment.Preparation));
+                File.WriteAllLines(Path.Combine(root,"HNS-garden-architecture-preparation.tsv"),new[]{"Species\tVariation\tTexture\tWidth\tHeight\tLeaf W\tLeaf H\tFruit W\tFruit H\tAnchors\tReconstructed pixels\tUnreached reproductive pixels"}.Concat(CanopyArchitectureExperiment.Preparation));
                 File.WriteAllLines(Path.Combine(root,"HNS-garden-architecture.tsv"),new[]{"Panel\tRow\tColumn\tSpecies\tPlant ID\tTrait\tRenderer\tAdditional planes"}.Concat(inventory.Select(r=>string.Join("\t",r.Panel,r.RowNumber,r.Column,r.Plant.def.defName,r.Plant.thingIDNumber,r.Cultivar?.traits.Single().defName??"Control",Backend(r.Plant),CanopyArchitectureExperiment.PlaneCounts.TryGetValue(r.Plant.thingIDNumber,out int n)?n:0))));
                 Log.Message("[HNS Architecture] rendered="+CanopyArchitectureExperiment.PrintedPlants.Count+"; fallback="+(styled.Count-CanopyArchitectureExperiment.PrintedPlants.Count)+"; source modules="+CanopyArchitectureExperiment.PreparedCount+"; materials="+CanopyArchitectureExperiment.MaterialCount+"; additional planes="+CanopyArchitectureExperiment.PlaneCounts.Values.Sum());return;
             }

@@ -10,12 +10,12 @@ namespace HorticultureNovelSeeds
     {
         internal static bool Valid(CanopyArchitectureKind k)=>k>=CanopyArchitectureKind.ForkedCrown&&k<=CanopyArchitectureKind.AbundantClusters;
         internal readonly record struct Bounds(int X,int Y,int W,int H);
-        internal sealed record Module(Pixel[] Pixels,Bounds Box);
+        internal sealed record Module(Pixel[] Pixels,Bounds Box,int Reconstructed=0,int RemainingOcclusion=0);
         internal sealed record Parts(Bounds Body,Module Leaves,Module Fruit,(float X,float Y)[] Anchors);
         // Placement is normalized to the visible source silhouette, not its
         // transparent margins. Each module retains the source artwork.
         internal readonly record struct Placement(bool Fruit,float X,float Y,float Scale,float Angle,bool Front);
-        internal static Parts Extract(Pixel[] p,int w,int h)
+        internal static Parts Extract(Pixel[] p,int w,int h,bool repairOcclusion=true)
         {
             if(w<16||h<16||p.Length!=w*h)return null;
             var body=Enumerable.Range(0,p.Length).Where(i=>p[i].A>=100).ToArray();
@@ -30,6 +30,11 @@ namespace HorticultureNovelSeeds
             var greens=body.Where(i=>BotanicalDetailMath.Green(p[i])).ToArray();
             if(greens.Length<24)return null;
             var leafset=greens.Where(i=>i/w>=b.Y+b.H*.27f).ToArray();
+            if(repairOcclusion)
+            {
+                var clean=leafset.Where(i=>!OrganSpriteMath.Reproductive(p[i])).ToArray();
+                if(clean.Length>=24)leafset=clean;
+            }
             Module Crop(IEnumerable<int> source,bool leaf)
             {
                 var selected=new HashSet<int>(source);
@@ -45,11 +50,76 @@ namespace HorticultureNovelSeeds
                         if(leaf ? c.G>=c.R*.86f&&c.G>=c.B*.98f&&!OrganSpriteMath.Reproductive(c) :
                             c.R>=c.G*.83f&&Math.Abs(c.R-p[i].R)+Math.Abs(c.G-p[i].G)+Math.Abs(c.B-p[i].B)<175)selected.Add(j);
                     }
+                var reconstructed=new Dictionary<int,Pixel>();
+                int unresolved=0;
+                if(leaf&&repairOcclusion)
+                {
+                    // Recover attached opaque crown tissue; never traverse air.
+                    int floorY=(int)MathF.Ceiling(b.Y+b.H*.27f);
+                    int limit=Math.Clamp((int)MathF.Ceiling(Math.Max(b.W,b.H)*.40f),6,128);
+                    var owner=new int[p.Length];Array.Fill(owner,-1);
+                    var distance=new int[p.Length];Array.Fill(distance,int.MaxValue);
+                    var queue=new Queue<int>();
+                    foreach(int i in selected.OrderBy(i=>i))
+                    {
+                        if(p[i].A<90||i/w<floorY-1)continue;
+                        owner[i]=i;distance[i]=0;queue.Enqueue(i);
+                    }
+                    var directions=new[]{(-1,0),(1,0),(0,-1),(0,1)};
+                    while(queue.Count>0)
+                    {
+                        int i=queue.Dequeue();if(distance[i]>=limit)continue;
+                        int x=i%w,y=i/w;
+                        foreach(var (dx,dy) in directions)
+                        {
+                            int xx=x+dx,yy=y+dy;if(xx<0||xx>=w||yy<floorY||yy>=h)continue;
+                            int j=yy*w+xx;
+                            if(p[j].A<90||owner[j]>=0)continue;
+                            owner[j]=owner[i];distance[j]=distance[i]+1;queue.Enqueue(j);
+                        }
+                    }
+                    float Lum(Pixel c)=>.299f*c.R+.587f*c.G+.114f*c.B;
+                    for(int y=floorY;y<h;y++)for(int x=0;x<w;x++)
+                    {
+                        int i=y*w+x;if(p[i].A<90||selected.Contains(i))continue;
+                        if(owner[i]<0){if(OrganSpriteMath.Reproductive(p[i]))unresolved++;continue;}
+                        var original=p[i];
+                        // Blend locally propagated foliage colors and retain
+                        // restrained original shading, never fruit hue.
+                        float rr=0,gg=0,bb=0,total=0;
+                        for(int dy=-2;dy<=2;dy++)for(int dx=-2;dx<=2;dx++)
+                        {
+                            int xx=x+dx,yy=y+dy;if(xx<0||xx>=w||yy<floorY-1||yy>=h)continue;
+                            int j=yy*w+xx;if(owner[j]<0)continue;
+                            var c=p[owner[j]];float weight=1f/(1+dx*dx+dy*dy);
+                            rr+=c.R*weight;gg+=c.G*weight;bb+=c.B*weight;total+=weight;
+                        }
+                        if(total<=0)continue;
+                        rr/=total;gg/=total;bb/=total;
+                        float reference=.299f*rr+.587f*gg+.114f*bb;
+                        float shade=Math.Clamp(.85f+.20f*(Lum(original)/Math.Max(15f,reference)),.78f,1.17f);
+                        byte C(float v)=>(byte)Math.Clamp((int)MathF.Round(v*shade),0,255);
+                        reconstructed[i]=new Pixel(C(rr),C(gg),C(bb),original.A);
+                    }
+                    foreach(int i in reconstructed.Keys)selected.Add(i);
+                    // Recover antialiasing only where source alpha exists.
+                    foreach(int i in reconstructed.Keys.ToArray())
+                    {
+                        int x=i%w,y=i/w;
+                        for(int dy=-1;dy<=1;dy++)for(int dx=-1;dx<=1;dx++)
+                        {
+                            int xx=x+dx,yy=y+dy;if(xx<0||xx>=w||yy<floorY||yy>=h)continue;
+                            int j=yy*w+xx;if(p[j].A==0||p[j].A>=90||selected.Contains(j))continue;
+                            var c=reconstructed[i];
+                            reconstructed[j]=new Pixel(c.R,c.G,c.B,p[j].A);selected.Add(j);
+                        }
+                    }
+                }
                 var box=Box(selected);
                 if(box.W<2||box.H<2)return null;
                 var pixels=new Pixel[box.W*box.H];
-                foreach(int i in selected)pixels[(i/w-box.Y)*box.W+i%w-box.X]=p[i];
-                return new(pixels,box);
+                foreach(int i in selected)pixels[(i/w-box.Y)*box.W+i%w-box.X]=reconstructed.TryGetValue(i,out var value)?value:p[i];
+                return new(pixels,box,reconstructed.Count,unresolved);
             }
             var leaves=Crop(leafset,true);
             var fruitMask=p.Select(OrganSpriteMath.Reproductive).ToArray();

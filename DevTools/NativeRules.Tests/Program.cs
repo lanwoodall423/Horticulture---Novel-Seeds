@@ -131,3 +131,29 @@ Require(SurfaceFinishMath.Environment(.5f,1f,.01f).Rain==.03125f,"quantized weat
     Require(CanopyArchitectureMath.Extract(new OrganSpriteMath.Pixel[n*n],n,n)==null,"no modules on empty sprite");
     Require(CanopyArchitectureMath.Recipe(CanopyArchitectureKind.FlowerSpray,parts with {Fruit=null}).Length==0,"missing fruit falls back");
 }
+
+{
+    const int n=64;var p=new OrganSpriteMath.Pixel[n*n];
+    var green=new OrganSpriteMath.Pixel(38,138,46,255);
+    var fruit=new OrganSpriteMath.Pixel(216,172,30,255);
+    for(int y=10;y<52;y++)for(int x=14;x<48;x++)p[y*n+x]=green;
+    for(int y=29;y<42;y++)for(int x=23;x<32;x++)p[y*n+x]=fruit;
+    for(int y=35;y<39;y++)for(int x=38;x<43;x++)p[y*n+x]=default;
+    for(int y=34;y<39;y++)for(int x=53;x<58;x++)p[y*n+x]=fruit;
+    var original=(OrganSpriteMath.Pixel[])p.Clone();
+    var before=CanopyArchitectureMath.Extract(p,n,n,false);
+    var after=CanopyArchitectureMath.Extract(p,n,n,true);
+    OrganSpriteMath.Pixel At(CanopyArchitectureMath.Module m,int x,int y)
+    {
+        var b=m.Box;
+        return x<b.X||x>=b.X+b.W||y<b.Y||y>=b.Y+b.H?default:m.Pixels[(y-b.Y)*b.W+x-b.X];
+    }
+    Require(At(before.Leaves,27,35).A==0,"legacy extraction exposes fruit-shaped hole");
+    Require(Enumerable.Range(29,13).All(y=>Enumerable.Range(23,9).All(x=>{var c=At(after.Leaves,x,y);return c.A==255&&c.G>c.R&&c.G>c.B;})),"embedded organ is reconstructed as green foliage");
+    Require(At(after.Leaves,40,36).A==0,"real transparent window preserved");
+    Require(At(after.Leaves,55,36).A==0,"detached organ not connected to canopy");
+    Require(Enumerable.Range(0,n*n).All(i=>At(after.Leaves,i%n,i/n).A<=p[i].A),"never adds alpha beyond original silhouette");
+    Require(after.Leaves.Reconstructed>=117&&after.Leaves.RemainingOcclusion>=25,"reconstruction and conservative exclusion measured");
+    Require(p.SequenceEqual(original),"source artwork untouched");
+    Require(before.Fruit.Box==after.Fruit.Box&&before.Fruit.Pixels.SequenceEqual(after.Fruit.Pixels),"independent reproductive module unchanged");
+}

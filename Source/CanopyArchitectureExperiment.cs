@@ -22,6 +22,7 @@ namespace HorticultureNovelSeeds
         internal static readonly HashSet<int> PrintedPlants=new(),FallbackPlants=new();
         internal static readonly Dictionary<int,int> PlaneCounts=new();
         internal static readonly List<string> Preparation=new();
+        internal static string DiagnosticRoot;
 #endif
         internal static CanopyArchitectureKind Resolve(CompPlantVariety comp)
         {
@@ -49,7 +50,33 @@ namespace HorticultureNovelSeeds
             }
             prepared.Add(key,new(parts,w,h,Make(parts.Leaves,"Leaves"),Make(parts.Fruit,"Fruit")));
 #if HNS_NATIVE_FIXTURE
-            Preparation.Add(string.Join("\t",def.defName,variation,source.name,w,h,parts.Leaves.Box.W,parts.Leaves.Box.H,parts.Fruit?.Box.W??0,parts.Fruit?.Box.H??0,parts.Anchors.Length));
+            Preparation.Add(string.Join("\t",def.defName,variation,source.name,w,h,parts.Leaves.Box.W,parts.Leaves.Box.H,parts.Fruit?.Box.W??0,parts.Fruit?.Box.H??0,parts.Anchors.Length,parts.Leaves.Reconstructed,parts.Leaves.RemainingOcclusion));
+            // Test-only diagnostic: the same source sprite and both extracted
+            // modules at their original UV coordinates. No scene image retouch.
+            if(!string.IsNullOrEmpty(DiagnosticRoot))
+            {
+                var legacy=CanopyArchitectureMath.Extract(p,w,h,false);
+                if(legacy?.Leaves!=null)
+                {
+                    var strip=new Color32[3*w*h];
+                    void Put(OrganSpriteMath.Pixel c,int x,int y,int column)
+                    {strip[y*3*w+x+column*w]=new Color32(c.R,c.G,c.B,c.A);}
+                    for(int y=0;y<h;y++)for(int x=0;x<w;x++)Put(p[y*w+x],x,y,0);
+                    void Place(CanopyArchitectureMath.Module m,int column)
+                    {
+                        var b=m.Box;
+                        for(int y=0;y<b.H;y++)for(int x=0;x<b.W;x++)Put(m.Pixels[y*b.W+x],x+b.X,y+b.Y,column);
+                    }
+                    Place(legacy.Leaves,1);Place(parts.Leaves,2);
+                    var image=new Texture2D(3*w,h,TextureFormat.RGBA32,false);
+                    try
+                    {
+                        image.SetPixels32(strip);image.Apply();
+                        System.IO.File.WriteAllBytes(System.IO.Path.Combine(DiagnosticRoot,"HNS-garden-module-"+def.defName+"-"+variation+".png"),image.EncodeToPNG());
+                    }
+                    finally{UnityEngine.Object.Destroy(image);}
+                }
+            }
 #endif
         }
         private static Material ModuleMaterial(Material source,Texture2D tex)
