@@ -21,4 +21,14 @@
       <renderQueue>2900</renderQueue>
     </shaderProgram>
   </ShaderDef>
+  <ShaderDef>
+    <defName>HNS_BotanicalNight</defName>
+    <shaderProgram>
+      <vertexShaderFileName>PlantWindSway.vert.glsl</vertexShaderFileName>
+      <fragmentShaderFileName>HNS_BotanicalNight.frag.glsl</fragmentShaderFileName>
+      <blendMode>Additive</blendMode>
+      <depthWrite>false</depthWrite>
+      <renderQueue>3151</renderQueue>
+    </shaderProgram>
+  </ShaderDef>
 </Defs>

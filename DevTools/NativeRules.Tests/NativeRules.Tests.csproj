@@ -12,5 +12,6 @@
     <Compile Include="../../Source/DevelopmentalPhenotype.cs" Link="DevelopmentalPhenotype.cs" />
     <Compile Include="../../Source/WindHabitMath.cs" Link="WindHabitMath.cs" />
     <Compile Include="../../Source/SurfaceFinishMath.cs" Link="SurfaceFinishMath.cs" />
+    <Compile Include="../../Source/BotanicalDetailMath.cs" Link="BotanicalDetailMath.cs" />
   </ItemGroup>
 </Project>

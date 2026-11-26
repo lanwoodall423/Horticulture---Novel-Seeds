@@ -774,4 +774,60 @@
     <exclusionTags><li>surfaceFinish</li></exclusionTags>
     <surfaceFinish>PearlCuticle</surfaceFinish>
   </HorticultureNovelSeeds.VarietyTraitDef>
+  <!-- Experimental topology, new structures and post-light details. -->
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_LobedLeaf</defName>
+    <label>Lobed Leaf</label>
+    <description>Rounded notches along the existing foliage silhouette.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>LobedLeaf</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_Windowleaf</defName>
+    <label>Windowleaf</label>
+    <description>Small natural openings in broad leaf tissue.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>Windowleaf</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_SideShoots</defName>
+    <label>Side Shoots</label>
+    <description>Additional small branches and leaflets emerging from the canopy.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>SideShoots</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_CurlingTendrils</defName>
+    <label>Curling Tendrils</label>
+    <description>Fine curling stems extending from the existing plant.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>CurlingTendrils</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_LanternBuds</defName>
+    <label>Lantern Buds</label>
+    <description>Localized reproductive or leaf-tip luminescence visible in darkness.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>LanternBuds</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
 </Defs>

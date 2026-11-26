@@ -95,3 +95,22 @@ Require(SurfaceFinishMath.Environment(.375f,1f,0f).X<0f && SurfaceFinishMath.Env
 Require(SurfaceFinishMath.Environment(.5f,1f,.8f)==(0f,1f,1f,1f),"rain and light bounded");
 Require(SurfaceFinishMath.Environment(float.NaN,float.NaN,float.NaN)==(0f,1f,0f,0f),"invalid environment finite");
 Require(SurfaceFinishMath.Environment(.5f,1f,.01f).Rain==.03125f,"quantized weather state");
+
+// Topological additions and cuts on a synthetic crop with untouched red fruit.
+{
+    const int w=64,h=64;
+    var source=new OrganSpriteMath.Pixel[w*h];
+    var green=new OrganSpriteMath.Pixel(50,150,55,255);
+    var red=new OrganSpriteMath.Pixel(190,35,43,255);
+    for(int y=13;y<47;y++)for(int x=17;x<47;x++)source[y*w+x]=green;
+    for(int y=31;y<36;y++)for(int x=29;x<34;x++)source[y*w+x]=red;
+    foreach(var k in Enum.GetValues<BotanicalDetailKind>().Where(BotanicalDetailMath.Topology))
+    {
+        var result=BotanicalDetailMath.Edit(source,w,h,k);
+        Require(result.Removed+result.Added>0,k+" changes topology");
+        Require(source.Select((p,i)=>(p,i)).Where(q=>q.p==red).All(q=>result.Pixels[q.i]==red),k+" retains fruit");
+        Require(k==BotanicalDetailKind.LobedLeaf||k==BotanicalDetailKind.Windowleaf?result.Removed>0&&result.Added==0:result.Added>0&&result.Removed==0,k+" changes only intended alpha");
+    }
+    Require(BotanicalDetailMath.Edit(new OrganSpriteMath.Pixel[w*h],w,h,BotanicalDetailKind.SideShoots).Added==0,"no floating shoots on empty art");
+    Require(BotanicalDetailMath.Darkness(1f)==0f&&BotanicalDetailMath.Darkness(.1f)==1f&&BotanicalDetailMath.Darkness(float.NaN)==0f,"day/night emission bounded");
+}

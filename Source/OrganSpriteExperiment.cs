@@ -70,7 +70,7 @@ namespace HorticultureNovelSeeds
                 tex.Apply(true,true);textures.Add(key,tex);
             }
         }
-        private static Color32[] Read(Texture2D source,int w,int h)
+        internal static Color32[] Read(Texture2D source,int w,int h)
         {
             RenderTexture previous=RenderTexture.active;
             RenderTexture temporary=RenderTexture.GetTemporary(w,h,0,RenderTextureFormat.ARGB32);

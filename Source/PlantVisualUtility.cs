@@ -32,7 +32,8 @@ namespace HorticultureNovelSeeds
             // Snow-overlay alignment and independently transformed mask layers
             // are deliberately outside this initial form proof.
             var form = wantSnowOverlay ? default : PlantFormMesh.Resolve(comp);
-            var organ = wantSnowOverlay || procedural || wind || surface || !visual.IsDefault || NovelSeedUtility.HasRegionalPlantColor(comp) ? OrganFormKind.None : OrganSpriteExperiment.Resolve(comp);
+            var detail=wantSnowOverlay||procedural||wind||surface||!visual.IsDefault||NovelSeedUtility.HasRegionalPlantColor(comp)||form.Valid?BotanicalDetailKind.None:BotanicalDetailExperiment.Resolve(comp);
+            var organ = detail!=BotanicalDetailKind.None || wantSnowOverlay || procedural || wind || surface || !visual.IsDefault || NovelSeedUtility.HasRegionalPlantColor(comp) ? OrganFormKind.None : OrganSpriteExperiment.Resolve(comp);
             Rand.PushState();
             Rand.Seed = plant.Position.GetHashCode();
             try
@@ -70,8 +71,11 @@ namespace HorticultureNovelSeeds
                     }
                     variationIndex = PlantMaskUtility.VariationIndexForTexture(plant.def, material?.mainTexture, variationIndex);
 
+                    Material originalMaterial=material;
                     Vector2[] uvs = null;
-                    if (OrganSpriteExperiment.TryMaterial(plant,material,organ,out var organMaterial))
+                    if(BotanicalDetailExperiment.TryMaterial(plant,material,detail,out var detailMaterial))
+                    { material=detailMaterial; PlantUtility.SetWindExposureColors(WorkingColors,plant); }
+                    else if (OrganSpriteExperiment.TryMaterial(plant,material,organ,out var organMaterial))
                     {
                         material=organMaterial;
                         PlantUtility.SetWindExposureColors(WorkingColors,plant);
@@ -89,6 +93,7 @@ namespace HorticultureNovelSeeds
                     }
 
                     PlantFormMesh.Print(plant, layer, adjustedCenter, planeSize, material, rotation, flipped, uvs, WorkingColors, Plant.TopVerticesAltitudeBias, plant.HashOffset() % 1024, form);
+                    BotanicalDetailExperiment.PrintGlow(plant,layer,originalMaterial,detail,adjustedCenter,planeSize,rotation,flipped,WorkingColors);
 
                     if (wantSnowOverlay && snowMaterial != null)
                     {
