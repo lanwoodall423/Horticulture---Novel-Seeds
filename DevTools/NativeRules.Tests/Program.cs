@@ -425,3 +425,24 @@ Require(SurfaceFinishMath.Environment(.5f,1f,.01f).Rain==.03125f,"quantized weat
         Require(!frames[0].SequenceEqual(frames[8])&&Enumerable.Range(1,8).Count(i=>!frames[i].SequenceEqual(frames[i-1]))>=6,"distinct progressive developmental frames");
     }
 }
+
+{
+    Require(Enum.GetValues<BotanicalDetailKind>().Count(SculptureMath.ForgeValid)==20,"twenty independent forge traits");
+    const int w=64,h=64;var art=new OrganSpriteMath.Pixel[w*h];
+    for(int y=6;y<54;y++)for(int x=8;x<56;x++)
+        if((x-31)*(x-31)/390f+(y-30)*(y-30)/520f<1)
+            art[y*w+x]=new((byte)(45+x/3),(byte)(106+y),(byte)(32+x/4),255);
+    for(int y=39;y<47;y++)for(int x=25;x<32;x++)art[y*w+x]=new(229,182,48,255);
+    var a=LifeSuiteMath.Analyze(art,w,h);Require(a!=null&&a.Organs>0,"forge source anatomy");
+    int W=SculptureMath.Side(w),H=SculptureMath.Side(h),ox=(W-w)/2,oy=(H-h)/2;
+    var finalFrames=new List<OrganSpriteMath.Pixel[]>();
+    for(int mode=26;mode<=45;mode++)
+    {
+        var frames=Enumerable.Range(0,9).Select(f=>SculptureMath.Frame(art,w,h,a,mode,f)).ToArray();
+        Require(frames.All(f=>f!=null&&f.Length==W*H),"forge "+mode+" padded frames");
+        Require(frames.All(f=>Enumerable.Range(0,art.Length).All(i=>art[i].A==0||f[(i/w+oy)*W+i%w+ox].A==art[i].A&&(f[(i/w+oy)*W+i%w+ox]==art[i]||SculptureMath.ForgeTintAllowed(mode,a,art[i],i)))),"forge "+mode+" protected source RGBA");
+        Require(Enumerable.Range(1,8).Count(i=>!frames[i].SequenceEqual(frames[i-1]))>=3,"forge "+mode+" varied phase frames");
+        Require(finalFrames.All(f=>!f.SequenceEqual(frames[8])),"forge "+mode+" distinct final phenotype");
+        finalFrames.Add(frames[8]);
+    }
+}

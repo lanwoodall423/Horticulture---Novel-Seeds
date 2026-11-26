@@ -1558,4 +1558,224 @@
     <exclusionTags><li>botanicalDetail</li></exclusionTags>
     <botanicalDetail>CrestedFan</botanicalDetail>
   </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_BanyanProps</defName>
+    <label>Banyan Props</label>
+    <description>Lateral branches develop descending adventitious support roots.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>BanyanProps</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_CandelabraTips</defName>
+    <label>Candelabra Tips</label>
+    <description>Sweeping lower arms develop a succession of upright reproductive apices.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>CandelabraTips</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_StolonDaughters</defName>
+    <label>Stolon Daughters</label>
+    <description>Low creeping stolons develop miniature source-derived daughter plants.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>StolonDaughters</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_BraidedLeaders</defName>
+    <label>Braided Leaders</label>
+    <description>Two secondary leaders cross in alternating layers and bear alternating leaves.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>BraidedLeaders</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_WingedPetioles</defName>
+    <label>Winged Petioles</label>
+    <description>Leaf stalks bear paired lateral blade expansions and an extended terminal blade.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>WingedPetioles</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_PitcherLeaves</defName>
+    <label>Pitcher Leaves</label>
+    <description>Secondary leaf organs develop tubular bodies, shaded throats and flared rims.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>PitcherLeaves</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_HoodedSpathes</defName>
+    <label>Hooded Spathes</label>
+    <description>Leaf hoods part around source-derived reproductive tissue.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>HoodedSpathes</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_EpiphyllousBloom</defName>
+    <label>Epiphyllous Bloom</label>
+    <description>Additional reproductive organs form directly along secondary leaf blades.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>EpiphyllousBloom</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_ScalePhyllotaxis</defName>
+    <label>Scale Phyllotaxis</label>
+    <description>Overlapping scale leaves emerge in a rotating apical rosette.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>ScalePhyllotaxis</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_SerratedLamina</defName>
+    <label>Serrated Lamina</label>
+    <description>New compound leaves develop a toothed margin of overlapping lobes.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>SerratedLamina</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_DehiscentCapsules</defName>
+    <label>Dehiscent Capsules</label>
+    <description>Split pod valves part to expose a central column of decorative seeds.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>DehiscentCapsules</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_WingedSamaras</defName>
+    <label>Winged Samaras</label>
+    <description>Paired winged diaspores extend and change their projected angle.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>WingedSamaras</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_AntherEmergence</defName>
+    <label>Anther Emergence</label>
+    <description>Individual filaments extend from source-derived reproductive structures.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>AntherEmergence</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_PetaloidDoubling</defName>
+    <label>Petaloid Doubling</label>
+    <description>An outer whorl of source-derived reproductive stamps expands around a central organ.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>PetaloidDoubling</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_SeedShedding</defName>
+    <label>Seed Shedding</label>
+    <description>Decorative seed particles descend from attached reproductive appendages.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>SeedShedding</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_PrismaticLamina</defName>
+    <label>Prismatic Lamina</label>
+    <description>Localized foliage territories show angle-dependent thin-film-like color.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>PrismaticLamina</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_RollingLamina</defName>
+    <label>Rolling Lamina</label>
+    <description>Additional leaf blades unfurl from a narrow back-facing roll into broader faces.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>RollingLamina</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_AmberResin</defName>
+    <label>Amber Resin</label>
+    <description>Amber droplets elongate from petiole junctions with localized glossy highlights.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>AmberResin</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_ExfoliatingBark</defName>
+    <label>Exfoliating Bark</label>
+    <description>Muted curled bark-like ribbons extend from the base.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>ExfoliatingBark</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_SelfShadowLace</defName>
+    <label>Self-Shadow Lace</label>
+    <description>A moving light angle projects the source silhouette onto selected foliage regions.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>SelfShadowLace</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
 </Defs>

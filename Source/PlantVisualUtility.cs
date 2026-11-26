@@ -83,7 +83,7 @@ namespace HorticultureNovelSeeds
                     if(ResponsiveHabitExperiment.TryMaterial(plant,material,pose,flipped,out var poseMaterial))
                     { material=poseMaterial; PlantUtility.SetWindExposureColors(WorkingColors,plant); comp?.VisualObservation?.AddPose(pose,material,plant.HashOffset()%1024); }
                     else if(LifeSuiteExperiment.TryMaterial(plant,material,detail,flipped,WorkingColors,out var lifeMaterial))
-                    {material=lifeMaterial;if(SculptureMath.Valid(detail))planeSize*=SculptureMath.Expansion;else LifeSuiteExperiment.PrintExtra(plant,layer,originalMaterial,detail,adjustedCenter,planeSize,rotation,flipped,WorkingColors);}
+                    {material=lifeMaterial;if(SculptureMath.Valid(detail)||SculptureMath.ForgeValid(detail))planeSize*=SculptureMath.Expansion;else LifeSuiteExperiment.PrintExtra(plant,layer,originalMaterial,detail,adjustedCenter,planeSize,rotation,flipped,WorkingColors);}
                     else if(VascularExperiment.TryMaterial(plant,material,detail,out var tissueMaterial))
                     {material=tissueMaterial;PlantUtility.SetWindExposureColors(WorkingColors,plant);comp?.VisualObservation?.AddTissue(detail,material);}
                     else if(BotanicalDetailExperiment.TryMaterial(plant,material,detail,out var detailMaterial))

@@ -11,6 +11,9 @@ namespace HorticultureNovelSeeds
     {
         internal static bool Enabled {get;set;}
         internal static bool SculptureEnabled {get;set;}
+        internal static bool ForgeEnabled {get;set;}
+        private static long forgeAtlasBytes;
+        private const long ForgeBudget=192L*1024*1024;
         internal const string ShaderName="HNS_LifeSuite",OverlayShader="HNS_LifeSuiteGlow";
         private sealed record Prepared(Texture2D Mask,LifeSuiteMath.Anatomy Anatomy,Dictionary<int,Texture2D> Atlases);
         private static readonly Dictionary<Texture,Prepared> prepared=new();
@@ -32,15 +35,16 @@ namespace HorticultureNovelSeeds
             string label=PlantMaskUtility.VariationLabel(def,variation)??"";
             if(label.Contains("Leafless",StringComparison.OrdinalIgnoreCase))return;
             int w=source.width,h=source.height;
-            if(w<16||h<16||w>256||h>256)return;
+            if(w<16||h<16||w>256||h>256||ForgeEnabled&&(w>128||h>128))return;
             var pixels=OrganSpriteExperiment.Read(source,w,h).Select(c=>new OrganSpriteMath.Pixel(c.r,c.g,c.b,c.a)).ToArray();
             var a=LifeSuiteMath.Analyze(pixels,w,h);if(a==null)return;
             var mask=new Texture2D(w,h,TextureFormat.RGBA32,false,true){name=source.name+"_HNS_LifeAnatomy",filterMode=FilterMode.Point,wrapMode=TextureWrapMode.Clamp};
             mask.SetPixels32(a.Mask.Select(c=>new Color32(c.R,c.G,c.B,c.A)).ToArray());mask.Apply(false,true);
             var atlases=new Dictionary<int,Texture2D>();
-            foreach(int mode in SculptureEnabled?new[]{21,22,23,24,25}:new[]{2,11,19})
+            foreach(int mode in ForgeEnabled?Enumerable.Range(26,20).ToArray():SculptureEnabled?new[]{21,22,23,24,25}:new[]{2,11,19})
             {
                 int aw=SculptureEnabled?SculptureMath.Side(w):w,ah=SculptureEnabled?SculptureMath.Side(h):h;
+                long bytes=36L*aw*ah;if(ForgeEnabled&&forgeAtlasBytes+bytes>ForgeBudget)break;
                 var cells=new Color32[9*aw*ah];int changed=0,unique=0;var previous=new List<OrganSpriteMath.Pixel[]>();
                 for(int f=0;f<9;f++)
                 {
@@ -51,7 +55,13 @@ namespace HorticultureNovelSeeds
                     {
                         int ox=(aw-w)/2,oy=(ah-h)/2;
                         for(int y=0;y<h;y++)for(int x=0;x<w;x++)
-                            if(pixels[y*w+x].A>0&&frame[(y+oy)*aw+x+ox]!=pixels[y*w+x])throw new InvalidOperationException("Sculpture changed original foreground");
+                        {
+                            int i=y*w+x;var original=pixels[i];var revised=frame[(y+oy)*aw+x+ox];
+                            if(original.A==0)continue;
+                            if(revised.A!=original.A||revised!=original&&!SculptureMath.ForgeTintAllowed(mode,a,original,i))
+                                throw new InvalidOperationException("Sculpture changed protected source foreground");
+                            if(revised!=original)changed++;
+                        }
                         changed+=frame.Count(p=>p.A>0)-pixels.Count(p=>p.A>0);
                     }
                     for(int y=0;y<ah;y++)for(int x=0;x<aw;x++)
@@ -65,9 +75,10 @@ namespace HorticultureNovelSeeds
                         cells[(y+f/3*ah)*3*aw+x+f%3*aw]=new(c.R,c.G,c.B,c.A);
                     }
                 }
-                if(changed<12||unique<2)continue;
+                if(changed<12||unique<2||ForgeEnabled&&unique<2)continue;
                 var atlas=new Texture2D(aw*3,ah*3,TextureFormat.RGBA32,false){name=source.name+"_HNS_LifeAtlas_"+mode,filterMode=source.filterMode,wrapMode=TextureWrapMode.Clamp};
                 atlas.SetPixels32(cells);atlas.Apply(false,true);atlases.Add(mode,atlas);
+                if(ForgeEnabled)forgeAtlasBytes+=bytes;
 #if HNS_NATIVE_FIXTURE
                 Preparation.Add(string.Join("\t",def.defName,variation,source.name,mode,a.Leaves,a.Organs,a.OrganPixels,unique,changed));
 #endif
@@ -129,11 +140,11 @@ namespace HorticultureNovelSeeds
         }
         internal static bool TryMaterial(Plant p,Material source,BotanicalDetailKind kind,bool flipped,Color32[] colors,out Material mat)
         {
-            mat=null;if(!Enabled||(SculptureEnabled?!SculptureMath.Valid(kind):!LifeSuiteMath.Valid(kind)))return false;
-            int mode=SculptureEnabled?SculptureMath.Mode(kind):LifeSuiteMath.Mode(kind);
+            mat=null;if(!Enabled||(ForgeEnabled?!SculptureMath.ForgeValid(kind):SculptureEnabled?!SculptureMath.Valid(kind):!LifeSuiteMath.Valid(kind)))return false;
+            int mode=ForgeEnabled?SculptureMath.ForgeMode(kind):SculptureEnabled?SculptureMath.Mode(kind):LifeSuiteMath.Mode(kind);
             if(source==null||source.shader!=ShaderDatabase.CutoutPlant||!source.HasProperty("_FallBehaviorEnabled")||source.GetFloat("_FallBehaviorEnabled")!=0f||
                 source.mainTextureScale!=Vector2.one||source.mainTextureOffset!=Vector2.zero||!prepared.TryGetValue(source.mainTexture,out var a)||
-                (LifeSuiteMath.NeedsOrgan(mode)&&a.Anatomy.Organs==0)||((mode==11||mode==19||mode>=21)&&!a.Atlases.ContainsKey(mode))||(mode is 23 or 24 or 25)&&a.Anatomy.Organs==0)
+                (LifeSuiteMath.NeedsOrgan(mode)&&a.Anatomy.Organs==0)||((mode==11||mode==19||mode>=21)&&!a.Atlases.ContainsKey(mode))||(mode is 23 or 24 or 25 or 27 or 29 or 32 or 33 or 34 or 38 or 39 or 40)&&a.Anatomy.Organs==0)
             {
 #if HNS_NATIVE_FIXTURE
                 Prints.Remove(p.thingIDNumber);Fallback.Add(p.thingIDNumber);
