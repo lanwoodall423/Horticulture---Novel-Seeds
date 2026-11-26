@@ -1136,3 +1136,34 @@ Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/9cf2b
 Reproduce with RimWorld closed:
 
     powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -MosaicGarden
+
+### Contextual botany: neighbor-responsive architecture
+
+Five additional zero-weight cosmetic candidates: Gap Seeker, Companion Bow,
+Crown Partition, Stand Spire and Free Rosette. The opted-in plant samples
+two adjacent lateral cells and quantized neighbor growth. Spawn/despawn
+events dirty only adjacent opted-in meshes; growth-band changes also have
+an invalidation hook. World-direction deformation of the original native
+sprite grid keeps the root row anchored and retains native materials,
+UVs and wind payload. No custom texture or material required.
+
+Source 99b63255c43164083ede53c7d906f3c742e4f42c, AllPerformance run
+f03590d1af094b39b3936df7d7ed16af (RimWorld 1.7.5014 rev1195):
+all eight stages passed, same 18 subjects across isolated, left-neighbor,
+right-neighbor, both-neighbor and isolated-again states. 75 validated
+contextual mesh states, 75 grid prints, 1,875 vertices, 120 automatic
+invalidations; three vanilla controls. No custom shader materials or masks.
+Both builds and geometry rule tests passed. Normal saves, config and
+preferences unchanged; test process and package cleaned up.
+
+The test proves reversible, immediate lateral context-dependent morphology,
+not actual historical growth or light competition. Growth-band event hook,
+other directions, other crops, ordinary activation, trait combinations,
+save/reload and dense-field performance remain unqualified. Prior systems
+remain available through their own experimental switches.
+
+Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/d6ae6dccf1fa0d653b960e82474246038392fb19
+
+Reproduce with RimWorld closed:
+
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -NeighborhoodGarden
