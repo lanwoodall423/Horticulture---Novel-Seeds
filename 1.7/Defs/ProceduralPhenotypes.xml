@@ -1053,4 +1053,59 @@
     <exclusionTags><li>responsiveHabit</li></exclusionTags>
     <responsiveHabit>SilkFlutter</responsiveHabit>
   </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_SuccessionBloom</defName>
+    <label>Succession Bloom</label>
+    <description>A plant carries unopened buds and open reproductive organs in a stable individual arrangement.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>responsiveHabit</li></exclusionTags>
+    <responsiveHabit>SuccessionBloom</responsiveHabit>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_SectorSport</defName>
+    <label>Sector Sport</label>
+    <description>A local reproductive sector develops a contrasting rose-colored sport while the rest of the plant retains its native appearance.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>responsiveHabit</li></exclusionTags>
+    <responsiveHabit>SectorSport</responsiveHabit>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_BiformHarvest</defName>
+    <label>Biform Harvest</label>
+    <description>Separate reproductive organs express stout and slender forms within one plant.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>responsiveHabit</li></exclusionTags>
+    <responsiveHabit>BiformHarvest</responsiveHabit>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_SisterBuds</defName>
+    <label>Sister Buds</label>
+    <description>Selected reproductive organs carry small adjacent daughter buds.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>responsiveHabit</li></exclusionTags>
+    <responsiveHabit>SisterBuds</responsiveHabit>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_RipeningMosaic</defName>
+    <label>Ripening Mosaic</label>
+    <description>Separate organs show unripe, ripe and late-stage botanical pigmentation in a stable individual mosaic.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>responsiveHabit</li></exclusionTags>
+    <responsiveHabit>RipeningMosaic</responsiveHabit>
+  </HorticultureNovelSeeds.VarietyTraitDef>
 </Defs>

@@ -239,3 +239,30 @@ Require(SurfaceFinishMath.Environment(.5f,1f,.01f).Rain==.03125f,"quantized weat
     Require(ArticulationMath.Frame(ArticulationMath.Phase(ResponsiveHabitKind.RainPendant,.5f,1f,.5f,true,false))==0,"shelter suppresses rain articulation");
     Require(ArticulationMath.WindFrame(0)!=ArticulationMath.WindFrame(2),"native wind phase changes organ frame");
 }
+
+{
+    const int n=64;
+    var green=new OrganSpriteMath.Pixel(38,138,46,255);
+    var gold=new OrganSpriteMath.Pixel(216,172,30,255);
+    var p=new OrganSpriteMath.Pixel[n*n];
+    for(int y=9;y<55;y++)for(int x=9;x<55;x++)p[y*n+x]=green;
+    foreach(var center in new[]{(20,20),(39,21),(20,39),(39,39)})
+        for(int y=center.Item2-3;y<=center.Item2+3;y++)for(int x=center.Item1-3;x<=center.Item1+3;x++)p[y*n+x]=gold;
+    var src=ArticulationMath.Prepare(p,n,n);
+    Require(src!=null&&src.Organs.Length==4,"four attached organs prepared for mosaic");
+    foreach(var k in Enum.GetValues<ResponsiveHabitKind>().Where(MosaicMath.Valid))
+    {
+        Require(MosaicMath.Compose(src,k,0,out _).SequenceEqual(p),k+" exact orientation reference");
+        var frames=new List<OrganSpriteMath.Pixel[]>();
+        for(int f=1;f<=8;f++)
+        {
+            var frame=MosaicMath.Compose(src,k,f,out int changed);
+            Require(changed>0&&changed<src.Organs.Length&&frame.Where((c,i)=>c!=p[i]).Any(),k+" mixed organ expression "+f);
+            Require(Enumerable.Range(0,p.Length).All(i=>frame[i].A>=p[i].A),k+" no alpha holes "+f);
+            Require(frame.SequenceEqual(MosaicMath.Compose(src,k,f,out _)),k+" deterministic "+f);
+            frames.Add(frame);
+        }
+        Require(frames.Skip(1).Any(f=>!f.SequenceEqual(frames[0])),k+" different individual variants");
+    }
+    Require(Enumerable.Range(0,1024).Select(MosaicMath.Frame).Distinct().Count()==8&&MosaicMath.Frame(-7)==8&&MosaicMath.Frame(0)==1,"bounded native seed selection");
+}

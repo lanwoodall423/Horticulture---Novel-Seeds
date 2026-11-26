@@ -1,10 +1,10 @@
 using System;
 namespace HorticultureNovelSeeds
 {
-    public enum ResponsiveHabitKind { None,Nightfold,Sunseeker,Rainbowed,Nightbloom,Raincup,DawnPetals,DuskPetals,RainPendant,SolarTilt,SilkFlutter }
+    public enum ResponsiveHabitKind { None,Nightfold,Sunseeker,Rainbowed,Nightbloom,Raincup,DawnPetals,DuskPetals,RainPendant,SolarTilt,SilkFlutter,SuccessionBloom,SectorSport,BiformHarvest,SisterBuds,RipeningMosaic }
     internal static class ResponsiveHabitMath
     {
-        internal static bool Valid(ResponsiveHabitKind kind)=>kind>=ResponsiveHabitKind.Nightfold&&kind<=ResponsiveHabitKind.SilkFlutter;
+        internal static bool Valid(ResponsiveHabitKind kind)=>kind>=ResponsiveHabitKind.Nightfold&&kind<=ResponsiveHabitKind.RipeningMosaic;
         internal readonly record struct Pose(float Height,float Contraction,float Lean,float Droop);
         private static float Unit(float x)=>Math.Clamp(float.IsFinite(x)?x:0f,0f,1f);
         private static float Q(float x)=>MathF.Round(x*64f)/64f;

@@ -54,7 +54,9 @@ namespace HorticultureNovelSeeds
         private static bool patternGarden, catalogGarden, creativeGarden, cultivarGarden, formGarden, organGarden, developmentGarden, windGarden, surfaceGarden, detailGarden, architectureGarden, poseGarden, groundGarden;
         private static readonly string[] GroundTraits={"Rootflare","RunnerHabit","BasalCarpet","LeafLitter","PetalDrift"};
         private static bool previousGroundWind;
-        private static bool articulationGarden;
+        private static bool articulationGarden,mosaicGarden;
+        private static readonly string[] MosaicTraits={"SuccessionBloom","SectorSport","BiformHarvest","SisterBuds","RipeningMosaic"};
+        private static int mosaicReprintPanel=-1;
         private static readonly string[] ArticulationTraits={"DawnPetals","DuskPetals","RainPendant","SolarTilt","SilkFlutter"};
         private const int PoseFrames=5;
         private static readonly string[] PoseTraits={"Nightfold","Sunseeker","Rainbowed","Nightbloom","Raincup"};
@@ -151,9 +153,9 @@ namespace HorticultureNovelSeeds
             if (active) legacy.Add(plant.thingIDNumber);
         }
 
-        internal static void Begin(string path, Action<string> stage, Action<string,string> completed, bool procedural = false, bool catalog = false, bool creative = false, bool cultivar = false, bool form = false, bool organ = false, bool development = false, bool wind = false, bool surface = false, bool detail = false, bool architecture = false,bool pose = false,bool ground = false,bool articulation = false)
+        internal static void Begin(string path, Action<string> stage, Action<string,string> completed, bool procedural = false, bool catalog = false, bool creative = false, bool cultivar = false, bool form = false, bool organ = false, bool development = false, bool wind = false, bool surface = false, bool detail = false, bool architecture = false,bool pose = false,bool ground = false,bool articulation = false,bool mosaic = false)
         {
-            patternGarden = procedural || creative || cultivar || form || organ || development || wind || surface || detail || architecture || pose || ground; catalogGarden = catalog; creativeGarden = creative; cultivarGarden = cultivar; formGarden = form; organGarden = organ; developmentGarden = development; windGarden = wind; surfaceGarden=surface; detailGarden=detail; architectureGarden=architecture;poseGarden=pose;groundGarden=ground;articulationGarden=articulation;
+            patternGarden = procedural || creative || cultivar || form || organ || development || wind || surface || detail || architecture || pose || ground; catalogGarden = catalog; creativeGarden = creative; cultivarGarden = cultivar; formGarden = form; organGarden = organ; developmentGarden = development; windGarden = wind; surfaceGarden=surface; detailGarden=detail; architectureGarden=architecture;poseGarden=pose;groundGarden=ground;articulationGarden=articulation;mosaicGarden=mosaic;
             root = path; onStage = stage; finish = completed;
             try
             {
@@ -168,6 +170,7 @@ namespace HorticultureNovelSeeds
                 CanopyArchitectureExperiment.Enabled=architectureGarden;
                 ResponsiveHabitExperiment.Enabled=poseGarden;
                 ResponsiveHabitExperiment.ArticulationEnabled=articulationGarden;
+                ResponsiveHabitExperiment.MosaicEnabled=mosaicGarden;
                 GroundHabitExperiment.Enabled=groundGarden;
                 if(groundGarden)
                 {
@@ -179,10 +182,10 @@ namespace HorticultureNovelSeeds
                 if(poseGarden)
                 {
                     previousPoseWind=Prefs.PlantWindSway;Prefs.PlantWindSway=articulationGarden;
-                    var defs=DefDatabase<VarietyTraitDef>.AllDefsListForReading.Where(t=>ResponsiveHabitMath.Valid(t.responsiveHabit)&&ArticulationMath.Valid(t.responsiveHabit)==articulationGarden).ToList();
+                    var defs=DefDatabase<VarietyTraitDef>.AllDefsListForReading.Where(t=>ResponsiveHabitExperiment.ModeMatches(t.responsiveHabit)).ToList();
                     Require(defs.Count==5&&defs.All(t=>t.commonality==0f&&TraitAppearanceCatalog.TryGet(t,out _)),"five neutral pose alleles");
                     Require(TraitCatalogValidation.Validate(DefDatabase<VarietyTraitDef>.AllDefsListForReading).Count==0,"trait catalog validation");
-                    if(articulationGarden){ArticulationAtlas.DiagnosticRoot=root;VerifyArticulationAtlasPixels();}
+                    if(articulationGarden||mosaicGarden){ArticulationAtlas.DiagnosticRoot=root;VerifyArticulationAtlasPixels();}
                     PoseEvidence.Add("Panel\tSpecies\tColumn\tPlant ID\tTrait\tLocal hour\tWeather\tSky glow\tRain rate\tFlipped\tHeight\tContraction\tLean\tDroop\tMaterial ID");
                 }
                 if(architectureGarden)
@@ -334,6 +337,7 @@ namespace HorticultureNovelSeeds
             // Deliberate extremes of real trait definitions; no changes to trait
             // defs/settings and no claims about natural mutation eligibility.
             if (groundGarden) return col==0 ? new() : new() { Trait(GroundTraits[col-1]) };
+            if (mosaicGarden) return col==0 ? new() : new() { Trait(MosaicTraits[panel]) };
             if (poseGarden) return col==0 ? new() : new() { Trait((articulationGarden?ArticulationTraits:PoseTraits)[col-1]) };
             if (architectureGarden) return col==0 ? new() : new() { Trait(ArchitectureTraits[col-1]) };
             if (detailGarden) return col==0 ? new() : new() { Trait(DetailTraits[col-1]) };
@@ -371,7 +375,7 @@ namespace HorticultureNovelSeeds
                 // Prewarm actual resolved masks before rendering. If shared
                 // manual or seasonal materials cannot use the experimental
                 // backend, their existing CPU path is intentionally retained.
-                if(articulationGarden)
+                if(articulationGarden||mosaicGarden)
                     for(int v=0;v<PlantMaskUtility.VariationCount(def);v++) ArticulationAtlas.Prepare(def,v);
                 if(groundGarden)
                     for(int v=0;v<PlantMaskUtility.VariationCount(def);v++) GroundHabitExperiment.Prepare(def,v);
@@ -384,6 +388,7 @@ namespace HorticultureNovelSeeds
                 if (!patternGarden)
                     for (int v = 0; v < PlantMaskUtility.VariationCount(def); v++)
                         WaylithPhenotypeShader.PrepareMask(def, v);
+                VarietyRecord sharedCultivar=null;
                 for (int c = 0; c < 6; c++)
                 {
                     var plant = (Plant)ThingMaker.MakeThing(def);
@@ -394,7 +399,8 @@ namespace HorticultureNovelSeeds
                     {
                         var traits = Traits(panel * 3 + r, c);
                         Require(traits.All(t => t != null) && traits.Count > 0, "valid actual traits");
-                        cultivar = registry.UnlockVariety(def, traits, "Garden " + def.label + " " + c, originKind:"debug-visual-fixture");
+                        cultivar = mosaicGarden&&sharedCultivar!=null?sharedCultivar:registry.UnlockVariety(def, traits, "Garden " + def.label + " " + c, originKind:"debug-visual-fixture");
+                        if(mosaicGarden)sharedCultivar=cultivar;
                         Require(cultivar != null && cultivar.traits.Count == traits.Count, "registered cultivar");
                         comp.SetVariety(cultivar);
                         Require(comp.Variety == cultivar && comp.ActiveTraits.Count == traits.Count, "assigned real genetics");
@@ -419,9 +425,14 @@ namespace HorticultureNovelSeeds
             {
                 frames++;
                 if (Find.WindowStack.TryRemove(typeof(EditWindow_Log), false)) { frames = 0; return; }
-                if(poseGarden && poseSampledPanel!=panel && frames>=100 && inventory.Where(r=>r.Panel==1&&r.Cultivar!=null).All(r=>ResponsiveHabitExperiment.PrintedPlants.ContainsKey(r.Plant.thingIDNumber)||(articulationGarden&&custom.Contains(r.Plant.thingIDNumber))))
+                if(mosaicGarden&&mosaicReprintPanel!=panel&&frames>=100&&inventory.Where(r=>r.Panel==panel+1&&r.Cultivar!=null).All(r=>PlantFormMesh.MosaicPrints.ContainsKey(r.Plant.thingIDNumber)))
                 {
-                    SamplePose();poseSampledPanel=panel;frames=92;return;
+                    foreach(var plant in current)plant.DirtyMapMesh(map);
+                    mosaicReprintPanel=panel;frames=85;return;
+                }
+                if(poseGarden && poseSampledPanel!=panel && frames>=100 && inventory.Where(r=>r.Panel==(mosaicGarden?panel+1:1)&&r.Cultivar!=null).All(r=>ResponsiveHabitExperiment.PrintedPlants.ContainsKey(r.Plant.thingIDNumber)||(articulationGarden&&custom.Contains(r.Plant.thingIDNumber))))
+                {
+                    if(mosaicGarden)SampleMosaic();else SamplePose();poseSampledPanel=panel;frames=92;return;
                 }
                 if(detailGarden && detailSampledPanel!=panel && frames>=100 && inventory.Where(r=>r.Panel==1&&r.Cultivar?.traits.Any(t=>t.botanicalDetail==BotanicalDetailKind.LanternBuds)==true).All(r=>BotanicalDetailExperiment.GlowPlants.ContainsKey(r.Plant.thingIDNumber)))
                 {
@@ -454,10 +465,10 @@ namespace HorticultureNovelSeeds
                     {
                         WriteInventory();
                         onStage("GardenInventory");
-                        End("PASS", articulationGarden ? "18 same plants; five native light/rain/wind states; local organ atlas material checks; explicit fallbacks" : groundGarden ? "36 plants; 26 ground detail planes, four explicit nonflower fallbacks; two daylight screenshots" : poseGarden ? "18 same plants; five actual light/rain states; 75 pose material checks and stable IDs" : architectureGarden ? "36 plants; 30 modular canopy cases on six species; two daylight screenshots; explicit fallback for unsupported modules" : detailGarden ? "18 same plants; 12 topology cases and three night overlays; day-night-day screenshots" : surfaceGarden ? "18 same mature plants; 15 surface finishes; four native lighting/weather states; 60 verified material states" : windGarden ? "18 same mature plants; 15 genetic wind materials; 12 actual wind-phase captures; 180 material-phase checks" : developmentGarden ? "18 same plants across three growth stages; 45 verified cultivar-stage GPU prints; 30 automatic mesh invalidations; three daylight screenshots" : organGarden ? "36 plants; 30 organ-form cases; eligible components composited; uncertain organs fall back; two daylight screenshots" : formGarden ? "36 plants; 30 genetically deformed cultivars; 15 pure morphology and 15 morphology plus pigmentation; two daylight screenshots" : cultivarGarden ? "54 plants; 15 organ-aware botanical candidates across three species; three daylight screenshots; 45 mask-free GPU cultivars" : creativeGarden ? "90 garden plants; 25 refined botanical traits across three species; five daylight screenshots; 75 mask-free GPU cultivars" : catalogGarden ? "108 garden plants; 90 baseline trait cases; six daylight screenshots; every loaded HNS appearance rule covered" : "72 garden plants, 60 registered cultivars, 12 species, four daylight screenshots");
+                        End("PASS", mosaicGarden ? "90 plants; 75 same-cultivar instances; per-organ mosaics, native mesh seed and remesh stability" : articulationGarden ? "18 same plants; five native light/rain/wind states; local organ atlas material checks; explicit fallbacks" : groundGarden ? "36 plants; 26 ground detail planes, four explicit nonflower fallbacks; two daylight screenshots" : poseGarden ? "18 same plants; five actual light/rain states; 75 pose material checks and stable IDs" : architectureGarden ? "36 plants; 30 modular canopy cases on six species; two daylight screenshots; explicit fallback for unsupported modules" : detailGarden ? "18 same plants; 12 topology cases and three night overlays; day-night-day screenshots" : surfaceGarden ? "18 same mature plants; 15 surface finishes; four native lighting/weather states; 60 verified material states" : windGarden ? "18 same mature plants; 15 genetic wind materials; 12 actual wind-phase captures; 180 material-phase checks" : developmentGarden ? "18 same plants across three growth stages; 45 verified cultivar-stage GPU prints; 30 automatic mesh invalidations; three daylight screenshots" : organGarden ? "36 plants; 30 organ-form cases; eligible components composited; uncertain organs fall back; two daylight screenshots" : formGarden ? "36 plants; 30 genetically deformed cultivars; 15 pure morphology and 15 morphology plus pigmentation; two daylight screenshots" : cultivarGarden ? "54 plants; 15 organ-aware botanical candidates across three species; three daylight screenshots; 45 mask-free GPU cultivars" : creativeGarden ? "90 garden plants; 25 refined botanical traits across three species; five daylight screenshots; 75 mask-free GPU cultivars" : catalogGarden ? "108 garden plants; 90 baseline trait cases; six daylight screenshots; every loaded HNS appearance rule covered" : "72 garden plants, 60 registered cultivars, 12 species, four daylight screenshots");
                         return;
                     }
-                    if(poseGarden)
+                    if(poseGarden&&!mosaicGarden)
                     {
                         frames=0;captureAge=0;capture=null;
                         foreach(var row in inventory.Where(r=>r.Panel==1).ToArray())inventory.Add(row with {Panel=panel+1});
@@ -514,6 +525,38 @@ namespace HorticultureNovelSeeds
             var weather=panel==2?DefDatabase<WeatherDef>.GetNamed("Rain"):WeatherDefOf.Clear;
             map.weatherManager.TransitionTo(weather);map.weatherManager.lastWeather=weather;map.weatherManager.curWeatherAge=4000;
             map.skyManager.SkyManagerUpdate();map.windManager.WindManagerTick();
+        }
+        private static readonly List<string> MosaicEvidence=new(){"Panel\tSpecies\tColumn\tPlant ID\tTrait\tNative mesh seed\tVariant frame\tMaterial ID\tPrint count\tSource atlas\tSame cultivar"};
+        private static void SampleMosaic()
+        {
+            var styled=inventory.Where(r=>r.Panel==panel+1&&r.Cultivar!=null).ToArray();
+            Require(styled.Length==15&&map.skyManager.CurSkyGlow>.8f&&mosaicReprintPanel==panel,"daylight mosaic fixture and remesh");
+            foreach(var group in styled.GroupBy(r=>r.Plant.def))
+            {
+                Require(group.Count()==5&&group.All(r=>ReferenceEquals(r.Cultivar,group.First().Cultivar)),"five individuals of one actual registered cultivar");
+                Require(group.Select(r=>MosaicMath.Frame(r.Plant.HashOffset()%1024)).Distinct().Count()>=2,"same cultivar expresses multiple individual seed variants");
+            }
+            foreach(var row in styled)
+            {
+                int id=row.Plant.thingIDNumber;var trait=row.Cultivar.traits.Single();
+                Require(ResponsiveHabitExperiment.PrintedPlants.TryGetValue(id,out var mat)&&
+                    mat.shader==DefDatabase<ShaderDef>.GetNamed(ArticulationAtlas.ShaderName).Shader&&mat.GetVector("_HnsPose").z==1f&&mat.mainTexture.name.EndsWith("_"+trait.responsiveHabit),"actual seed-selected mosaic material");
+                Require(PlantFormMesh.MosaicPrints.TryGetValue(id,out var print)&&print.Valid&&print.Prints>=2&&print.Payload==row.Plant.HashOffset()%1024&&print.MaterialId==mat.GetInstanceID(),"native appended UV.z and material stable on reprint");
+                MosaicEvidence.Add(string.Join("\t",panel+1,row.Plant.def.defName,row.Column,id,trait.defName,print.Payload,MosaicMath.Frame((int)print.Payload),print.MaterialId,print.Prints,mat.mainTexture.name,true));
+            }
+            Require(styled.GroupBy(r=>ResponsiveHabitExperiment.PrintedPlants[r.Plant.thingIDNumber]).Any(g=>g.Select(r=>MosaicMath.Frame(r.Plant.HashOffset()%1024)).Distinct().Count()>1),"shared material carries different per-plant variants");
+            Log.Message("[HNS Mosaic] panel="+(panel+1)+"; 15 same-cultivar cases; atlas count="+ArticulationAtlas.Count+"; materials="+ResponsiveHabitExperiment.MaterialCount);
+        }
+        private static void WriteMosaic()
+        {
+            var styled=inventory.Where(r=>r.Cultivar!=null).ToArray();
+            Require(inventory.Count==90&&styled.Length==75&&inventory.Select(r=>r.Plant.thingIDNumber).Distinct().Count()==90&&MosaicEvidence.Count==76,"90 actual plants, 75 validated cases");
+            Require(styled.All(r=>Backend(r.Plant)=="GPU individual organ mosaic")&&inventory.Where(r=>r.Cultivar==null).All(r=>Backend(r.Plant)=="Vanilla"),"native mosaic and original controls");
+            Require(ArticulationAtlas.OrientationEvidence.Count==1+ArticulationAtlas.Count&&ArticulationAtlas.MosaicPreparation.Count==1+8*ArticulationAtlas.Count,"every atlas orientation and all mosaic variants verified");
+            Require(ArticulationAtlas.Count==30&&ResponsiveHabitExperiment.MaterialCount<=30&&WaylithPhenotypeShader.MaterialCount==0&&WaylithPhenotypeShader.MaskCount==0,"bounded shared atlas/material use");
+            File.WriteAllLines(Path.Combine(root,"HNS-garden-mosaic.tsv"),MosaicEvidence);
+            File.WriteAllLines(Path.Combine(root,"HNS-garden-mosaic-preparation.tsv"),ArticulationAtlas.MosaicPreparation);
+            Log.Message("[HNS Mosaic] verified=75; materials="+ResponsiveHabitExperiment.MaterialCount+"; atlases="+ArticulationAtlas.Count+"; eight variants each");
         }
         private static void SamplePose()
         {
@@ -719,7 +762,7 @@ namespace HorticultureNovelSeeds
             int id = p.thingIDNumber;
             if(GroundHabitExperiment.PrintedPlants.ContainsKey(id))return "Botanical ground plane";
             if(groundGarden&&p.TryGetComp<CompPlantVariety>()?.ActiveTraits.Any(t=>GroundHabitMath.Valid(t.groundHabit))==true)return "Ground detail unavailable, original path";
-            if(ResponsiveHabitExperiment.PrintedPlants.ContainsKey(id))return articulationGarden?"GPU organ articulation":"GPU responsive UV pose";
+            if(ResponsiveHabitExperiment.PrintedPlants.ContainsKey(id))return mosaicGarden?"GPU individual organ mosaic":articulationGarden?"GPU organ articulation":"GPU responsive UV pose";
             if(articulationGarden&&p.TryGetComp<CompPlantVariety>()?.ActiveTraits.Any(t=>ArticulationMath.Valid(t.responsiveHabit))==true)return "Articulation unavailable, original path";
             if(CanopyArchitectureExperiment.PrintedPlants.Contains(id))return "Modular canopy planes";
             if(architectureGarden && p.TryGetComp<CompPlantVariety>()?.ActiveTraits.Any(t=>CanopyArchitectureMath.Valid(t.canopyArchitecture))==true)return "Architecture unavailable, original path";
@@ -774,6 +817,7 @@ namespace HorticultureNovelSeeds
                 File.WriteAllLines(Path.Combine(root,"HNS-garden-ground.tsv"),evidence);
                 Log.Message("[HNS Ground] rendered="+expected+"; fallback="+(styled.Count-expected)+"; materials="+GroundHabitExperiment.MaterialCount+"; one plane per eligible plant");return;
             }
+            if(mosaicGarden){WriteMosaic();return;}
             if(poseGarden)
             {
                 var styled=inventory.Where(r=>r.Cultivar!=null).ToList();
@@ -900,6 +944,7 @@ namespace HorticultureNovelSeeds
             CanopyArchitectureExperiment.Enabled=false;
             ResponsiveHabitExperiment.Enabled=false;
             ResponsiveHabitExperiment.ArticulationEnabled=false;
+            ResponsiveHabitExperiment.MosaicEnabled=false;
             GroundHabitExperiment.Enabled=false;
             if(groundGarden)Prefs.PlantWindSway=previousGroundWind;
             if(poseGarden)Prefs.PlantWindSway=previousPoseWind;

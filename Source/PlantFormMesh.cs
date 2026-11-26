@@ -18,6 +18,8 @@ namespace HorticultureNovelSeeds
 #if HNS_NATIVE_FIXTURE
         internal static readonly HashSet<int> PrintedPlants = new();
         internal static int Meshes, Vertices, Triangles;
+        internal sealed record MosaicPrint(float Payload,int MaterialId,int Prints,bool Valid);
+        internal static readonly Dictionary<int,MosaicPrint> MosaicPrints=new();
 #endif
         internal static Form Resolve(CompPlantVariety comp)
         {
@@ -43,6 +45,19 @@ namespace HorticultureNovelSeeds
         {
             if (!form.Valid || material==null)
             {
+#if HNS_NATIVE_FIXTURE
+                if(ResponsiveHabitExperiment.MosaicEnabled&&ResponsiveHabitExperiment.PrintedPlants.TryGetValue(plant.thingIDNumber,out var printed)&&ReferenceEquals(printed,material))
+                {
+                    var mesh=layer.GetSubMesh(material);int first=mesh.uvs.Count;
+                    Printer_Plane.PrintPlane(layer,center,size,material,rotation,flipped,uvs,colors,bias,payload);
+                    bool valid=mesh.uvs.Count==first+4;
+                    for(int i=first;i<mesh.uvs.Count;i++)valid&=mesh.uvs[i].z==payload;
+                    int mid=material.GetInstanceID();int id=plant.thingIDNumber;
+                    if(MosaicPrints.TryGetValue(id,out var old))MosaicPrints[id]=new(payload,mid,old.Prints+1,valid&&old.Valid&&old.Payload==payload&&old.MaterialId==mid);
+                    else MosaicPrints[id]=new(payload,mid,1,valid);
+                    return;
+                }
+#endif
                 Printer_Plane.PrintPlane(layer,center,size,material,rotation,flipped,uvs,colors,bias,payload);
                 return;
             }

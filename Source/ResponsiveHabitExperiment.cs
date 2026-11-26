@@ -12,7 +12,10 @@ namespace HorticultureNovelSeeds
         internal const string DefName="HNS_ResponsiveHabit";
         internal static bool Enabled {get;set;}
         internal static bool ArticulationEnabled {get;set;}
-        internal static string ShaderFor(ResponsiveHabitKind kind)=>ArticulationMath.Valid(kind)?ArticulationAtlas.ShaderName:DefName;
+        internal static bool MosaicEnabled {get;set;}
+        internal static bool UsesAtlas(ResponsiveHabitKind kind)=>ArticulationMath.Valid(kind)||MosaicMath.Valid(kind);
+        internal static bool ModeMatches(ResponsiveHabitKind kind)=>ResponsiveHabitMath.Valid(kind)&&(MosaicEnabled?MosaicMath.Valid(kind):ArticulationEnabled?ArticulationMath.Valid(kind):!UsesAtlas(kind));
+        internal static string ShaderFor(ResponsiveHabitKind kind)=>UsesAtlas(kind)?ArticulationAtlas.ShaderName:DefName;
         private const int Limit=96;
         private readonly record struct Key(Material Source,ResponsiveHabitKind Kind,bool Sheltered,bool Flipped);
         private static readonly Dictionary<Key,Material> materials=new();
@@ -28,12 +31,13 @@ namespace HorticultureNovelSeeds
             if(!Enabled||comp?.ActiveTraits==null)return ResponsiveHabitKind.None;
             VarietyTraitDef chosen=null;
             foreach(var t in comp.ActiveTraits)
-                if(t!=null&&!t.produceOnlyVisual&&ResponsiveHabitMath.Valid(t.responsiveHabit)&&ArticulationMath.Valid(t.responsiveHabit)==ArticulationEnabled&&
+                if(t!=null&&!t.produceOnlyVisual&&ModeMatches(t.responsiveHabit)&&
                    (chosen==null||string.CompareOrdinal(t.defName,chosen.defName)<0))chosen=t;
             return chosen?.responsiveHabit??ResponsiveHabitKind.None;
         }
         internal static Vector4 Current(Map map,ResponsiveHabitKind kind,bool sheltered,bool flipped)
         {
+            if(MosaicMath.Valid(kind))return new Vector4(0f,0f,1f,0f);
             if(ArticulationMath.Valid(kind))return new Vector4(ArticulationMath.Phase(kind,GenLocalDate.DayPercent(map),map.skyManager.CurSkyGlow,map.weatherManager.RainRate,sheltered,flipped),kind==ResponsiveHabitKind.SilkFlutter?1f:0f,0f,0f);
             var p=ResponsiveHabitMath.Controls(kind,GenLocalDate.DayPercent(map),map.skyManager.CurSkyGlow,map.weatherManager.RainRate,sheltered,flipped);
             return new Vector4(p.Height,p.Contraction,p.Lean,p.Droop);
@@ -58,9 +62,9 @@ namespace HorticultureNovelSeeds
             bool sheltered=plant.Map.roofGrid.RoofAt(plant.Position)!=null;
             // Only a directional habit needs a second mirrored material.
             bool directionFlip=(kind==ResponsiveHabitKind.Sunseeker||kind==ResponsiveHabitKind.SolarTilt)&&flipped;
-            bool articulation=ArticulationMath.Valid(kind);
+            bool articulation=UsesAtlas(kind);
             Texture2D atlas=null;
-            if(articulation&&(!ArticulationEnabled||!ArticulationAtlas.TryGet(plant.def,source.mainTexture,kind,out atlas)))return false;
+            if(!ModeMatches(kind)||articulation&&!ArticulationAtlas.TryGet(plant.def,source.mainTexture,kind,out atlas))return false;
             var key=new Key(source,kind,sheltered,directionFlip);
             if(!materials.TryGetValue(key,out material))
             {

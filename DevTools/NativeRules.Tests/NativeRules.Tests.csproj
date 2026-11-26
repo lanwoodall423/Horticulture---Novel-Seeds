@@ -15,6 +15,7 @@
     <Compile Include="../../Source/BotanicalDetailMath.cs" Link="BotanicalDetailMath.cs" />
     <Compile Include="../../Source/CanopyArchitectureMath.cs" Link="CanopyArchitectureMath.cs" />
     <Compile Include="../../Source/ResponsiveHabitMath.cs" Link="ResponsiveHabitMath.cs" />
+    <Compile Include="../../Source/MosaicMath.cs" Link="MosaicMath.cs" />
     <Compile Include="../../Source/ArticulationMath.cs" Link="ArticulationMath.cs" />
     <Compile Include="../../Source/GroundHabitMath.cs" Link="GroundHabitMath.cs" />
   </ItemGroup>

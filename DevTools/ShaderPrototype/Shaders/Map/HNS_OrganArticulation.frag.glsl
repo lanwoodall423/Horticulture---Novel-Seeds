@@ -2,6 +2,7 @@
 // Nine prewarmed organ-local poses. Nearest frame selection avoids blending
 // two displaced cutout silhouettes. Half-texel clamp prevents atlas bleed.
 layout(location = 1) in vec2 vUv;
+layout(location = 2) flat in float vFallSeed;
 layout(location = 0) out vec4 outColor;
 layout(set = 2, binding = 0) uniform MaterialUniforms
 {
@@ -17,6 +18,9 @@ void main()
     float phase=uMaterial._HnsPose.x;
     if(uMaterial._HnsPose.y>0.5)phase=0.5+0.5*sin(uMaterial._SwayHead*0.65);
     float frame=floor(clamp(phase,0.0,1.0)*8.0+0.5);
+    // One stable native per-plant mesh payload; eight bounded organ-mosaic slots.
+    // Frame zero is reserved for the exact vanilla/orientation reference.
+    if(uMaterial._HnsPose.z>0.5)frame=1.0+mod(floor(abs(vFallSeed)+0.5),8.0);
     vec2 pad=uMaterial._HnsAtlas.xy*0.5;
     // Atlas source pixels came through native Blit/ReadPixels. Its local Y
     // orientation is independent of the reversed atlas row addressing.
