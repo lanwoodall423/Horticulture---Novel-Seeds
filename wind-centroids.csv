@@ -1,0 +1,19 @@
+Species;Column;Trait;Green pixels min;Green pixels max;Centroid X span px;Centroid Y span px
+Corn;1;Control;585;616;1.549;1.463
+Corn;2;Rigid Habit;582;602;0.637;0.72
+Corn;3;Supple Habit;553;641;7.214;5.833
+Corn;4;Flutterleaf;567;652;3.696;3.843
+Corn;5;Nodding Habit;525;668;1.868;7.492
+Corn;6;Sweeping Habit;543;628;6.976;2.802
+Cotton;1;Control;537;559;0.453;0.593
+Cotton;2;Rigid Habit;521;528;0.12;0.052
+Cotton;3;Supple Habit;482;560;1.447;2.239
+Cotton;4;Flutterleaf;524;573;0.722;1.315
+Cotton;5;Nodding Habit;497;545;0.358;2.173
+Cotton;6;Sweeping Habit;511;576;1.496;1.043
+Strawberry;1;Control;640;674;0.241;0.496
+Strawberry;2;Rigid Habit;667;676;0.297;0.137
+Strawberry;3;Supple Habit;629;706;1.132;1.668
+Strawberry;4;Flutterleaf;652;676;0.537;0.764
+Strawberry;5;Nodding Habit;646;692;0.518;1.988
+Strawberry;6;Sweeping Habit;635;686;1.052;0.354

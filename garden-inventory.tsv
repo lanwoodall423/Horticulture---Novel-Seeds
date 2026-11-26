@@ -1,0 +1,217 @@
+Panel	Row	Column	Species	Cultivar	Trait IDs	Renderer	Automatic mask sources	Trait labels	Tiers	Motifs	Form mesh
+1	1	1	Plant_Corn	Vanilla control		Vanilla	not styled				Original
+1	1	2	Plant_Corn	Garden corn plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+1	1	3	Plant_Corn	Garden corn plant 2	HNS_SuppleHabit	GPU genetic wind	1:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+1	1	4	Plant_Corn	Garden corn plant 3	HNS_Flutterleaf	GPU genetic wind	1:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+1	1	5	Plant_Corn	Garden corn plant 4	HNS_NoddingHabit	GPU genetic wind	1:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+1	1	6	Plant_Corn	Garden corn plant 5	HNS_SweepingHabit	GPU genetic wind	0:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+1	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled				Original
+1	2	2	Plant_Cotton	Garden cotton plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+1	2	3	Plant_Cotton	Garden cotton plant 2	HNS_SuppleHabit	GPU genetic wind	0:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+1	2	4	Plant_Cotton	Garden cotton plant 3	HNS_Flutterleaf	GPU genetic wind	1:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+1	2	5	Plant_Cotton	Garden cotton plant 4	HNS_NoddingHabit	GPU genetic wind	0:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+1	2	6	Plant_Cotton	Garden cotton plant 5	HNS_SweepingHabit	GPU genetic wind	1:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+1	3	1	Plant_Strawberry	Vanilla control		Vanilla	not styled				Original
+1	3	2	Plant_Strawberry	Garden strawberry plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+1	3	3	Plant_Strawberry	Garden strawberry plant 2	HNS_SuppleHabit	GPU genetic wind	0:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+1	3	4	Plant_Strawberry	Garden strawberry plant 3	HNS_Flutterleaf	GPU genetic wind	0:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+1	3	5	Plant_Strawberry	Garden strawberry plant 4	HNS_NoddingHabit	GPU genetic wind	0:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+1	3	6	Plant_Strawberry	Garden strawberry plant 5	HNS_SweepingHabit	GPU genetic wind	0:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+2	1	1	Plant_Corn	Vanilla control		Vanilla	not styled				Original
+2	1	2	Plant_Corn	Garden corn plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+2	1	3	Plant_Corn	Garden corn plant 2	HNS_SuppleHabit	GPU genetic wind	1:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+2	1	4	Plant_Corn	Garden corn plant 3	HNS_Flutterleaf	GPU genetic wind	1:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+2	1	5	Plant_Corn	Garden corn plant 4	HNS_NoddingHabit	GPU genetic wind	1:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+2	1	6	Plant_Corn	Garden corn plant 5	HNS_SweepingHabit	GPU genetic wind	0:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+2	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled				Original
+2	2	2	Plant_Cotton	Garden cotton plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+2	2	3	Plant_Cotton	Garden cotton plant 2	HNS_SuppleHabit	GPU genetic wind	0:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+2	2	4	Plant_Cotton	Garden cotton plant 3	HNS_Flutterleaf	GPU genetic wind	1:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+2	2	5	Plant_Cotton	Garden cotton plant 4	HNS_NoddingHabit	GPU genetic wind	0:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+2	2	6	Plant_Cotton	Garden cotton plant 5	HNS_SweepingHabit	GPU genetic wind	1:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+2	3	1	Plant_Strawberry	Vanilla control		Vanilla	not styled				Original
+2	3	2	Plant_Strawberry	Garden strawberry plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+2	3	3	Plant_Strawberry	Garden strawberry plant 2	HNS_SuppleHabit	GPU genetic wind	0:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+2	3	4	Plant_Strawberry	Garden strawberry plant 3	HNS_Flutterleaf	GPU genetic wind	0:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+2	3	5	Plant_Strawberry	Garden strawberry plant 4	HNS_NoddingHabit	GPU genetic wind	0:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+2	3	6	Plant_Strawberry	Garden strawberry plant 5	HNS_SweepingHabit	GPU genetic wind	0:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+3	1	1	Plant_Corn	Vanilla control		Vanilla	not styled				Original
+3	1	2	Plant_Corn	Garden corn plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+3	1	3	Plant_Corn	Garden corn plant 2	HNS_SuppleHabit	GPU genetic wind	1:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+3	1	4	Plant_Corn	Garden corn plant 3	HNS_Flutterleaf	GPU genetic wind	1:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+3	1	5	Plant_Corn	Garden corn plant 4	HNS_NoddingHabit	GPU genetic wind	1:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+3	1	6	Plant_Corn	Garden corn plant 5	HNS_SweepingHabit	GPU genetic wind	0:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+3	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled				Original
+3	2	2	Plant_Cotton	Garden cotton plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+3	2	3	Plant_Cotton	Garden cotton plant 2	HNS_SuppleHabit	GPU genetic wind	0:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+3	2	4	Plant_Cotton	Garden cotton plant 3	HNS_Flutterleaf	GPU genetic wind	1:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+3	2	5	Plant_Cotton	Garden cotton plant 4	HNS_NoddingHabit	GPU genetic wind	0:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+3	2	6	Plant_Cotton	Garden cotton plant 5	HNS_SweepingHabit	GPU genetic wind	1:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+3	3	1	Plant_Strawberry	Vanilla control		Vanilla	not styled				Original
+3	3	2	Plant_Strawberry	Garden strawberry plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+3	3	3	Plant_Strawberry	Garden strawberry plant 2	HNS_SuppleHabit	GPU genetic wind	0:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+3	3	4	Plant_Strawberry	Garden strawberry plant 3	HNS_Flutterleaf	GPU genetic wind	0:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+3	3	5	Plant_Strawberry	Garden strawberry plant 4	HNS_NoddingHabit	GPU genetic wind	0:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+3	3	6	Plant_Strawberry	Garden strawberry plant 5	HNS_SweepingHabit	GPU genetic wind	0:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+4	1	1	Plant_Corn	Vanilla control		Vanilla	not styled				Original
+4	1	2	Plant_Corn	Garden corn plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+4	1	3	Plant_Corn	Garden corn plant 2	HNS_SuppleHabit	GPU genetic wind	1:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+4	1	4	Plant_Corn	Garden corn plant 3	HNS_Flutterleaf	GPU genetic wind	1:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+4	1	5	Plant_Corn	Garden corn plant 4	HNS_NoddingHabit	GPU genetic wind	1:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+4	1	6	Plant_Corn	Garden corn plant 5	HNS_SweepingHabit	GPU genetic wind	0:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+4	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled				Original
+4	2	2	Plant_Cotton	Garden cotton plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+4	2	3	Plant_Cotton	Garden cotton plant 2	HNS_SuppleHabit	GPU genetic wind	0:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+4	2	4	Plant_Cotton	Garden cotton plant 3	HNS_Flutterleaf	GPU genetic wind	1:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+4	2	5	Plant_Cotton	Garden cotton plant 4	HNS_NoddingHabit	GPU genetic wind	0:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+4	2	6	Plant_Cotton	Garden cotton plant 5	HNS_SweepingHabit	GPU genetic wind	1:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+4	3	1	Plant_Strawberry	Vanilla control		Vanilla	not styled				Original
+4	3	2	Plant_Strawberry	Garden strawberry plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+4	3	3	Plant_Strawberry	Garden strawberry plant 2	HNS_SuppleHabit	GPU genetic wind	0:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+4	3	4	Plant_Strawberry	Garden strawberry plant 3	HNS_Flutterleaf	GPU genetic wind	0:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+4	3	5	Plant_Strawberry	Garden strawberry plant 4	HNS_NoddingHabit	GPU genetic wind	0:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+4	3	6	Plant_Strawberry	Garden strawberry plant 5	HNS_SweepingHabit	GPU genetic wind	0:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+5	1	1	Plant_Corn	Vanilla control		Vanilla	not styled				Original
+5	1	2	Plant_Corn	Garden corn plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+5	1	3	Plant_Corn	Garden corn plant 2	HNS_SuppleHabit	GPU genetic wind	1:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+5	1	4	Plant_Corn	Garden corn plant 3	HNS_Flutterleaf	GPU genetic wind	1:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+5	1	5	Plant_Corn	Garden corn plant 4	HNS_NoddingHabit	GPU genetic wind	1:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+5	1	6	Plant_Corn	Garden corn plant 5	HNS_SweepingHabit	GPU genetic wind	0:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+5	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled				Original
+5	2	2	Plant_Cotton	Garden cotton plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+5	2	3	Plant_Cotton	Garden cotton plant 2	HNS_SuppleHabit	GPU genetic wind	0:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+5	2	4	Plant_Cotton	Garden cotton plant 3	HNS_Flutterleaf	GPU genetic wind	1:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+5	2	5	Plant_Cotton	Garden cotton plant 4	HNS_NoddingHabit	GPU genetic wind	0:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+5	2	6	Plant_Cotton	Garden cotton plant 5	HNS_SweepingHabit	GPU genetic wind	1:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+5	3	1	Plant_Strawberry	Vanilla control		Vanilla	not styled				Original
+5	3	2	Plant_Strawberry	Garden strawberry plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+5	3	3	Plant_Strawberry	Garden strawberry plant 2	HNS_SuppleHabit	GPU genetic wind	0:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+5	3	4	Plant_Strawberry	Garden strawberry plant 3	HNS_Flutterleaf	GPU genetic wind	0:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+5	3	5	Plant_Strawberry	Garden strawberry plant 4	HNS_NoddingHabit	GPU genetic wind	0:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+5	3	6	Plant_Strawberry	Garden strawberry plant 5	HNS_SweepingHabit	GPU genetic wind	0:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+6	1	1	Plant_Corn	Vanilla control		Vanilla	not styled				Original
+6	1	2	Plant_Corn	Garden corn plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+6	1	3	Plant_Corn	Garden corn plant 2	HNS_SuppleHabit	GPU genetic wind	1:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+6	1	4	Plant_Corn	Garden corn plant 3	HNS_Flutterleaf	GPU genetic wind	1:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+6	1	5	Plant_Corn	Garden corn plant 4	HNS_NoddingHabit	GPU genetic wind	1:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+6	1	6	Plant_Corn	Garden corn plant 5	HNS_SweepingHabit	GPU genetic wind	0:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+6	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled				Original
+6	2	2	Plant_Cotton	Garden cotton plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+6	2	3	Plant_Cotton	Garden cotton plant 2	HNS_SuppleHabit	GPU genetic wind	0:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+6	2	4	Plant_Cotton	Garden cotton plant 3	HNS_Flutterleaf	GPU genetic wind	1:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+6	2	5	Plant_Cotton	Garden cotton plant 4	HNS_NoddingHabit	GPU genetic wind	0:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+6	2	6	Plant_Cotton	Garden cotton plant 5	HNS_SweepingHabit	GPU genetic wind	1:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+6	3	1	Plant_Strawberry	Vanilla control		Vanilla	not styled				Original
+6	3	2	Plant_Strawberry	Garden strawberry plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+6	3	3	Plant_Strawberry	Garden strawberry plant 2	HNS_SuppleHabit	GPU genetic wind	0:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+6	3	4	Plant_Strawberry	Garden strawberry plant 3	HNS_Flutterleaf	GPU genetic wind	0:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+6	3	5	Plant_Strawberry	Garden strawberry plant 4	HNS_NoddingHabit	GPU genetic wind	0:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+6	3	6	Plant_Strawberry	Garden strawberry plant 5	HNS_SweepingHabit	GPU genetic wind	0:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+7	1	1	Plant_Corn	Vanilla control		Vanilla	not styled				Original
+7	1	2	Plant_Corn	Garden corn plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+7	1	3	Plant_Corn	Garden corn plant 2	HNS_SuppleHabit	GPU genetic wind	1:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+7	1	4	Plant_Corn	Garden corn plant 3	HNS_Flutterleaf	GPU genetic wind	1:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+7	1	5	Plant_Corn	Garden corn plant 4	HNS_NoddingHabit	GPU genetic wind	1:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+7	1	6	Plant_Corn	Garden corn plant 5	HNS_SweepingHabit	GPU genetic wind	0:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+7	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled				Original
+7	2	2	Plant_Cotton	Garden cotton plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+7	2	3	Plant_Cotton	Garden cotton plant 2	HNS_SuppleHabit	GPU genetic wind	0:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+7	2	4	Plant_Cotton	Garden cotton plant 3	HNS_Flutterleaf	GPU genetic wind	1:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+7	2	5	Plant_Cotton	Garden cotton plant 4	HNS_NoddingHabit	GPU genetic wind	0:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+7	2	6	Plant_Cotton	Garden cotton plant 5	HNS_SweepingHabit	GPU genetic wind	1:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+7	3	1	Plant_Strawberry	Vanilla control		Vanilla	not styled				Original
+7	3	2	Plant_Strawberry	Garden strawberry plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+7	3	3	Plant_Strawberry	Garden strawberry plant 2	HNS_SuppleHabit	GPU genetic wind	0:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+7	3	4	Plant_Strawberry	Garden strawberry plant 3	HNS_Flutterleaf	GPU genetic wind	0:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+7	3	5	Plant_Strawberry	Garden strawberry plant 4	HNS_NoddingHabit	GPU genetic wind	0:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+7	3	6	Plant_Strawberry	Garden strawberry plant 5	HNS_SweepingHabit	GPU genetic wind	0:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+8	1	1	Plant_Corn	Vanilla control		Vanilla	not styled				Original
+8	1	2	Plant_Corn	Garden corn plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+8	1	3	Plant_Corn	Garden corn plant 2	HNS_SuppleHabit	GPU genetic wind	1:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+8	1	4	Plant_Corn	Garden corn plant 3	HNS_Flutterleaf	GPU genetic wind	1:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+8	1	5	Plant_Corn	Garden corn plant 4	HNS_NoddingHabit	GPU genetic wind	1:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+8	1	6	Plant_Corn	Garden corn plant 5	HNS_SweepingHabit	GPU genetic wind	0:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+8	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled				Original
+8	2	2	Plant_Cotton	Garden cotton plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+8	2	3	Plant_Cotton	Garden cotton plant 2	HNS_SuppleHabit	GPU genetic wind	0:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+8	2	4	Plant_Cotton	Garden cotton plant 3	HNS_Flutterleaf	GPU genetic wind	1:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+8	2	5	Plant_Cotton	Garden cotton plant 4	HNS_NoddingHabit	GPU genetic wind	0:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+8	2	6	Plant_Cotton	Garden cotton plant 5	HNS_SweepingHabit	GPU genetic wind	1:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+8	3	1	Plant_Strawberry	Vanilla control		Vanilla	not styled				Original
+8	3	2	Plant_Strawberry	Garden strawberry plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+8	3	3	Plant_Strawberry	Garden strawberry plant 2	HNS_SuppleHabit	GPU genetic wind	0:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+8	3	4	Plant_Strawberry	Garden strawberry plant 3	HNS_Flutterleaf	GPU genetic wind	0:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+8	3	5	Plant_Strawberry	Garden strawberry plant 4	HNS_NoddingHabit	GPU genetic wind	0:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+8	3	6	Plant_Strawberry	Garden strawberry plant 5	HNS_SweepingHabit	GPU genetic wind	0:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+9	1	1	Plant_Corn	Vanilla control		Vanilla	not styled				Original
+9	1	2	Plant_Corn	Garden corn plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+9	1	3	Plant_Corn	Garden corn plant 2	HNS_SuppleHabit	GPU genetic wind	1:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+9	1	4	Plant_Corn	Garden corn plant 3	HNS_Flutterleaf	GPU genetic wind	1:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+9	1	5	Plant_Corn	Garden corn plant 4	HNS_NoddingHabit	GPU genetic wind	1:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+9	1	6	Plant_Corn	Garden corn plant 5	HNS_SweepingHabit	GPU genetic wind	0:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+9	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled				Original
+9	2	2	Plant_Cotton	Garden cotton plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+9	2	3	Plant_Cotton	Garden cotton plant 2	HNS_SuppleHabit	GPU genetic wind	0:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+9	2	4	Plant_Cotton	Garden cotton plant 3	HNS_Flutterleaf	GPU genetic wind	1:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+9	2	5	Plant_Cotton	Garden cotton plant 4	HNS_NoddingHabit	GPU genetic wind	0:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+9	2	6	Plant_Cotton	Garden cotton plant 5	HNS_SweepingHabit	GPU genetic wind	1:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+9	3	1	Plant_Strawberry	Vanilla control		Vanilla	not styled				Original
+9	3	2	Plant_Strawberry	Garden strawberry plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+9	3	3	Plant_Strawberry	Garden strawberry plant 2	HNS_SuppleHabit	GPU genetic wind	0:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+9	3	4	Plant_Strawberry	Garden strawberry plant 3	HNS_Flutterleaf	GPU genetic wind	0:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+9	3	5	Plant_Strawberry	Garden strawberry plant 4	HNS_NoddingHabit	GPU genetic wind	0:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+9	3	6	Plant_Strawberry	Garden strawberry plant 5	HNS_SweepingHabit	GPU genetic wind	0:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+10	1	1	Plant_Corn	Vanilla control		Vanilla	not styled				Original
+10	1	2	Plant_Corn	Garden corn plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+10	1	3	Plant_Corn	Garden corn plant 2	HNS_SuppleHabit	GPU genetic wind	1:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+10	1	4	Plant_Corn	Garden corn plant 3	HNS_Flutterleaf	GPU genetic wind	1:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+10	1	5	Plant_Corn	Garden corn plant 4	HNS_NoddingHabit	GPU genetic wind	1:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+10	1	6	Plant_Corn	Garden corn plant 5	HNS_SweepingHabit	GPU genetic wind	0:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+10	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled				Original
+10	2	2	Plant_Cotton	Garden cotton plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+10	2	3	Plant_Cotton	Garden cotton plant 2	HNS_SuppleHabit	GPU genetic wind	0:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+10	2	4	Plant_Cotton	Garden cotton plant 3	HNS_Flutterleaf	GPU genetic wind	1:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+10	2	5	Plant_Cotton	Garden cotton plant 4	HNS_NoddingHabit	GPU genetic wind	0:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+10	2	6	Plant_Cotton	Garden cotton plant 5	HNS_SweepingHabit	GPU genetic wind	1:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+10	3	1	Plant_Strawberry	Vanilla control		Vanilla	not styled				Original
+10	3	2	Plant_Strawberry	Garden strawberry plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+10	3	3	Plant_Strawberry	Garden strawberry plant 2	HNS_SuppleHabit	GPU genetic wind	0:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+10	3	4	Plant_Strawberry	Garden strawberry plant 3	HNS_Flutterleaf	GPU genetic wind	0:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+10	3	5	Plant_Strawberry	Garden strawberry plant 4	HNS_NoddingHabit	GPU genetic wind	0:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+10	3	6	Plant_Strawberry	Garden strawberry plant 5	HNS_SweepingHabit	GPU genetic wind	0:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+11	1	1	Plant_Corn	Vanilla control		Vanilla	not styled				Original
+11	1	2	Plant_Corn	Garden corn plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+11	1	3	Plant_Corn	Garden corn plant 2	HNS_SuppleHabit	GPU genetic wind	1:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+11	1	4	Plant_Corn	Garden corn plant 3	HNS_Flutterleaf	GPU genetic wind	1:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+11	1	5	Plant_Corn	Garden corn plant 4	HNS_NoddingHabit	GPU genetic wind	1:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+11	1	6	Plant_Corn	Garden corn plant 5	HNS_SweepingHabit	GPU genetic wind	0:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+11	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled				Original
+11	2	2	Plant_Cotton	Garden cotton plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+11	2	3	Plant_Cotton	Garden cotton plant 2	HNS_SuppleHabit	GPU genetic wind	0:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+11	2	4	Plant_Cotton	Garden cotton plant 3	HNS_Flutterleaf	GPU genetic wind	1:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+11	2	5	Plant_Cotton	Garden cotton plant 4	HNS_NoddingHabit	GPU genetic wind	0:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+11	2	6	Plant_Cotton	Garden cotton plant 5	HNS_SweepingHabit	GPU genetic wind	1:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+11	3	1	Plant_Strawberry	Vanilla control		Vanilla	not styled				Original
+11	3	2	Plant_Strawberry	Garden strawberry plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+11	3	3	Plant_Strawberry	Garden strawberry plant 2	HNS_SuppleHabit	GPU genetic wind	0:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+11	3	4	Plant_Strawberry	Garden strawberry plant 3	HNS_Flutterleaf	GPU genetic wind	0:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+11	3	5	Plant_Strawberry	Garden strawberry plant 4	HNS_NoddingHabit	GPU genetic wind	0:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+11	3	6	Plant_Strawberry	Garden strawberry plant 5	HNS_SweepingHabit	GPU genetic wind	0:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+12	1	1	Plant_Corn	Vanilla control		Vanilla	not styled				Original
+12	1	2	Plant_Corn	Garden corn plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+12	1	3	Plant_Corn	Garden corn plant 2	HNS_SuppleHabit	GPU genetic wind	1:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+12	1	4	Plant_Corn	Garden corn plant 3	HNS_Flutterleaf	GPU genetic wind	1:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+12	1	5	Plant_Corn	Garden corn plant 4	HNS_NoddingHabit	GPU genetic wind	1:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+12	1	6	Plant_Corn	Garden corn plant 5	HNS_SweepingHabit	GPU genetic wind	0:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+12	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled				Original
+12	2	2	Plant_Cotton	Garden cotton plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+12	2	3	Plant_Cotton	Garden cotton plant 2	HNS_SuppleHabit	GPU genetic wind	0:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+12	2	4	Plant_Cotton	Garden cotton plant 3	HNS_Flutterleaf	GPU genetic wind	1:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+12	2	5	Plant_Cotton	Garden cotton plant 4	HNS_NoddingHabit	GPU genetic wind	0:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+12	2	6	Plant_Cotton	Garden cotton plant 5	HNS_SweepingHabit	GPU genetic wind	1:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
+12	3	1	Plant_Strawberry	Vanilla control		Vanilla	not styled				Original
+12	3	2	Plant_Strawberry	Garden strawberry plant 1	HNS_RigidHabit	GPU genetic wind	0:local	Rigid Habit	Uncommon	A stiff, upright plant with very little wind movement.	Original
+12	3	3	Plant_Strawberry	Garden strawberry plant 2	HNS_SuppleHabit	GPU genetic wind	0:local	Supple Habit	Uncommon	Flexible foliage that sways farther in the breeze.	Original
+12	3	4	Plant_Strawberry	Garden strawberry plant 3	HNS_Flutterleaf	GPU genetic wind	0:local	Flutterleaf	Rare	A light, quick secondary flutter over ordinary swaying.	Original
+12	3	5	Plant_Strawberry	Garden strawberry plant 4	HNS_NoddingHabit	GPU genetic wind	0:local	Nodding Habit	Rare	A gentle forward-and-back nod, with less sideways bending.	Original
+12	3	6	Plant_Strawberry	Garden strawberry plant 5	HNS_SweepingHabit	GPU genetic wind	0:local	Sweeping Habit	Rare	A broad side-to-side sweep of the canopy.	Original
