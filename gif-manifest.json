@@ -1,0 +1,26 @@
+[
+  {
+    "file": "map-growth.gif",
+    "frames": 8,
+    "source_frames": 5,
+    "bytes": 2356979
+  },
+  {
+    "file": "map-growth-closeup.gif",
+    "frames": 8,
+    "source_frames": 5,
+    "bytes": 1201329
+  },
+  {
+    "file": "field-save-reload.gif",
+    "frames": 2,
+    "source_frames": 2,
+    "bytes": 533247
+  },
+  {
+    "file": "garden-to-field.gif",
+    "frames": 3,
+    "source_frames": 3,
+    "bytes": 1012724
+  }
+]
