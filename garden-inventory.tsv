@@ -1,0 +1,109 @@
+Panel	Row	Column	Species	Cultivar	Trait IDs	Renderer	Automatic mask sources	Trait labels	Tiers	Motifs
+1	1	1	Plant_Rice	Vanilla control		Vanilla	not styled			
+1	1	2	Plant_Rice	Garden rice plant 1	HNS_Giant	Geometry/effects only	not styled	Giant	Common	Fuller habit
+1	1	3	Plant_Rice	Garden rice plant 2	HNS_Dwarf	Geometry/effects only	not styled	Dwarf	Common	Compact habit
+1	1	4	Plant_Rice	Garden rice plant 3	HNS_Humongous	GPU procedural, no mask	0:none	Humongous	Exceptional	Massive layered growth; gilded ridges
+1	1	5	Plant_Rice	Garden rice plant 4	HNS_HighYield	GPU whole	0:local	High-Yield	Common	Full, closely packed habit
+1	1	6	Plant_Rice	Garden rice plant 5	HNS_LowYield	GPU whole	0:local	Low-Yield	Common	Sparse smaller habit
+1	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled			
+1	2	2	Plant_Cotton	Garden cotton plant 1	HNS_Delicate	GPU procedural, no mask	0:none	Delicate	Common	Slender pale tissue
+1	2	3	Plant_Cotton	Garden cotton plant 2	HNS_Robust	GPU procedural, no mask	0:none, 1:none	Robust	Common	Broad squat dark-green habit
+1	2	4	Plant_Cotton	Garden cotton plant 3	HNS_VeryDelicate	GPU procedural, no mask	1:none	Very Delicate	Rare	Ethereal thin silver foliage
+1	2	5	Plant_Cotton	Garden cotton plant 4	HNS_DiseaseResistant	GPU procedural, no mask	1:none	Disease-Resistant	Common	Dark healthy leaf cuticle
+1	2	6	Plant_Cotton	Garden cotton plant 5	HNS_DiseaseVulnerable	GPU procedural, no mask	1:none	Disease-Vulnerable	Common	Muted irregular lesion mottling
+1	3	1	Plant_Corn	Vanilla control		Vanilla	not styled			
+1	3	2	Plant_Corn	Garden corn plant 1	HNS_Easy	GPU whole	0:local	Easy	Common	Open rounded habit
+1	3	3	Plant_Corn	Garden corn plant 2	HNS_Difficult	GPU whole	0:local, 1:local	Difficult	Common	Upright wiry habit
+1	3	4	Plant_Corn	Garden corn plant 3	HNS_EasySow	Geometry/effects only	not styled	Easy Sow	Common	Low broad habit
+1	3	5	Plant_Corn	Garden corn plant 4	HNS_DifficultSow	GPU whole	1:local	Difficult Sow	Common	Tall tight clustered habit
+1	3	6	Plant_Corn	Garden corn plant 5	HNS_EasyHarvest	GPU whole	0:local	Easy Harvest	Common	Open loose canopy
+2	1	1	Plant_Potato	Vanilla control		Vanilla	not styled			
+2	1	2	Plant_Potato	Garden potato plant 1	HNS_DifficultHarvest	GPU whole	0:local	Difficult Harvest	Common	Close dense canopy
+2	1	3	Plant_Potato	Garden potato plant 2	HNS_ColdResistant	GPU procedural, no mask	0:none	Cold-Resistant	Common	Faint cool wax bloom
+2	1	4	Plant_Potato	Garden potato plant 3	HNS_ColdVulnerable	GPU procedural, no mask	0:none	Cold-Vulnerable	Common	Pale purple tip blush
+2	1	5	Plant_Potato	Garden potato plant 4	HNS_HeatResistant	GPU procedural, no mask	0:none	Heat-Resistant	Common	Warm amber cuticle
+2	1	6	Plant_Potato	Garden potato plant 5	HNS_HeatVulnerable	GPU procedural, no mask	0:none	Heat-Vulnerable	Common	Dry brown tip marks
+2	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled			
+2	2	2	Plant_Cotton	Garden cotton plant 1	HNS_ResourceDependent_Mulch	GPU procedural, no mask	0:none	Resource-Dependent (Mulch)	Uncommon	Earthy bronze grain
+2	2	3	Plant_Cotton	Garden cotton plant 2	HNS_ResourceDependent_Hay	GPU procedural, no mask	0:none	Resource-Dependent (Hay)	Uncommon	Straw-colored streaks
+2	2	4	Plant_Cotton	Garden cotton plant 3	HNS_ResourceDependent_Fungus	GPU procedural, no mask	1:none	Resource-Dependent (Fungus)	Uncommon	Fungal ivory speckling
+2	2	5	Plant_Cotton	Garden cotton plant 4	HNS_Perennial	GPU procedural, no mask	0:none, 1:none	Perennial	Uncommon	Mature bronze/jade canopy
+2	2	6	Plant_Cotton	Garden cotton plant 5	HNS_SelfSeeding	GPU procedural, no mask	0:none, 1:none	Self-Seeding	Uncommon	Small seed-like gold flecks
+2	3	1	Plant_Hops	Vanilla control		Vanilla	not styled			
+2	3	2	Plant_Hops	Garden hop plant 1	HNS_Forage	GPU procedural, no mask	0:none	Forage	Uncommon	Open grassy habit, mild golden tips
+2	3	3	Plant_Hops	Garden hop plant 2	HNS_FishHabitat	GPU procedural, no mask	0:none	Fish-Habitat	Uncommon	Blue-green water ripple markings
+2	3	4	Plant_Hops	Garden hop plant 3	HNS_AquaticForage	GPU procedural, no mask	0:none	Aquatic Forage	Uncommon	Olive-teal wet cuticle
+2	3	5	Plant_Hops	Garden hop plant 4	HNS_Aquatic	GPU procedural, no mask	0:none	Aquatic	Uncommon	Teal rippled pigment
+2	3	6	Plant_Hops	Garden hop plant 5	HNS_Sandy	GPU procedural, no mask	0:none	Desert	Uncommon	Dune-gold wax and brown tips
+3	1	1	Plant_Cotton	Vanilla control		Vanilla	not styled			
+3	1	2	Plant_Cotton	Garden cotton plant 1	HNS_HayByproduct	GPU procedural, no mask	0:none, 1:none	Byproduct (Hay)	Uncommon	Straw-gold linear streaks
+3	1	3	Plant_Cotton	Garden cotton plant 2	HNS_Joyresin	GPU procedural, no mask	1:none	Resinous (Joyresin)	Uncommon	Honey-gold resin droplets
+3	1	4	Plant_Cotton	Garden cotton plant 3	HNS_Painresin	GPU procedural, no mask	0:none	Resinous (Painresin)	Rare	Violet-black lacquer
+3	1	5	Plant_Cotton	Garden cotton plant 4	HNS_Burnresin	GPU procedural, no mask	1:none	Resinous (Burnresin)	Rare	Copper-red resin beads
+3	1	6	Plant_Cotton	Garden cotton plant 5	HNS_Toxresin	GPU procedural, no mask	1:none	Resinous (Toxresin)	Rare	Lime-green resin deposits
+3	2	1	Plant_Healroot	Vanilla control		Vanilla	not styled			
+3	2	2	Plant_Healroot	Garden healroot 1	HNS_Thorny	GPU procedural, no mask	0:none	Thorny	Common	Dark serration and restrained spikes
+3	2	3	Plant_Healroot	Garden healroot 2	HNS_Beautiful	GPU procedural, no mask	0:none	Beautiful	Common	Soft ivory/gold highlight
+3	2	4	Plant_Healroot	Garden healroot 3	HNS_Ugly	GPU procedural, no mask	0:none	Ugly	Common	Dusky bruised coloration
+3	2	5	Plant_Healroot	Garden healroot 4	HNS_HighlyMedicinal	GPU procedural, no mask	0:none	Highly Medicinal	Uncommon	Cool silver-green vein-like markings
+3	2	6	Plant_Healroot	Garden healroot 5	HNS_Joycompound	GPU procedural, no mask	0:none	Compound (Joycompound)	Uncommon	Soft pink/violet blush
+3	3	1	Plant_Strawberry	Vanilla control		Vanilla	not styled			
+3	3	2	Plant_Strawberry	Garden strawberry plant 1	HNS_Variegated	GPU procedural, no mask	0:none	Ivory Variegation	Exceptional	Ivory sectors
+3	3	3	Plant_Strawberry	Garden strawberry plant 2	HNS_Anthocyanin	GPU procedural, no mask	0:none	Crimson Blush	Exceptional	Crimson blush
+3	3	4	Plant_Strawberry	Garden strawberry plant 3	HNS_MoonFrost	GPU procedural, no mask	0:none	Moonfrost	Exceptional	Silver-blue bloom
+3	3	5	Plant_Strawberry	Garden strawberry plant 4	HNS_GoldFreckled	GPU procedural, no mask	0:none	Goldfreckled	Exceptional	Gold mottling
+3	3	6	Plant_Strawberry	Garden strawberry plant 5	HNS_AuroraVeins	GPU procedural, no mask	0:none	Aurora Veins	Exceptional	Bright turquoise branching motifs
+4	1	1	Plant_Corn	Vanilla control		Vanilla	not styled			
+4	1	2	Plant_Corn	Garden corn plant 1	HNS_Nutritious_5	GPU procedural, no mask	0:none, 1:none	Nutritious (+5%)	Common	Progressive rich gold speckles
+4	1	3	Plant_Corn	Garden corn plant 2	HNS_Nutritious_10	GPU procedural, no mask	1:none	Nutritious (+10%)	Uncommon	Progressive rich gold speckles
+4	1	4	Plant_Corn	Garden corn plant 3	HNS_Nutritious_15	GPU procedural, no mask	0:none	Nutritious (+15%)	Uncommon	Progressive rich gold speckles
+4	1	5	Plant_Corn	Garden corn plant 4	HNS_Nutritious_20	GPU procedural, no mask	0:none, 1:none	Nutritious (+20%)	Rare	Progressive rich gold speckles
+4	1	6	Plant_Corn	Garden corn plant 5	HNS_Nutritious_25	GPU procedural, no mask	0:none, 1:none	Nutritious (+25%)	Rare	Progressive rich gold speckles
+4	2	1	Plant_Corn	Vanilla control		Vanilla	not styled			
+4	2	2	Plant_Corn	Garden corn plant 1	HNS_Nutritious_30	GPU procedural, no mask	0:none, 1:none	Nutritious (+30%)	Rare	Progressive rich gold speckles
+4	2	3	Plant_Corn	Garden corn plant 2	HNS_Nutritious_35	GPU procedural, no mask	0:none, 1:none	Nutritious (+35%)	Rare	Progressive rich gold speckles
+4	2	4	Plant_Corn	Garden corn plant 3	HNS_Nutritious_40	GPU procedural, no mask	0:none, 1:none	Nutritious (+40%)	Rare	Progressive rich gold speckles
+4	2	5	Plant_Corn	Garden corn plant 4	HNS_Nutritious_45	GPU procedural, no mask	0:none, 1:none	Nutritious (+45%)	Rare	Progressive rich gold speckles
+4	2	6	Plant_Corn	Garden corn plant 5	HNS_Nutritious_50	GPU procedural, no mask	0:none, 1:none	Nutritious (+50%)	Exceptional	Progressive rich gold speckles
+4	3	1	Plant_Corn	Vanilla control		Vanilla	not styled			
+4	3	2	Plant_Corn	Garden corn plant 1	HNS_Nutritious_55	GPU procedural, no mask	0:none	Nutritious (+55%)	Exceptional	Progressive rich gold speckles
+4	3	3	Plant_Corn	Garden corn plant 2	HNS_Nutritious_60	GPU procedural, no mask	0:none, 1:none	Nutritious (+60%)	Exceptional	Progressive rich gold speckles
+4	3	4	Plant_Corn	Garden corn plant 3	HNS_Nutritious_65	GPU procedural, no mask	0:none	Nutritious (+65%)	Exceptional	Progressive rich gold speckles
+4	3	5	Plant_Corn	Garden corn plant 4	HNS_Nutritious_70	GPU procedural, no mask	1:none	Nutritious (+70%)	Exceptional	Progressive rich gold speckles
+4	3	6	Plant_Corn	Garden corn plant 5	HNS_Nutritious_75	GPU procedural, no mask	0:none	Nutritious (+75%)	Exceptional	Progressive rich gold speckles
+5	1	1	Plant_Corn	Vanilla control		Vanilla	not styled			
+5	1	2	Plant_Corn	Garden corn plant 1	HNS_Nutritious_80	GPU procedural, no mask	0:none, 1:none	Nutritious (+80%)	Exceptional	Progressive rich gold speckles
+5	1	3	Plant_Corn	Garden corn plant 2	HNS_Nutritious_85	GPU procedural, no mask	1:none	Nutritious (+85%)	Exceptional	Progressive rich gold speckles
+5	1	4	Plant_Corn	Garden corn plant 3	HNS_Nutritious_90	GPU procedural, no mask	0:none	Nutritious (+90%)	Exceptional	Progressive rich gold speckles
+5	1	5	Plant_Corn	Garden corn plant 4	HNS_Nutritious_95	GPU procedural, no mask	0:none, 1:none	Nutritious (+95%)	Exceptional	Progressive rich gold speckles
+5	1	6	Plant_Corn	Garden corn plant 5	HNS_Nutritious_100	GPU procedural, no mask	0:none, 1:none	Nutritious (+100%)	Exceptional	Progressive rich gold speckles
+5	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled			
+5	2	2	Plant_Cotton	Garden cotton plant 1	HNS_SynergyGenerated_Plant_Rice_GrowthRate	GPU procedural, no mask	0:none	Synergy (Rice plant) (Growth rate)	Uncommon	Companion-linked GrowthRate appearance
+5	2	3	Plant_Cotton	Garden cotton plant 2	HNS_SynergyGenerated_Plant_Rice_Yield	GPU procedural, no mask	0:none	Synergy (Rice plant) (Harvest yield)	Uncommon	Companion-linked Yield appearance
+5	2	4	Plant_Cotton	Garden cotton plant 3	HNS_SynergyGenerated_Plant_Rice_SowSpeed	GPU procedural, no mask	1:none	Synergy (Rice plant) (Sowing speed)	Uncommon	Companion-linked SowSpeed appearance
+5	2	5	Plant_Cotton	Garden cotton plant 4	HNS_SynergyGenerated_Plant_Rice_HarvestSpeed	GPU procedural, no mask	1:none	Synergy (Rice plant) (Harvest speed)	Uncommon	Companion-linked HarvestSpeed appearance
+5	2	6	Plant_Cotton	Garden cotton plant 5	HNS_SynergyGenerated_Plant_Rice_DiseaseResistance	GPU procedural, no mask	1:none	Synergy (Rice plant) (Disease resistance)	Uncommon	Companion-linked DiseaseResistance appearance
+5	3	1	Plant_Corn	Vanilla control		Vanilla	not styled			
+5	3	2	Plant_Corn	Garden corn plant 1	HNS_ProduceColor_RGB_255_13_73	GPU masked	0:local	Produce Color	Uncommon	Restrained inherited fruit pigment
+5	3	3	Plant_Corn	Garden corn plant 2	HNS_ProduceColor_RGB_64_112_255	GPU masked	0:local	Produce Color	Uncommon	Restrained inherited fruit pigment
+5	3	4	Plant_Corn	Garden corn plant 3	HNS_ProduceColor_RGB_255_194_13	GPU masked	0:local	Produce Color	Uncommon	Restrained inherited fruit pigment
+5	3	5	Plant_Corn	Garden corn plant 4	HNS_ProduceColor_RGB_10_209_159	GPU masked	1:local	Produce Color	Uncommon	Restrained inherited fruit pigment
+5	3	6	Plant_Corn	Garden corn plant 5	HNS_ProduceColor_RGB_194_13_255	GPU masked	0:local	Produce Color	Uncommon	Restrained inherited fruit pigment
+6	1	1	Plant_Corn	Vanilla control		Vanilla	not styled			
+6	1	2	Plant_Corn	Garden corn plant 1	HNS_LeafColor_RGB_255_13_73	GPU masked	1:local	Leaf Color	Uncommon	Restrained inherited foliage pigment
+6	1	3	Plant_Corn	Garden corn plant 2	HNS_LeafColor_RGB_64_112_255	GPU masked	1:local	Leaf Color	Uncommon	Restrained inherited foliage pigment
+6	1	4	Plant_Corn	Garden corn plant 3	HNS_LeafColor_RGB_255_194_13	GPU masked	0:local	Leaf Color	Uncommon	Restrained inherited foliage pigment
+6	1	5	Plant_Corn	Garden corn plant 4	HNS_LeafColor_RGB_10_209_159	GPU masked	1:local	Leaf Color	Uncommon	Restrained inherited foliage pigment
+6	1	6	Plant_Corn	Garden corn plant 5	HNS_LeafColor_RGB_194_13_255	GPU masked	1:local	Leaf Color	Uncommon	Restrained inherited foliage pigment
+6	2	1	Plant_Corn	Vanilla control		Vanilla	not styled			
+6	2	2	Plant_Corn	Garden corn plant 1	HNS_StemColor_RGB_255_13_73	GPU masked	0:local	Stem Color	Uncommon	Restrained inherited stem pigment
+6	2	3	Plant_Corn	Garden corn plant 2	HNS_StemColor_RGB_64_112_255	GPU masked	0:local	Stem Color	Uncommon	Restrained inherited stem pigment
+6	2	4	Plant_Corn	Garden corn plant 3	HNS_StemColor_RGB_255_194_13	GPU masked	1:local	Stem Color	Uncommon	Restrained inherited stem pigment
+6	2	5	Plant_Corn	Garden corn plant 4	HNS_StemColor_RGB_10_209_159	GPU masked	1:local	Stem Color	Uncommon	Restrained inherited stem pigment
+6	2	6	Plant_Corn	Garden corn plant 5	HNS_StemColor_RGB_194_13_255	GPU masked	1:local	Stem Color	Uncommon	Restrained inherited stem pigment
+6	3	1	Plant_Cotton	Vanilla control		Vanilla	not styled			
+6	3	2	Plant_Cotton	Garden cotton plant 1	HNS_Humongous, HNS_AuroraVeins	GPU procedural, no mask	0:none	Humongous + Aurora Veins	Exceptional + Exceptional	Massive layered growth; gilded ridges + Bright turquoise branching motifs
+6	3	3	Plant_Cotton	Garden cotton plant 2	HNS_Robust, HNS_ColdResistant, HNS_DiseaseResistant	GPU procedural, no mask	0:none, 1:none	Robust + Cold-Resistant + Disease-Resistant	Common + Common + Common	Broad squat dark-green habit + Faint cool wax bloom + Dark healthy leaf cuticle
+6	3	4	Plant_Cotton	Garden cotton plant 3	HNS_Beautiful, HNS_Variegated, HNS_ProduceColor_RGB_255_13_73	GPU masked	0:local	Beautiful + Ivory Variegation + Produce Color	Common + Exceptional + Uncommon	Soft ivory/gold highlight + Ivory sectors + Restrained inherited fruit pigment
+6	3	5	Plant_Cotton	Garden cotton plant 4	HNS_Burnresin, HNS_HeatResistant, HNS_Thorny	GPU procedural, no mask	1:none	Resinous (Burnresin) + Heat-Resistant + Thorny	Rare + Common + Common	Copper-red resin beads + Warm amber cuticle + Dark serration and restrained spikes
+6	3	6	Plant_Cotton	Garden cotton plant 5	HNS_Nutritious_100, HNS_GoldFreckled, HNS_HighYield	GPU procedural, no mask	0:none	Nutritious (+100%) + Goldfreckled + High-Yield	Exceptional + Exceptional + Common	Progressive rich gold speckles + Gold mottling + Full, closely packed habit

@@ -1,0 +1,873 @@
+Trait ID	Label	Generated	Config root	Tier	Motif	Pattern	Strength	Scale	Width	Height	Density	Sampled individually
+HNS_Anthocyanin	Crimson Blush	False	False	Exceptional	Crimson blush	2	0.92	1	1	1	1	True
+HNS_Aquatic	Aquatic	False	False	Uncommon	Teal rippled pigment	10	0.38	1	1.05	1	1	True
+HNS_AquaticForage	Aquatic Forage	False	False	Uncommon	Olive-teal wet cuticle	10	0.3	1	1.03	1	0.94	True
+HNS_AuroraVeins	Aurora Veins	False	False	Exceptional	Bright turquoise branching motifs	5	0.95	1	1	1	1	True
+HNS_Beautiful	Beautiful	False	False	Common	Soft ivory/gold highlight	1	0.22	1	1.03	1.02	1.02	True
+HNS_Burnresin	Resinous (Burnresin)	False	False	Rare	Copper-red resin beads	13	0.62	1	1.02	1	1	True
+HNS_Byproduct	Byproduct	False	True	Uncommon	Pale accessory flecks (family)	4	0.32	1	1	1	1	False
+HNS_ColdResistant	Cold-Resistant	False	False	Common	Faint cool wax bloom	3	0.23	1	1.02	0.98	1	True
+HNS_ColdVulnerable	Cold-Vulnerable	False	False	Common	Pale purple tip blush	2	0.18	1	0.98	1.03	1	True
+HNS_Compound	Compound	False	True	Uncommon	Violet pigment accents (family)	2	0.3	1	1	1	1	False
+HNS_Delicate	Delicate	False	False	Common	Slender pale tissue	3	0.13	1	0.91	1.1	1	True
+HNS_Difficult	Difficult	False	False	Common	Upright wiry habit	0	0	1	0.94	1.08	1.03	True
+HNS_DifficultHarvest	Difficult Harvest	False	False	Common	Close dense canopy	0	0	1	0.98	1.04	1.14	True
+HNS_DifficultSow	Difficult Sow	False	False	Common	Tall tight clustered habit	0	0	1	0.93	1.12	1.08	True
+HNS_DiseaseResistant	Disease-Resistant	False	False	Common	Dark healthy leaf cuticle	8	0.2	1	1.02	1	1	True
+HNS_DiseaseVulnerable	Disease-Vulnerable	False	False	Common	Muted irregular lesion mottling	7	0.32	1	0.97	1	0.94	True
+HNS_Dwarf	Dwarf	False	False	Common	Compact habit	0	0	0.85	1.06	0.92	1	True
+HNS_Easy	Easy	False	False	Common	Open rounded habit	0	0	0.98	1.06	0.96	0.96	True
+HNS_EasyHarvest	Easy Harvest	False	False	Common	Open loose canopy	0	0	1	1.08	0.98	0.87	True
+HNS_EasySow	Easy Sow	False	False	Common	Low broad habit	0	0	0.96	1.1	0.91	1	True
+HNS_FishHabitat	Fish-Habitat	False	False	Uncommon	Blue-green water ripple markings	10	0.42	1	1.09	0.98	1	True
+HNS_Forage	Forage	False	False	Uncommon	Open grassy habit, mild golden tips	6	0.23	1	1.04	0.98	0.78	True
+HNS_Giant	Giant	False	False	Common	Fuller habit	0	0	1.18	1.03	1.04	1	True
+HNS_GoldFreckled	Goldfreckled	False	False	Exceptional	Gold mottling	4	0.9	1	1	1	1	True
+HNS_HayByproduct	Byproduct (Hay)	False	False	Uncommon	Straw-gold linear streaks	1	0.33	1	1.04	1.08	1.03	True
+HNS_HeatResistant	Heat-Resistant	False	False	Common	Warm amber cuticle	6	0.23	1	1.02	0.96	1	True
+HNS_HeatVulnerable	Heat-Vulnerable	False	False	Common	Dry brown tip marks	7	0.22	1	0.98	1.02	0.95	True
+HNS_HighlyMedicinal	Highly Medicinal	False	False	Uncommon	Cool silver-green vein-like markings	5	0.4	1	1.03	1	1	True
+HNS_HighYield	High-Yield	False	False	Common	Full, closely packed habit	0	0	1.06	1.04	1	1.18	True
+HNS_Humongous	Humongous	False	False	Exceptional	Massive layered growth; gilded ridges	4	0.53	1.9	1.12	1.12	1.18	True
+HNS_Joycompound	Compound (Joycompound)	False	False	Uncommon	Soft pink/violet blush	2	0.45	1	1.02	1	1	True
+HNS_Joyresin	Resinous (Joyresin)	False	False	Uncommon	Honey-gold resin droplets	11	0.44	1	1.03	1	1	True
+HNS_LeafColor	Leaf Color	False	True	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_10_10_209	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_10_110_209	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_10_159_209	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_10_209_10	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_10_209_110	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_10_209_159	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	True
+HNS_LeafColor_RGB_10_209_209	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_10_209_60	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_10_60_209	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_104_166_41	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_104_41_166	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_110_10_209	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_110_209_10	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_112_255_64	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_112_64_255	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_115_115_255	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_115_150_255	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_115_185_255	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_115_220_255	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_115_255_115	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_115_255_150	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_115_255_185	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_115_255_220	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_115_255_255	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_120_166_75	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_120_75_166	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_123_209_94	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_123_94_209	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_126_166_8	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_126_8_166	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_13_13_255	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_13_134_255	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_13_194_255	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_13_255_13	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_13_255_134	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_13_255_194	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_13_255_255	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_13_255_73	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_13_73_255	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_131_209_52	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_131_52_209	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_134_13_255	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_134_255_13	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_135_166_41	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_135_41_166	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_143_166_75	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_143_75_166	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_150_115_255	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_150_255_115	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_152_209_94	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_152_94_209	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_159_10_209	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_159_209_10	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_159_255_64	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_159_64_255	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_166_104_41	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_166_120_75	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_166_126_8	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_166_135_41	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_166_143_75	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_166_166_41	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_166_166_75	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_166_166_8	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_166_41_104	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_166_41_135	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_166_41_166	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_166_41_41	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_166_41_73	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_166_48_8	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_166_73_41	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_166_75_120	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_166_75_143	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_166_75_166	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_166_75_75	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_166_75_97	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_166_8_126	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_166_8_166	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_166_8_48	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_166_8_8	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_166_8_87	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_166_87_8	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_166_97_75	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_170_209_52	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_170_52_209	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_180_209_94	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_180_94_209	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_185_115_255	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_185_255_115	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_194_13_255	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	True
+HNS_LeafColor_RGB_194_255_13	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_207_255_64	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_207_64_255	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_209_10_10	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_209_10_110	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_209_10_159	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_209_10_209	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_209_10_60	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_209_110_10	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_209_123_94	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_209_131_52	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_209_152_94	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_209_159_10	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_209_170_52	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_209_180_94	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_209_209_10	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_209_209_52	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_209_209_94	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_209_52_131	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_209_52_170	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_209_52_209	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_209_52_52	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_209_52_91	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_209_60_10	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_209_91_52	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_209_94_123	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_209_94_152	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_209_94_180	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_209_94_209	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_209_94_94	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_220_115_255	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_220_255_115	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_255_112_64	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_255_115_115	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_255_115_150	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_255_115_185	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_255_115_220	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_255_115_255	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_255_13_13	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_255_13_134	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_255_13_194	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_255_13_255	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_255_13_73	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	True
+HNS_LeafColor_RGB_255_134_13	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_255_150_115	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_255_159_64	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_255_185_115	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_255_194_13	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	True
+HNS_LeafColor_RGB_255_207_64	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_255_220_115	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_255_255_115	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_255_255_13	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_255_255_64	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_255_64_112	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_255_64_159	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_255_64_207	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_255_64_255	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_255_64_64	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_255_73_13	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_41_104_166	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_41_135_166	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_41_166_104	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_41_166_135	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_41_166_166	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_41_166_41	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_41_166_73	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_41_41_166	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_41_73_166	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_48_166_8	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_48_8_166	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_52_131_209	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_52_170_209	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_52_209_131	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_52_209_170	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_52_209_209	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_52_209_52	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_52_209_91	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_52_52_209	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_52_91_209	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_60_10_209	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_60_209_10	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_64_112_255	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	True
+HNS_LeafColor_RGB_64_159_255	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_64_207_255	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_64_255_112	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_64_255_159	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_64_255_207	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_64_255_255	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_64_255_64	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_64_64_255	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_73_13_255	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_73_166_41	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_73_255_13	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_73_41_166	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_75_120_166	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_75_143_166	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_75_166_120	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_75_166_143	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_75_166_166	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_75_166_75	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_75_166_97	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_75_75_166	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_75_97_166	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_8_126_166	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_8_166_126	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_8_166_166	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_8_166_48	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_8_166_8	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_8_166_87	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_8_48_166	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_8_8_166	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_8_87_166	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_87_166_8	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_87_8_166	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_91_209_52	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_91_52_209	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_94_123_209	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_94_152_209	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_94_180_209	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_94_209_123	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_94_209_152	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_94_209_180	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_94_209_209	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_94_209_94	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_94_94_209	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_97_166_75	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LeafColor_RGB_97_75_166	Leaf Color	True	False	Uncommon	Restrained inherited foliage pigment	0	0	1	1	1	1	False
+HNS_LowYield	Low-Yield	False	False	Common	Sparse smaller habit	0	0	0.96	0.98	1	0.82	True
+HNS_MoonFrost	Moonfrost	False	False	Exceptional	Silver-blue bloom	3	0.92	1	1	1	1	True
+HNS_Nutritious	Nutritious (+%)	False	True	Variable	Progressive rich gold speckles	4	0.2	1	1	1	1	False
+HNS_Nutritious_10	Nutritious (+10%)	True	False	Uncommon	Progressive rich gold speckles	4	0.207	1.024	1	1	1.03	True
+HNS_Nutritious_100	Nutritious (+100%)	True	False	Exceptional	Progressive rich gold speckles	4	0.9	1.24	1	1	1.3	True
+HNS_Nutritious_15	Nutritious (+15%)	True	False	Uncommon	Progressive rich gold speckles	4	0.2455	1.036	1	1	1.045	True
+HNS_Nutritious_20	Nutritious (+20%)	True	False	Rare	Progressive rich gold speckles	4	0.284	1.048	1	1	1.06	True
+HNS_Nutritious_25	Nutritious (+25%)	True	False	Rare	Progressive rich gold speckles	4	0.3225	1.06	1	1	1.075	True
+HNS_Nutritious_30	Nutritious (+30%)	True	False	Rare	Progressive rich gold speckles	4	0.361	1.072	1	1	1.09	True
+HNS_Nutritious_35	Nutritious (+35%)	True	False	Rare	Progressive rich gold speckles	4	0.3995	1.084	1	1	1.105	True
+HNS_Nutritious_40	Nutritious (+40%)	True	False	Rare	Progressive rich gold speckles	4	0.438	1.096	1	1	1.12	True
+HNS_Nutritious_45	Nutritious (+45%)	True	False	Rare	Progressive rich gold speckles	4	0.4765	1.108	1	1	1.135	True
+HNS_Nutritious_5	Nutritious (+5%)	True	False	Common	Progressive rich gold speckles	4	0.1685	1.012	1	1	1.015	True
+HNS_Nutritious_50	Nutritious (+50%)	True	False	Exceptional	Progressive rich gold speckles	4	0.515	1.12	1	1	1.15	True
+HNS_Nutritious_55	Nutritious (+55%)	True	False	Exceptional	Progressive rich gold speckles	4	0.5535	1.132	1	1	1.165	True
+HNS_Nutritious_60	Nutritious (+60%)	True	False	Exceptional	Progressive rich gold speckles	4	0.592	1.144	1	1	1.18	True
+HNS_Nutritious_65	Nutritious (+65%)	True	False	Exceptional	Progressive rich gold speckles	4	0.6305	1.156	1	1	1.195	True
+HNS_Nutritious_70	Nutritious (+70%)	True	False	Exceptional	Progressive rich gold speckles	4	0.669	1.168	1	1	1.21	True
+HNS_Nutritious_75	Nutritious (+75%)	True	False	Exceptional	Progressive rich gold speckles	4	0.7075	1.18	1	1	1.225	True
+HNS_Nutritious_80	Nutritious (+80%)	True	False	Exceptional	Progressive rich gold speckles	4	0.746	1.192	1	1	1.24	True
+HNS_Nutritious_85	Nutritious (+85%)	True	False	Exceptional	Progressive rich gold speckles	4	0.7845	1.204	1	1	1.255	True
+HNS_Nutritious_90	Nutritious (+90%)	True	False	Exceptional	Progressive rich gold speckles	4	0.823	1.216	1	1	1.27	True
+HNS_Nutritious_95	Nutritious (+95%)	True	False	Exceptional	Progressive rich gold speckles	4	0.8615	1.228	1	1	1.285	True
+HNS_Painresin	Resinous (Painresin)	False	False	Rare	Violet-black lacquer	12	0.57	1	1.04	1	1	True
+HNS_Perennial	Perennial	False	False	Uncommon	Mature bronze/jade canopy	8	0.3	1.04	1.07	0.98	1.04	True
+HNS_ProduceColor	Produce Color	False	True	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_10_10_209	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_10_110_209	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_10_159_209	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_10_209_10	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_10_209_110	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_10_209_159	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	True
+HNS_ProduceColor_RGB_10_209_209	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_10_209_60	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_10_60_209	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_104_166_41	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_104_41_166	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_110_10_209	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_110_209_10	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_112_255_64	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_112_64_255	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_115_115_255	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_115_150_255	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_115_185_255	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_115_220_255	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_115_255_115	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_115_255_150	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_115_255_185	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_115_255_220	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_115_255_255	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_120_166_75	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_120_75_166	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_123_209_94	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_123_94_209	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_126_166_8	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_126_8_166	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_13_13_255	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_13_134_255	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_13_194_255	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_13_255_13	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_13_255_134	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_13_255_194	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_13_255_255	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_13_255_73	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_13_73_255	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_131_209_52	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_131_52_209	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_134_13_255	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_134_255_13	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_135_166_41	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_135_41_166	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_143_166_75	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_143_75_166	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_150_115_255	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_150_255_115	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_152_209_94	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_152_94_209	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_159_10_209	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_159_209_10	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_159_255_64	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_159_64_255	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_166_104_41	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_166_120_75	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_166_126_8	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_166_135_41	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_166_143_75	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_166_166_41	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_166_166_75	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_166_166_8	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_166_41_104	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_166_41_135	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_166_41_166	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_166_41_41	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_166_41_73	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_166_48_8	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_166_73_41	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_166_75_120	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_166_75_143	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_166_75_166	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_166_75_75	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_166_75_97	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_166_8_126	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_166_8_166	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_166_8_48	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_166_8_8	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_166_8_87	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_166_87_8	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_166_97_75	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_170_209_52	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_170_52_209	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_180_209_94	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_180_94_209	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_185_115_255	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_185_255_115	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_194_13_255	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	True
+HNS_ProduceColor_RGB_194_255_13	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_207_255_64	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_207_64_255	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_209_10_10	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_209_10_110	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_209_10_159	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_209_10_209	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_209_10_60	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_209_110_10	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_209_123_94	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_209_131_52	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_209_152_94	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_209_159_10	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_209_170_52	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_209_180_94	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_209_209_10	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_209_209_52	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_209_209_94	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_209_52_131	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_209_52_170	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_209_52_209	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_209_52_52	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_209_52_91	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_209_60_10	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_209_91_52	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_209_94_123	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_209_94_152	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_209_94_180	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_209_94_209	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_209_94_94	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_220_115_255	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_220_255_115	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_255_112_64	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_255_115_115	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_255_115_150	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_255_115_185	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_255_115_220	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_255_115_255	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_255_13_13	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_255_13_134	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_255_13_194	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_255_13_255	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_255_13_73	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	True
+HNS_ProduceColor_RGB_255_134_13	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_255_150_115	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_255_159_64	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_255_185_115	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_255_194_13	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	True
+HNS_ProduceColor_RGB_255_207_64	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_255_220_115	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_255_255_115	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_255_255_13	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_255_255_64	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_255_64_112	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_255_64_159	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_255_64_207	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_255_64_255	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_255_64_64	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_255_73_13	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_41_104_166	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_41_135_166	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_41_166_104	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_41_166_135	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_41_166_166	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_41_166_41	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_41_166_73	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_41_41_166	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_41_73_166	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_48_166_8	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_48_8_166	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_52_131_209	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_52_170_209	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_52_209_131	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_52_209_170	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_52_209_209	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_52_209_52	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_52_209_91	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_52_52_209	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_52_91_209	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_60_10_209	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_60_209_10	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_64_112_255	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	True
+HNS_ProduceColor_RGB_64_159_255	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_64_207_255	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_64_255_112	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_64_255_159	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_64_255_207	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_64_255_255	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_64_255_64	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_64_64_255	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_73_13_255	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_73_166_41	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_73_255_13	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_73_41_166	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_75_120_166	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_75_143_166	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_75_166_120	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_75_166_143	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_75_166_166	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_75_166_75	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_75_166_97	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_75_75_166	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_75_97_166	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_8_126_166	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_8_166_126	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_8_166_166	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_8_166_48	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_8_166_8	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_8_166_87	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_8_48_166	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_8_8_166	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_8_87_166	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_87_166_8	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_87_8_166	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_91_209_52	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_91_52_209	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_94_123_209	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_94_152_209	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_94_180_209	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_94_209_123	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_94_209_152	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_94_209_180	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_94_209_209	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_94_209_94	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_94_94_209	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_97_166_75	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_ProduceColor_RGB_97_75_166	Produce Color	True	False	Uncommon	Restrained inherited fruit pigment	0	0	1	1	1	1	False
+HNS_Resinous	Resinous	False	True	Uncommon	Lacquered droplets (family)	11	0.42	1	1	1	1	False
+HNS_ResourceDependent	Resource-Dependent	False	True	Uncommon	Mineral mottling (family)	9	0.32	1	1	1	1	False
+HNS_ResourceDependent_Fungus	Resource-Dependent (Fungus)	False	False	Uncommon	Fungal ivory speckling	9	0.52	1	1.04	1	1	True
+HNS_ResourceDependent_Hay	Resource-Dependent (Hay)	False	False	Uncommon	Straw-colored streaks	1	0.32	1	1	1.06	1	True
+HNS_ResourceDependent_Mulch	Resource-Dependent (Mulch)	False	False	Uncommon	Earthy bronze grain	6	0.35	1	1.02	1	1	True
+HNS_Robust	Robust	False	False	Common	Broad squat dark-green habit	8	0.19	1	1.12	0.9	1.05	True
+HNS_Sandy	Desert	False	False	Uncommon	Dune-gold wax and brown tips	6	0.41	1	0.94	1.04	0.95	True
+HNS_SelfSeeding	Self-Seeding	False	False	Uncommon	Small seed-like gold flecks	4	0.33	1	1.03	1	1.08	True
+HNS_StemColor	Stem Color	False	True	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_10_10_209	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_10_110_209	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_10_159_209	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_10_209_10	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_10_209_110	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_10_209_159	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	True
+HNS_StemColor_RGB_10_209_209	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_10_209_60	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_10_60_209	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_104_166_41	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_104_41_166	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_110_10_209	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_110_209_10	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_112_255_64	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_112_64_255	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_115_115_255	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_115_150_255	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_115_185_255	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_115_220_255	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_115_255_115	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_115_255_150	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_115_255_185	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_115_255_220	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_115_255_255	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_120_166_75	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_120_75_166	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_123_209_94	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_123_94_209	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_126_166_8	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_126_8_166	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_13_13_255	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_13_134_255	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_13_194_255	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_13_255_13	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_13_255_134	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_13_255_194	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_13_255_255	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_13_255_73	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_13_73_255	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_131_209_52	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_131_52_209	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_134_13_255	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_134_255_13	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_135_166_41	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_135_41_166	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_143_166_75	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_143_75_166	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_150_115_255	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_150_255_115	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_152_209_94	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_152_94_209	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_159_10_209	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_159_209_10	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_159_255_64	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_159_64_255	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_166_104_41	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_166_120_75	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_166_126_8	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_166_135_41	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_166_143_75	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_166_166_41	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_166_166_75	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_166_166_8	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_166_41_104	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_166_41_135	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_166_41_166	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_166_41_41	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_166_41_73	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_166_48_8	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_166_73_41	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_166_75_120	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_166_75_143	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_166_75_166	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_166_75_75	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_166_75_97	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_166_8_126	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_166_8_166	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_166_8_48	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_166_8_8	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_166_8_87	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_166_87_8	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_166_97_75	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_170_209_52	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_170_52_209	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_180_209_94	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_180_94_209	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_185_115_255	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_185_255_115	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_194_13_255	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	True
+HNS_StemColor_RGB_194_255_13	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_207_255_64	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_207_64_255	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_209_10_10	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_209_10_110	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_209_10_159	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_209_10_209	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_209_10_60	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_209_110_10	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_209_123_94	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_209_131_52	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_209_152_94	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_209_159_10	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_209_170_52	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_209_180_94	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_209_209_10	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_209_209_52	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_209_209_94	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_209_52_131	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_209_52_170	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_209_52_209	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_209_52_52	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_209_52_91	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_209_60_10	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_209_91_52	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_209_94_123	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_209_94_152	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_209_94_180	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_209_94_209	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_209_94_94	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_220_115_255	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_220_255_115	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_255_112_64	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_255_115_115	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_255_115_150	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_255_115_185	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_255_115_220	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_255_115_255	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_255_13_13	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_255_13_134	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_255_13_194	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_255_13_255	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_255_13_73	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	True
+HNS_StemColor_RGB_255_134_13	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_255_150_115	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_255_159_64	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_255_185_115	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_255_194_13	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	True
+HNS_StemColor_RGB_255_207_64	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_255_220_115	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_255_255_115	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_255_255_13	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_255_255_64	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_255_64_112	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_255_64_159	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_255_64_207	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_255_64_255	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_255_64_64	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_255_73_13	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_41_104_166	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_41_135_166	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_41_166_104	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_41_166_135	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_41_166_166	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_41_166_41	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_41_166_73	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_41_41_166	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_41_73_166	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_48_166_8	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_48_8_166	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_52_131_209	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_52_170_209	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_52_209_131	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_52_209_170	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_52_209_209	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_52_209_52	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_52_209_91	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_52_52_209	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_52_91_209	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_60_10_209	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_60_209_10	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_64_112_255	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	True
+HNS_StemColor_RGB_64_159_255	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_64_207_255	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_64_255_112	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_64_255_159	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_64_255_207	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_64_255_255	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_64_255_64	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_64_64_255	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_73_13_255	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_73_166_41	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_73_255_13	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_73_41_166	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_75_120_166	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_75_143_166	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_75_166_120	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_75_166_143	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_75_166_166	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_75_166_75	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_75_166_97	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_75_75_166	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_75_97_166	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_8_126_166	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_8_166_126	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_8_166_166	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_8_166_48	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_8_166_8	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_8_166_87	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_8_48_166	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_8_8_166	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_8_87_166	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_87_166_8	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_87_8_166	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_91_209_52	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_91_52_209	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_94_123_209	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_94_152_209	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_94_180_209	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_94_209_123	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_94_209_152	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_94_209_180	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_94_209_209	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_94_209_94	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_94_94_209	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_97_166_75	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_StemColor_RGB_97_75_166	Stem Color	True	False	Uncommon	Restrained inherited stem pigment	0	0	1	1	1	1	False
+HNS_Synergy	Synergy	False	True	Uncommon	Interconnected jade ridges (family)	5	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Corn_DiseaseResistance	Synergy (Corn plant) (Disease resistance)	True	False	Uncommon	Companion-linked DiseaseResistance appearance	8	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Corn_GrowthRate	Synergy (Corn plant) (Growth rate)	True	False	Uncommon	Companion-linked GrowthRate appearance	5	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Corn_HarvestSpeed	Synergy (Corn plant) (Harvest speed)	True	False	Uncommon	Companion-linked HarvestSpeed appearance	6	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Corn_SowSpeed	Synergy (Corn plant) (Sowing speed)	True	False	Uncommon	Companion-linked SowSpeed appearance	1	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Corn_Yield	Synergy (Corn plant) (Harvest yield)	True	False	Uncommon	Companion-linked Yield appearance	4	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Cotton_DiseaseResistance	Synergy (Cotton plant) (Disease resistance)	True	False	Uncommon	Companion-linked DiseaseResistance appearance	8	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Cotton_GrowthRate	Synergy (Cotton plant) (Growth rate)	True	False	Uncommon	Companion-linked GrowthRate appearance	5	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Cotton_HarvestSpeed	Synergy (Cotton plant) (Harvest speed)	True	False	Uncommon	Companion-linked HarvestSpeed appearance	6	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Cotton_SowSpeed	Synergy (Cotton plant) (Sowing speed)	True	False	Uncommon	Companion-linked SowSpeed appearance	1	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Cotton_Yield	Synergy (Cotton plant) (Harvest yield)	True	False	Uncommon	Companion-linked Yield appearance	4	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Dandelion_DiseaseResistance	Synergy (Dandelions) (Disease resistance)	True	False	Uncommon	Companion-linked DiseaseResistance appearance	8	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Dandelion_GrowthRate	Synergy (Dandelions) (Growth rate)	True	False	Uncommon	Companion-linked GrowthRate appearance	5	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Dandelion_HarvestSpeed	Synergy (Dandelions) (Harvest speed)	True	False	Uncommon	Companion-linked HarvestSpeed appearance	6	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Dandelion_SowSpeed	Synergy (Dandelions) (Sowing speed)	True	False	Uncommon	Companion-linked SowSpeed appearance	1	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Dandelion_Yield	Synergy (Dandelions) (Harvest yield)	True	False	Uncommon	Companion-linked Yield appearance	4	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Daylily_DiseaseResistance	Synergy (Daylily) (Disease resistance)	True	False	Uncommon	Companion-linked DiseaseResistance appearance	8	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Daylily_GrowthRate	Synergy (Daylily) (Growth rate)	True	False	Uncommon	Companion-linked GrowthRate appearance	5	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Daylily_HarvestSpeed	Synergy (Daylily) (Harvest speed)	True	False	Uncommon	Companion-linked HarvestSpeed appearance	6	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Daylily_SowSpeed	Synergy (Daylily) (Sowing speed)	True	False	Uncommon	Companion-linked SowSpeed appearance	1	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Daylily_Yield	Synergy (Daylily) (Harvest yield)	True	False	Uncommon	Companion-linked Yield appearance	4	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Devilstrand_DiseaseResistance	Synergy (Devilstrand) (Disease resistance)	True	False	Uncommon	Companion-linked DiseaseResistance appearance	8	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Devilstrand_GrowthRate	Synergy (Devilstrand) (Growth rate)	True	False	Uncommon	Companion-linked GrowthRate appearance	5	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Devilstrand_HarvestSpeed	Synergy (Devilstrand) (Harvest speed)	True	False	Uncommon	Companion-linked HarvestSpeed appearance	6	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Devilstrand_SowSpeed	Synergy (Devilstrand) (Sowing speed)	True	False	Uncommon	Companion-linked SowSpeed appearance	1	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Devilstrand_Yield	Synergy (Devilstrand) (Harvest yield)	True	False	Uncommon	Companion-linked Yield appearance	4	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Haygrass_DiseaseResistance	Synergy (Haygrass) (Disease resistance)	True	False	Uncommon	Companion-linked DiseaseResistance appearance	8	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Haygrass_GrowthRate	Synergy (Haygrass) (Growth rate)	True	False	Uncommon	Companion-linked GrowthRate appearance	5	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Haygrass_HarvestSpeed	Synergy (Haygrass) (Harvest speed)	True	False	Uncommon	Companion-linked HarvestSpeed appearance	6	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Haygrass_SowSpeed	Synergy (Haygrass) (Sowing speed)	True	False	Uncommon	Companion-linked SowSpeed appearance	1	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Haygrass_Yield	Synergy (Haygrass) (Harvest yield)	True	False	Uncommon	Companion-linked Yield appearance	4	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Healroot_DiseaseResistance	Synergy (Healroot) (Disease resistance)	True	False	Uncommon	Companion-linked DiseaseResistance appearance	8	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Healroot_GrowthRate	Synergy (Healroot) (Growth rate)	True	False	Uncommon	Companion-linked GrowthRate appearance	5	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Healroot_HarvestSpeed	Synergy (Healroot) (Harvest speed)	True	False	Uncommon	Companion-linked HarvestSpeed appearance	6	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Healroot_SowSpeed	Synergy (Healroot) (Sowing speed)	True	False	Uncommon	Companion-linked SowSpeed appearance	1	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Healroot_Yield	Synergy (Healroot) (Harvest yield)	True	False	Uncommon	Companion-linked Yield appearance	4	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Hops_DiseaseResistance	Synergy (Hop plant) (Disease resistance)	True	False	Uncommon	Companion-linked DiseaseResistance appearance	8	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Hops_GrowthRate	Synergy (Hop plant) (Growth rate)	True	False	Uncommon	Companion-linked GrowthRate appearance	5	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Hops_HarvestSpeed	Synergy (Hop plant) (Harvest speed)	True	False	Uncommon	Companion-linked HarvestSpeed appearance	6	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Hops_SowSpeed	Synergy (Hop plant) (Sowing speed)	True	False	Uncommon	Companion-linked SowSpeed appearance	1	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Hops_Yield	Synergy (Hop plant) (Harvest yield)	True	False	Uncommon	Companion-linked Yield appearance	4	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Potato_DiseaseResistance	Synergy (Potato plant) (Disease resistance)	True	False	Uncommon	Companion-linked DiseaseResistance appearance	8	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Potato_GrowthRate	Synergy (Potato plant) (Growth rate)	True	False	Uncommon	Companion-linked GrowthRate appearance	5	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Potato_HarvestSpeed	Synergy (Potato plant) (Harvest speed)	True	False	Uncommon	Companion-linked HarvestSpeed appearance	6	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Potato_SowSpeed	Synergy (Potato plant) (Sowing speed)	True	False	Uncommon	Companion-linked SowSpeed appearance	1	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Potato_Yield	Synergy (Potato plant) (Harvest yield)	True	False	Uncommon	Companion-linked Yield appearance	4	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Psychoid_DiseaseResistance	Synergy (Psychoid plant) (Disease resistance)	True	False	Uncommon	Companion-linked DiseaseResistance appearance	8	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Psychoid_GrowthRate	Synergy (Psychoid plant) (Growth rate)	True	False	Uncommon	Companion-linked GrowthRate appearance	5	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Psychoid_HarvestSpeed	Synergy (Psychoid plant) (Harvest speed)	True	False	Uncommon	Companion-linked HarvestSpeed appearance	6	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Psychoid_SowSpeed	Synergy (Psychoid plant) (Sowing speed)	True	False	Uncommon	Companion-linked SowSpeed appearance	1	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Psychoid_Yield	Synergy (Psychoid plant) (Harvest yield)	True	False	Uncommon	Companion-linked Yield appearance	4	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Rice_DiseaseResistance	Synergy (Rice plant) (Disease resistance)	True	False	Uncommon	Companion-linked DiseaseResistance appearance	8	0.3	1	1	1	1	True
+HNS_SynergyGenerated_Plant_Rice_GrowthRate	Synergy (Rice plant) (Growth rate)	True	False	Uncommon	Companion-linked GrowthRate appearance	5	0.3	1	1	1	1	True
+HNS_SynergyGenerated_Plant_Rice_HarvestSpeed	Synergy (Rice plant) (Harvest speed)	True	False	Uncommon	Companion-linked HarvestSpeed appearance	6	0.3	1	1	1	1	True
+HNS_SynergyGenerated_Plant_Rice_SowSpeed	Synergy (Rice plant) (Sowing speed)	True	False	Uncommon	Companion-linked SowSpeed appearance	1	0.3	1	1	1	1	True
+HNS_SynergyGenerated_Plant_Rice_Yield	Synergy (Rice plant) (Harvest yield)	True	False	Uncommon	Companion-linked Yield appearance	4	0.3	1	1	1	1	True
+HNS_SynergyGenerated_Plant_Rose_DiseaseResistance	Synergy (Rose) (Disease resistance)	True	False	Uncommon	Companion-linked DiseaseResistance appearance	8	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Rose_GrowthRate	Synergy (Rose) (Growth rate)	True	False	Uncommon	Companion-linked GrowthRate appearance	5	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Rose_HarvestSpeed	Synergy (Rose) (Harvest speed)	True	False	Uncommon	Companion-linked HarvestSpeed appearance	6	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Rose_SowSpeed	Synergy (Rose) (Sowing speed)	True	False	Uncommon	Companion-linked SowSpeed appearance	1	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Rose_Yield	Synergy (Rose) (Harvest yield)	True	False	Uncommon	Companion-linked Yield appearance	4	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_SaguaroCactus_DiseaseResistance	Synergy (Saguaro cactus) (Disease resistance)	True	False	Uncommon	Companion-linked DiseaseResistance appearance	8	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_SaguaroCactus_GrowthRate	Synergy (Saguaro cactus) (Growth rate)	True	False	Uncommon	Companion-linked GrowthRate appearance	5	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_SaguaroCactus_HarvestSpeed	Synergy (Saguaro cactus) (Harvest speed)	True	False	Uncommon	Companion-linked HarvestSpeed appearance	6	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_SaguaroCactus_SowSpeed	Synergy (Saguaro cactus) (Sowing speed)	True	False	Uncommon	Companion-linked SowSpeed appearance	1	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_SaguaroCactus_Yield	Synergy (Saguaro cactus) (Harvest yield)	True	False	Uncommon	Companion-linked Yield appearance	4	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Smokeleaf_DiseaseResistance	Synergy (Smokeleaf plant) (Disease resistance)	True	False	Uncommon	Companion-linked DiseaseResistance appearance	8	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Smokeleaf_GrowthRate	Synergy (Smokeleaf plant) (Growth rate)	True	False	Uncommon	Companion-linked GrowthRate appearance	5	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Smokeleaf_HarvestSpeed	Synergy (Smokeleaf plant) (Harvest speed)	True	False	Uncommon	Companion-linked HarvestSpeed appearance	6	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Smokeleaf_SowSpeed	Synergy (Smokeleaf plant) (Sowing speed)	True	False	Uncommon	Companion-linked SowSpeed appearance	1	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Smokeleaf_Yield	Synergy (Smokeleaf plant) (Harvest yield)	True	False	Uncommon	Companion-linked Yield appearance	4	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Strawberry_DiseaseResistance	Synergy (Strawberry plant) (Disease resistance)	True	False	Uncommon	Companion-linked DiseaseResistance appearance	8	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Strawberry_GrowthRate	Synergy (Strawberry plant) (Growth rate)	True	False	Uncommon	Companion-linked GrowthRate appearance	5	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Strawberry_HarvestSpeed	Synergy (Strawberry plant) (Harvest speed)	True	False	Uncommon	Companion-linked HarvestSpeed appearance	6	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Strawberry_SowSpeed	Synergy (Strawberry plant) (Sowing speed)	True	False	Uncommon	Companion-linked SowSpeed appearance	1	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Strawberry_Yield	Synergy (Strawberry plant) (Harvest yield)	True	False	Uncommon	Companion-linked Yield appearance	4	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Timbershroom_DiseaseResistance	Synergy (Timbershroom) (Disease resistance)	True	False	Uncommon	Companion-linked DiseaseResistance appearance	8	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Timbershroom_GrowthRate	Synergy (Timbershroom) (Growth rate)	True	False	Uncommon	Companion-linked GrowthRate appearance	5	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Timbershroom_HarvestSpeed	Synergy (Timbershroom) (Harvest speed)	True	False	Uncommon	Companion-linked HarvestSpeed appearance	6	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Timbershroom_SowSpeed	Synergy (Timbershroom) (Sowing speed)	True	False	Uncommon	Companion-linked SowSpeed appearance	1	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Timbershroom_Yield	Synergy (Timbershroom) (Harvest yield)	True	False	Uncommon	Companion-linked Yield appearance	4	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Tinctoria_DiseaseResistance	Synergy (Tinctoria) (Disease resistance)	True	False	Uncommon	Companion-linked DiseaseResistance appearance	8	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Tinctoria_GrowthRate	Synergy (Tinctoria) (Growth rate)	True	False	Uncommon	Companion-linked GrowthRate appearance	5	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Tinctoria_HarvestSpeed	Synergy (Tinctoria) (Harvest speed)	True	False	Uncommon	Companion-linked HarvestSpeed appearance	6	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Tinctoria_SowSpeed	Synergy (Tinctoria) (Sowing speed)	True	False	Uncommon	Companion-linked SowSpeed appearance	1	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_Tinctoria_Yield	Synergy (Tinctoria) (Harvest yield)	True	False	Uncommon	Companion-linked Yield appearance	4	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeBamboo_DiseaseResistance	Synergy (Bamboo tree) (Disease resistance)	True	False	Uncommon	Companion-linked DiseaseResistance appearance	8	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeBamboo_GrowthRate	Synergy (Bamboo tree) (Growth rate)	True	False	Uncommon	Companion-linked GrowthRate appearance	5	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeBamboo_HarvestSpeed	Synergy (Bamboo tree) (Harvest speed)	True	False	Uncommon	Companion-linked HarvestSpeed appearance	6	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeBamboo_SowSpeed	Synergy (Bamboo tree) (Sowing speed)	True	False	Uncommon	Companion-linked SowSpeed appearance	1	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeBamboo_Yield	Synergy (Bamboo tree) (Harvest yield)	True	False	Uncommon	Companion-linked Yield appearance	4	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeBirch_DiseaseResistance	Synergy (Birch tree) (Disease resistance)	True	False	Uncommon	Companion-linked DiseaseResistance appearance	8	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeBirch_GrowthRate	Synergy (Birch tree) (Growth rate)	True	False	Uncommon	Companion-linked GrowthRate appearance	5	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeBirch_HarvestSpeed	Synergy (Birch tree) (Harvest speed)	True	False	Uncommon	Companion-linked HarvestSpeed appearance	6	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeBirch_SowSpeed	Synergy (Birch tree) (Sowing speed)	True	False	Uncommon	Companion-linked SowSpeed appearance	1	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeBirch_Yield	Synergy (Birch tree) (Harvest yield)	True	False	Uncommon	Companion-linked Yield appearance	4	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeCecropia_DiseaseResistance	Synergy (Cecropia tree) (Disease resistance)	True	False	Uncommon	Companion-linked DiseaseResistance appearance	8	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeCecropia_GrowthRate	Synergy (Cecropia tree) (Growth rate)	True	False	Uncommon	Companion-linked GrowthRate appearance	5	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeCecropia_HarvestSpeed	Synergy (Cecropia tree) (Harvest speed)	True	False	Uncommon	Companion-linked HarvestSpeed appearance	6	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeCecropia_SowSpeed	Synergy (Cecropia tree) (Sowing speed)	True	False	Uncommon	Companion-linked SowSpeed appearance	1	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeCecropia_Yield	Synergy (Cecropia tree) (Harvest yield)	True	False	Uncommon	Companion-linked Yield appearance	4	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeCocoa_DiseaseResistance	Synergy (Cocoa tree) (Disease resistance)	True	False	Uncommon	Companion-linked DiseaseResistance appearance	8	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeCocoa_GrowthRate	Synergy (Cocoa tree) (Growth rate)	True	False	Uncommon	Companion-linked GrowthRate appearance	5	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeCocoa_HarvestSpeed	Synergy (Cocoa tree) (Harvest speed)	True	False	Uncommon	Companion-linked HarvestSpeed appearance	6	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeCocoa_SowSpeed	Synergy (Cocoa tree) (Sowing speed)	True	False	Uncommon	Companion-linked SowSpeed appearance	1	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeCocoa_Yield	Synergy (Cocoa tree) (Harvest yield)	True	False	Uncommon	Companion-linked Yield appearance	4	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeCypress_DiseaseResistance	Synergy (Cypress tree) (Disease resistance)	True	False	Uncommon	Companion-linked DiseaseResistance appearance	8	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeCypress_GrowthRate	Synergy (Cypress tree) (Growth rate)	True	False	Uncommon	Companion-linked GrowthRate appearance	5	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeCypress_HarvestSpeed	Synergy (Cypress tree) (Harvest speed)	True	False	Uncommon	Companion-linked HarvestSpeed appearance	6	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeCypress_SowSpeed	Synergy (Cypress tree) (Sowing speed)	True	False	Uncommon	Companion-linked SowSpeed appearance	1	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeCypress_Yield	Synergy (Cypress tree) (Harvest yield)	True	False	Uncommon	Companion-linked Yield appearance	4	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeDrago_DiseaseResistance	Synergy (Drago tree) (Disease resistance)	True	False	Uncommon	Companion-linked DiseaseResistance appearance	8	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeDrago_GrowthRate	Synergy (Drago tree) (Growth rate)	True	False	Uncommon	Companion-linked GrowthRate appearance	5	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeDrago_HarvestSpeed	Synergy (Drago tree) (Harvest speed)	True	False	Uncommon	Companion-linked HarvestSpeed appearance	6	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeDrago_SowSpeed	Synergy (Drago tree) (Sowing speed)	True	False	Uncommon	Companion-linked SowSpeed appearance	1	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeDrago_Yield	Synergy (Drago tree) (Harvest yield)	True	False	Uncommon	Companion-linked Yield appearance	4	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeMaple_DiseaseResistance	Synergy (Maple tree) (Disease resistance)	True	False	Uncommon	Companion-linked DiseaseResistance appearance	8	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeMaple_GrowthRate	Synergy (Maple tree) (Growth rate)	True	False	Uncommon	Companion-linked GrowthRate appearance	5	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeMaple_HarvestSpeed	Synergy (Maple tree) (Harvest speed)	True	False	Uncommon	Companion-linked HarvestSpeed appearance	6	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeMaple_SowSpeed	Synergy (Maple tree) (Sowing speed)	True	False	Uncommon	Companion-linked SowSpeed appearance	1	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeMaple_Yield	Synergy (Maple tree) (Harvest yield)	True	False	Uncommon	Companion-linked Yield appearance	4	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeOak_DiseaseResistance	Synergy (Oak tree) (Disease resistance)	True	False	Uncommon	Companion-linked DiseaseResistance appearance	8	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeOak_GrowthRate	Synergy (Oak tree) (Growth rate)	True	False	Uncommon	Companion-linked GrowthRate appearance	5	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeOak_HarvestSpeed	Synergy (Oak tree) (Harvest speed)	True	False	Uncommon	Companion-linked HarvestSpeed appearance	6	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeOak_SowSpeed	Synergy (Oak tree) (Sowing speed)	True	False	Uncommon	Companion-linked SowSpeed appearance	1	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeOak_Yield	Synergy (Oak tree) (Harvest yield)	True	False	Uncommon	Companion-linked Yield appearance	4	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreePalm_DiseaseResistance	Synergy (Palm tree) (Disease resistance)	True	False	Uncommon	Companion-linked DiseaseResistance appearance	8	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreePalm_GrowthRate	Synergy (Palm tree) (Growth rate)	True	False	Uncommon	Companion-linked GrowthRate appearance	5	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreePalm_HarvestSpeed	Synergy (Palm tree) (Harvest speed)	True	False	Uncommon	Companion-linked HarvestSpeed appearance	6	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreePalm_SowSpeed	Synergy (Palm tree) (Sowing speed)	True	False	Uncommon	Companion-linked SowSpeed appearance	1	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreePalm_Yield	Synergy (Palm tree) (Harvest yield)	True	False	Uncommon	Companion-linked Yield appearance	4	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreePine_DiseaseResistance	Synergy (Pine tree) (Disease resistance)	True	False	Uncommon	Companion-linked DiseaseResistance appearance	8	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreePine_GrowthRate	Synergy (Pine tree) (Growth rate)	True	False	Uncommon	Companion-linked GrowthRate appearance	5	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreePine_HarvestSpeed	Synergy (Pine tree) (Harvest speed)	True	False	Uncommon	Companion-linked HarvestSpeed appearance	6	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreePine_SowSpeed	Synergy (Pine tree) (Sowing speed)	True	False	Uncommon	Companion-linked SowSpeed appearance	1	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreePine_Yield	Synergy (Pine tree) (Harvest yield)	True	False	Uncommon	Companion-linked Yield appearance	4	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreePoplar_DiseaseResistance	Synergy (Poplar tree) (Disease resistance)	True	False	Uncommon	Companion-linked DiseaseResistance appearance	8	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreePoplar_GrowthRate	Synergy (Poplar tree) (Growth rate)	True	False	Uncommon	Companion-linked GrowthRate appearance	5	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreePoplar_HarvestSpeed	Synergy (Poplar tree) (Harvest speed)	True	False	Uncommon	Companion-linked HarvestSpeed appearance	6	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreePoplar_SowSpeed	Synergy (Poplar tree) (Sowing speed)	True	False	Uncommon	Companion-linked SowSpeed appearance	1	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreePoplar_Yield	Synergy (Poplar tree) (Harvest yield)	True	False	Uncommon	Companion-linked Yield appearance	4	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeTeak_DiseaseResistance	Synergy (Teak tree) (Disease resistance)	True	False	Uncommon	Companion-linked DiseaseResistance appearance	8	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeTeak_GrowthRate	Synergy (Teak tree) (Growth rate)	True	False	Uncommon	Companion-linked GrowthRate appearance	5	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeTeak_HarvestSpeed	Synergy (Teak tree) (Harvest speed)	True	False	Uncommon	Companion-linked HarvestSpeed appearance	6	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeTeak_SowSpeed	Synergy (Teak tree) (Sowing speed)	True	False	Uncommon	Companion-linked SowSpeed appearance	1	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeTeak_Yield	Synergy (Teak tree) (Harvest yield)	True	False	Uncommon	Companion-linked Yield appearance	4	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeWillow_DiseaseResistance	Synergy (Willow tree) (Disease resistance)	True	False	Uncommon	Companion-linked DiseaseResistance appearance	8	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeWillow_GrowthRate	Synergy (Willow tree) (Growth rate)	True	False	Uncommon	Companion-linked GrowthRate appearance	5	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeWillow_HarvestSpeed	Synergy (Willow tree) (Harvest speed)	True	False	Uncommon	Companion-linked HarvestSpeed appearance	6	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeWillow_SowSpeed	Synergy (Willow tree) (Sowing speed)	True	False	Uncommon	Companion-linked SowSpeed appearance	1	0.3	1	1	1	1	False
+HNS_SynergyGenerated_Plant_TreeWillow_Yield	Synergy (Willow tree) (Harvest yield)	True	False	Uncommon	Companion-linked Yield appearance	4	0.3	1	1	1	1	False
+HNS_Thorny	Thorny	False	False	Common	Dark serration and restrained spikes	15	0.31	1	1.02	1	1	True
+HNS_Toxresin	Resinous (Toxresin)	False	False	Rare	Lime-green resin deposits	14	0.6	1	1.03	1	1	True
+HNS_Ugly	Ugly	False	False	Common	Dusky bruised coloration	7	0.35	1	0.98	1.02	1	True
+HNS_Variegated	Ivory Variegation	False	False	Exceptional	Ivory sectors	1	0.86	1	1	1	1	True
+HNS_VeryDelicate	Very Delicate	False	False	Rare	Ethereal thin silver foliage	3	0.57	0.95	0.74	1.25	0.84	True
