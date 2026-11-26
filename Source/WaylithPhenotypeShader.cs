@@ -26,6 +26,7 @@ namespace HorticultureNovelSeeds
         internal static readonly HashSet<int> MaskFreeProceduralPlants = new();
         internal static readonly HashSet<(int,int)> DevelopmentalPrints = new();
         internal static readonly Dictionary<int,Material> WindPrints = new();
+        internal static readonly Dictionary<int,Material> SurfacePrints = new();
 #endif
 
         // Caller must prepare from the main-thread editor/load boundary, not a print.
@@ -54,13 +55,16 @@ namespace HorticultureNovelSeeds
             var comp = plant.TryGetComp<CompPlantVariety>();
             Vector4 pattern = ProceduralPhenotypeUtility.Resolve(comp);
             var wind = plant.Position.GetSnowDepth(plant.Map) > .8f ? WindHabitKind.None : WindHabitUtility.Resolve(comp);
-            if (!NovelSeedUtility.HasRegionalPlantColor(comp) && (pattern.x > 0f || WindHabitMath.Valid(wind) || !PlantMaskUtility.HasActiveMasks(plant.def) || NovelSeedUtility.HasPlantMaskVisual(comp)))
+            var finish=plant.Position.GetSnowDepth(plant.Map)>.8f ? SurfaceFinishKind.None : SurfaceFinishUtility.Resolve(comp);
+            bool sheltered=SurfaceFinishMath.Valid(finish) && plant.Map.roofGrid.RoofAt(plant.Position)!=null;
+            if (!NovelSeedUtility.HasRegionalPlantColor(comp) && (pattern.x > 0f || SurfaceFinishMath.Valid(finish) || WindHabitMath.Valid(wind) || !PlantMaskUtility.HasActiveMasks(plant.def) || NovelSeedUtility.HasPlantMaskVisual(comp)))
             {
-                if (!TryGetCore(source, null, visual, PlantVisualParameters.Default, PlantVisualParameters.Default, pattern, out material, wind)) return false;
+                if (!TryGetCore(source, null, visual, PlantVisualParameters.Default, PlantVisualParameters.Default, pattern, out material, wind, finish, sheltered)) return false;
 #if HNS_NATIVE_FIXTURE
                 if (pattern.x > 0f) { ProceduralPlants.Add(plant.thingIDNumber); MaskFreeProceduralPlants.Add(plant.thingIDNumber); }
                 PrintedPlants.Add(plant.thingIDNumber);
                 if(WindHabitMath.Valid(wind)) WindPrints[plant.thingIDNumber]=material;
+                if(SurfaceFinishMath.Valid(finish)) SurfacePrints[plant.thingIDNumber]=material;
                 if (DevelopmentalPhenotype.IsMode((int)pattern.x) && material.GetVector("_HnsPattern").w == pattern.w)
                     DevelopmentalPrints.Add((plant.thingIDNumber, DevelopmentalPhenotype.Band(plant.Growth)));
 #endif
@@ -69,7 +73,7 @@ namespace HorticultureNovelSeeds
             var layers = PlantMaskUtility.LayersForVariation(plant.def, variationIndex, false);
             if (layers == null)
             {
-                if (!TryGetCore(source, null, visual, PlantVisualParameters.Default, PlantVisualParameters.Default, pattern, out material, wind)) return false;
+                if (!TryGetCore(source, null, visual, PlantVisualParameters.Default, PlantVisualParameters.Default, pattern, out material, wind, finish, sheltered)) return false;
             }
             else
             {
@@ -81,7 +85,7 @@ namespace HorticultureNovelSeeds
 #if HNS_NATIVE_FIXTURE
                 NativeShaderProbe.TryOverrideMaskStyles(plant, ref a, ref b, ref c);
 #endif
-                if (!TryGetCore(source, prepared.Texture, a, b, c, pattern, out material, wind)) return false;
+                if (!TryGetCore(source, prepared.Texture, a, b, c, pattern, out material, wind, finish, sheltered)) return false;
 #if HNS_NATIVE_FIXTURE
                 MaskedPlants.Add(plant.thingIDNumber);
 #endif
@@ -104,7 +108,7 @@ namespace HorticultureNovelSeeds
         }
 
         internal static bool TryGetCore(Material source, Texture2D mask, PlantVisualParameters a,
-            PlantVisualParameters b, PlantVisualParameters c, Vector4 pattern, out Material material, WindHabitKind wind = WindHabitKind.None)
+            PlantVisualParameters b, PlantVisualParameters c, Vector4 pattern, out Material material, WindHabitKind wind = WindHabitKind.None, SurfaceFinishKind finish = SurfaceFinishKind.None, bool sheltered = false)
         {
             material = null;
             bool motion=WindHabitMath.Valid(wind);
@@ -114,7 +118,7 @@ namespace HorticultureNovelSeeds
             var s0 = new Style(a); var s1 = new Style(b); var s2 = new Style(c);
             if (!s0.Valid || !s1.Valid || !s2.Valid || !Finite(pattern)) return false;
             var key = new MaterialKey(source, texture, source.renderQueue, source.mainTextureScale,
-                source.mainTextureOffset, mask, s0, s1, s2, pattern, wind);
+                source.mainTextureOffset, mask, s0, s1, s2, pattern, wind, finish, sheltered);
             if (materials.TryGetValue(key, out material)) return true;
             if (materials.Count >= MaterialLimit) return false;
             Material candidate = null;
@@ -136,7 +140,8 @@ namespace HorticultureNovelSeeds
                     !shader.HasProperty(Shader.PropertyToID("_HnsDullness2")) ||
                     !shader.HasProperty(Shader.PropertyToID("_HnsPattern")) ||
                     !shader.HasProperty(Shader.PropertyToID("_SwayHead")) ||
-                    (motion && !shader.HasProperty(Shader.PropertyToID("_HnsWind"))))
+                    (motion && !shader.HasProperty(Shader.PropertyToID("_HnsWind"))) ||
+                    (SurfaceFinishMath.Valid(finish) && (!shader.HasProperty(Shader.PropertyToID("_HnsSurface")) || !shader.HasProperty(Shader.PropertyToID("_HnsEnvironment")))))
                     throw new InvalidOperationException("Phenotype shader or material layout unavailable.");
                 candidate = new Material(shader)
                 {
@@ -148,6 +153,7 @@ namespace HorticultureNovelSeeds
                 };
                 candidate.SetVector("_HnsPattern", pattern);
                 if(motion) candidate.SetVector("_HnsWind",WindHabitUtility.Controls(wind));
+                if(SurfaceFinishMath.Valid(finish)) { candidate.SetFloat("_HnsSurface",(int)finish); SurfaceFinishUtility.Register(candidate,sheltered); }
                 s0.Apply(candidate, "");
                 s1.Apply(candidate, "1");
                 s2.Apply(candidate, "2");
@@ -183,7 +189,7 @@ namespace HorticultureNovelSeeds
             }
         }
         private readonly record struct MaterialKey(Material Source, Texture2D Texture, int Queue, Vector2 Scale,
-            Vector2 Offset, Texture2D Mask, Style A, Style B, Style C, Vector4 Pattern, WindHabitKind Wind);
+            Vector2 Offset, Texture2D Mask, Style A, Style B, Style C, Vector4 Pattern, WindHabitKind Wind, SurfaceFinishKind Finish, bool Sheltered);
         private sealed record PreparedMask(Texture2D Source, Texture2D Texture, VisualMaskLayerRecord[] Layers, int[] Hashes)
         {
             internal bool Matches(Texture source, IReadOnlyList<VisualMaskLayerRecord> layers)

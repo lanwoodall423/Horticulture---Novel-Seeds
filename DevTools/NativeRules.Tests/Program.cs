@@ -90,3 +90,8 @@ Require(!DevelopmentalPhenotype.IsMode(50)&&DevelopmentalPhenotype.IsMode(51)&&D
 foreach(var habit in Enum.GetValues<WindHabitKind>()){var c=WindHabitMath.Controls(habit);Require(c.X>=0f&&c.X+c.Flutter<=2.5f&&c.Z>=0f&&c.Z+c.Flutter<=2.5f&&c.Rate>=.5f&&c.Rate<=1.5f,habit+" bounded wind profile");}
 Require(WindHabitMath.Controls(WindHabitKind.None)==(1f,1f,1f,0f),"neutral wind profile");
 Require(WindHabitMath.Controls(WindHabitKind.RigidHabit).X<.2f&&WindHabitMath.Controls(WindHabitKind.Flutterleaf).Flutter>.3f,"distinct wind habits");
+
+Require(SurfaceFinishMath.Environment(.375f,1f,0f).X<0f && SurfaceFinishMath.Environment(.625f,1f,0f).X>0f,"direction changes with local solar time");
+Require(SurfaceFinishMath.Environment(.5f,1f,.8f)==(0f,1f,1f,1f),"rain and light bounded");
+Require(SurfaceFinishMath.Environment(float.NaN,float.NaN,float.NaN)==(0f,1f,0f,0f),"invalid environment finite");
+Require(SurfaceFinishMath.Environment(.5f,1f,.01f).Rain==.03125f,"quantized weather state");

@@ -23,6 +23,8 @@ layout(set = 2, binding = 0) uniform MaterialUniforms
     float _HnsDullness2;
     vec4 _HnsPattern; // @default = vec4(0.0, 0.0, 0.0, 1.0)
     vec4 _HnsWind; // @default = vec4(1.0, 1.0, 1.0, 0.0)
+    float _HnsSurface; // @default = 0.0
+    vec4 _HnsEnvironment; // @default = vec4(0.0, 1.0, 1.0, 0.0)
 } uMaterial;
 
 void main()

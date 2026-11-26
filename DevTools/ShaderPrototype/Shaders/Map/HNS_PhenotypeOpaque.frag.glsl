@@ -20,6 +20,8 @@ layout(set = 2, binding = 0) uniform MaterialUniforms
     float _HnsDullness2;
     vec4 _HnsPattern; // @default = vec4(0.0, 0.0, 0.0, 1.0)
     vec4 _HnsWind; // @default = vec4(1.0, 1.0, 1.0, 0.0)
+    float _HnsSurface; // @default = 0.0
+    vec4 _HnsEnvironment; // @default = vec4(0.0, 1.0, 1.0, 0.0)
 } uMaterial;
 layout(set = 2, binding = 1) uniform sampler2D _MainTex;
 layout(set = 2, binding = 2) uniform sampler2D _HnsMask;
@@ -571,6 +573,72 @@ vec3 hnsPattern(vec3 rgb, vec4 src, vec2 localUv, vec2 sampleUv, vec3 regions)
     return clamp(mix(rgb,target,amount),0.0,1.0);
 }
 
+// Approximate microrelief from the existing sprite's painted luminance.
+// No normal map, extra texture, emission or alpha expansion.
+float hnsRelief(vec2 uv,float fallback)
+{
+    vec4 s=texture(_MainTex,uv);
+    return s.a<.35?fallback:dot(s.rgb,vec3(.299,.587,.114));
+}
+vec3 hnsSurface(vec3 rgb,vec4 src,vec2 localUv,vec2 uv,vec3 regions)
+{
+    float mode=uMaterial._HnsSurface;
+    if(mode<.5)return rgb;
+    vec4 e=uMaterial._HnsEnvironment;
+    float val=max(src.r,max(src.g,src.b));
+    float affinity=hnsTissueAffinity(src.rgb,regions)*smoothstep(.09,.30,val);
+    if(affinity<.01)return rgb;
+    vec2 d=2.0/vec2(textureSize(_MainTex,0));
+    float lum=dot(src.rgb,vec3(.299,.587,.114));
+    vec2 grad=vec2(hnsRelief(uv+vec2(d.x,0),lum)-hnsRelief(uv-vec2(d.x,0),lum),
+                   hnsRelief(uv+vec2(0,d.y),lum)-hnsRelief(uv-vec2(0,d.y),lum));
+    vec3 normal=normalize(vec3(-grad*3.8,1.0));
+    vec3 halfDir=normalize(vec3(e.xy*.70,1.0));
+    float facing=clamp(dot(normal,halfDir),0.0,1.0);
+    float gloss=pow(facing,13.0)*smoothstep(.22,.64,val);
+    float diffuse=clamp(dot(normal,normalize(vec3(e.xy,1.3))),0.0,1.0);
+    float rim=hnsRim(uv,1.7);
+    float grain=hnsNoise(localUv*vec2(31.0,24.0));
+    float wet=e.w;
+    vec3 result=rgb;
+    if(mode<1.5) // Satin: broad smooth directional gleam, retain hue
+    {
+        result=rgb*(.87+.19*diffuse);
+        result=mix(result,vec3(.91,.96,.83),gloss*(.17+.20*e.z)+wet*.10*gloss);
+    }
+    else if(mode<2.5) // Velvet: diffuse low-sheen, fine nap and grazing edge
+    {
+        result=rgb*(.69+.25*diffuse+.10*grain);
+        result=mix(result,vec3(.62,.75,.53),rim*(.13+.13*e.z)*(.5+.5*grain));
+    }
+    else if(mode<3.5) // Wax bloom: broad pale scattering
+    {
+        float bloom=smoothstep(.14,.72,val)*(.38+.62*diffuse);
+        result=mix(rgb,vec3(.75,.84,.79)*(.40+.60*val),bloom*(.35+.32*e.z));
+        result+=vec3(.055,.065,.05)*rim*e.z;
+    }
+    else if(mode<4.5) // Hydrophobic beads, sparse and tied to actual rain
+    {
+        vec2 st=localUv*8.0,id=floor(st);
+        vec2 p=fract(st)-(.24+.52*hnsPoint(id));
+        float size=.12+.065*hnsHash(id+vec2(2,9));
+        float drop=(1.0-smoothstep(size-.035,size+.045,length(p)))*step(.28,hnsHash(id));
+        float glint=(1.0-smoothstep(.03,.10,length(p+e.xy*.07+vec2(.035,.035))))*drop;
+        float edge=smoothstep(size-.075,size-.025,length(p))*drop;
+        result=rgb*(1.0-.13*wet);
+        result=mix(result,rgb*.64,edge*wet*.65);
+        result=mix(result,vec3(.72,.91,.92),drop*wet*.26+glint*wet*.65);
+        result+=vec3(.05)*gloss*wet;
+    }
+    else // Pearlescent cuticle: direction-dependent cool/warm glints
+    {
+        float phase=dot(normal.xy,e.xy)*2.0+e.x*.8+grain*.48+localUv.y*.32;
+        vec3 pearl=mix(vec3(.53,.76,.81),vec3(.91,.78,.52),smoothstep(-.42,.65,phase));
+        result=mix(rgb,pearl*(.58+.42*val),(.20+.35*gloss)*e.z);
+    }
+    return clamp(mix(rgb,result,affinity),0.0,1.0);
+}
+
 void main()
 {
     vec2 uv = vUv * uMaterial._MainTex_ST.zw + uMaterial._MainTex_ST.xy;
@@ -591,5 +659,6 @@ void main()
             rgb = compose(rgb, uMaterial._HnsTint2.rgb, uMaterial._HnsControls2, uMaterial._HnsDullness2);
         // Unassigned pixels remain exactly as in the source.
     }
-    outColor = vec4(hnsPattern(rgb, src, vUv, uv, regions), src.a);
+    rgb=hnsPattern(rgb,src,vUv,uv,regions);
+    outColor=vec4(hnsSurface(rgb,src,vUv,uv,regions),src.a);
 }

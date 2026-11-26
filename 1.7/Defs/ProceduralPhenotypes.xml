@@ -718,4 +718,60 @@
     <exclusionTags><li>windHabit</li></exclusionTags>
     <windHabit>SweepingHabit</windHabit>
   </HorticultureNovelSeeds.VarietyTraitDef>
+  <!-- Experimental environment-responsive surface finishes. -->
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_SatinCuticle</defName>
+    <label>Satin Cuticle</label>
+    <description>Smooth leaf surfaces with directional satin highlights.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>surfaceFinish</li></exclusionTags>
+    <surfaceFinish>SatinCuticle</surfaceFinish>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_VelvetNap</defName>
+    <label>Velvet Nap</label>
+    <description>Soft matte foliage with diffuse edge lighting and fine nap.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>surfaceFinish</li></exclusionTags>
+    <surfaceFinish>VelvetNap</surfaceFinish>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_SilverBloom</defName>
+    <label>Silver Bloom</label>
+    <description>A pale waxy surface that catches light along raised areas.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>surfaceFinish</li></exclusionTags>
+    <surfaceFinish>SilverBloom</surfaceFinish>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_RainBeads</defName>
+    <label>Rain Beads</label>
+    <description>Hydrophobic foliage with localized simulated droplets in rain.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>surfaceFinish</li></exclusionTags>
+    <surfaceFinish>RainBeads</surfaceFinish>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_PearlCuticle</defName>
+    <label>Pearl Cuticle</label>
+    <description>Subtle cool and warm structural color shifts with the light direction.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>surfaceFinish</li></exclusionTags>
+    <surfaceFinish>PearlCuticle</surfaceFinish>
+  </HorticultureNovelSeeds.VarietyTraitDef>
 </Defs>
