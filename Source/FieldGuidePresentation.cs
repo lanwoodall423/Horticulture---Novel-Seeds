@@ -30,7 +30,7 @@ namespace HorticultureNovelSeeds
         {
             Fill(r,Tile);Fill(new(r.x,r.y,3,r.height),color);
             Label(new(r.x+12,r.y+5,r.width-22,33),n,GameFont.Medium,color);
-            Label(new(r.x+12,r.y+40,r.width-22,24),label,GameFont.Small,Muted);
+            Label(new(r.x+12,r.y+Mathf.Min(40,r.height-23),r.width-22,23),label,GameFont.Small,Muted);
         }
         private static void Meter(Rect r,float value,Color c)
         {Fill(r,Rule);Fill(new(r.x,r.y,r.width*Mathf.Clamp01(value),r.height),c);}
@@ -73,7 +73,7 @@ namespace HorticultureNovelSeeds
                 float y=0;Title(view,ref y,"Botanical field guide","Discover, preserve and cultivate the living history of your colony.");
                 float w=(view.width-16)/3;
                 Metric(new(0,y,w,74),all.Count.ToString(),"Documented cultivars",Accent);
-                Metric(new(w+8,y,w,74),(GameComponent_CultivationJournal.Instance?.ObservedSpecies.Count()??0).ToString(),"Observed species",Blue);
+                Metric(new(w+8,y,w,74),all.Select(v=>v.cropDef.defName).Concat(GameComponent_CultivationJournal.Instance?.ObservedSpecies??Enumerable.Empty<string>()).Distinct(StringComparer.Ordinal).Count().ToString(),"Recorded species",Blue);
                 Metric(new(2*(w+8),y,w,74),s==null?"--":(s.Ready+s.Packs).ToString(),"Awaiting action",Gold);y+=88;
                 Section(view,ref y,"DISCOVERIES AWAITING ATTENTION");
                 if(urgent.Length==0){Label(new(0,y,view.width,55),s==null?"Scanning visible discoveries on your current home map...":"No mature discoveries or undocumented seed packs currently need attention.",GameFont.Small,Muted);y+=55;}

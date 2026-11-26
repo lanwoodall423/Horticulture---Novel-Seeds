@@ -175,7 +175,7 @@ namespace HorticultureNovelSeeds
                 NativeUi.Button(view, ref y, "Rename", () => Find.WindowStack.Add(new Dialog_RenameVariety(v)));
                 NativeUi.Button(view, ref y, v.registryFavorite ? "Remove favorite" : "Favorite", () => v.registryFavorite = !v.registryFavorite);
                 NativeUi.Button(view, ref y, v.registryArchived ? "Restore" : "Archive", () => v.registryArchived = !v.registryArchived);
-                NativeUi.Button(view, ref y, "Locate on map", () => Locate(v));
+
                 NativeUi.Button(view, ref y, lineage ? "Hide pedigree" : "Show pedigree", () => lineage = !lineage);
                 if (lineage)
                 {
@@ -236,7 +236,7 @@ namespace HorticultureNovelSeeds
             var target = Find.CurrentMap?.listerThings?.AllThings.FirstOrDefault(t =>
                 (t.TryGetComp<CompPlantVariety>() is CompPlantVariety plant && !plant.PendingDiscovery && plant.VarietyId == variety.id) ||
                 t.TryGetComp<CompNovelProduceAppearance>()?.SourceVarietyIds?.Contains(variety.id) == true);
-            if (target != null) CameraJumper.TryJumpAndSelect(target);
+            if (target != null) LocateThing(target);
             else Messages.Message("No matching plant or produce on the current map.", MessageTypeDefOf.NeutralEvent, false);
         }
     }

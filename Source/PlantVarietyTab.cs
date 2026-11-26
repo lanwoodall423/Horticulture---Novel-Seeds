@@ -22,6 +22,8 @@ namespace HorticultureNovelSeeds
             {
                 Heading(w,ref y,"UNDOCUMENTED VARIATION");
                 Body(w,ref y,"This individual has not been documented as a cultivar. Genetic identity, modifiers and lineage remain unknown.",Muted);
+                if(Widgets.ButtonText(new Rect(0,y,w,28),"Open discovery inbox"))MainTabWindow_CultivarRegistry.OpenDiscoveries();
+                y+=34;
                 if(Widgets.ButtonText(new Rect(0,y,w,28),"Open species in Horticulture"))MainTabWindow_CultivarRegistry.OpenPlant(p.def);
                 y+=34;
             }

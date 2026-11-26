@@ -28,6 +28,7 @@ namespace HorticultureNovelSeeds
         private static Zone_Growing zone;
         private static HorticultureWorkspaceDocument workspace;
         private static int harvests;
+        private static bool namingRetried;
         private static readonly List<string> evidence=new(){"Stage\tDiscovery count\tReady\tPacks\tPage\tRepaint count\tScreenshot"};
         [DllImport("user32.dll")]private static extern bool InvalidateRect(IntPtr h,IntPtr r,bool erase);
         [DllImport("user32.dll")]private static extern bool UpdateWindow(IntPtr h);
@@ -186,7 +187,14 @@ namespace HorticultureNovelSeeds
                     var naming=(IHorticultureNamingSurface)dialog;
                     Require(naming.TraitLabels.Count==0&&!recovered.Destroyed,"naming preserves undisclosed genes and pack");
                     naming.Name="First field guide discovery";
-                    if(!Capture("09-naming","Discoveries"))return;
+                    if(!namingRetried)
+                    {
+                        if(!Capture("09-naming","Discoveries"))return;
+                        naming.Cancel();Require(!recovered.Destroyed,"cancel retains actual seed pack");
+                        Require(FieldGuideIndex.OrderDocumentation(recovered,farmer),"actual retry after cancellation");
+                        namingRetried=true;Find.TickManager.CurTimeSpeed=TimeSpeed.Ultrafast;Reset();return;
+                    }
+                    if(age<45)return;
                     naming.Save();Require(recovered.Destroyed,"actual naming registration consumes recovered pack");
                     var v=GameComponent_NovelSeeds.Instance.VarietiesFor(Def("Corn")).Single(v=>v.customName=="First field guide discovery");
                     Require(HorticulturePresentationPolicy.IsDocumented(v)&&GameComponent_CultivationJournal.Instance.ForCultivar(v)!=null,"documented cultivar and journal");
