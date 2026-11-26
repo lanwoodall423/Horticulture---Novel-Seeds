@@ -865,3 +865,41 @@ Preparation SHA256: 08F170A7AEA5452FC254C07CC471E5966C13255D5DCFF3DD45713B4757F5
 Reproduce with RimWorld closed:
 
     powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -ArchitectureGarden
+
+## Foliage reconstruction refinement (2026-11-25)
+
+Owner identified fruit-shaped transparent holes in the modular foliage,
+particularly forked corn. Source 884ab892a5f473b0c8bd6c6a632cb4924eefbf00
+adds bounded four-connected propagation of foliage colors across attached
+opaque source tissue, excluding genuine alpha gaps and disconnected organs.
+Original source art and independent reproductive extraction are unchanged.
+No new trait, mechanics, cache identities, manual masks or prior visual changes.
+
+AllPerformance run 7376431d40e5429297401ae70d289c26, RimWorld 1.7.5014
+rev1195: all five stages passed. 36 mature plants, 28 variants rendered,
+two hops reproductive fallbacks, 98 additional planes, nine module sets,
+13 module materials; zero custom shader materials and zero prepared masks.
+Eight new regression tests passed, both builds clean. All normal player
+preservation and owned cleanup checks passed. No relevant HNS error
+identified in captured log. Evidence and exact same-source diagnostics:
+https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/ce603425f98ae8a0fbe1017bc929355bf12fbeee
+
+The two corn source modules recovered 2223/2564 pixels. Rose retained
+899 unreachable reproductive pixels. The recovered source silhouettes
+no longer show the conspicuous corn/cotton cutout holes; light shading
+and approximate fruit-shaped foliage echoes remain, especially cotton.
+The method estimates obscured tissue, not anatomical ground truth.
+The native source/legacy/repaired strips are aligned on the same UV grid;
+garden screenshots may use different variants/positions than prior run.
+Other combined effects, natural development, wind, field performance,
+seasonal art, save/reload and ordinary activation remain unqualified.
+
+DLL SHA256: 6D883017B7E33A0E8C2C5B440AFFFA07C3CE6A23824DF372D1742EB4BAC5A185.
+Receipt SHA256: 8A4200244F7B79EB77D595FC3A4E0281526F42DBB8866EC9A4730CF614E23867.
+Log SHA256: 41BA82C216E5C93621E9EC42C5ECE228606A6855E24F2AA14DDE182F4C3DC5D8.
+Architecture inventory SHA256: 5C8977AED0BC7460A59CFEA5A912C8C0E78F44BFE4D300AAAB0C5FEA1459F5CF.
+Preparation SHA256: AA7427526FD11C20290092DD4C41AC8FEF12496FB22BF58389DE5BA0B75ED2B3.
+
+Reproduce with RimWorld closed:
+
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -ArchitectureGarden
