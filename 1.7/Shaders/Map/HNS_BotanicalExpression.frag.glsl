@@ -38,7 +38,10 @@ void main()
         src=texture(_HnsArchitecture,(vec2(mod(f,3.),2.-floor(f/3.))+local)/3.);
         base=(uv-.5)*1.5+.5;
     }
-    else src=texture(_MainTex,uv);
+    // Waylith native source sampling must share the vertical convention
+    // of the CPU-read anatomy and architecture uploads. Keep map-space uv
+    // for root/tip calculations; invert only at texture lookup.
+    else src=texture(_MainTex,vec2(uv.x,1.-uv.y));
     if(src.a<.35)discard;
     vec4 a=outside(base)?vec4(0):texture(_HnsAnatomy,vec2(base.x,1.-base.y));
     float green=smoothstep(.0,.065,src.g-src.r)*smoothstep(.015,.085,src.g-src.b);

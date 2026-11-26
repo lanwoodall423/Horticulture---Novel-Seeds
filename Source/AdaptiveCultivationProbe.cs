@@ -104,6 +104,42 @@ namespace HorticultureNovelSeeds
             }
             return true;
         }
+        private static readonly List<string> orientation=new(){"Species\tColumn\tPath\tUpright error\tInverted error\tReference asymmetry"};
+        private static void CheckOrientation(Plant p,int col,BotanicalExpressionEngine.Print pr,Texture2D rendered)
+        {
+            var source=(Texture2D)pr.Material.mainTexture;
+            int w=source.width,h=source.height;
+            // Compare native GPU alpha against the unmodified native-source readback.
+            // The centered architecture frame zero preserves every original pixel.
+            // Row support is insensitive to horizontal lean and color treatments.
+            var original=OrganSpriteExperiment.Read(source,w,h);
+            bool architecture=pr.Material.GetVector("_HnsExpression").x>.5f;
+            var neutral=architecture?BotanicalExpressionEngine.Readback(pr.Material,0,pr.Seed,0,pr.Material.GetVector("_HnsExpressionEnv")):rendered;
+            try
+            {
+                var pixels=neutral.GetPixels32();int W=neutral.width,H=neutral.height,ox=(W-w)/2,oy=(H-h)/2;
+                var reference=new int[h];var actual=new int[h];
+                for(int y=0;y<h;y++)for(int x=0;x<w;x++)
+                {
+                    if(original[y*w+x].a>=90)reference[y]++;
+                    if(pixels[(y+oy)*W+x+ox].a>=90)actual[y]++;
+                }
+                int sum=reference.Sum();Require(sum>30,"nonblank upright reference");
+                float upright=0,inverted=0,asymmetry=0;
+                for(int y=0;y<h;y++)
+                {
+                    upright+=Math.Abs(actual[y]-reference[y]);
+                    inverted+=Math.Abs(actual[y]-reference[h-1-y]);
+                    asymmetry+=Math.Abs(reference[y]-reference[h-1-y]);
+                }
+                upright/=sum;inverted/=sum;asymmetry/=sum;
+                orientation.Add(string.Join("\t",p.def.defName,col,architecture?"architecture":"direct",upright.ToString("F4",System.Globalization.CultureInfo.InvariantCulture),inverted.ToString("F4",System.Globalization.CultureInfo.InvariantCulture),asymmetry.ToString("F4",System.Globalization.CultureInfo.InvariantCulture)));
+                File.WriteAllLines(Path.Combine(root,"HNS-garden-adaptive-orientation.tsv"),orientation);
+                Require(asymmetry>.10f&&upright+.025f<inverted&&upright<.30f,
+                    "native source orientation "+p.def.defName+"/"+col+" upright="+upright+" inverted="+inverted+" asymmetry="+asymmetry);
+            }
+            finally{if(architecture)UnityEngine.Object.Destroy(neutral);}
+        }
         private static void Record(string name)
         {
             foreach(var p in plants)
@@ -117,6 +153,7 @@ namespace HorticultureNovelSeeds
                     {
                         Require(tex.GetPixels32().Count(c0=>c0.r+c0.g+c0.b>24)>30,"nonblank native GPU material");
                         File.WriteAllBytes(Path.Combine(root,"HNS-garden-adaptive-gpu-"+name+"-"+col.ToString("D2")+".png"),tex.EncodeToPNG());
+                        if(name=="02-mature")CheckOrientation(p,col,pr,tex);
                     }
                     finally{UnityEngine.Object.Destroy(tex);}
                 }
@@ -173,7 +210,7 @@ namespace HorticultureNovelSeeds
                 {
                     if(!Ready()||!Capture("02-mature"))return;
                     Require(BotanicalExpressionEngine.Prints[Corn(6).thingIDNumber].Decision.Plan.Count==2,"mechanical high-yield and two ornamental channels accepted");
-                    stage("AdaptiveVisuals");StartSupply();phase=2;Reset();return;
+                    stage("AdaptiveVisuals");Require(orientation.Count==14,"all thirteen expressed specimens orientation checked");stage("AdaptiveOrientation");StartSupply();phase=2;Reset();return;
                 }
                 if(phase==2)
                 {
@@ -214,7 +251,7 @@ namespace HorticultureNovelSeeds
                     if(ITab_PlantPhenotype.LastDrawnId!=Corn(4).thingIDNumber||age<60)return;
                     if(!Capture("06-phenotype",false))return;
                     Require(AdaptivePhenotypePresentation.Explain(Comp(Corn(4))).Contains("supplied"),"documented explanation reflects paid state");
-                    stage("AdaptiveInspector");active=false;finish("PASS","five gameplay-linked cue families, actual resource job, perennial harvest and native phenotype inspector");
+                    stage("AdaptiveInspector");active=false;finish("PASS","five upright gameplay-linked cue families, native source orientation parity, actual resource job, perennial harvest and native phenotype inspector");
                 }
             }
             catch(Exception e){Fail(e);}
