@@ -1381,3 +1381,27 @@ combined effects, wind/camera behavior and dense fields unqualified.
 Some extended branches reach the bounded canvas and can look stylized.
 
 Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/055bf31cac961922adde18bc4b63c6a279686e8f
+
+### Botanical Forge: twenty additional visual recipes
+
+Twenty independent zero-weight cosmetic modes across support architecture,
+leaf organ construction, reproductive mechanisms and tissue optics. Reuse
+the bounded source-aware branch canvas and shared native atlas renderer.
+Eighteen additive modes preserve original occupied RGBA; two optical modes
+affect only qualified foliage, retain alpha and protect all other tissue.
+No additional mesh planes, 192 MiB Forge atlas allocation budget.
+
+Native run f4d9fa7e768449bd9fbd1df650a8ef14, source e03e761,
+AllPerformance: all 39 stages passed, 36 garden panels, 72 distinct
+plants (60 modified, 12 controls), 540 accepted native material states
+and 540 off-screen GPU renders; all 60 specimens have nine distinct
+frames. 160 shared atlases from eight source maps. Additive normalized
+interior RGB error max 0.00008652791; optical 0.04706238.
+Both builds and rule tests passed. Player data preserved.
+25 GIFs: twenty individual, four groups, all-twenty overview.
+Controlled phase previews, not natural growth or full-map screenshots.
+No physical optics, actual new plants or seed dispersal. Ordinary
+activation, map-scale appearance, combinations, reload and dense-field
+performance remain unqualified.
+
+Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/1e64d2531d9c7e36b9bba1492c1c415bbea30e8b
