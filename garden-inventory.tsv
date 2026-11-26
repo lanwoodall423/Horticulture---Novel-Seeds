@@ -1,0 +1,55 @@
+Panel	Row	Column	Species	Cultivar	Trait IDs	Renderer	Automatic mask sources	Trait labels	Tiers	Motifs	Form mesh
+1	1	1	Plant_Corn	Vanilla control		Vanilla	not styled				Original
+1	1	2	Plant_Corn	Garden corn plant 1	HNS_LobedLeaf	Botanical topology composite	not styled	Lobed Leaf	Uncommon	Rounded notches along the existing foliage silhouette.	Original
+1	1	3	Plant_Corn	Garden corn plant 2	HNS_Windowleaf	Botanical topology composite	not styled	Windowleaf	Rare	Small natural openings in broad leaf tissue.	Original
+1	1	4	Plant_Corn	Garden corn plant 3	HNS_SideShoots	Botanical topology composite	not styled	Side Shoots	Uncommon	Additional small branches and leaflets emerging from the canopy.	Original
+1	1	5	Plant_Corn	Garden corn plant 4	HNS_CurlingTendrils	Botanical topology composite	not styled	Curling Tendrils	Rare	Fine curling stems extending from the existing plant.	Original
+1	1	6	Plant_Corn	Garden corn plant 5	HNS_LanternBuds	Post-light night overlay	not styled	Lantern Buds	Rare	Localized reproductive or leaf-tip luminescence visible in darkness.	Original
+1	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled				Original
+1	2	2	Plant_Cotton	Garden cotton plant 1	HNS_LobedLeaf	Topology unavailable, original path	not styled	Lobed Leaf	Uncommon	Rounded notches along the existing foliage silhouette.	Original
+1	2	3	Plant_Cotton	Garden cotton plant 2	HNS_Windowleaf	Botanical topology composite	not styled	Windowleaf	Rare	Small natural openings in broad leaf tissue.	Original
+1	2	4	Plant_Cotton	Garden cotton plant 3	HNS_SideShoots	Botanical topology composite	not styled	Side Shoots	Uncommon	Additional small branches and leaflets emerging from the canopy.	Original
+1	2	5	Plant_Cotton	Garden cotton plant 4	HNS_CurlingTendrils	Botanical topology composite	not styled	Curling Tendrils	Rare	Fine curling stems extending from the existing plant.	Original
+1	2	6	Plant_Cotton	Garden cotton plant 5	HNS_LanternBuds	Post-light night overlay	not styled	Lantern Buds	Rare	Localized reproductive or leaf-tip luminescence visible in darkness.	Original
+1	3	1	Plant_Strawberry	Vanilla control		Vanilla	not styled				Original
+1	3	2	Plant_Strawberry	Garden strawberry plant 1	HNS_LobedLeaf	Topology unavailable, original path	not styled	Lobed Leaf	Uncommon	Rounded notches along the existing foliage silhouette.	Original
+1	3	3	Plant_Strawberry	Garden strawberry plant 2	HNS_Windowleaf	Botanical topology composite	not styled	Windowleaf	Rare	Small natural openings in broad leaf tissue.	Original
+1	3	4	Plant_Strawberry	Garden strawberry plant 3	HNS_SideShoots	Botanical topology composite	not styled	Side Shoots	Uncommon	Additional small branches and leaflets emerging from the canopy.	Original
+1	3	5	Plant_Strawberry	Garden strawberry plant 4	HNS_CurlingTendrils	Botanical topology composite	not styled	Curling Tendrils	Rare	Fine curling stems extending from the existing plant.	Original
+1	3	6	Plant_Strawberry	Garden strawberry plant 5	HNS_LanternBuds	Post-light night overlay	not styled	Lantern Buds	Rare	Localized reproductive or leaf-tip luminescence visible in darkness.	Original
+2	1	1	Plant_Corn	Vanilla control		Vanilla	not styled				Original
+2	1	2	Plant_Corn	Garden corn plant 1	HNS_LobedLeaf	Botanical topology composite	not styled	Lobed Leaf	Uncommon	Rounded notches along the existing foliage silhouette.	Original
+2	1	3	Plant_Corn	Garden corn plant 2	HNS_Windowleaf	Botanical topology composite	not styled	Windowleaf	Rare	Small natural openings in broad leaf tissue.	Original
+2	1	4	Plant_Corn	Garden corn plant 3	HNS_SideShoots	Botanical topology composite	not styled	Side Shoots	Uncommon	Additional small branches and leaflets emerging from the canopy.	Original
+2	1	5	Plant_Corn	Garden corn plant 4	HNS_CurlingTendrils	Botanical topology composite	not styled	Curling Tendrils	Rare	Fine curling stems extending from the existing plant.	Original
+2	1	6	Plant_Corn	Garden corn plant 5	HNS_LanternBuds	Post-light night overlay	not styled	Lantern Buds	Rare	Localized reproductive or leaf-tip luminescence visible in darkness.	Original
+2	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled				Original
+2	2	2	Plant_Cotton	Garden cotton plant 1	HNS_LobedLeaf	Topology unavailable, original path	not styled	Lobed Leaf	Uncommon	Rounded notches along the existing foliage silhouette.	Original
+2	2	3	Plant_Cotton	Garden cotton plant 2	HNS_Windowleaf	Botanical topology composite	not styled	Windowleaf	Rare	Small natural openings in broad leaf tissue.	Original
+2	2	4	Plant_Cotton	Garden cotton plant 3	HNS_SideShoots	Botanical topology composite	not styled	Side Shoots	Uncommon	Additional small branches and leaflets emerging from the canopy.	Original
+2	2	5	Plant_Cotton	Garden cotton plant 4	HNS_CurlingTendrils	Botanical topology composite	not styled	Curling Tendrils	Rare	Fine curling stems extending from the existing plant.	Original
+2	2	6	Plant_Cotton	Garden cotton plant 5	HNS_LanternBuds	Post-light night overlay	not styled	Lantern Buds	Rare	Localized reproductive or leaf-tip luminescence visible in darkness.	Original
+2	3	1	Plant_Strawberry	Vanilla control		Vanilla	not styled				Original
+2	3	2	Plant_Strawberry	Garden strawberry plant 1	HNS_LobedLeaf	Topology unavailable, original path	not styled	Lobed Leaf	Uncommon	Rounded notches along the existing foliage silhouette.	Original
+2	3	3	Plant_Strawberry	Garden strawberry plant 2	HNS_Windowleaf	Botanical topology composite	not styled	Windowleaf	Rare	Small natural openings in broad leaf tissue.	Original
+2	3	4	Plant_Strawberry	Garden strawberry plant 3	HNS_SideShoots	Botanical topology composite	not styled	Side Shoots	Uncommon	Additional small branches and leaflets emerging from the canopy.	Original
+2	3	5	Plant_Strawberry	Garden strawberry plant 4	HNS_CurlingTendrils	Botanical topology composite	not styled	Curling Tendrils	Rare	Fine curling stems extending from the existing plant.	Original
+2	3	6	Plant_Strawberry	Garden strawberry plant 5	HNS_LanternBuds	Post-light night overlay	not styled	Lantern Buds	Rare	Localized reproductive or leaf-tip luminescence visible in darkness.	Original
+3	1	1	Plant_Corn	Vanilla control		Vanilla	not styled				Original
+3	1	2	Plant_Corn	Garden corn plant 1	HNS_LobedLeaf	Botanical topology composite	not styled	Lobed Leaf	Uncommon	Rounded notches along the existing foliage silhouette.	Original
+3	1	3	Plant_Corn	Garden corn plant 2	HNS_Windowleaf	Botanical topology composite	not styled	Windowleaf	Rare	Small natural openings in broad leaf tissue.	Original
+3	1	4	Plant_Corn	Garden corn plant 3	HNS_SideShoots	Botanical topology composite	not styled	Side Shoots	Uncommon	Additional small branches and leaflets emerging from the canopy.	Original
+3	1	5	Plant_Corn	Garden corn plant 4	HNS_CurlingTendrils	Botanical topology composite	not styled	Curling Tendrils	Rare	Fine curling stems extending from the existing plant.	Original
+3	1	6	Plant_Corn	Garden corn plant 5	HNS_LanternBuds	Post-light night overlay	not styled	Lantern Buds	Rare	Localized reproductive or leaf-tip luminescence visible in darkness.	Original
+3	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled				Original
+3	2	2	Plant_Cotton	Garden cotton plant 1	HNS_LobedLeaf	Topology unavailable, original path	not styled	Lobed Leaf	Uncommon	Rounded notches along the existing foliage silhouette.	Original
+3	2	3	Plant_Cotton	Garden cotton plant 2	HNS_Windowleaf	Botanical topology composite	not styled	Windowleaf	Rare	Small natural openings in broad leaf tissue.	Original
+3	2	4	Plant_Cotton	Garden cotton plant 3	HNS_SideShoots	Botanical topology composite	not styled	Side Shoots	Uncommon	Additional small branches and leaflets emerging from the canopy.	Original
+3	2	5	Plant_Cotton	Garden cotton plant 4	HNS_CurlingTendrils	Botanical topology composite	not styled	Curling Tendrils	Rare	Fine curling stems extending from the existing plant.	Original
+3	2	6	Plant_Cotton	Garden cotton plant 5	HNS_LanternBuds	Post-light night overlay	not styled	Lantern Buds	Rare	Localized reproductive or leaf-tip luminescence visible in darkness.	Original
+3	3	1	Plant_Strawberry	Vanilla control		Vanilla	not styled				Original
+3	3	2	Plant_Strawberry	Garden strawberry plant 1	HNS_LobedLeaf	Topology unavailable, original path	not styled	Lobed Leaf	Uncommon	Rounded notches along the existing foliage silhouette.	Original
+3	3	3	Plant_Strawberry	Garden strawberry plant 2	HNS_Windowleaf	Botanical topology composite	not styled	Windowleaf	Rare	Small natural openings in broad leaf tissue.	Original
+3	3	4	Plant_Strawberry	Garden strawberry plant 3	HNS_SideShoots	Botanical topology composite	not styled	Side Shoots	Uncommon	Additional small branches and leaflets emerging from the canopy.	Original
+3	3	5	Plant_Strawberry	Garden strawberry plant 4	HNS_CurlingTendrils	Botanical topology composite	not styled	Curling Tendrils	Rare	Fine curling stems extending from the existing plant.	Original
+3	3	6	Plant_Strawberry	Garden strawberry plant 5	HNS_LanternBuds	Post-light night overlay	not styled	Lantern Buds	Rare	Localized reproductive or leaf-tip luminescence visible in darkness.	Original

@@ -1,0 +1,46 @@
+Panel	Species	Column	Plant ID	Trait	Sky glow	Darkness	Glow material ID	Renderer
+1	Plant_Corn	2	35272	LobedLeaf	1	0	0	Botanical topology composite
+1	Plant_Corn	3	35273	Windowleaf	1	0	0	Botanical topology composite
+1	Plant_Corn	4	35274	SideShoots	1	0	0	Botanical topology composite
+1	Plant_Corn	5	35275	CurlingTendrils	1	0	0	Botanical topology composite
+1	Plant_Corn	6	35276	LanternBuds	1	0	-17363	Post-light night overlay
+1	Plant_Cotton	2	35278	LobedLeaf	1	0	0	Topology unavailable, original path
+1	Plant_Cotton	3	35279	Windowleaf	1	0	0	Botanical topology composite
+1	Plant_Cotton	4	35280	SideShoots	1	0	0	Botanical topology composite
+1	Plant_Cotton	5	35281	CurlingTendrils	1	0	0	Botanical topology composite
+1	Plant_Cotton	6	35282	LanternBuds	1	0	-17355	Post-light night overlay
+1	Plant_Strawberry	2	35284	LobedLeaf	1	0	0	Topology unavailable, original path
+1	Plant_Strawberry	3	35285	Windowleaf	1	0	0	Botanical topology composite
+1	Plant_Strawberry	4	35286	SideShoots	1	0	0	Botanical topology composite
+1	Plant_Strawberry	5	35287	CurlingTendrils	1	0	0	Botanical topology composite
+1	Plant_Strawberry	6	35288	LanternBuds	1	0	-17347	Post-light night overlay
+2	Plant_Corn	2	35272	LobedLeaf	0	1	0	Botanical topology composite
+2	Plant_Corn	3	35273	Windowleaf	0	1	0	Botanical topology composite
+2	Plant_Corn	4	35274	SideShoots	0	1	0	Botanical topology composite
+2	Plant_Corn	5	35275	CurlingTendrils	0	1	0	Botanical topology composite
+2	Plant_Corn	6	35276	LanternBuds	0	1	-17363	Post-light night overlay
+2	Plant_Cotton	2	35278	LobedLeaf	0	1	0	Topology unavailable, original path
+2	Plant_Cotton	3	35279	Windowleaf	0	1	0	Botanical topology composite
+2	Plant_Cotton	4	35280	SideShoots	0	1	0	Botanical topology composite
+2	Plant_Cotton	5	35281	CurlingTendrils	0	1	0	Botanical topology composite
+2	Plant_Cotton	6	35282	LanternBuds	0	1	-17355	Post-light night overlay
+2	Plant_Strawberry	2	35284	LobedLeaf	0	1	0	Topology unavailable, original path
+2	Plant_Strawberry	3	35285	Windowleaf	0	1	0	Botanical topology composite
+2	Plant_Strawberry	4	35286	SideShoots	0	1	0	Botanical topology composite
+2	Plant_Strawberry	5	35287	CurlingTendrils	0	1	0	Botanical topology composite
+2	Plant_Strawberry	6	35288	LanternBuds	0	1	-17347	Post-light night overlay
+3	Plant_Corn	2	35272	LobedLeaf	1	0	0	Botanical topology composite
+3	Plant_Corn	3	35273	Windowleaf	1	0	0	Botanical topology composite
+3	Plant_Corn	4	35274	SideShoots	1	0	0	Botanical topology composite
+3	Plant_Corn	5	35275	CurlingTendrils	1	0	0	Botanical topology composite
+3	Plant_Corn	6	35276	LanternBuds	1	0	-17363	Post-light night overlay
+3	Plant_Cotton	2	35278	LobedLeaf	1	0	0	Topology unavailable, original path
+3	Plant_Cotton	3	35279	Windowleaf	1	0	0	Botanical topology composite
+3	Plant_Cotton	4	35280	SideShoots	1	0	0	Botanical topology composite
+3	Plant_Cotton	5	35281	CurlingTendrils	1	0	0	Botanical topology composite
+3	Plant_Cotton	6	35282	LanternBuds	1	0	-17355	Post-light night overlay
+3	Plant_Strawberry	2	35284	LobedLeaf	1	0	0	Topology unavailable, original path
+3	Plant_Strawberry	3	35285	Windowleaf	1	0	0	Botanical topology composite
+3	Plant_Strawberry	4	35286	SideShoots	1	0	0	Botanical topology composite
+3	Plant_Strawberry	5	35287	CurlingTendrils	1	0	0	Botanical topology composite
+3	Plant_Strawberry	6	35288	LanternBuds	1	0	-17347	Post-light night overlay
