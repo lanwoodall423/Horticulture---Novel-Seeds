@@ -647,3 +647,50 @@ Preparation SHA256: 2C19D2739844E1A8ECC46C2B55A29FD57FF3BB0B0611C1291033530F40E6
 Reproduce with RimWorld closed:
 
     powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -OrganGarden
+
+## Developmental genetic expression experiment (2026-11-25)
+
+Source ec4008284c5f05373858d18f0c5c1c28f03ca59f adds five zero-default-
+weight neutral appearance candidates: Bronze Flush, Frostbud, Autumn
+Crown, Ripening Blush, Maturing Variegation. Stable modes 51..55 use
+the existing pattern uniform's fourth component for three finite
+developmental states at growth thresholds 0.4 and 0.8. Growth setter
+and TickLong crossing hooks invalidate the map mesh for eligible
+cultivars. Existing organ-form and morphology experiments retained;
+no change to prior trait mechanics or visual mode identities.
+
+AllPerformance run 3ecbc2c2a68e4ca0818931f428c11f83 on RimWorld
+1.7.5014 rev1195 passed all six stages. Same 18 actual plants (15
+cultivars, three controls) at 30%, 60%, and 100% growth, identical
+positions and IDs. All 45 cultivar-stage material states verified,
+30 growth-setter mesh invalidations, 45 cached materials, zero
+prepared GPU masks. Three real noon captures. Both ordinary and
+fixture builds clean. All previous journal, form and organ math
+checks and four developmental checks passed. No relevant HNS
+error identified by the log check. Player save/config/preferences
+preservation and owned process/package cleanup passed.
+
+Evidence and exact stage inventory:
+https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/1b2bd2b7d075ae11b5672a8871e27599ff084a01
+
+Growth was deliberately set by the fixture rather than observed
+over natural elapsed ticks. TickLong-driven transitions, naturally
+grown plants, smooth temporal interpolation, performance, save/reload,
+other crops, combinations, editor previews and ordinary shader
+activation remain unqualified. Visual transitions are stepped at
+three bands, not continuous animation. Ripening pigmentation depends
+on the underlying reproductive tissue being present in the source
+sprite; it does not create immature fruit. No manual masks added.
+The strawberry capture shows especially readable juvenile bronze,
+mature golden crown and mature cream variegation; subtle ripening
+colors are less apparent at ordinary zoom.
+
+DLL SHA256: 6D86601C31059FB34345FC567486DC058CCEC0F87E077B2E650D52E5CF5D5687.
+Receipt SHA256: 9BE08B0D1E0C30207CBE23F9EF51DE088C63F42594F46E4620DDAB2C8EA13B74.
+Log SHA256: 399CC01394A4835FBFBF4725E639586B75DEBD4D6140155C953CA455D539B6EC.
+Inventory SHA256: 16B0E4650027CC2A2E54ED1DE560BC5300A424D6F18CEE2A302066AAE14E3E7D.
+Development inventory SHA256: 8A5533E9E184D55F40A1ED9E99F39531418357CFFDA0BCAE8AA195EC05E57A3F.
+
+Reproduce with RimWorld closed:
+
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -DevelopmentGarden
