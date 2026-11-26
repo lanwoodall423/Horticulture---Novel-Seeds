@@ -274,6 +274,34 @@ namespace HorticultureNovelSeeds
             }
             return false;
         }
+        internal static bool PreviewQualified(ThingDef def,string[] ids,out Texture2D image)
+        {
+            image=null;
+            if(!Enabled||def==null||!E.QualifiedSpecies(def.defName)||ids.Length==0||
+                ids.Any(id=>!E.Known(id)&&AdaptivePhenotypeMath.ForTrait(id)==0))return false;
+            var traits=ids.Select(id=>DefDatabase<VarietyTraitDef>.GetNamedSilentFail(id)).ToArray();
+            if(traits.Any(t=>t==null||HorticultureNovelSeedsMod.Settings?.VisualOverrideFor(def,t)!=null))return false;
+            var promoted=ids.Where(E.Known).ToArray();var requested=AdaptivePhenotypeMath.From(ids);
+            Prepare(def,promoted,(requested&AdaptivePhenotypeMath.Cue.Yield)!=0);
+            for(int v=0;v<PlantMaskUtility.VariationCount(def);v++)
+            {
+                if(PlantMaskUtility.TextureForVariation(def,v) is not Texture2D source||!sources.TryGetValue(source,out var a))continue;
+                var d=E.Resolve(promoted,E.FamilyOf(def.defName),a.Anatomy.Organs);
+                if(d.Unknown||d.Accepted.Length!=promoted.Length)continue;
+                var f=AdaptivePhenotypeMath.Resolve(requested,a.Anatomy.Leaves,a.Anatomy.Organs,false,0,d.Plan.Architecture>0);
+                if(f.Cues!=requested)continue;
+                var plan=d.Plan;
+                if(f.Has(AdaptivePhenotypeMath.Cue.Yield))
+                {
+                    if(!a.Atlases.ContainsKey(AdaptivePhenotypeMath.FullerArchitecture))continue;
+                    plan=plan with{Architecture=AdaptivePhenotypeMath.FullerArchitecture};
+                }
+                if(!plan.Valid&&!f.Valid)continue;
+                var m=GetMaterial(source,a,plan,f);if(m==null)continue;
+                image=Readback(m,8,1,0,new Vector4(0,1,.95f,0));return true;
+            }
+            return false;
+        }
         internal static Texture2D Readback(Material m,int band,int seed,float bias,Vector4 env)
         {
             int w=m.mainTexture.width,h=m.mainTexture.height;

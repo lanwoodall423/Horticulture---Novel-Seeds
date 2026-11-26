@@ -28,7 +28,7 @@ namespace HorticultureNovelSeeds
             if (!ReferenceEquals(lastGame, Current.Game))
             {
                 lastGame = Current.Game; page = "Overview"; search = ""; selectedPlant = null;
-                selectedCultivar = null; comparisonIds.Clear(); lineage = compare = false;
+                selectedCultivar = null; studioA=studioB=null;studioZone=null;comparisonIds.Clear(); lineage = compare = false;
                 leftScroll = rightScroll = Vector2.zero;
             }
         }

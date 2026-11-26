@@ -289,6 +289,18 @@ namespace HorticultureNovelSeeds
             return comp.CrossPollinated;
         }
 
+        internal static string BreedingCandidateStatus(VarietyTraitDef trait,IReadOnlyList<VarietyTraitDef> maternal,ThingDef crop,NovelSeedsSettings settings)
+        {
+            if(trait==null||!ExpressionEligible(trait,crop,settings))return "Unavailable in current settings/species";
+            if(maternal.Contains(trait))return "Already inherited";
+            if(IsCosmeticCrossPollinationTrait(trait)||trait.configFamily==PercentageTraitFactory.NutritiousFamily&&maternal.Any(t=>t.configFamily==trait.configFamily))
+                return "Special color/nutrition rules";
+            if(maternal.Any(t=>SameConfigGroup(t,trait)))return "Conflicting trait family";
+            var blocked=new HashSet<string>();foreach(var t in maternal)AddBlockedTags(t,blocked);
+            if(SharesBlockedTag(trait,blocked))return "Conflicting exclusion channel";
+            return "Eligible candidate";
+        }
+
         // Keep the legacy selection path identical while the independent
         // option is off. Resolve mechanical slots first, so ornamental donors
         // do not change the choices or RNG draws in that event's mechanical path.

@@ -132,10 +132,11 @@ namespace HorticultureNovelSeeds
         private void DrawBreeding(Rect rect,List<VarietyRecord> all)
         {
             var s=FieldGuideIndex.Current;var zones=s?.Zones??Array.Empty<FieldGuideIndex.GrowingZone>();
-            var view=NativeUi.Scroll(rect,ref rightScroll,200+Math.Max(1,zones.Length)*96);
+            var view=NativeUi.Scroll(rect,ref rightScroll,700+Math.Max(1,zones.Length)*96+BreedingStudio.Outcomes(studioA,studioB,all).Length*56+(studioB?.traits?.Count??0)*27);
             try
             {
-                float y=0;Title(view,ref y,"Breeding and cultivation","Manage existing growing-zone selections; compatible cultivars can cross-pollinate when sown near eligible donors.");
+                float y=0;Title(view,ref y,"Breeding Studio","Compare documented parents, plan a real growing-zone mix and follow documented offspring.");
+                DrawStudio(view,ref y,all,zones);
                 Section(view,ref y,"GROWING ZONES ON THIS MAP");
                 if(zones.Length==0){Label(new(0,y,view.width,70),"Create a growing zone and select a crop. Discover at least two compatible cultivars to establish a breeding mix.",GameFont.Small,Muted);y+=76;}
                 foreach(var z in zones)

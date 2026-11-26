@@ -111,6 +111,10 @@ namespace HorticultureNovelSeeds
                     {
                         Environment.SetEnvironmentVariable("HNS_NATIVE_ORNAMENTAL_INHERITANCE",null);Stage("Startup");OrnamentalInheritanceProbe.Begin(root,Stage,Finish);return;
                     }
+                    if(Environment.GetEnvironmentVariable("HNS_NATIVE_BREEDING_STUDIO")=="1")
+                    {
+                        Environment.SetEnvironmentVariable("HNS_NATIVE_BREEDING_STUDIO",null);Stage("Startup");BreedingStudioProbe.Begin(root,Stage,Finish);return;
+                    }
                     if(Environment.GetEnvironmentVariable("HNS_NATIVE_ADAPTIVE")=="1")
                     {
                         Environment.SetEnvironmentVariable("HNS_NATIVE_ADAPTIVE",null);Stage("Startup");AdaptiveCultivationProbe.Begin(root,Stage,Finish);return;
@@ -172,7 +176,7 @@ namespace HorticultureNovelSeeds
             Path.GetFullPath(GenFilePaths.SaveDataFolderPath).TrimEnd(Path.DirectorySeparatorChar).Equals(Path.GetFullPath(root).TrimEnd(Path.DirectorySeparatorChar), StringComparison.OrdinalIgnoreCase) &&
             string.Join(",", LoadedModManager.RunningModsListForReading.Select(m => m.PackageIdPlayerFacing)).Equals(expectedPackages, StringComparison.OrdinalIgnoreCase);
 
-        public override void GameComponentUpdate() { NativeShaderProbe.Update(); NativeGardenProbe.Update(); ProductionExpressionProbe.Update(); FieldGuideProbe.Update(); OrnamentalInheritanceProbe.Update(); AdaptiveCultivationProbe.Update(); }
+        public override void GameComponentUpdate() { NativeShaderProbe.Update(); NativeGardenProbe.Update(); ProductionExpressionProbe.Update(); FieldGuideProbe.Update(); OrnamentalInheritanceProbe.Update(); AdaptiveCultivationProbe.Update(); BreedingStudioProbe.Update(); }
 
         public override void GameComponentTick()
         {

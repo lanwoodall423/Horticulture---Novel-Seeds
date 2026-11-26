@@ -27,7 +27,7 @@ namespace HorticultureNovelSeeds
         private static readonly HashSet<string> portraitRequested=new();
         internal static Snapshot Current=>snapshot?.Map==Find.CurrentMap?snapshot:null;
         internal static void Open(){open=true;refresh=true;}
-        internal static void Close(){open=false;portraitQueue.Clear();portraitRequested.Clear();}
+        internal static void Close(){open=false;portraitQueue.Clear();portraitRequested.Clear();BreedingStudio.Clear();}
         internal static void RequestRefresh()=>refresh=true;
         private static bool Visible(Thing t,Map map)=>t?.Spawned==true&&t.Map==map&&t.Position.InBounds(map)&&!t.Position.Fogged(map)&&(t.Faction==null||t.Faction.IsPlayer);
         internal static bool TryDescribe(Thing t,Map map,out Discovery row)
@@ -55,6 +55,7 @@ namespace HorticultureNovelSeeds
                 portraits.Clear();portraitQueue.Clear();portraitRequested.Clear();snapshot=null;game=Verse.Current.Game;refresh=true;
             }
             if(!open||game==null)return;
+            BreedingStudio.Pump();
             var map=Find.CurrentMap;
             if(refresh||snapshot?.Map!=map||++age>=90)
             {
