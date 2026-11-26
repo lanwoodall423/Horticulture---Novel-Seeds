@@ -1441,3 +1441,26 @@ unchanged, test process and package removed.
 Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/d227237137b57af356a2b475b3518440a085a3ec
 
 Final expression fixture retry: source 68c599ac1ca7517c750839d8195442d2c3045257; run 7a7570c2ac4b4fe599f28b1eba679aa9; nine native stages PASS. History-value Scribe round trips, not full save reload. Normal config/prefs/saves unchanged, temporary package and process removed. Laboratory: Native selected/edited GPU preview API: PASS; Window contents executed: True; GUI repaint verified: True; If false, GUI remains separately unqualified. Budget: Source maps=8; shared materials=16; texture bytes=7430144; growth invalidations=90 Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/264ea90e104065ddd88422c7ff6448d37844f4c5 . Dense-field performance, production activation, natural cross-channel breeding, and map-scale presentation remain unqualified.
+
+### Botanical Field Guide and Discovery Inbox (2026-11-26)
+
+First player-experience slice: native overview with documented cultivar and
+recorded species counts, actionable discoveries and collection cards; live
+current-home-map discovery inbox (512 priority rows); actual preserve-seeds
+designation and colonist documentation order; documented cultivar dossier,
+side-by-side comparison and existing zone selection/breeding-mix links.
+The index refreshes outside draw; no new saved records. Preview queue uses
+qualified native expression GPU output outside paint (24-entry cache),
+clearly labeled mature illustration or species-reference fallback.
+No hidden trait disclosure or designer offspring. Native source 8db1733,
+run 5a14900f207e4b9eb4b197c22089673a, AllPerformance, nine stages PASS.
+Ten native screenshot frames and three GIF sequences. Real vanilla harvest,
+seed recovery, naming cancel/retry, registration and journal observation;
+sample initial states are fixture-seeded. Existing rules and builds pass.
+Normal config/prefs/saves unchanged; owned process and package removed.
+Not a continuous pointer recording or a full player playthrough. Current
+home map, default UI scale and fixture locale only. Automatic preservation,
+dismissal, exact specimen portraits, complete Breeding Studio and lineage/
+chronicle improvements remain pending. Existing 1.6 release untouched.
+
+Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/87708b313574ea45c8b1f99b8a2e6b5080695ede
