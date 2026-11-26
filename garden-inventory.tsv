@@ -1,0 +1,91 @@
+Panel	Row	Column	Species	Cultivar	Trait IDs	Renderer	Automatic mask sources	Trait labels	Tiers	Motifs	Form mesh
+1	1	1	Plant_Corn	Vanilla control		Vanilla	not styled				Original
+1	1	2	Plant_Corn	Garden corn plant 1	HNS_SuccessionBloom	GPU individual organ mosaic	not styled	Succession Bloom	Rare	A plant carries unopened buds and open reproductive organs in a stable individual arrangement.	Original
+1	1	3	Plant_Corn	Garden corn plant 1	HNS_SuccessionBloom	GPU individual organ mosaic	not styled	Succession Bloom	Rare	A plant carries unopened buds and open reproductive organs in a stable individual arrangement.	Original
+1	1	4	Plant_Corn	Garden corn plant 1	HNS_SuccessionBloom	GPU individual organ mosaic	not styled	Succession Bloom	Rare	A plant carries unopened buds and open reproductive organs in a stable individual arrangement.	Original
+1	1	5	Plant_Corn	Garden corn plant 1	HNS_SuccessionBloom	GPU individual organ mosaic	not styled	Succession Bloom	Rare	A plant carries unopened buds and open reproductive organs in a stable individual arrangement.	Original
+1	1	6	Plant_Corn	Garden corn plant 1	HNS_SuccessionBloom	GPU individual organ mosaic	not styled	Succession Bloom	Rare	A plant carries unopened buds and open reproductive organs in a stable individual arrangement.	Original
+1	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled				Original
+1	2	2	Plant_Cotton	Garden cotton plant 1	HNS_SuccessionBloom	GPU individual organ mosaic	not styled	Succession Bloom	Rare	A plant carries unopened buds and open reproductive organs in a stable individual arrangement.	Original
+1	2	3	Plant_Cotton	Garden cotton plant 1	HNS_SuccessionBloom	GPU individual organ mosaic	not styled	Succession Bloom	Rare	A plant carries unopened buds and open reproductive organs in a stable individual arrangement.	Original
+1	2	4	Plant_Cotton	Garden cotton plant 1	HNS_SuccessionBloom	GPU individual organ mosaic	not styled	Succession Bloom	Rare	A plant carries unopened buds and open reproductive organs in a stable individual arrangement.	Original
+1	2	5	Plant_Cotton	Garden cotton plant 1	HNS_SuccessionBloom	GPU individual organ mosaic	not styled	Succession Bloom	Rare	A plant carries unopened buds and open reproductive organs in a stable individual arrangement.	Original
+1	2	6	Plant_Cotton	Garden cotton plant 1	HNS_SuccessionBloom	GPU individual organ mosaic	not styled	Succession Bloom	Rare	A plant carries unopened buds and open reproductive organs in a stable individual arrangement.	Original
+1	3	1	Plant_Daylily	Vanilla control		Vanilla	not styled				Original
+1	3	2	Plant_Daylily	Garden daylily 1	HNS_SuccessionBloom	GPU individual organ mosaic	not styled	Succession Bloom	Rare	A plant carries unopened buds and open reproductive organs in a stable individual arrangement.	Original
+1	3	3	Plant_Daylily	Garden daylily 1	HNS_SuccessionBloom	GPU individual organ mosaic	not styled	Succession Bloom	Rare	A plant carries unopened buds and open reproductive organs in a stable individual arrangement.	Original
+1	3	4	Plant_Daylily	Garden daylily 1	HNS_SuccessionBloom	GPU individual organ mosaic	not styled	Succession Bloom	Rare	A plant carries unopened buds and open reproductive organs in a stable individual arrangement.	Original
+1	3	5	Plant_Daylily	Garden daylily 1	HNS_SuccessionBloom	GPU individual organ mosaic	not styled	Succession Bloom	Rare	A plant carries unopened buds and open reproductive organs in a stable individual arrangement.	Original
+1	3	6	Plant_Daylily	Garden daylily 1	HNS_SuccessionBloom	GPU individual organ mosaic	not styled	Succession Bloom	Rare	A plant carries unopened buds and open reproductive organs in a stable individual arrangement.	Original
+2	1	1	Plant_Corn	Vanilla control		Vanilla	not styled				Original
+2	1	2	Plant_Corn	Garden corn plant 1	HNS_SectorSport	GPU individual organ mosaic	not styled	Sector Sport	Rare	A local reproductive sector develops a contrasting rose-colored sport while the rest of the plant retains its native appearance.	Original
+2	1	3	Plant_Corn	Garden corn plant 1	HNS_SectorSport	GPU individual organ mosaic	not styled	Sector Sport	Rare	A local reproductive sector develops a contrasting rose-colored sport while the rest of the plant retains its native appearance.	Original
+2	1	4	Plant_Corn	Garden corn plant 1	HNS_SectorSport	GPU individual organ mosaic	not styled	Sector Sport	Rare	A local reproductive sector develops a contrasting rose-colored sport while the rest of the plant retains its native appearance.	Original
+2	1	5	Plant_Corn	Garden corn plant 1	HNS_SectorSport	GPU individual organ mosaic	not styled	Sector Sport	Rare	A local reproductive sector develops a contrasting rose-colored sport while the rest of the plant retains its native appearance.	Original
+2	1	6	Plant_Corn	Garden corn plant 1	HNS_SectorSport	GPU individual organ mosaic	not styled	Sector Sport	Rare	A local reproductive sector develops a contrasting rose-colored sport while the rest of the plant retains its native appearance.	Original
+2	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled				Original
+2	2	2	Plant_Cotton	Garden cotton plant 1	HNS_SectorSport	GPU individual organ mosaic	not styled	Sector Sport	Rare	A local reproductive sector develops a contrasting rose-colored sport while the rest of the plant retains its native appearance.	Original
+2	2	3	Plant_Cotton	Garden cotton plant 1	HNS_SectorSport	GPU individual organ mosaic	not styled	Sector Sport	Rare	A local reproductive sector develops a contrasting rose-colored sport while the rest of the plant retains its native appearance.	Original
+2	2	4	Plant_Cotton	Garden cotton plant 1	HNS_SectorSport	GPU individual organ mosaic	not styled	Sector Sport	Rare	A local reproductive sector develops a contrasting rose-colored sport while the rest of the plant retains its native appearance.	Original
+2	2	5	Plant_Cotton	Garden cotton plant 1	HNS_SectorSport	GPU individual organ mosaic	not styled	Sector Sport	Rare	A local reproductive sector develops a contrasting rose-colored sport while the rest of the plant retains its native appearance.	Original
+2	2	6	Plant_Cotton	Garden cotton plant 1	HNS_SectorSport	GPU individual organ mosaic	not styled	Sector Sport	Rare	A local reproductive sector develops a contrasting rose-colored sport while the rest of the plant retains its native appearance.	Original
+2	3	1	Plant_Daylily	Vanilla control		Vanilla	not styled				Original
+2	3	2	Plant_Daylily	Garden daylily 1	HNS_SectorSport	GPU individual organ mosaic	not styled	Sector Sport	Rare	A local reproductive sector develops a contrasting rose-colored sport while the rest of the plant retains its native appearance.	Original
+2	3	3	Plant_Daylily	Garden daylily 1	HNS_SectorSport	GPU individual organ mosaic	not styled	Sector Sport	Rare	A local reproductive sector develops a contrasting rose-colored sport while the rest of the plant retains its native appearance.	Original
+2	3	4	Plant_Daylily	Garden daylily 1	HNS_SectorSport	GPU individual organ mosaic	not styled	Sector Sport	Rare	A local reproductive sector develops a contrasting rose-colored sport while the rest of the plant retains its native appearance.	Original
+2	3	5	Plant_Daylily	Garden daylily 1	HNS_SectorSport	GPU individual organ mosaic	not styled	Sector Sport	Rare	A local reproductive sector develops a contrasting rose-colored sport while the rest of the plant retains its native appearance.	Original
+2	3	6	Plant_Daylily	Garden daylily 1	HNS_SectorSport	GPU individual organ mosaic	not styled	Sector Sport	Rare	A local reproductive sector develops a contrasting rose-colored sport while the rest of the plant retains its native appearance.	Original
+3	1	1	Plant_Corn	Vanilla control		Vanilla	not styled				Original
+3	1	2	Plant_Corn	Garden corn plant 1	HNS_BiformHarvest	GPU individual organ mosaic	not styled	Biform Harvest	Rare	Separate reproductive organs express stout and slender forms within one plant.	Original
+3	1	3	Plant_Corn	Garden corn plant 1	HNS_BiformHarvest	GPU individual organ mosaic	not styled	Biform Harvest	Rare	Separate reproductive organs express stout and slender forms within one plant.	Original
+3	1	4	Plant_Corn	Garden corn plant 1	HNS_BiformHarvest	GPU individual organ mosaic	not styled	Biform Harvest	Rare	Separate reproductive organs express stout and slender forms within one plant.	Original
+3	1	5	Plant_Corn	Garden corn plant 1	HNS_BiformHarvest	GPU individual organ mosaic	not styled	Biform Harvest	Rare	Separate reproductive organs express stout and slender forms within one plant.	Original
+3	1	6	Plant_Corn	Garden corn plant 1	HNS_BiformHarvest	GPU individual organ mosaic	not styled	Biform Harvest	Rare	Separate reproductive organs express stout and slender forms within one plant.	Original
+3	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled				Original
+3	2	2	Plant_Cotton	Garden cotton plant 1	HNS_BiformHarvest	GPU individual organ mosaic	not styled	Biform Harvest	Rare	Separate reproductive organs express stout and slender forms within one plant.	Original
+3	2	3	Plant_Cotton	Garden cotton plant 1	HNS_BiformHarvest	GPU individual organ mosaic	not styled	Biform Harvest	Rare	Separate reproductive organs express stout and slender forms within one plant.	Original
+3	2	4	Plant_Cotton	Garden cotton plant 1	HNS_BiformHarvest	GPU individual organ mosaic	not styled	Biform Harvest	Rare	Separate reproductive organs express stout and slender forms within one plant.	Original
+3	2	5	Plant_Cotton	Garden cotton plant 1	HNS_BiformHarvest	GPU individual organ mosaic	not styled	Biform Harvest	Rare	Separate reproductive organs express stout and slender forms within one plant.	Original
+3	2	6	Plant_Cotton	Garden cotton plant 1	HNS_BiformHarvest	GPU individual organ mosaic	not styled	Biform Harvest	Rare	Separate reproductive organs express stout and slender forms within one plant.	Original
+3	3	1	Plant_Daylily	Vanilla control		Vanilla	not styled				Original
+3	3	2	Plant_Daylily	Garden daylily 1	HNS_BiformHarvest	GPU individual organ mosaic	not styled	Biform Harvest	Rare	Separate reproductive organs express stout and slender forms within one plant.	Original
+3	3	3	Plant_Daylily	Garden daylily 1	HNS_BiformHarvest	GPU individual organ mosaic	not styled	Biform Harvest	Rare	Separate reproductive organs express stout and slender forms within one plant.	Original
+3	3	4	Plant_Daylily	Garden daylily 1	HNS_BiformHarvest	GPU individual organ mosaic	not styled	Biform Harvest	Rare	Separate reproductive organs express stout and slender forms within one plant.	Original
+3	3	5	Plant_Daylily	Garden daylily 1	HNS_BiformHarvest	GPU individual organ mosaic	not styled	Biform Harvest	Rare	Separate reproductive organs express stout and slender forms within one plant.	Original
+3	3	6	Plant_Daylily	Garden daylily 1	HNS_BiformHarvest	GPU individual organ mosaic	not styled	Biform Harvest	Rare	Separate reproductive organs express stout and slender forms within one plant.	Original
+4	1	1	Plant_Corn	Vanilla control		Vanilla	not styled				Original
+4	1	2	Plant_Corn	Garden corn plant 1	HNS_SisterBuds	GPU individual organ mosaic	not styled	Sister Buds	Rare	Selected reproductive organs carry small adjacent daughter buds.	Original
+4	1	3	Plant_Corn	Garden corn plant 1	HNS_SisterBuds	GPU individual organ mosaic	not styled	Sister Buds	Rare	Selected reproductive organs carry small adjacent daughter buds.	Original
+4	1	4	Plant_Corn	Garden corn plant 1	HNS_SisterBuds	GPU individual organ mosaic	not styled	Sister Buds	Rare	Selected reproductive organs carry small adjacent daughter buds.	Original
+4	1	5	Plant_Corn	Garden corn plant 1	HNS_SisterBuds	GPU individual organ mosaic	not styled	Sister Buds	Rare	Selected reproductive organs carry small adjacent daughter buds.	Original
+4	1	6	Plant_Corn	Garden corn plant 1	HNS_SisterBuds	GPU individual organ mosaic	not styled	Sister Buds	Rare	Selected reproductive organs carry small adjacent daughter buds.	Original
+4	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled				Original
+4	2	2	Plant_Cotton	Garden cotton plant 1	HNS_SisterBuds	GPU individual organ mosaic	not styled	Sister Buds	Rare	Selected reproductive organs carry small adjacent daughter buds.	Original
+4	2	3	Plant_Cotton	Garden cotton plant 1	HNS_SisterBuds	GPU individual organ mosaic	not styled	Sister Buds	Rare	Selected reproductive organs carry small adjacent daughter buds.	Original
+4	2	4	Plant_Cotton	Garden cotton plant 1	HNS_SisterBuds	GPU individual organ mosaic	not styled	Sister Buds	Rare	Selected reproductive organs carry small adjacent daughter buds.	Original
+4	2	5	Plant_Cotton	Garden cotton plant 1	HNS_SisterBuds	GPU individual organ mosaic	not styled	Sister Buds	Rare	Selected reproductive organs carry small adjacent daughter buds.	Original
+4	2	6	Plant_Cotton	Garden cotton plant 1	HNS_SisterBuds	GPU individual organ mosaic	not styled	Sister Buds	Rare	Selected reproductive organs carry small adjacent daughter buds.	Original
+4	3	1	Plant_Daylily	Vanilla control		Vanilla	not styled				Original
+4	3	2	Plant_Daylily	Garden daylily 1	HNS_SisterBuds	GPU individual organ mosaic	not styled	Sister Buds	Rare	Selected reproductive organs carry small adjacent daughter buds.	Original
+4	3	3	Plant_Daylily	Garden daylily 1	HNS_SisterBuds	GPU individual organ mosaic	not styled	Sister Buds	Rare	Selected reproductive organs carry small adjacent daughter buds.	Original
+4	3	4	Plant_Daylily	Garden daylily 1	HNS_SisterBuds	GPU individual organ mosaic	not styled	Sister Buds	Rare	Selected reproductive organs carry small adjacent daughter buds.	Original
+4	3	5	Plant_Daylily	Garden daylily 1	HNS_SisterBuds	GPU individual organ mosaic	not styled	Sister Buds	Rare	Selected reproductive organs carry small adjacent daughter buds.	Original
+4	3	6	Plant_Daylily	Garden daylily 1	HNS_SisterBuds	GPU individual organ mosaic	not styled	Sister Buds	Rare	Selected reproductive organs carry small adjacent daughter buds.	Original
+5	1	1	Plant_Corn	Vanilla control		Vanilla	not styled				Original
+5	1	2	Plant_Corn	Garden corn plant 1	HNS_RipeningMosaic	GPU individual organ mosaic	not styled	Ripening Mosaic	Rare	Separate organs show unripe, ripe and late-stage botanical pigmentation in a stable individual mosaic.	Original
+5	1	3	Plant_Corn	Garden corn plant 1	HNS_RipeningMosaic	GPU individual organ mosaic	not styled	Ripening Mosaic	Rare	Separate organs show unripe, ripe and late-stage botanical pigmentation in a stable individual mosaic.	Original
+5	1	4	Plant_Corn	Garden corn plant 1	HNS_RipeningMosaic	GPU individual organ mosaic	not styled	Ripening Mosaic	Rare	Separate organs show unripe, ripe and late-stage botanical pigmentation in a stable individual mosaic.	Original
+5	1	5	Plant_Corn	Garden corn plant 1	HNS_RipeningMosaic	GPU individual organ mosaic	not styled	Ripening Mosaic	Rare	Separate organs show unripe, ripe and late-stage botanical pigmentation in a stable individual mosaic.	Original
+5	1	6	Plant_Corn	Garden corn plant 1	HNS_RipeningMosaic	GPU individual organ mosaic	not styled	Ripening Mosaic	Rare	Separate organs show unripe, ripe and late-stage botanical pigmentation in a stable individual mosaic.	Original
+5	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled				Original
+5	2	2	Plant_Cotton	Garden cotton plant 1	HNS_RipeningMosaic	GPU individual organ mosaic	not styled	Ripening Mosaic	Rare	Separate organs show unripe, ripe and late-stage botanical pigmentation in a stable individual mosaic.	Original
+5	2	3	Plant_Cotton	Garden cotton plant 1	HNS_RipeningMosaic	GPU individual organ mosaic	not styled	Ripening Mosaic	Rare	Separate organs show unripe, ripe and late-stage botanical pigmentation in a stable individual mosaic.	Original
+5	2	4	Plant_Cotton	Garden cotton plant 1	HNS_RipeningMosaic	GPU individual organ mosaic	not styled	Ripening Mosaic	Rare	Separate organs show unripe, ripe and late-stage botanical pigmentation in a stable individual mosaic.	Original
+5	2	5	Plant_Cotton	Garden cotton plant 1	HNS_RipeningMosaic	GPU individual organ mosaic	not styled	Ripening Mosaic	Rare	Separate organs show unripe, ripe and late-stage botanical pigmentation in a stable individual mosaic.	Original
+5	2	6	Plant_Cotton	Garden cotton plant 1	HNS_RipeningMosaic	GPU individual organ mosaic	not styled	Ripening Mosaic	Rare	Separate organs show unripe, ripe and late-stage botanical pigmentation in a stable individual mosaic.	Original
+5	3	1	Plant_Daylily	Vanilla control		Vanilla	not styled				Original
+5	3	2	Plant_Daylily	Garden daylily 1	HNS_RipeningMosaic	GPU individual organ mosaic	not styled	Ripening Mosaic	Rare	Separate organs show unripe, ripe and late-stage botanical pigmentation in a stable individual mosaic.	Original
+5	3	3	Plant_Daylily	Garden daylily 1	HNS_RipeningMosaic	GPU individual organ mosaic	not styled	Ripening Mosaic	Rare	Separate organs show unripe, ripe and late-stage botanical pigmentation in a stable individual mosaic.	Original
+5	3	4	Plant_Daylily	Garden daylily 1	HNS_RipeningMosaic	GPU individual organ mosaic	not styled	Ripening Mosaic	Rare	Separate organs show unripe, ripe and late-stage botanical pigmentation in a stable individual mosaic.	Original
+5	3	5	Plant_Daylily	Garden daylily 1	HNS_RipeningMosaic	GPU individual organ mosaic	not styled	Ripening Mosaic	Rare	Separate organs show unripe, ripe and late-stage botanical pigmentation in a stable individual mosaic.	Original
+5	3	6	Plant_Daylily	Garden daylily 1	HNS_RipeningMosaic	GPU individual organ mosaic	not styled	Ripening Mosaic	Rare	Separate organs show unripe, ripe and late-stage botanical pigmentation in a stable individual mosaic.	Original
