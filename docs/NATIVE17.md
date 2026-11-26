@@ -1083,3 +1083,18 @@ Corrected evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/
 Reproduce with RimWorld closed:
 
     powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -ArticulationGarden
+
+#### Sprite orientation regression (follow-up)
+
+The prior corrected frame-order gallery (4a27082) contained vertically
+inverted sprites; its swatch probe checked frame identity but not local
+sprite orientation. Source 1c4ce8c7fe81431126f7bc61beb7243bee37fea7
+corrects local UV.y independently of atlas row addressing.
+Run 69d66e7ca1b94458b9c4dd4623a04bd7 passed 30 actual vanilla-source
+versus neutral-atlas GPU positional comparisons, all nine frame indices,
+all eight native stages, and 75 material states; all cleanup and player
+preservation checks passed. Corn screenshot inspection confirmed all
+five traits upright in five states. No changes to previous approved
+render paths. Earlier inverted gallery superseded.
+
+Upright evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/f3345d5617ae2a47ab6f7b971037bea83f893dc1
