@@ -17,6 +17,11 @@ namespace HorticultureNovelSeeds
                     errors.Add(trait.defName + " has an explicit balance value but still uses tag fallback.");
                 if (trait.requiredResourceDef != null && trait.requiredResourceCount != 1)
                     errors.Add(trait.defName + " must consume exactly one required resource unit.");
+                if (trait.proceduralPhenotype != ProceduralPhenotype.None)
+                {
+                    if (!ValidProceduralCosmetic(trait)) errors.Add(trait.defName + " has invalid procedural appearance or non-cosmetic mechanics.");
+                    continue;
+                }
                 if (IsCosmetic(trait) || trait.configRoot) continue;
                 if (!HasBenefit(trait)) errors.Add(trait.defName + " has no mechanical benefit.");
                 if (!HasCostOrRestriction(trait)) errors.Add(trait.defName + " has no mechanical cost or substantial restriction.");
@@ -63,6 +68,24 @@ namespace HorticultureNovelSeeds
         private static bool IsCosmetic(VarietyTraitDef trait)
         {
             return trait != null && (ColorTraitFactory.IsColorFamily(trait.configFamily) || trait.visualMaskIndex >= 0);
+        }
+
+        // A procedural cosmetic is deliberately neutral. Do not use its presence
+        // to bypass the tradeoff policy for actual mechanical traits.
+        private static bool ValidProceduralCosmetic(VarietyTraitDef t)
+        {
+            return t.proceduralPhenotype >= ProceduralPhenotype.Variegated && t.proceduralPhenotype <= ProceduralPhenotype.AuroraVeins
+                && float.IsFinite(t.proceduralStrength) && t.proceduralStrength > 0f && t.proceduralStrength <= 1f
+                && t.balanceValueExplicit && t.balanceValue == 0f && !t.positive && !t.produceOnlyVisual && !t.inheritToProduce
+                && t.yieldFactor == 1f && t.growthRateFactor == 1f && t.workFactor == 1f
+                && t.sowWorkFactor == 1f && t.harvestWorkFactor == 1f && t.blightChanceFactor == 1f && t.blightDamageFactor == 1f
+                && t.maxHitPointsFactor == 1f && t.beautyOffset == 0f && t.coldGrowthOffset == 0f && t.heatGrowthOffset == 0f && t.sowSkillOffset == 0
+                && t.fishingYieldFactor == 1f && t.nutritionFactor == 1f && t.medicalPotencyFactor == 1f && t.forageNutritionFactor == 1f
+                && t.companionGrowthFactor == 1f && t.synergyPlantDef == null && t.synergyStat.NullOrEmpty()
+                && t.produceArmorHeatFactor == 1f && t.produceColdInsulationFactor == 1f && t.produceMaxHitPointsFactor == 1f && t.produceBeautyOffset == 0f
+                && !t.selfSeeding && !t.perennial && !t.perennialColdDormancy && !t.humongousSpacing && t.tramplingDamage == 0f && t.thornScratchChance == 0f
+                && t.requiredResourceDef == null && t.requiredSowTag.NullOrEmpty() && t.byproductDef == null
+                && t.resinHediff == null && t.resinDamage == null && t.compoundThought == null && t.compoundHediff == null && t.joyResinThought == null;
         }
 
         private static bool HasBenefit(VarietyTraitDef trait)

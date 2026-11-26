@@ -92,7 +92,6 @@ vec3 hnsPattern(vec3 rgb, vec4 src, vec2 localUv, vec2 sampleUv)
     float fine = hnsNoise(q*13.0);
     float value = max(src.r,max(src.g,src.b));
     float shade = smoothstep(0.09,0.32,value);
-    float luma = dot(src.rgb,vec3(.299,.587,.114));
     // Keep a little of the original hue and all of the original luminance
     // structure rather than painting flat opaque bands over a sprite.
     float lightness = clamp(.28+.93*value,0.0,1.0);
@@ -116,8 +115,8 @@ vec3 hnsPattern(vec3 rgb, vec4 src, vec2 localUv, vec2 sampleUv)
         vec2 stepUv = 1.5 / vec2(textureSize(_MainTex,0));
         float rim = 1.0 - min(min(texture(_MainTex,sampleUv+vec2(stepUv.x,0)).a,texture(_MainTex,sampleUv-vec2(stepUv.x,0)).a),
                             min(texture(_MainTex,sampleUv+vec2(0,stepUv.y)).a,texture(_MainTex,sampleUv-vec2(0,stepUv.y)).a));
-        target = mix(vec3(.19,.48,.61),vec3(.78,.94,1.0),clamp(.68*value+.32*rim+.13*fine,0.0,1.0));
-        blend = .76+.24*rim;
+        target = mix(vec3(.11,.26,.33),vec3(.81,.92,.94),clamp(.79*value+.24*rim+.08*fine,0.0,1.0));
+        blend = .75+.20*rim;
     }
     else if (p.x < 4.5)
     {

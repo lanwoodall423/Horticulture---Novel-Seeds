@@ -91,11 +91,15 @@ namespace HorticultureNovelSeeds
                 Require(candidates.Length > 0, "a visible unroofed plot with 18 clear plant positions");
                 start = candidates[0].Cell;
                 Log.Message("[HNS Garden] plot clear cells=" + candidates[0].Score);
+                // Clear the entire visible foreground of this disposable map.
+                // Trees can make a cell non-standable, so filtering plant removal
+                // through ClearCell left their canopies covering adjacent rows.
+                var vegetation = map.listerThings.AllThings.OfType<Plant>().Where(p =>
+                    p.Position.x >= start.x - 7 && p.Position.x <= start.x + 22 &&
+                    p.Position.z >= start.z - 7 && p.Position.z <= start.z + 16).ToArray();
+                foreach (var plant in vegetation) if (plant.Spawned) plant.Destroy(DestroyMode.Vanish);
                 foreach (var cell in Cells(start).Where(ClearCell))
-                {
-                    cell.GetPlant(map)?.Destroy(DestroyMode.Vanish);
                     map.terrainGrid.SetTerrain(cell, TerrainDefOf.Soil);
-                }
                 Find.WindowStack.TryRemove(typeof(EditWindow_Log), false);
                 Find.Selector.ClearSelection();
                 Find.CameraDriver.JumpToCurrentMapLoc(start + new IntVec3(8,0,4));
