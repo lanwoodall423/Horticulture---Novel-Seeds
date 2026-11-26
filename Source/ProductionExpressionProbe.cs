@@ -26,6 +26,32 @@ namespace HorticultureNovelSeeds
         internal static bool AwaitingReload{get;private set;}
         private static int phase,frames,shotAge;
         private static string shot;
+        private static IntPtr fixtureWindow;
+        private static readonly List<string> captureStatus=new(){"Phase\tNative map screenshot\tRedraw requests"};
+        private static int redrawRequests;
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern bool InvalidateRect(IntPtr hWnd,IntPtr rect,bool erase);
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern bool UpdateWindow(IntPtr hWnd);
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern uint GetWindowThreadProcessId(IntPtr hWnd,out uint processId);
+        private static void RequestMapRedraw()
+        {
+            if(!OperatingSystem.IsWindows())return;
+            if(fixtureWindow==IntPtr.Zero)
+            {
+                using var process=System.Diagnostics.Process.GetCurrentProcess();
+                fixtureWindow=process.MainWindowHandle;
+            }
+            if(fixtureWindow==IntPtr.Zero||GetWindowThreadProcessId(fixtureWindow,out uint owner)==0||owner!=(uint)Environment.ProcessId)return;
+            // Request WM_PAINT only for this isolated game window. The native
+            // Waylith backend translates it into an actual presentation request.
+            if(InvalidateRect(fixtureWindow,IntPtr.Zero,false))
+            {
+                redrawRequests++;
+                UpdateWindow(fixtureWindow);
+            }
+        }
         private static readonly string[] crops={"Plant_Corn","Plant_Cotton","Plant_Daylily"};
         private static readonly float[] growth={.40f,.55f,.65f,.80f,.90f,1f};
         private static readonly List<Plant> samples=new(),dense=new(),neighbors=new();
@@ -207,10 +233,14 @@ namespace HorticultureNovelSeeds
                     }
                     finally{UnityEngine.Object.Destroy(tex);}
                 }
-                ScreenCapture.CaptureScreenshot(shot);shotAge=0;return false;
+                redrawRequests=0;ScreenCapture.CaptureScreenshot(shot);RequestMapRedraw();shotAge=0;return false;
             }
             shotAge++;
-            return shotAge>=60||(shotAge>=10&&File.Exists(shot)&&new FileInfo(shot).Length>1000);
+            bool written=shotAge>=20&&File.Exists(shot)&&new FileInfo(shot).Length>1000;
+            if(!written&&shotAge<360){RequestMapRedraw();return false;}
+            captureStatus.Add(name+"\t"+(written?"written":"unavailable")+"\t"+redrawRequests);
+            File.WriteAllLines(Path.Combine(root,"HNS-garden-production-map-capture.tsv"),captureStatus);
+            return true;
         }
         private static void MakeDense()
         {
