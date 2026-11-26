@@ -244,3 +244,50 @@ evidence branch for owner review. No release metadata or ordinary saves changed.
 Reproduce, only with the game closed:
 
     powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -GardenProbe
+
+## Automatic-only anatomy decision and garden (2026-11-25)
+
+Owner approved removal of manual masks. Commit
+9a86f19087fb6cbee639cf6ed068944adb11b43a removes the manual resolver and
+generation exclusions, paint/edit gizmo, painter/projection operations,
+review queue, import/export UI and manual settings fields. The automatic
+classifier and its texture identity, confidence gating, GPU packed-mask
+path and legacy renderer remain. The retained layer representation is
+automatic mask data, not a manual painter. Region-specific plant color
+controls remain; harvested items use whole-item produce styling (the
+existing produce channel 0), with automatic harvested-item targeting
+not implemented. Visual Designer interaction and harvested-item appearance
+still require separate qualification. Old manual settings keys are
+intentionally ignored by native 1.7; original 1.6 artwork/configuration
+is preserved in Git. The native staging runner strips the 271 manual
+payload nodes from copied defaults, reducing 9,599,189 bytes to 309,653
+bytes; it does not rewrite the tracked 1.6 defaults or normal player files.
+
+The clean candidate compiled with zero errors/warnings; all 12 journal
+rule tests passed. Native AllPerformance run
+e78140538632464498e62361b98bb004 on 1.7.5014 rev1195 passed all seven
+garden stages. Generation reported 87 variations generated, zero
+reused/bundled hits, zero low-confidence and zero failed. The installed
+162-record legacy bundle did not yield validated hits in this run.
+Fresh automatic masks were the actual source for all 60 registered
+cultivars: 55 GPU masked, five oak on the legacy material path; 12
+vanilla controls. The inventory of species and exact trait IDs was
+identical to the previous garden. All four noon screenshots captured.
+No Horticulture-specific errors identified; normal mod config and prefs
+hashes, save inventory, owned game shutdown, package cleanup verified.
+The classifier's confidence is not a substitute for art review.
+
+Before/after visual comparison and full raw captures:
+https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/542e1a703a5d0d163c6cd543be912fa9517840aa
+
+Separate randomized maps and sprite variants, and background vegetation
+occlusion, mean this is a qualitative comparison, not a pixel-matched
+A/B experiment. Rice produce pigmentation is less distinct and cotton
+regional targeting differs. The owner may inspect the evidence; the next
+visual priorities are improving automatic region accuracy and adding
+mask-free procedural patterns. Do not reinstate manual painting as a
+prerequisite. No production release/default renderer activation.
+
+DLL SHA256: C9BDA5909985404C72409C5C9B15410A94869099C8B465C237C9D77680E5C60E.
+Receipt SHA256: 7E24971F77E0D8138DF1BFA9E0DC24842DB18D500DF6542DB7ECA242419AAF70.
+Player log SHA256: 5190B4B591281255C8548FC1D3B11ADDEC5A6697348CBDEED641054D0119C78C.
