@@ -360,3 +360,23 @@ Require(SurfaceFinishMath.Environment(.5f,1f,.01f).Rain==.03125f,"quantized weat
         Require(PhenotypeVocabulary.Wind(k).Phrase!=null,"wind vocabulary "+k);
     for(int mode=1;mode<=55;mode++)Require(PhenotypeVocabulary.Pigment(mode,1).Phrase!=null,"procedural vocabulary "+mode);
 }
+
+{
+    const int w=80,h=80;
+    var art=new OrganSpriteMath.Pixel[w*h];
+    for(int y=8;y<64;y++)for(int x=4;x<75;x++)
+    {
+        float a=(x-23)*(x-23)/190f+(y-28)*(y-28)/380f;
+        float b=(x-57)*(x-57)/175f+(y-42)*(y-42)/340f;
+        if(a<=1||b<=1)art[y*w+x]=new(62,143,37,255);
+    }
+    for(int y=31;y<40;y++)for(int x=18;x<27;x++)art[y*w+x]=new(222,183,61,255);
+    var anatomy=VascularMath.Build(art,w,h);
+    Require(anatomy!=null&&anatomy.Territories>=2&&anatomy.VeinPixels>0&&anatomy.ThinPixels>0,"vascular anatomy has local territories, veins and thin tissue");
+    var again=VascularMath.Build(art,w,h);
+    Require(anatomy.Mask.SequenceEqual(again.Mask),"deterministic vascular map");
+    Require(Enumerable.Range(0,art.Length).All(i=>anatomy.Mask[i].A==0||VascularMath.Eligible(art[i])),"no fruit, air or protected pixels in anatomy mask");
+    Require(anatomy.Mask.Where(p=>p.A>0).Select(p=>p.B).Distinct().Count()>1,"local territory variation");
+    Require(VascularMath.Build(new OrganSpriteMath.Pixel[w*h],w,h)==null,"blank art rejected");
+    Require(VascularMath.Light(0f)==0f&&VascularMath.Light(1f)==1f&&VascularMath.Light(float.NaN)==0f&&VascularMath.Wet(0f)==0f&&VascularMath.Wet(1f)==1f,"bounded environmental response");
+}

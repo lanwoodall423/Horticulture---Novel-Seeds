@@ -20,8 +20,10 @@ param(
     [switch]$ArticulationGarden,
     [switch]$MosaicGarden,
     [switch]$NeighborhoodGarden,
-    [switch]$ChronicleGarden
+    [switch]$ChronicleGarden,
+    [switch]$VascularGarden
 )
+if($VascularGarden){$DetailGarden=$true}
 if($ChronicleGarden){$FormGarden=$true}
 if($ChronicleGarden -and $NeighborhoodGarden){throw 'CHOOSE_ONE_PROBE'}
 if($NeighborhoodGarden){$FormGarden=$true}
@@ -43,7 +45,7 @@ $temp=Join-Path ([IO.Path]::GetTempPath()) ('hns-native-'+$run)
 $stage=Join-Path $repo ('DevTools\Staged\Native17Package-'+$run)
 $installed=Join-Path $game ('Mods\HNS-NativeFixture-'+$run)
 $outDir=Join-Path $repo ('DevTools\TestResults\native-'+$run)
-$receipt=[ordered]@{schemaVersion=1;run=$run;loadout=$Loadout;shaderProbe=[bool]$ShaderProbe;gardenProbe=[bool]$GardenProbe;patternGarden=[bool]$PatternGarden;catalogGarden=[bool]$CatalogGarden;creativeGarden=[bool]$CreativeGarden;cultivarGarden=[bool]$CultivarGarden;formGarden=[bool]$FormGarden;organGarden=[bool]$OrganGarden;developmentGarden=[bool]$DevelopmentGarden;windGarden=[bool]$WindGarden;surfaceGarden=[bool]$SurfaceGarden;detailGarden=[bool]$DetailGarden;architectureGarden=[bool]$ArchitectureGarden;poseGarden=[bool]$PoseGarden;articulationGarden=[bool]$ArticulationGarden;mosaicGarden=[bool]$MosaicGarden;neighborhoodGarden=[bool]$NeighborhoodGarden;chronicleGarden=[bool]$ChronicleGarden;groundGarden=[bool]$GroundGarden;status='BLOCKED';reason='NOT_STARTED';sourceHead=$null;version=$null;assemblySha256=$null;activePackages=@();optimizerIdentities=@();stages=@();fixtureLine=$null;processId=$null;testProcessStopped=$false;testPackageRemoved=$false;normalConfigUnchanged=$null;normalPrefsUnchanged=$null;normalSavesUnchanged=$null;isolatedSaveDirectory=$temp;startedUtc=$null;finishedUtc=$null}
+$receipt=[ordered]@{schemaVersion=1;run=$run;loadout=$Loadout;shaderProbe=[bool]$ShaderProbe;gardenProbe=[bool]$GardenProbe;patternGarden=[bool]$PatternGarden;catalogGarden=[bool]$CatalogGarden;creativeGarden=[bool]$CreativeGarden;cultivarGarden=[bool]$CultivarGarden;formGarden=[bool]$FormGarden;organGarden=[bool]$OrganGarden;developmentGarden=[bool]$DevelopmentGarden;windGarden=[bool]$WindGarden;surfaceGarden=[bool]$SurfaceGarden;detailGarden=[bool]$DetailGarden;vascularGarden=[bool]$VascularGarden;architectureGarden=[bool]$ArchitectureGarden;poseGarden=[bool]$PoseGarden;articulationGarden=[bool]$ArticulationGarden;mosaicGarden=[bool]$MosaicGarden;neighborhoodGarden=[bool]$NeighborhoodGarden;chronicleGarden=[bool]$ChronicleGarden;groundGarden=[bool]$GroundGarden;status='BLOCKED';reason='NOT_STARTED';sourceHead=$null;version=$null;assemblySha256=$null;activePackages=@();optimizerIdentities=@();stages=@();fixtureLine=$null;processId=$null;testProcessStopped=$false;testPackageRemoved=$false;normalConfigUnchanged=$null;normalPrefsUnchanged=$null;normalSavesUnchanged=$null;isolatedSaveDirectory=$temp;startedUtc=$null;finishedUtc=$null}
 $proc=$null; $installedByRun=$false; $before=$null; $started=$null; $capturedPlayerBaseline=$false
 $utf8=New-Object Text.UTF8Encoding($false)
 function Assert-Closed {
@@ -177,6 +179,7 @@ try {
     if($WindGarden){$psi.EnvironmentVariables['HNS_NATIVE_WIND_GARDEN']='1'}
     if($SurfaceGarden){$psi.EnvironmentVariables['HNS_NATIVE_SURFACE_GARDEN']='1'}
     if($DetailGarden){$psi.EnvironmentVariables['HNS_NATIVE_DETAIL_GARDEN']='1'}
+    if($VascularGarden){$psi.EnvironmentVariables['HNS_NATIVE_VASCULAR_GARDEN']='1'}
     if($ArchitectureGarden){$psi.EnvironmentVariables['HNS_NATIVE_ARCHITECTURE_GARDEN']='1'}
     if($PoseGarden){$psi.EnvironmentVariables['HNS_NATIVE_POSE_GARDEN']='1'}
     if($ArticulationGarden){$psi.EnvironmentVariables['HNS_NATIVE_ARTICULATION_GARDEN']='1'}

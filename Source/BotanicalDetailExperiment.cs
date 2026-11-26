@@ -28,12 +28,13 @@ namespace HorticultureNovelSeeds
             if(!Enabled||comp?.ActiveTraits==null)return BotanicalDetailKind.None;
             VarietyTraitDef chosen=null;
             foreach(var t in comp.ActiveTraits)
-                if(t!=null&&!t.produceOnlyVisual&&BotanicalDetailMath.Valid(t.botanicalDetail)&&
+                if(t!=null&&!t.produceOnlyVisual&&BotanicalDetailMath.Valid(t.botanicalDetail)&&VascularMath.Valid(t.botanicalDetail)==VascularExperiment.Enabled&&
                     (chosen==null||string.CompareOrdinal(t.defName,chosen.defName)<0))chosen=t;
             return chosen?.botanicalDetail??BotanicalDetailKind.None;
         }
         internal static void Prepare(ThingDef def,int variation)
         {
+            if(VascularExperiment.Enabled){VascularExperiment.Prepare(def,variation);return;}
             if(!Enabled||PlantMaskUtility.TextureForVariation(def,variation) is not Texture2D source)return;
             string label=PlantMaskUtility.VariationLabel(def,variation)??"";
             if(label.Contains("Immature",StringComparison.OrdinalIgnoreCase)||label.Contains("Leafless",StringComparison.OrdinalIgnoreCase))return;

@@ -88,7 +88,7 @@ namespace HorticultureNovelSeeds
         },40);
         internal static Fact Detail(BotanicalDetailKind k)=>F(k==BotanicalDetailKind.LanternBuds?Region.Light:Region.Foliage,"detail",k switch
         {
-            BotanicalDetailKind.LobedLeaf=>"lobed leaf edges",BotanicalDetailKind.Windowleaf=>"small windows in the foliage",BotanicalDetailKind.SideShoots=>"additional lateral shoots",BotanicalDetailKind.CurlingTendrils=>"curling tendrils",BotanicalDetailKind.LanternBuds=>"softly luminous reproductive organs",_=>null
+            BotanicalDetailKind.LobedLeaf=>"lobed leaf edges",BotanicalDetailKind.Windowleaf=>"small windows in the foliage",BotanicalDetailKind.SideShoots=>"additional lateral shoots",BotanicalDetailKind.CurlingTendrils=>"curling tendrils",BotanicalDetailKind.LanternBuds=>"softly luminous reproductive organs",BotanicalDetailKind.IvoryNerves=>"cream-colored internal veins",BotanicalDetailKind.CrimsonNetwork=>"wine-red branching veins and localized blush",BotanicalDetailKind.LivingGlass=>"light-sensitive thin foliage with shaded veins",BotanicalDetailKind.VascularChimera=>"localized cream-green foliage sectors",BotanicalDetailKind.BronzeReticulum=>"bronze capillary-like markings",_=>null
         },40);
         internal static Fact Ground(GroundHabitKind k)=>F(Region.Ground,"habit",k switch
         {

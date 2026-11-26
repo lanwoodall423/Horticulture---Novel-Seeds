@@ -5,11 +5,11 @@ using Pixel = HorticultureNovelSeeds.OrganSpriteMath.Pixel;
 
 namespace HorticultureNovelSeeds
 {
-    public enum BotanicalDetailKind { None,LobedLeaf,Windowleaf,SideShoots,CurlingTendrils,LanternBuds }
+    public enum BotanicalDetailKind { None,LobedLeaf,Windowleaf,SideShoots,CurlingTendrils,LanternBuds,IvoryNerves,CrimsonNetwork,LivingGlass,VascularChimera,BronzeReticulum }
     internal static class BotanicalDetailMath
     {
-        internal static bool Valid(BotanicalDetailKind k)=>k>=BotanicalDetailKind.LobedLeaf&&k<=BotanicalDetailKind.LanternBuds;
-        internal static bool Topology(BotanicalDetailKind k)=>Valid(k)&&k!=BotanicalDetailKind.LanternBuds;
+        internal static bool Valid(BotanicalDetailKind k)=>k>=BotanicalDetailKind.LobedLeaf&&k<=BotanicalDetailKind.BronzeReticulum;
+        internal static bool Topology(BotanicalDetailKind k)=>k>=BotanicalDetailKind.LobedLeaf&&k<=BotanicalDetailKind.CurlingTendrils;
         internal static bool Green(Pixel p)=>p.A>=100&&p.G>=p.R*1.035f&&p.G>=p.B*1.16f&&p.G>45;
         internal static float Darkness(float sky)=>1f-Math.Clamp((float.IsFinite(sky)?sky:1f)-.12f,0f,.48f)/.48f;
         internal sealed record Result(Pixel[] Pixels,int Removed,int Added);

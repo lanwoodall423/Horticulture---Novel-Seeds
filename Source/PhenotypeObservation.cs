@@ -17,6 +17,8 @@ namespace HorticultureNovelSeeds
         private readonly List<(ResponsiveHabitKind Kind,Material Material,int Seed)> poses=new();
         private readonly List<(SurfaceFinishKind Kind,Material Material)> surfaces=new();
         private readonly List<Material> glows=new();
+        private readonly List<(BotanicalDetailKind Kind,Material Mat)> tissues=new();
+        internal void AddTissue(BotanicalDetailKind k,Material m){if(m!=null&&!tissues.Contains((k,m)))tissues.Add((k,m));}
         internal static PhenotypeObservation For(Plant p)=>p?.TryGetComp<CompPlantVariety>()?.VisualObservation;
         internal void Add(V.Fact f){if(!string.IsNullOrWhiteSpace(f.Phrase)&&!facts.Contains(f))facts.Add(f);}
         internal void AddPose(ResponsiveHabitKind k,Material m,int seed)
@@ -43,6 +45,11 @@ namespace HorticultureNovelSeeds
             foreach(var s in surfaces)
                 if(s.Material!=null)result.Add(V.Surface(s.Kind,s.Material.GetVector("_HnsEnvironment").w>.08f));
             if(glows.Any(m=>m!=null&&m.GetFloat("_HnsDarkness")>.08f))result.Add(V.Detail(BotanicalDetailKind.LanternBuds));
+            foreach(var t in tissues)if(t.Mat!=null)
+            {
+                if(t.Kind==BotanicalDetailKind.LivingGlass&&t.Mat.GetVector("_HnsTissue").y<.08f)continue;
+                result.Add(V.Detail(t.Kind));
+            }
             return V.Resolve(result);
         }
         internal string Prose()=>V.Prose(Facts());

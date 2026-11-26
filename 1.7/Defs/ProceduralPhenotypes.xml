@@ -1228,4 +1228,59 @@
     <plantForm>StretchBands</plantForm>
     <plantFormStrength>1</plantFormStrength>
   </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_IvoryNerves</defName>
+    <label>Ivory Nerves</label>
+    <description>Pale ivory midribs and smaller branches follow individual foliage territories.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>IvoryNerves</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_CrimsonNetwork</defName>
+    <label>Crimson Network</label>
+    <description>Wine-red vascular markings intensify in selected leaf territories.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>CrimsonNetwork</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_LivingGlass</defName>
+    <label>Living Glass</label>
+    <description>Thin foliage tissue brightens in daylight while thicker internal veins remain shaded.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>LivingGlass</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_VascularChimera</defName>
+    <label>Vascular Chimera</label>
+    <description>Individual foliage territories express different cream and green pigments.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>VascularChimera</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_BronzeReticulum</defName>
+    <label>Bronze Reticulum</label>
+    <description>Warm bronze capillary markings respond to moisture and retain original leaf shading.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>botanicalDetail</li></exclusionTags>
+    <botanicalDetail>BronzeReticulum</botanicalDetail>
+  </HorticultureNovelSeeds.VarietyTraitDef>
 </Defs>
