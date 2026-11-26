@@ -1,0 +1,37 @@
+Panel	Row	Column	Species	Plant ID	Trait	Renderer	Additional planes
+1	1	1	Plant_Corn	18929	Control	Vanilla	0
+1	1	2	Plant_Corn	18930	HNS_ForkedCrown	Modular canopy planes	2
+1	1	3	Plant_Corn	18931	HNS_TieredCanopy	Modular canopy planes	3
+1	1	4	Plant_Corn	18932	HNS_SpreadingRosette	Modular canopy planes	3
+1	1	5	Plant_Corn	18933	HNS_FlowerSpray	Modular canopy planes	5
+1	1	6	Plant_Corn	18934	HNS_AbundantClusters	Modular canopy planes	5
+1	2	1	Plant_Cotton	18935	Control	Vanilla	0
+1	2	2	Plant_Cotton	18936	HNS_ForkedCrown	Modular canopy planes	2
+1	2	3	Plant_Cotton	18937	HNS_TieredCanopy	Modular canopy planes	3
+1	2	4	Plant_Cotton	18938	HNS_SpreadingRosette	Modular canopy planes	3
+1	2	5	Plant_Cotton	18939	HNS_FlowerSpray	Modular canopy planes	5
+1	2	6	Plant_Cotton	18940	HNS_AbundantClusters	Modular canopy planes	5
+1	3	1	Plant_Strawberry	18941	Control	Vanilla	0
+1	3	2	Plant_Strawberry	18942	HNS_ForkedCrown	Modular canopy planes	2
+1	3	3	Plant_Strawberry	18943	HNS_TieredCanopy	Modular canopy planes	3
+1	3	4	Plant_Strawberry	18944	HNS_SpreadingRosette	Modular canopy planes	3
+1	3	5	Plant_Strawberry	18945	HNS_FlowerSpray	Modular canopy planes	5
+1	3	6	Plant_Strawberry	18946	HNS_AbundantClusters	Modular canopy planes	5
+2	1	1	Plant_Rose	18947	Control	Vanilla	0
+2	1	2	Plant_Rose	18948	HNS_ForkedCrown	Modular canopy planes	2
+2	1	3	Plant_Rose	18949	HNS_TieredCanopy	Modular canopy planes	3
+2	1	4	Plant_Rose	18950	HNS_SpreadingRosette	Modular canopy planes	3
+2	1	5	Plant_Rose	18951	HNS_FlowerSpray	Modular canopy planes	5
+2	1	6	Plant_Rose	18952	HNS_AbundantClusters	Modular canopy planes	5
+2	2	1	Plant_Daylily	18953	Control	Vanilla	0
+2	2	2	Plant_Daylily	18954	HNS_ForkedCrown	Modular canopy planes	2
+2	2	3	Plant_Daylily	18955	HNS_TieredCanopy	Modular canopy planes	3
+2	2	4	Plant_Daylily	18956	HNS_SpreadingRosette	Modular canopy planes	3
+2	2	5	Plant_Daylily	18957	HNS_FlowerSpray	Modular canopy planes	5
+2	2	6	Plant_Daylily	18958	HNS_AbundantClusters	Modular canopy planes	5
+2	3	1	Plant_Hops	18959	Control	Vanilla	0
+2	3	2	Plant_Hops	18960	HNS_ForkedCrown	Modular canopy planes	2
+2	3	3	Plant_Hops	18961	HNS_TieredCanopy	Modular canopy planes	3
+2	3	4	Plant_Hops	18962	HNS_SpreadingRosette	Modular canopy planes	3
+2	3	5	Plant_Hops	18963	HNS_FlowerSpray	Architecture unavailable, original path	0
+2	3	6	Plant_Hops	18964	HNS_AbundantClusters	Architecture unavailable, original path	0

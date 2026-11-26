@@ -1,0 +1,10 @@
+Species	Variation	Texture	Width	Height	Leaf W	Leaf H	Fruit W	Fruit H	Anchors
+Plant_Corn	0	CornPlantA	256	256	136	187	34	41	5
+Plant_Corn	1	CornPlantB	256	256	140	187	29	41	5
+Plant_Cotton	0	CottonPlantA	256	256	208	185	50	133	5
+Plant_Cotton	1	CottonPlantB	256	256	200	177	49	51	5
+Plant_Strawberry	0	StrawberryPlant	256	256	256	166	35	37	5
+Plant_Rose	0	RoseA	256	256	179	141	64	79	5
+Plant_Daylily	0	DaylilyA	256	256	240	179	53	53	5
+Plant_Daylily	1	DaylilyB	256	256	246	184	55	51	5
+Plant_Hops	0	HopsPlantA	256	256	222	176	0	0	5
