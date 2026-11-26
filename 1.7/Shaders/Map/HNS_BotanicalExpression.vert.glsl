@@ -15,6 +15,7 @@ layout(set=2,binding=0) uniform MaterialUniforms
     vec4 _HnsExpression;
     vec4 _HnsExpressionEnv;
     vec4 _HnsPreview;
+    vec4 _HnsFunctional;
 }uMaterial;
 void main()
 {

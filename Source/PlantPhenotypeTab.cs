@@ -141,13 +141,14 @@ namespace HorticultureNovelSeeds
                 string description=V.Prose(facts);
                 if(string.IsNullOrEmpty(description))description="No distinctive rendered expression is currently recorded.";
                 string potential=authority?.PotentialAppearance;
+                string function=authority==null?null:AdaptivePhenotypePresentation.Explain(c);
                 Rect bounds=new Rect(0,0,size.x,size.y).ContractedBy(11);
                 DrawHeader(new Rect(bounds.x,bounds.y,bounds.width,96),p,authority);
                 Rect outer=new(bounds.x,bounds.y+106,bounds.width,bounds.height-106);
                 float width=outer.width-18,detailWidth=width-126;
                 float rowHeight=groups.Sum(g=>Mathf.Max(29f,Height(g.Value,detailWidth-10)+10f)+3f);
                 float h=26+Height(description,width)+9+26+Mathf.Max(28,rowHeight)+
-                    26+(ChronicleMath.Count(c.VisualChronicle)>0?93:38)+26+Height(potential??"Not documented.",width)+31;
+                    26+(ChronicleMath.Count(c.VisualChronicle)>0?93:38)+26+Height(potential??"Not documented.",width)+31+(string.IsNullOrEmpty(function)?0:26+Height(function,width)+9);
                 Rect view=new(0,0,width,Mathf.Max(outer.height,h));
                 Widgets.BeginScrollView(outer,ref scroll,view);
                 try
@@ -155,6 +156,7 @@ namespace HorticultureNovelSeeds
                     float y=0;
                     Heading(width,ref y,"INDIVIDUAL PHENOTYPE");
                     Body(width,ref y,description,facts.Length==0?Muted:Ink);
+                    if(!string.IsNullOrEmpty(function)){Heading(width,ref y,"APPEARANCE AND CULTIVATION");Body(width,ref y,function,Ink);}
                     Heading(width,ref y,"BOTANICAL OBSERVATIONS");
                     if(groups.Length==0)Body(width,ref y,"No active visual observations.",Muted);
                     foreach(var g in groups)
