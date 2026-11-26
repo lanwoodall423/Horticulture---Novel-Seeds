@@ -2,7 +2,8 @@
 param(
     [ValidateSet('AllPerformance','BothLoading','Minimal')][string]$Loadout='AllPerformance',
     [ValidateRange(30,300)][int]$TimeoutSeconds=180,
-    [switch]$ShaderProbe
+    [switch]$ShaderProbe,
+    [switch]$GardenProbe
 )
 $ErrorActionPreference='Stop'
 $repo=Split-Path -Parent $PSScriptRoot
@@ -18,7 +19,7 @@ $temp=Join-Path ([IO.Path]::GetTempPath()) ('hns-native-'+$run)
 $stage=Join-Path $repo ('DevTools\Staged\Native17Package-'+$run)
 $installed=Join-Path $game ('Mods\HNS-NativeFixture-'+$run)
 $outDir=Join-Path $repo ('DevTools\TestResults\native-'+$run)
-$receipt=[ordered]@{schemaVersion=1;run=$run;loadout=$Loadout;shaderProbe=[bool]$ShaderProbe;status='BLOCKED';reason='NOT_STARTED';sourceHead=$null;version=$null;assemblySha256=$null;activePackages=@();optimizerIdentities=@();stages=@();fixtureLine=$null;processId=$null;testProcessStopped=$false;testPackageRemoved=$false;normalConfigUnchanged=$null;normalPrefsUnchanged=$null;normalSavesUnchanged=$null;isolatedSaveDirectory=$temp;startedUtc=$null;finishedUtc=$null}
+$receipt=[ordered]@{schemaVersion=1;run=$run;loadout=$Loadout;shaderProbe=[bool]$ShaderProbe;gardenProbe=[bool]$GardenProbe;status='BLOCKED';reason='NOT_STARTED';sourceHead=$null;version=$null;assemblySha256=$null;activePackages=@();optimizerIdentities=@();stages=@();fixtureLine=$null;processId=$null;testProcessStopped=$false;testPackageRemoved=$false;normalConfigUnchanged=$null;normalPrefsUnchanged=$null;normalSavesUnchanged=$null;isolatedSaveDirectory=$temp;startedUtc=$null;finishedUtc=$null}
 $proc=$null; $installedByRun=$false; $before=$null; $started=$null; $capturedPlayerBaseline=$false
 $utf8=New-Object Text.UTF8Encoding($false)
 function Assert-Closed {
@@ -47,6 +48,7 @@ function Assert-NoPackage {
 }
 New-Item -ItemType Directory -Path $outDir | Out-Null
 try {
+    if($ShaderProbe -and $GardenProbe){throw "CHOOSE_ONE_PROBE"}
     Assert-Closed
     Assert-NoPackage
     $head=(& git -C $repo rev-parse HEAD).Trim()
@@ -79,7 +81,7 @@ try {
         Copy-Item -LiteralPath (Join-Path $repo ('1.6\'+$d)) -Destination (Join-Path $stage '1.7') -Recurse
     }
     Copy-Item -LiteralPath (Join-Path $repo '1.7\Defs\ThingDefs_Items.xml') -Destination (Join-Path $stage '1.7\Defs\ThingDefs_Items.xml') -Force
-    if($ShaderProbe){
+    if($ShaderProbe -or $GardenProbe){
         Copy-Item -LiteralPath (Join-Path $repo 'DevTools\ShaderPrototype\Defs\HNS_PhenotypeShaders.xml') -Destination (Join-Path $stage '1.7\Defs')
         Copy-Item -LiteralPath (Join-Path $repo 'DevTools\ShaderPrototype\Shaders') -Destination (Join-Path $stage '1.7') -Recurse
     }
@@ -113,6 +115,7 @@ try {
     foreach($dlc in @('royalty','ideology','biotech','anomaly','odyssey')){$node=$config.CreateElement('li');$node.InnerText='ludeon.rimworld.'+$dlc;$null=$config.DocumentElement.SelectSingleNode("knownExpansions").AppendChild($node)}
     $config.Save((Join-Path $configDir 'ModsConfig.xml'))
     $prefs='<PrefsData><runInBackground>True</runInBackground><fullscreen>False</fullscreen><screenWidth>1280</screenWidth><screenHeight>720</screenHeight><volumeMaster>0</volumeMaster><devMode>True</devMode><adaptiveTrainingEnabled>False</adaptiveTrainingEnabled><autosaveIntervalDays>7</autosaveIntervalDays></PrefsData>'
+    if($GardenProbe){$prefs=$prefs.Replace("<screenWidth>1280</screenWidth><screenHeight>720</screenHeight>","<screenWidth>1600</screenWidth><screenHeight>900</screenHeight>")}
     [IO.File]::WriteAllText((Join-Path $configDir 'Prefs.xml'),$prefs,$utf8)
     if(Test-Path -LiteralPath $log -PathType Leaf){Copy-Item -LiteralPath $log -Destination (Join-Path $outDir 'prior-player.log')}
     Assert-Closed
@@ -123,6 +126,7 @@ try {
     $psi.EnvironmentVariables['HNS_NATIVE_PACKAGES']=($packages -join ',')
     $psi.EnvironmentVariables['HNS_NATIVE_DLL']=$sha
     if($ShaderProbe){$psi.EnvironmentVariables['HNS_NATIVE_SHADER_PROBE']='1'}
+    if($GardenProbe){$psi.EnvironmentVariables['HNS_NATIVE_GARDEN_PROBE']='1'}
     $receipt.startedUtc=[DateTime]::UtcNow.ToString('o')
     $proc=[Diagnostics.Process]::Start($psi)
     $started=$proc.StartTime
@@ -148,7 +152,7 @@ try {
                 $receipt.fixtureLine=[string]::new(([string]$final).ToCharArray())
                 $result=$final.Substring($final.IndexOf($prefix)+$prefix.Length)
                 if($result -match '^(PASS|FAIL)\s+(.+)$'){$receipt.status=$Matches[1];$receipt.reason=$Matches[2]}
-                $requiredStages=if($ShaderProbe){'Startup,ShaderPixelParity,ShaderMaskParity,ShaderFallback,ShaderField'}else{'Startup,HarvestAndSeedRecovery,Registration,CultivarHarvest,SaveReload'}
+                $requiredStages=if($GardenProbe){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenPanel3,GardenPanel4,GardenInventory'}elseif($ShaderProbe){'Startup,ShaderPixelParity,ShaderMaskParity,ShaderFallback,ShaderField'}else{'Startup,HarvestAndSeedRecovery,Registration,CultivarHarvest,SaveReload'}
                 if($receipt.status -eq 'PASS' -and (($receipt.stages -join ',') -ne $requiredStages)){$receipt.status='FAIL';$receipt.reason='INCOMPLETE_STAGE_EVIDENCE'}
                 break
             }
@@ -189,6 +193,9 @@ finally{
     [IO.File]::WriteAllText((Join-Path $outDir 'preservation-result.json'),([ordered]@{testProcessStopped=$receipt.testProcessStopped;testPackageRemoved=$receipt.testPackageRemoved;normalConfigUnchanged=$receipt.normalConfigUnchanged;normalPrefsUnchanged=$receipt.normalPrefsUnchanged;normalSavesUnchanged=$receipt.normalSavesUnchanged}|ConvertTo-Json -Depth 2),$utf8)
     if($ShaderProbe -and (Test-Path -LiteralPath $temp)){
         foreach($file in Get-ChildItem -LiteralPath $temp -Filter 'HNS-shader-*.png' -File){Copy-Item -LiteralPath $file.FullName -Destination $outDir}
+    }
+    if($GardenProbe -and (Test-Path -LiteralPath $temp)){
+        foreach($file in Get-ChildItem -LiteralPath $temp -Filter 'HNS-garden-*' -File){Copy-Item -LiteralPath $file.FullName -Destination $outDir}
     }
     $receipt.finishedUtc=[DateTime]::UtcNow.ToString('o')
     $json=$receipt|ConvertTo-Json -Depth 4

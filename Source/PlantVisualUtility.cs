@@ -18,6 +18,9 @@ namespace HorticultureNovelSeeds
 
         public static bool PrintScaledPlant(Plant plant, SectionLayer layer, PlantVisualParameters visual)
         {
+#if HNS_NATIVE_FIXTURE
+            NativeGardenProbe.RecordPrint(plant, true);
+#endif
             if (TryPrintIndependentMaskLayers(plant, layer, visual)) return false;
             Vector3 trueCenter = plant.TrueCenter();
             bool wantSnowOverlay = plant.Position.GetSnowDepth(plant.Map) > 0.8f;
@@ -298,6 +301,9 @@ namespace HorticultureNovelSeeds
                 preservesWind = true;
                 return shaderMaterial;
             }
+#if HNS_NATIVE_FIXTURE
+            NativeGardenProbe.RecordLegacy(plant);
+#endif
             Texture2D sourceTexture = source.mainTexture as Texture2D;
             int maskKey = unchecked((PlantMaskUtility.MaskHash(plant.def, variationIndex) * 397 ^ NovelSeedUtility.PlantTextureVisualHash(plant.TryGetComp<CompPlantVariety>())) * 31 + isolatedMaskLayer);
             StyledMaterialKey key = new StyledMaterialKey(sourceTexture != null ? sourceTexture.GetInstanceID() : source.GetInstanceID(), source.shader.GetInstanceID(), source.renderQueue, maskKey, visual);

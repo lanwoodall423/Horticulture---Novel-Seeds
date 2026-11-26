@@ -391,11 +391,17 @@ namespace HorticultureNovelSeeds
             CompPlantVariety comp = __instance.TryGetComp<CompPlantVariety>();
             if (comp == null || !comp.HasAnyTraits)
             {
+#if HNS_NATIVE_FIXTURE
+                NativeGardenProbe.RecordPrint(__instance, false);
+#endif
                 return true;
             }
             PlantVisualParameters visual = NovelSeedUtility.ResolveVisualParameters(comp);
             if (visual.IsDefault && (!NovelSeedUtility.HasPlantMaskVisual(comp) || !PlantMaskUtility.HasActiveMasks(__instance.def)))
             {
+#if HNS_NATIVE_FIXTURE
+                NativeGardenProbe.RecordPrint(__instance, false);
+#endif
                 return true;
             }
             return PlantVisualUtility.PrintScaledPlant(__instance, layer, visual);
