@@ -1,0 +1,25 @@
+{
+  "run": "8e40817089dc44389a13fe1d6856787b",
+  "loadout": "AllPerformance",
+  "status": "PASS",
+  "reason": "five gameplay-linked cue families, actual resource job, perennial harvest and native phenotype inspector",
+  "sourceHead": "492f4d60a4e9e8b86e007792c5cbf4527f34d40d",
+  "version": "0.1.0-alpha+g492f4d60a4e9",
+  "assemblySha256": "EE142927B3515AE0C501B9EBD44D93FF17725EDDBAC549F4870E81B9E833CF4C",
+  "gameVersion": "1.7.5014 rev1195",
+  "stages": [
+    "Startup",
+    "AdaptiveSetup",
+    "AdaptiveVisuals",
+    "AdaptiveResource",
+    "AdaptivePerennial",
+    "AdaptiveInspector"
+  ],
+  "testProcessStopped": true,
+  "testPackageRemoved": true,
+  "normalConfigUnchanged": true,
+  "normalPrefsUnchanged": true,
+  "normalSavesUnchanged": true,
+  "startedUtc": "2026-11-26T22:01:07.2744563Z",
+  "finishedUtc": "2026-11-26T22:02:18.1241296Z"
+}
