@@ -1168,4 +1168,64 @@
     <plantForm>FreeRosette</plantForm>
     <plantFormStrength>1</plantFormStrength>
   </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_CrookedChronicle</defName>
+    <label>Crooked Chronicle</label>
+    <description>Older stem bends remain as later growth records new growing space.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>plantForm</li></exclusionTags>
+    <plantForm>CrookedChronicle</plantForm>
+    <plantFormStrength>1</plantFormStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_RingedHabit</defName>
+    <label>Ringed Habit</label>
+    <description>Canopy layers retain the compression of earlier crowded growing stages.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>plantForm</li></exclusionTags>
+    <plantForm>RingedHabit</plantForm>
+    <plantFormStrength>1</plantFormStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_AsymmetricWhorls</defName>
+    <label>Asymmetric Whorls</label>
+    <description>Separate growth layers spread toward the open side that existed when they developed.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>plantForm</li></exclusionTags>
+    <plantForm>AsymmetricWhorls</plantForm>
+    <plantFormStrength>1</plantFormStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_ReleaseCrown</defName>
+    <label>Release Crown</label>
+    <description>A compressed older canopy develops a broad upper crown when later growth has open space.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>plantForm</li></exclusionTags>
+    <plantForm>ReleaseCrown</plantForm>
+    <plantFormStrength>1</plantFormStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_StretchBands</defName>
+    <label>Stretch Bands</label>
+    <description>Earlier crowded growth retains elongated internode-like sections after the competition is gone.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>plantForm</li></exclusionTags>
+    <plantForm>StretchBands</plantForm>
+    <plantFormStrength>1</plantFormStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
 </Defs>

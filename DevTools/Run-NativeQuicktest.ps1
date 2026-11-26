@@ -19,8 +19,11 @@ param(
     [switch]$GroundGarden,
     [switch]$ArticulationGarden,
     [switch]$MosaicGarden,
-    [switch]$NeighborhoodGarden
+    [switch]$NeighborhoodGarden,
+    [switch]$ChronicleGarden
 )
+if($ChronicleGarden){$FormGarden=$true}
+if($ChronicleGarden -and $NeighborhoodGarden){throw 'CHOOSE_ONE_PROBE'}
 if($NeighborhoodGarden){$FormGarden=$true}
 if($MosaicGarden){$PoseGarden=$true}
 if($MosaicGarden -and $ArticulationGarden){throw 'CHOOSE_ONE_PROBE'}
@@ -40,7 +43,7 @@ $temp=Join-Path ([IO.Path]::GetTempPath()) ('hns-native-'+$run)
 $stage=Join-Path $repo ('DevTools\Staged\Native17Package-'+$run)
 $installed=Join-Path $game ('Mods\HNS-NativeFixture-'+$run)
 $outDir=Join-Path $repo ('DevTools\TestResults\native-'+$run)
-$receipt=[ordered]@{schemaVersion=1;run=$run;loadout=$Loadout;shaderProbe=[bool]$ShaderProbe;gardenProbe=[bool]$GardenProbe;patternGarden=[bool]$PatternGarden;catalogGarden=[bool]$CatalogGarden;creativeGarden=[bool]$CreativeGarden;cultivarGarden=[bool]$CultivarGarden;formGarden=[bool]$FormGarden;organGarden=[bool]$OrganGarden;developmentGarden=[bool]$DevelopmentGarden;windGarden=[bool]$WindGarden;surfaceGarden=[bool]$SurfaceGarden;detailGarden=[bool]$DetailGarden;architectureGarden=[bool]$ArchitectureGarden;poseGarden=[bool]$PoseGarden;articulationGarden=[bool]$ArticulationGarden;mosaicGarden=[bool]$MosaicGarden;neighborhoodGarden=[bool]$NeighborhoodGarden;groundGarden=[bool]$GroundGarden;status='BLOCKED';reason='NOT_STARTED';sourceHead=$null;version=$null;assemblySha256=$null;activePackages=@();optimizerIdentities=@();stages=@();fixtureLine=$null;processId=$null;testProcessStopped=$false;testPackageRemoved=$false;normalConfigUnchanged=$null;normalPrefsUnchanged=$null;normalSavesUnchanged=$null;isolatedSaveDirectory=$temp;startedUtc=$null;finishedUtc=$null}
+$receipt=[ordered]@{schemaVersion=1;run=$run;loadout=$Loadout;shaderProbe=[bool]$ShaderProbe;gardenProbe=[bool]$GardenProbe;patternGarden=[bool]$PatternGarden;catalogGarden=[bool]$CatalogGarden;creativeGarden=[bool]$CreativeGarden;cultivarGarden=[bool]$CultivarGarden;formGarden=[bool]$FormGarden;organGarden=[bool]$OrganGarden;developmentGarden=[bool]$DevelopmentGarden;windGarden=[bool]$WindGarden;surfaceGarden=[bool]$SurfaceGarden;detailGarden=[bool]$DetailGarden;architectureGarden=[bool]$ArchitectureGarden;poseGarden=[bool]$PoseGarden;articulationGarden=[bool]$ArticulationGarden;mosaicGarden=[bool]$MosaicGarden;neighborhoodGarden=[bool]$NeighborhoodGarden;chronicleGarden=[bool]$ChronicleGarden;groundGarden=[bool]$GroundGarden;status='BLOCKED';reason='NOT_STARTED';sourceHead=$null;version=$null;assemblySha256=$null;activePackages=@();optimizerIdentities=@();stages=@();fixtureLine=$null;processId=$null;testProcessStopped=$false;testPackageRemoved=$false;normalConfigUnchanged=$null;normalPrefsUnchanged=$null;normalSavesUnchanged=$null;isolatedSaveDirectory=$temp;startedUtc=$null;finishedUtc=$null}
 $proc=$null; $installedByRun=$false; $before=$null; $started=$null; $capturedPlayerBaseline=$false
 $utf8=New-Object Text.UTF8Encoding($false)
 function Assert-Closed {
@@ -168,6 +171,7 @@ try {
     if($CultivarGarden){$psi.EnvironmentVariables['HNS_NATIVE_CULTIVAR_GARDEN']='1'}
     if($FormGarden){$psi.EnvironmentVariables['HNS_NATIVE_FORM_GARDEN']='1'}
     if($NeighborhoodGarden){$psi.EnvironmentVariables['HNS_NATIVE_NEIGHBORHOOD_GARDEN']='1'}
+    if($ChronicleGarden){$psi.EnvironmentVariables['HNS_NATIVE_CHRONICLE_GARDEN']='1'}
     if($OrganGarden){$psi.EnvironmentVariables['HNS_NATIVE_ORGAN_GARDEN']='1'}
     if($DevelopmentGarden){$psi.EnvironmentVariables['HNS_NATIVE_DEVELOPMENT_GARDEN']='1'}
     if($WindGarden){$psi.EnvironmentVariables['HNS_NATIVE_WIND_GARDEN']='1'}
@@ -203,7 +207,7 @@ try {
                 $receipt.fixtureLine=[string]::new(([string]$final).ToCharArray())
                 $result=$final.Substring($final.IndexOf($prefix)+$prefix.Length)
                 if($result -match '^(PASS|FAIL)\s+(.+)$'){$receipt.status=$Matches[1];$receipt.reason=$Matches[2]}
-                $requiredStages=if($NeighborhoodGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenPanel3,GardenPanel4,GardenPanel5,GardenInventory'}elseif($GroundGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenInventory'}elseif($PoseGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenPanel3,GardenPanel4,GardenPanel5,GardenInventory'}elseif($ArchitectureGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenInventory'}elseif($DetailGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenPanel3,GardenInventory'}elseif($SurfaceGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenPanel3,GardenPanel4,GardenInventory'}elseif($WindGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenPanel3,GardenPanel4,GardenPanel5,GardenPanel6,GardenPanel7,GardenPanel8,GardenPanel9,GardenPanel10,GardenPanel11,GardenPanel12,GardenInventory'}elseif($DevelopmentGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenPanel3,GardenInventory'}elseif($FormGarden -or $OrganGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenInventory'}elseif($CultivarGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenPanel3,GardenInventory'}elseif($CatalogGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenPanel3,GardenPanel4,GardenPanel5,GardenPanel6,GardenInventory'}elseif($CreativeGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenPanel3,GardenPanel4,GardenPanel5,GardenInventory'}elseif($GardenProbe){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenPanel3,GardenPanel4,GardenInventory'}elseif($ShaderProbe){'Startup,ShaderPixelParity,ShaderMaskParity,ShaderFallback,ShaderField'}else{'Startup,HarvestAndSeedRecovery,Registration,CultivarHarvest,SaveReload'}
+                $requiredStages=if($ChronicleGarden -or $NeighborhoodGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenPanel3,GardenPanel4,GardenPanel5,GardenInventory'}elseif($GroundGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenInventory'}elseif($PoseGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenPanel3,GardenPanel4,GardenPanel5,GardenInventory'}elseif($ArchitectureGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenInventory'}elseif($DetailGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenPanel3,GardenInventory'}elseif($SurfaceGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenPanel3,GardenPanel4,GardenInventory'}elseif($WindGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenPanel3,GardenPanel4,GardenPanel5,GardenPanel6,GardenPanel7,GardenPanel8,GardenPanel9,GardenPanel10,GardenPanel11,GardenPanel12,GardenInventory'}elseif($DevelopmentGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenPanel3,GardenInventory'}elseif($FormGarden -or $OrganGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenInventory'}elseif($CultivarGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenPanel3,GardenInventory'}elseif($CatalogGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenPanel3,GardenPanel4,GardenPanel5,GardenPanel6,GardenInventory'}elseif($CreativeGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenPanel3,GardenPanel4,GardenPanel5,GardenInventory'}elseif($GardenProbe){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenPanel3,GardenPanel4,GardenInventory'}elseif($ShaderProbe){'Startup,ShaderPixelParity,ShaderMaskParity,ShaderFallback,ShaderField'}else{'Startup,HarvestAndSeedRecovery,Registration,CultivarHarvest,SaveReload'}
                 if($receipt.status -eq 'PASS' -and (($receipt.stages -join ',') -ne $requiredStages)){$receipt.status='FAIL';$receipt.reason='INCOMPLETE_STAGE_EVIDENCE'}
                 break
             }

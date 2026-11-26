@@ -19,6 +19,8 @@ namespace HorticultureNovelSeeds
     public class CompPlantVariety : ThingComp
     {
         private string varietyId;
+        private int visualChronicle;
+        internal int VisualChronicle {get=>visualChronicle;set=>visualChronicle=ChronicleMath.Sanitize(value);}
         private List<VarietyTraitDef> transientTraits;
         private bool pendingDiscovery;
         private bool resourceSatisfied;
@@ -194,6 +196,7 @@ namespace HorticultureNovelSeeds
         {
             base.PostExposeData();
             Scribe_Values.Look(ref varietyId, "varietyId");
+            ChronicleExperiment.Expose(ref visualChronicle);
             Scribe_Collections.Look(ref transientTraits, "transientTraits", LookMode.Def);
             Scribe_Values.Look(ref pendingDiscovery, "pendingDiscovery", false);
             Scribe_Values.Look(ref resourceSatisfied, "resourceSatisfied", false);

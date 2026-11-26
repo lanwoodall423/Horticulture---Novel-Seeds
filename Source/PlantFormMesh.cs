@@ -11,7 +11,7 @@ namespace HorticultureNovelSeeds
     internal static class PlantFormMesh
     {
         internal static bool Enabled { get; set; }
-        internal readonly record struct Form(PlantFormKind Kind,float Strength,NeighborhoodMath.Pressure Pressure=default)
+        internal readonly record struct Form(PlantFormKind Kind,float Strength,NeighborhoodMath.Pressure Pressure=default,int Chronicle=0)
         {
             internal bool Valid => PlantFormMath.IsValid(Kind,Strength);
         }
@@ -19,22 +19,25 @@ namespace HorticultureNovelSeeds
         internal static readonly HashSet<int> PrintedPlants = new();
         internal sealed record NeighborhoodPrint(NeighborhoodMath.Pressure Pressure,int Prints,bool RootFixed,float TipShift,float TipHeight,float Width,bool GeometryChanged);
         internal static readonly Dictionary<int,NeighborhoodPrint> NeighborhoodPrints=new();
+        internal sealed record ChroniclePrint(int Code,bool RootFixed,float LowerX,float MiddleX,float UpperX,float TipX,float TipHeight,float LowerWidth,float MiddleWidth,float UpperWidth,float MaxError,int MaterialId,int Vertices);
+        internal static readonly Dictionary<int,ChroniclePrint> ChroniclePrints=new();
         internal static int Meshes, Vertices, Triangles;
         internal sealed record MosaicPrint(float Payload,int MaterialId,int Prints,bool Valid);
         internal static readonly Dictionary<int,MosaicPrint> MosaicPrints=new();
 #endif
+        internal static bool ModeMatches(PlantFormKind kind)=>ChronicleExperiment.Enabled?ChronicleMath.Valid(kind):NeighborhoodExperiment.Enabled?NeighborhoodMath.Valid(kind):!ChronicleMath.Valid(kind)&&!NeighborhoodMath.Valid(kind);
         internal static Form Resolve(CompPlantVariety comp)
         {
             if (!Enabled || comp?.ActiveTraits == null) return default;
             VarietyTraitDef chosen=null;
             foreach(var trait in comp.ActiveTraits)
             {
-                if (trait == null || trait.produceOnlyVisual || !PlantFormMath.IsValid(trait.plantForm,trait.plantFormStrength)||NeighborhoodMath.Valid(trait.plantForm)!=NeighborhoodExperiment.Enabled) continue;
+                if (trait == null || trait.produceOnlyVisual || !PlantFormMath.IsValid(trait.plantForm,trait.plantFormStrength)||!ModeMatches(trait.plantForm)) continue;
                 if (chosen==null || trait.plantFormStrength>chosen.plantFormStrength ||
                     trait.plantFormStrength==chosen.plantFormStrength && string.CompareOrdinal(trait.defName,chosen.defName)<0)
                     chosen=trait;
             }
-            return chosen==null ? default : new Form(chosen.plantForm,chosen.plantFormStrength);
+            return chosen==null ? default : new Form(chosen.plantForm,chosen.plantFormStrength,default,comp.VisualChronicle);
         }
         private static Vector3 Bilerp(Vector3 a,Vector3 b,Vector3 c,Vector3 d,float x,float y)
             => (a+(d-a)*x)*(1f-y)+(b+(c-b)*x)*y;
@@ -65,7 +68,7 @@ namespace HorticultureNovelSeeds
             }
             var sub=layer.GetSubMesh(material);
             int start=sub.verts.Count, triStart=sub.tris.Count;
-            const int n=PlantFormMath.Subdivisions, stride=n+1, count=stride*stride;
+            int n=ChronicleMath.Valid(form.Kind)?8:PlantFormMath.Subdivisions, stride=n+1, count=stride*stride;
             // Guard nonstandard channels and mesh size. A section can contain
             // other printers; don't disturb their vertex/index correspondence.
             bool eligible=!sub.finalized && start+count<=60000 && sub.uvs.Count==start && sub.colors.Count==start &&
@@ -86,7 +89,7 @@ namespace HorticultureNovelSeeds
                 for(int i=0;i<=n;i++)
                 {
                     float u=i/(float)n,v=j/(float)n;
-                    var warped=PlantFormMath.Warp(form.Kind,form.Strength,u,v,flipped,form.Pressure);
+                    var warped=PlantFormMath.Warp(form.Kind,form.Strength,u,v,flipped,form.Pressure,form.Chronicle);
                     Vector3 pos=Bilerp(a,b,c,d,warped.X,warped.Y);
                     pos.y=Bilerp(a,b,c,d,u,v).y;
                     sub.verts.Add(pos);
@@ -104,6 +107,21 @@ namespace HorticultureNovelSeeds
                 }
 #if HNS_NATIVE_FIXTURE
             PrintedPlants.Add(plant.thingIDNumber); Meshes++; Vertices+=count; Triangles+=2*n*n;
+            if(ChronicleMath.Valid(form.Kind))
+            {
+                bool root=true;float error=0;
+                for(int j=0;j<=n;j++)for(int i=0;i<=n;i++)
+                {
+                    float u=i/(float)n,v=j/(float)n;var q=ChronicleMath.Warp(form.Kind,form.Strength,u,v,form.Chronicle);
+                    var expected=Bilerp(a,b,c,d,q.X,q.Y);expected.y=Bilerp(a,b,c,d,u,v).y;
+                    error=Math.Max(error,(sub.verts[start+j*stride+i]-expected).magnitude);
+                    if(j==0)root&=(sub.verts[start+i]-Bilerp(a,b,c,d,u,0f)).sqrMagnitude<1e-8f;
+                }
+                float X(int j)=>(sub.verts[start+j*stride+n/2].x-Bilerp(a,b,c,d,.5f,j/(float)n).x)/size.x;
+                float W(int j)=>(sub.verts[start+j*stride+n]-sub.verts[start+j*stride]).magnitude/size.x;
+                float h=(sub.verts[start+n*stride+n/2].z-Bilerp(a,b,c,d,.5f,0f).z)/size.y;
+                ChroniclePrints[plant.thingIDNumber]=new(form.Chronicle,root,X(n/4),X(n/2),X(3*n/4),X(n),h,W(n/4),W(n/2),W(n),error,material.GetInstanceID(),count);
+            }
             if(NeighborhoodMath.Valid(form.Kind))
             {
                 bool fixedRoot=true,changed=false;

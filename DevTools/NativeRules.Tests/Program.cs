@@ -30,7 +30,7 @@ Console.WriteLine("Native rule tests passed. JSON round-trip is not RimWorld Scr
 
 // Verify the geometry contract independently of Unity, including orientation,
 // base anchoring and non-folding triangles at maximum strength.
-foreach (PlantFormKind kind in Enum.GetValues<PlantFormKind>().Where(k=>k!=PlantFormKind.None&&!NeighborhoodMath.Valid(k)))
+foreach (PlantFormKind kind in Enum.GetValues<PlantFormKind>().Where(k=>k!=PlantFormKind.None&&!NeighborhoodMath.Valid(k)&&!ChronicleMath.Valid(k)))
 {
     foreach(bool flip in new[]{false,true})
     {
@@ -294,4 +294,32 @@ Require(SurfaceFinishMath.Environment(.5f,1f,.01f).Rain==.03125f,"quantized weat
     Require(NeighborhoodMath.Warp(PlantFormKind.GapSeeker,1f,.5f,1f,l).X>.8f&&NeighborhoodMath.Warp(PlantFormKind.CompanionBow,1f,.5f,1f,l).X<.2f,"different directional responses");
     Require(NeighborhoodMath.Warp(PlantFormKind.StandSpire,1f,.5f,1f,both).Y>1.25f,"crowd elongation");
     Require(NeighborhoodMath.Warp(PlantFormKind.FreeRosette,1f,1f,1f,default).X>1.3f,"isolated crown spread");
+}
+
+{
+    var l=new NeighborhoodMath.Pressure(1,0);var r=new NeighborhoodMath.Pressure(0,1);var both=new NeighborhoodMath.Pressure(1,1);
+    int h=ChronicleMath.Record(0,.25f,.45f,l);
+    h=ChronicleMath.Record(h,.45f,.7f,r);h=ChronicleMath.Record(h,.7f,1f,l);
+    Require(ChronicleMath.Count(h)==3&&ChronicleMath.At(h,0)==2&&ChronicleMath.At(h,1)==3&&ChronicleMath.At(h,2)==2,"chronicle records three ordered growth contexts");
+    Require(ChronicleMath.Record(ChronicleMath.Record(h,1f,.25f,both),.25f,1f,both)==h,"old growth history cannot be overwritten");
+    Require(ChronicleMath.Record(0,.95f,1f,l)==0&&ChronicleMath.Sanitize(-1)==0,"missing early history is not invented; corrupt values bounded");
+    foreach(var kind in Enum.GetValues<PlantFormKind>().Where(ChronicleMath.Valid))
+    {
+        foreach(int code in new[]{0,73,82,91,154,100,292,ChronicleMath.Record(0,.25f,1f,both),h})
+        {
+            for(int x=0;x<=8;x++)Require(ChronicleMath.Warp(kind,1f,x/8f,0f,code)==(x/8f,0f),kind+" root fixed");
+            for(int y=0;y<8;y++)for(int x=0;x<8;x++)
+            {
+                var a=ChronicleMath.Warp(kind,1f,x/8f,y/8f,code);
+                var b=ChronicleMath.Warp(kind,1f,(x+1)/8f,y/8f,code);
+                var c=ChronicleMath.Warp(kind,1f,x/8f,(y+1)/8f,code);
+                var d=ChronicleMath.Warp(kind,1f,(x+1)/8f,(y+1)/8f,code);
+                float Area((float X,float Y)a,(float X,float Y)b,(float X,float Y)c)=>(b.X-a.X)*(c.Y-a.Y)-(b.Y-a.Y)*(c.X-a.X);
+                if(!(Area(a,b,c)>0f&&Area(b,d,c)>0f))throw new Exception(kind+" folded historical mesh");
+            }
+        }
+        Require(Enumerable.Range(0,9).All(j=>Enumerable.Range(0,9).All(i=>ChronicleMath.Warp(kind,1f,i/8f,j/8f,73)==(i/8f,j/8f))),kind+" no prior pressure retains original shape");
+    }
+    Require(ChronicleMath.Warp(PlantFormKind.CrookedChronicle,1f,.5f,1f,82).X>.8f,"two early left pressures persist");
+    Require(ChronicleMath.Warp(PlantFormKind.ReleaseCrown,1f,1f,1f,100).X>1.3f,"release crown expands late");
 }
