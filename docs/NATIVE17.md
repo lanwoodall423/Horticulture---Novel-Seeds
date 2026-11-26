@@ -986,3 +986,66 @@ Pose inventory SHA256: A0C9C220CFE0651FBD9986DC5469CA39EBC6602A371CDC1080C944859
 Reproduce with RimWorld closed:
 
     powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -PoseGarden
+
+## Research pass: botanical ground structures (2026-11-25)
+
+Native Altitudes/Printer_Plane research confirms a Filth layer below LowPlant
+and Shadows, and above terrain. A second experimental rendering mechanism
+uses a single prewarmed cutout ground plane per eligible mature plant,
+without spawning filth, plants, items, resources or simulation objects.
+Deterministic procedural shapes use sampled source-art palettes. Five
+neutral zero-weight candidates: Rootflare, Runner Habit, Basal Carpet,
+Leaf Litter, Petal Drift. Petal Drift restricted to vanilla rose/daylily;
+uncertain/nonflower species retain original appearance. No manual masks.
+
+Source fe73b09bf6e08bf9e90e7e140216787b4289b773; AllPerformance
+run 9e0325490aaf487a8e5d6ada77482eda on RimWorld 1.7.5014 rev1195:
+all five stages passed. 36 mature plants (six controls and 30 candidate
+cases), 26 verified ground planes and four expected nonflower fallbacks.
+39 generated 128x128 texture/material pairs from nine original source
+variations; one extra plane per eligible plant. Verified native Cutout
+shader, Filth altitude and bounded .95..1.55 world-unit size. Zero
+custom phenotype materials and zero GPU masks. Both builds clean; all
+prior and 17 new ground tests passed. Normal player preservation and
+owned cleanup passed; no relevant HNS errors identified in log.
+Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/4b4b7c3345251189e37bf2243b8b43c3eb84503f
+
+Runner Habit and Basal Carpet visibly change upright plant silhouettes;
+Rootflare, Leaf Litter and Petal Drift are less visible on soil or below
+compact canopies. Pawns obscure corn/rose root cases and an unrelated
+terrain artifact appears near the top row. No image retouch. Ground
+placement is approximate, not physical roots or real vegetative spread.
+The plane can extend into adjacent cells; density/obstacle, seasonal and
+terrain transitions, growth/removal, save/reload, combination with other
+effects, field performance and ordinary activation remain unqualified.
+All earlier visual systems including approved refined canopy retained.
+No mechanics, 1.6 assets or player configuration changed.
+
+DLL SHA256: 37DD2367FF72B86C2B8BE95BAC2104E2D828512E350AE035E8D3B8BF2BAEF9DD.
+Receipt SHA256: 4E417D62BFC52004438C3097FC9EC4453183C3D726E715F6A4D5D7DE606EB588.
+Log SHA256: 11DD0464E9C5A25FCB1D5764A64E741189424A2A373A01B3E25FD40F69839979.
+Ground inventory SHA256: 189DC0458484EDA076DAA2149F0561B79D1E87D9FEE2B8A12A593AE9EFA91800.
+Preparation SHA256: 70ABC2BD813A2EE5848DA069843EAC576179F22F42BC7BB8756206DCD7AE9270.
+
+Reproduce with RimWorld closed:
+
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -GroundGarden
+
+### Further renderer research candidates (not implemented or qualified)
+
+- Native CutoutAnimated and FrameAnim stages demonstrate frame-based UV
+  animation. Organ-local blooming/opening can use a precomputed finite
+  frame strip or shared time uniform; preserve source anatomy and base mesh.
+- Native plant UV.z and vertex alpha carry per-instance seed and exposure.
+  Explore per-organ weighted motion on reconstructed modules, so flower
+  heads and leaves can move differently without per-plant CPU animation.
+- Ground-level planes could carry stable scattered leaf/petal detail,
+  localized creeping growth and plant footprints. Before enabling them,
+  qualify clipping against neighboring cells, terrain, snow and objects.
+- Existing additive post-light and native TransparentPlant stages enable
+  localized visual emission and possible translucent tissue. Test separately
+  from real gameplay lighting and opaque render ordering.
+
+These are directions identified from installed 1.7 renderer files, not claims
+of support or tested behavior. Prioritize botanical readability, bounded
+caches and compatible combinations before adding more trait mechanics.
