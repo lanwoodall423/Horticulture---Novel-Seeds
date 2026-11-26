@@ -19,7 +19,8 @@ void main()
     float frame=floor(clamp(phase,0.0,1.0)*8.0+0.5);
     vec2 pad=uMaterial._HnsAtlas.xy*0.5;
     vec2 uv=clamp(vUv,pad,vec2(1.0)-pad);
-    vec2 cell=vec2(mod(frame,3.0),floor(frame/3.0));
+    // Waylith samples Texture2D rows in reverse upload order; verified by GPU swatches.
+    vec2 cell=vec2(mod(frame,3.0),2.0-floor(frame/3.0));
     vec4 src=texture(_MainTex,(cell+uv)/3.0);
     if(src.a<0.35)discard;
     outColor=src;
