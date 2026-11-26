@@ -1049,3 +1049,37 @@ Reproduce with RimWorld closed:
 These are directions identified from installed 1.7 renderer files, not claims
 of support or tested behavior. Prioritize botanical readability, bounded
 caches and compatible combinations before adding more trait mechanics.
+
+### Independent reproductive organ articulation
+
+Five additional zero-weight cosmetic candidates: Dawn Petals, Dusk Petals,
+Rain Pendant, Solar Tilt and Silk Flutter. Automatic approximate reproductive
+component detection, local foliage reconstruction and nine discrete prewarmed
+poses per bounded atlas (maximum 48 atlases, 192px source-side limit).
+Native plant wind vertex stage retained; environmental phase or native wind
+head selects a local pose without per-draw texture preparation or extra mesh.
+Original source art and alpha footprint retained. Unsupported anatomy falls back.
+
+Initial source d3bad62, run 1bb38459f3304e15b01a701d5662af94: all eight
+garden stages passed, but follow-up run a0e0a175ebf14d5aa7771a58e5fecbfb
+(source b03730c) failed direct GPU frame parity (outer atlas rows reversed).
+Original gallery retained as superseded diagnostics. Source
+bbf4da99caa352b7542589e9ee2bd5dd632e1a9d corrects row mapping and
+passed all nine GPU swatches (maximum normalized RGB error 0.0018627644).
+Corrected AllPerformance run a329212d9dca4a179f09b8fc81c90c4e,
+RimWorld 1.7.5014 rev1195: all eight stages passed; 18 unique mature plants,
+15 rendered cultivars, three controls, five environmental states,
+75 verified states, 15 stable materials and 30 prepared atlases.
+All five preservation/cleanup checks passed on all three runs.
+Initial builds clean; all previous and 20 additional articulation rules passed.
+No manual masks or new geometry; no legacy 1.6 or ordinary settings changes.
+Finite local pose selection is not continuous anatomical animation.
+Classifier approximation, reconstructed foliage echoes, synchronized
+wind phases, low-zoom readability, growth, combination, save/reload,
+dense-field performance and ordinary activation remain unqualified.
+
+Corrected evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/4a2708250d6aa31f93b280aa9bf3bc3fc14ba4f5
+
+Reproduce with RimWorld closed:
+
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -ArticulationGarden
