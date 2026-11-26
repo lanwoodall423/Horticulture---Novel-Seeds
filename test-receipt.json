@@ -1,0 +1,26 @@
+{
+  "run": "f60942e5ea704b05bf0be6ad2091a682",
+  "loadout": "AllPerformance",
+  "status": "PASS",
+  "reason": "five upright gameplay-linked cue families, native source orientation parity, actual resource job, perennial harvest and native phenotype inspector",
+  "sourceHead": "6b9719e3502ac3667e24d69d04da01e99a5a2fce",
+  "version": "0.1.0-alpha+g6b9719e3502a",
+  "assemblySha256": "EB2D069411694B811B984097AA3CEC2D6D58511B792F9799589B5C1D65149B39",
+  "gameVersion": "1.7.5014 rev1195",
+  "stages": [
+    "Startup",
+    "AdaptiveSetup",
+    "AdaptiveVisuals",
+    "AdaptiveOrientation",
+    "AdaptiveResource",
+    "AdaptivePerennial",
+    "AdaptiveInspector"
+  ],
+  "testProcessStopped": true,
+  "testPackageRemoved": true,
+  "normalConfigUnchanged": true,
+  "normalPrefsUnchanged": true,
+  "normalSavesUnchanged": true,
+  "startedUtc": "2026-11-26T22:07:42.6526277Z",
+  "finishedUtc": "2026-11-26T22:08:45.0926133Z"
+}

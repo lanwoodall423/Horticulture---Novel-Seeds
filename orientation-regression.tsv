@@ -1,0 +1,14 @@
+Species	Column	Path	Upright error	Inverted error	Reference asymmetry
+Plant_Corn	1	architecture	0.0179	0.6740	0.6720
+Plant_Corn	2	direct	0.0110	0.6710	0.6720
+Plant_Corn	3	direct	0.0120	0.6740	0.6720
+Plant_Corn	4	direct	0.0111	0.6905	0.6935
+Plant_Corn	5	direct	0.0160	0.6740	0.6720
+Plant_Corn	6	architecture	0.0120	0.6700	0.6720
+Plant_Cotton	8	architecture	0.0057	0.6256	0.6251
+Plant_Cotton	9	direct	0.0067	0.4649	0.4644
+Plant_Cotton	10	direct	0.0042	0.6261	0.6251
+Plant_Cotton	11	direct	0.0098	0.6039	0.6033
+Plant_Cotton	12	direct	0.0051	0.4664	0.4644
+Plant_Cotton	13	architecture	0.0052	0.6251	0.6251
+Plant_Corn	14	direct	0.0110	0.6650	0.6720
