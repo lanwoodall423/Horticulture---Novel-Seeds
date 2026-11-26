@@ -1,0 +1,27 @@
+{
+  "run": "157823100a3b4f338ed6b38fd1844890",
+  "loadout": "AllPerformance",
+  "status": "PASS",
+  "reason": "native Breeding Studio, actual zone mix, real pawn sow and cross, upright native rendering, actual harvest/seed pack and documentation, documented lineage outcome",
+  "sourceHead": "4570f215e383827d2b9a55505d344d594fcac275",
+  "version": "0.1.0-alpha+g4570f215e383",
+  "assemblySha256": "5809AF09DB1C254C765462AB3BA25FD54A2999A138D7AC3636AA69F013A26954",
+  "gameVersion": "1.7.5014 rev1195",
+  "stages": [
+    "Startup",
+    "StudioSetup",
+    "StudioPreview",
+    "StudioMix",
+    "StudioSow",
+    "StudioOrientation",
+    "StudioPreservation",
+    "StudioDocumentation"
+  ],
+  "testProcessStopped": true,
+  "testPackageRemoved": true,
+  "normalConfigUnchanged": true,
+  "normalPrefsUnchanged": true,
+  "normalSavesUnchanged": true,
+  "startedUtc": "2026-11-26T22:16:44.8094252Z",
+  "finishedUtc": "2026-11-26T22:17:41.2262039Z"
+}
