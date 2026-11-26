@@ -1,0 +1,4 @@
+Species	Mother	Donor	Offspring	Mechanical	Ornamental	Yield factor	Growth factor	Cold offset	Heat offset
+Plant_Corn	HNS_Plant_Corn_1	HNS_Plant_Corn_2	HNS_Plant_Corn_3	ColdResistant	CrimsonNetwork	1.15	0.9	-6	-3
+Plant_Cotton	HNS_Plant_Cotton_4	HNS_Plant_Cotton_5	HNS_Plant_Cotton_6	ColdResistant	CrimsonNetwork	1.15	0.9	-6	-3
+Plant_Daylily	HNS_Plant_Daylily_7	HNS_Plant_Daylily_8	HNS_Plant_Daylily_9	ColdResistant	CrimsonNetwork	1.15	0.9	-6	-3

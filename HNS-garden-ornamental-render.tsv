@@ -1,0 +1,25 @@
+Phase	Species	Plant ID	Cultivar ID	Growth	Channels	Seed	Native mesh	Image
+1	Plant_Corn	9972	HNS_Plant_Corn_2	0.4	1	4	True	HNS-garden-ornamental-gpu-01-01.png
+1	Plant_Corn	9973	HNS_Plant_Corn_3	0.4	1	5	True	HNS-garden-ornamental-gpu-01-02.png
+1	Plant_Cotton	9975	HNS_Plant_Cotton_5	0.4	1	7	True	HNS-garden-ornamental-gpu-01-04.png
+1	Plant_Cotton	9976	HNS_Plant_Cotton_6	0.4	1	0	True	HNS-garden-ornamental-gpu-01-05.png
+1	Plant_Daylily	9978	HNS_Plant_Daylily_8	0.4	1	2	True	HNS-garden-ornamental-gpu-01-07.png
+1	Plant_Daylily	9979	HNS_Plant_Daylily_9	0.4	1	3	True	HNS-garden-ornamental-gpu-01-08.png
+2	Plant_Corn	9972	HNS_Plant_Corn_2	0.65	1	4	True	HNS-garden-ornamental-gpu-02-01.png
+2	Plant_Corn	9973	HNS_Plant_Corn_3	0.65	1	5	True	HNS-garden-ornamental-gpu-02-02.png
+2	Plant_Cotton	9975	HNS_Plant_Cotton_5	0.65	1	7	True	HNS-garden-ornamental-gpu-02-04.png
+2	Plant_Cotton	9976	HNS_Plant_Cotton_6	0.65	1	0	True	HNS-garden-ornamental-gpu-02-05.png
+2	Plant_Daylily	9978	HNS_Plant_Daylily_8	0.65	1	2	True	HNS-garden-ornamental-gpu-02-07.png
+2	Plant_Daylily	9979	HNS_Plant_Daylily_9	0.65	1	3	True	HNS-garden-ornamental-gpu-02-08.png
+3	Plant_Corn	9972	HNS_Plant_Corn_2	0.85	1	4	True	HNS-garden-ornamental-gpu-03-01.png
+3	Plant_Corn	9973	HNS_Plant_Corn_3	0.85	1	5	True	HNS-garden-ornamental-gpu-03-02.png
+3	Plant_Cotton	9975	HNS_Plant_Cotton_5	0.85	1	7	True	HNS-garden-ornamental-gpu-03-04.png
+3	Plant_Cotton	9976	HNS_Plant_Cotton_6	0.85	1	0	True	HNS-garden-ornamental-gpu-03-05.png
+3	Plant_Daylily	9978	HNS_Plant_Daylily_8	0.85	1	2	True	HNS-garden-ornamental-gpu-03-07.png
+3	Plant_Daylily	9979	HNS_Plant_Daylily_9	0.85	1	3	True	HNS-garden-ornamental-gpu-03-08.png
+4	Plant_Corn	9972	HNS_Plant_Corn_2	1	1	4	True	HNS-garden-ornamental-gpu-04-01.png
+4	Plant_Corn	9973	HNS_Plant_Corn_3	1	1	5	True	HNS-garden-ornamental-gpu-04-02.png
+4	Plant_Cotton	9975	HNS_Plant_Cotton_5	1	1	7	True	HNS-garden-ornamental-gpu-04-04.png
+4	Plant_Cotton	9976	HNS_Plant_Cotton_6	1	1	0	True	HNS-garden-ornamental-gpu-04-05.png
+4	Plant_Daylily	9978	HNS_Plant_Daylily_8	1	1	2	True	HNS-garden-ornamental-gpu-04-07.png
+4	Plant_Daylily	9979	HNS_Plant_Daylily_9	1	1	3	True	HNS-garden-ornamental-gpu-04-08.png

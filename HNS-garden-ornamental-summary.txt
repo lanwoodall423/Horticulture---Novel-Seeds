@@ -1,0 +1,1 @@
+512 paired actual selection seeds; mechanical parity 512/512; independent mechanical additions 512; independent ornamental additions 512; legacy mixed mechanical additions 507; all 18 definitions mechanically neutral; incompatible channel rejected
