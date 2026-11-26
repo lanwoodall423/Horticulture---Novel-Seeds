@@ -12,6 +12,7 @@ namespace HorticultureNovelSeeds
     {
         internal const int MaximumAdditions=1;
         internal static bool Enabled(NovelSeedsSettings s,ThingDef def)=>s?.enableBotanicalExpression==true&&s.enableIndependentOrnamentalInheritance&&E.QualifiedSpecies(def?.defName);
+        internal static bool IsAppearance(VarietyTraitDef t)=>Pure(t)||NovelSeedUtility.IsCosmeticCrossPollinationTrait(t);
         private static bool Neutral(float value)=>value==1f;
         internal static bool Pure(VarietyTraitDef t)
         {

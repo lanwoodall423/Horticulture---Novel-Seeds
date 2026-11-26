@@ -166,6 +166,15 @@ namespace HorticultureNovelSeeds
             Label(new(140,y+75,view.width-148,25),info.Generation.HasValue?"Generation "+info.Generation.Value:"Generation unknown",GameFont.Small,Accent);
             Label(new(140,y+104,view.width-148,29),rendered?"Illustrative mature expression; individuals vary.":"Reference artwork; individual appearance may differ.",GameFont.Tiny,Muted);
             y+=152;
+            var ornamental=info.AuthorizedTraits.Where(OrnamentalInheritance.IsAppearance).ToArray();
+            var other=info.AuthorizedTraits.Where(t=>!OrnamentalInheritance.IsAppearance(t)).ToArray();
+            if(ornamental.Length>0)
+            {
+                Fill(new(0,y,view.width,56),Tile);
+                Label(new(9,y+5,view.width-18,21),"Agricultural / other inheritance: "+other.Length,GameFont.Small,Ink);
+                Label(new(9,y+29,view.width-18,21),"Ornamental inheritance: "+ornamental.Length,GameFont.Small,Accent);
+                y+=64;
+            }
             float w=(view.width-8)/2;
             var stats=new[]{("Yield",NovelSeedUtility.YieldFactor(info.AuthorizedTraits)),("Growth rate",NovelSeedUtility.GrowthRateFactor(info.AuthorizedTraits)),("Sow work",ExpandedTraitUtility.SowWorkFactor(info.AuthorizedTraits)),("Harvest work",ExpandedTraitUtility.HarvestWorkFactor(info.AuthorizedTraits))};
             for(int i=0;i<4;i++){var stat=stats[i];bool beneficial=i<2?stat.Item2>1:stat.Item2<1;Metric(new((i%2)*(w+8),y+(i/2)*67,w,61),((stat.Item2-1)*100).ToString("+0.#;-0.#;0")+"%",stat.Item1,Mathf.Approximately(stat.Item2,1)?Muted:beneficial?Accent:Gold);}

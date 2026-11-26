@@ -159,7 +159,7 @@ namespace HorticultureNovelSeeds
             string potential=info.PotentialAppearance;
             string potentialText=string.IsNullOrEmpty(potential)?null:"Potential appearance (genetic tendencies; expression varies):\n"+potential;
             float potentialHeight=potentialText==null?0f:Mathf.Max(48f,Text.CalcHeight(potentialText,Mathf.Max(1f,rect.width-18f))+8f);
-            var view = NativeUi.Scroll(rect, ref rightScroll, 960 + potentialHeight + info.AuthorizedTraits.Count * 66 + (lineage ? 128 * 34 : 0));
+            var view = NativeUi.Scroll(rect, ref rightScroll, 1080 + potentialHeight + info.AuthorizedTraits.Count * 66 + (lineage ? 128 * 34 : 0));
             try
             {
                 float y = 0;
@@ -169,8 +169,12 @@ namespace HorticultureNovelSeeds
                 if(Widgets.ButtonText(new(0,y,view.width,30),"View growing zones / breeding"))PrepareBreeding();y+=38;
                 Section(view,ref y,"DOCUMENTED GENETIC TENDENCIES");
                 if(potentialText!=null)NativeUi.Label(view,ref y,potentialText,potentialHeight);
-                foreach (var trait in info.AuthorizedTraits)
-                    NativeUi.Label(view, ref y, TraitColorUI.Label(trait) + ": " + TraitColorUI.Description(trait), 62);
+                var agricultural=info.AuthorizedTraits.Where(t=>!OrnamentalInheritance.IsAppearance(t)).ToArray();
+                var ornamental=info.AuthorizedTraits.Where(OrnamentalInheritance.IsAppearance).ToArray();
+                if(agricultural.Length>0)Section(view,ref y,"AGRICULTURAL / OTHER INHERITANCE");
+                foreach(var trait in agricultural)NativeUi.Label(view,ref y,TraitColorUI.Label(trait)+": "+TraitColorUI.Description(trait),62);
+                if(ornamental.Length>0)Section(view,ref y,"ORNAMENTAL INHERITANCE");
+                foreach(var trait in ornamental)NativeUi.Label(view,ref y,TraitColorUI.Label(trait)+": "+TraitColorUI.Description(trait),62);
                 DrawJournal(view, ref y, info.Journal);
                 NativeUi.Button(view, ref y, "Rename", () => Find.WindowStack.Add(new Dialog_RenameVariety(v)));
                 NativeUi.Button(view, ref y, v.registryFavorite ? "Remove favorite" : "Favorite", () => v.registryFavorite = !v.registryFavorite);
