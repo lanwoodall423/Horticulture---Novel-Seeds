@@ -128,6 +128,7 @@ namespace HorticultureNovelSeeds
             overlayPattern = trait?.visualSpikes == true ? 1 : 0;
             overlayRed = 0.19f; overlayGreen = 0.15f; overlayBlue = 0.15f;
             spikes = trait?.visualSpikes == true;
+            TraitAppearanceCatalog.Apply(trait, this);
             CopyPlantVisualToProduce();
             produceVisualInitialized = true;
             produceUsesPlantColor = false;

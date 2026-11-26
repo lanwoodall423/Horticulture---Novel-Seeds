@@ -826,6 +826,20 @@ namespace HorticultureNovelSeeds
             return false;
         }
 
+        // Whole-plant tint can use the ordinary shader path without anatomy.
+        // Region-targeted pigment and custom regional overrides retain masking.
+        internal static bool HasRegionalPlantColor(CompPlantVariety comp)
+        {
+            if (comp?.ActiveTraits == null) return false;
+            foreach (var trait in comp.ActiveTraits)
+            {
+                if (trait == null || trait.produceOnlyVisual) continue;
+                if (trait.visualMaskIndex >= 0) return true;
+                if (VisualOverride(comp.parent?.def, trait) != null && HasPlantMaskVisual(comp)) return true;
+            }
+            return false;
+        }
+
         private static bool HasColorChange(VisualSettingsRecord visual)
         {
             return !Mathf.Approximately(visual.tintRed, 1f) || !Mathf.Approximately(visual.tintGreen, 1f)

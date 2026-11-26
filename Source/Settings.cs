@@ -693,10 +693,10 @@ namespace HorticultureNovelSeeds
             GlobalTraitSettingsRecord global = GetGlobalTraitSettings(root, false);
             List<VisualSettingsRecord> result;
             if (family?.useTypeSpecificVisuals == true)
-                result = typeRecord != null ? typeRecord.VisualsFor(traitDef) : new OptionWeightRecord(traitDef.defName).VisualsFor(traitDef);
+                result = typeRecord?.visualCustomized == true ? typeRecord.VisualsFor(traitDef) : new GlobalTraitSettingsRecord(ColorTraitFactory.IsColorFamily(traitDef.configFamily) ? root : traitDef).Visuals;
             else
                 result = plantTrait?.useCustomVisual == true ? plantTrait.Visuals
-                    : global != null ? global.Visuals : new GlobalTraitSettingsRecord(root).Visuals;
+                    : global?.visualCustomized == true ? global.Visuals : new GlobalTraitSettingsRecord(ColorTraitFactory.IsColorFamily(traitDef.configFamily) ? root : traitDef).Visuals;
             if (traitDef.visualMaskIndex >= 0) result = ColorTraitFactory.ApplyIntrinsicColor(traitDef, result);
             visualInstancesCache[key] = result;
             return result;
@@ -749,7 +749,7 @@ namespace HorticultureNovelSeeds
             if (traitDef == null) return new List<VisualSettingsRecord> { new VisualSettingsRecord() };
             VarietyTraitDef root = TraitConfigUtility.Root(traitDef);
             GlobalTraitSettingsRecord global = GetGlobalTraitSettings(root, false);
-            return (global != null ? global.Visuals : new GlobalTraitSettingsRecord(root).Visuals).Select(item => item.Clone()).ToList();
+            return (global?.visualCustomized == true ? global.Visuals : new GlobalTraitSettingsRecord(root).Visuals).Select(item => item.Clone()).ToList();
         }
 
         public static float DefaultWeight(VarietyTraitDef traitDef)

@@ -38,7 +38,7 @@ namespace HorticultureNovelSeeds
         {
             if (!active || plant == null) return;
             if (!maskSources.TryGetValue(plant.thingIDNumber, out var sources)) maskSources.Add(plant.thingIDNumber, sources = new());
-            if (patternGarden && ProceduralPhenotypeUtility.Resolve(plant.TryGetComp<CompPlantVariety>()).x > 0f)
+            if ((patternGarden || catalogGarden) && ProceduralPhenotypeUtility.Resolve(plant.TryGetComp<CompPlantVariety>()).x > 0f && !NovelSeedUtility.HasRegionalPlantColor(plant.TryGetComp<CompPlantVariety>()))
             { sources.Add(variation + ":none"); return; }
             var layers = PlantMaskUtility.LayersForVariation(plant.def, variation, false);
             sources.Add(variation + ":" + (layers == null ? "none" : PlantAutoMaskCache.RecordSource(plant.def, variation, false)));
@@ -51,7 +51,55 @@ namespace HorticultureNovelSeeds
         private static int panel, frames, captureAge;
         private static string capture;
         private static bool active;
-        private static bool patternGarden;
+        private static bool patternGarden, catalogGarden;
+        private static List<List<VarietyTraitDef>> catalogCases;
+        private static int PanelCount => catalogGarden ? 6 : SpeciesOptions.Length;
+        private static readonly string[] CatalogCrops = {
+            "Plant_Rice","Plant_Cotton","Plant_Corn", "Plant_Potato","Plant_Cotton","Plant_Hops",
+            "Plant_Cotton","Plant_Healroot","Plant_Strawberry", "Plant_Corn","Plant_Corn","Plant_Corn",
+            "Plant_Corn","Plant_Cotton","Plant_Corn", "Plant_Corn","Plant_Corn","Plant_Cotton" };
+        private static List<List<VarietyTraitDef>> CatalogCases()
+        {
+            var result = new List<List<VarietyTraitDef>>();
+            string[] named = {
+                "Giant","Dwarf","Humongous","HighYield","LowYield",
+                "Delicate","Robust","VeryDelicate","DiseaseResistant","DiseaseVulnerable",
+                "Easy","Difficult","EasySow","DifficultSow","EasyHarvest",
+                "DifficultHarvest","ColdResistant","ColdVulnerable","HeatResistant","HeatVulnerable",
+                "ResourceDependent_Mulch","ResourceDependent_Hay","ResourceDependent_Fungus","Perennial","SelfSeeding",
+                "Forage","FishHabitat","AquaticForage","Aquatic","Sandy",
+                "HayByproduct","Joyresin","Painresin","Burnresin","Toxresin",
+                "Thorny","Beautiful","Ugly","HighlyMedicinal","Joycompound",
+                "Variegated","Anthocyanin","MoonFrost","GoldFreckled","AuroraVeins"
+            };
+            foreach (string name in named) result.Add(new() { Trait(name) });
+            for (int n = 5; n <= 100; n += 5) result.Add(new() { Trait("Nutritious_" + n) });
+            foreach (string stat in SynergyTraitFactory.StatOptions) result.Add(new() { Trait("SynergyGenerated_Plant_Rice_" + stat) });
+            foreach (string family in new[] { "ProduceColor", "LeafColor", "StemColor" })
+                for (int i = 0; i < 5; i++) result.Add(new() { Pigment(family, i) });
+            result.Add(new() { Trait("Humongous"), Trait("AuroraVeins") });
+            result.Add(new() { Trait("Robust"), Trait("ColdResistant"), Trait("DiseaseResistant") });
+            result.Add(new() { Trait("Beautiful"), Trait("Variegated"), Pigment("ProduceColor", 0) });
+            result.Add(new() { Trait("Burnresin"), Trait("HeatResistant"), Trait("Thorny") });
+            result.Add(new() { Trait("Nutritious_100"), Trait("GoldFreckled"), Trait("HighYield") });
+            Require(result.Count == 90 && result.SelectMany(x=>x).All(t=>t != null), "90 concrete catalog test cases");
+            var all = DefDatabase<VarietyTraitDef>.AllDefsListForReading.Where(t => t.defName.StartsWith("HNS_", StringComparison.Ordinal)).ToList();
+            Require(all.All(t => TraitAppearanceCatalog.TryGet(t, out _)), "all loaded HNS definitions have appearance rules");
+            var singles = result.Where(x=>x.Count==1).Select(x=>x[0]).ToHashSet();
+            Require(all.Where(t=>!t.configRoot && !t.generated).All(singles.Contains), "every authored concrete trait has an individual fixture");
+            var manifest = new List<string> { "Trait ID\tLabel\tGenerated\tConfig root\tTier\tMotif\tPattern\tStrength\tScale\tWidth\tHeight\tDensity\tSampled individually" };
+            foreach (var t in all.OrderBy(t=>t.defName))
+            {
+                TraitAppearanceCatalog.TryGet(t, out var p);
+                manifest.Add(string.Join("\t", t.defName, t.label, t.generated, t.configRoot, p.Tier, p.Motif, p.Pattern,
+                    p.Strength.ToString(CultureInfo.InvariantCulture), p.Scale.ToString(CultureInfo.InvariantCulture),
+                    p.Width.ToString(CultureInfo.InvariantCulture), p.Height.ToString(CultureInfo.InvariantCulture),
+                    p.Density.ToString(CultureInfo.InvariantCulture), singles.Contains(t)));
+            }
+            File.WriteAllLines(Path.Combine(root,"HNS-garden-catalog.tsv"),manifest);
+            Log.Message("[HNS Garden] catalog covered=" + all.Count + "; authored=" + all.Count(t=>!t.generated) + "; generated=" + all.Count(t=>t.generated));
+            return result;
+        }
         private static readonly string[] PatternTraits = { "Variegated", "Anthocyanin", "MoonFrost", "GoldFreckled", "AuroraVeins" };
         private sealed record Row(int Panel, int RowNumber, int Column, Plant Plant, VarietyRecord Cultivar);
         internal static void RecordPrint(Plant plant, bool customPrint)
@@ -65,15 +113,16 @@ namespace HorticultureNovelSeeds
             if (active) legacy.Add(plant.thingIDNumber);
         }
 
-        internal static void Begin(string path, Action<string> stage, Action<string,string> completed, bool procedural = false)
+        internal static void Begin(string path, Action<string> stage, Action<string,string> completed, bool procedural = false, bool catalog = false)
         {
-            patternGarden = procedural;
+            patternGarden = procedural; catalogGarden = catalog;
             root = path; onStage = stage; finish = completed;
             try
             {
                 map = Find.CurrentMap;
                 Require(map != null, "current map");
                 WaylithPhenotypeShader.Enabled = true;
+                if (catalogGarden) catalogCases = CatalogCases();
                 // Noon in local solar time, not merely the global time of day.
                 int advance = Mathf.RoundToInt(Mathf.Repeat(.5f - GenLocalDate.DayPercent(map), 1f) * 60000f);
                 Find.TickManager.DebugSetTicksGame(Find.TickManager.TicksGame + advance);
@@ -144,6 +193,7 @@ namespace HorticultureNovelSeeds
         {
             // Deliberate extremes of real trait definitions; no changes to trait
             // defs/settings and no claims about natural mutation eligibility.
+            if (catalogGarden) return col == 0 ? new() : catalogCases[row * 5 + col - 1];
             if (patternGarden) return col == 0 ? new() : new() { Trait(PatternTraits[col - 1]) };
             return col switch
             {
@@ -164,7 +214,9 @@ namespace HorticultureNovelSeeds
             Require(registry != null, "registry");
             for (int r = 0; r < 3; r++)
             {
-                var def = Choose(patternGarden && panel == 3 && r == 1 ? "Plant_Haygrass" : SpeciesOptions[panel][r]);
+                var def = catalogGarden ? DefDatabase<ThingDef>.GetNamed(CatalogCrops[panel*3+r]) : Choose(patternGarden && panel == 3 && r == 1 ? "Plant_Haygrass" : SpeciesOptions[panel][r]);
+                Require(HorticulturePlantPolicy.IsSupported(def), "supported garden crop");
+                if (catalogGarden) chosen.Add(def);
                 // Prewarm actual resolved masks before rendering. If shared
                 // manual or seasonal materials cannot use the experimental
                 // backend, their existing CPU path is intentionally retained.
@@ -217,11 +269,11 @@ namespace HorticultureNovelSeeds
                 if (capture != null && File.Exists(capture) && new FileInfo(capture).Length > 1000 && ++captureAge >= 30)
                 {
                     onStage("GardenPanel" + (panel+1));
-                    if (++panel == SpeciesOptions.Length)
+                    if (++panel == PanelCount)
                     {
                         WriteInventory();
                         onStage("GardenInventory");
-                        End("PASS", "72 garden plants, 60 registered cultivars, 12 species, four daylight screenshots");
+                        End("PASS", catalogGarden ? "108 garden plants; 90 trait cases; six daylight screenshots; every loaded HNS appearance rule covered" : "72 garden plants, 60 registered cultivars, 12 species, four daylight screenshots");
                         return;
                     }
                     foreach (var plant in current) if (plant.Spawned) plant.Destroy(DestroyMode.Vanish);
@@ -244,13 +296,25 @@ namespace HorticultureNovelSeeds
         }
         private static void WriteInventory()
         {
-            var lines = new List<string> { "Panel\tRow\tColumn\tSpecies\tCultivar\tTrait IDs\tRenderer\tAutomatic mask sources" };
+            var lines = new List<string> { "Panel\tRow\tColumn\tSpecies\tCultivar\tTrait IDs\tRenderer\tAutomatic mask sources\tTrait labels\tTiers\tMotifs" };
             foreach (var entry in inventory)
                 lines.Add(string.Join("\t", entry.Panel, entry.RowNumber, entry.Column, entry.Plant.def.defName,
-                    entry.Cultivar?.customName ?? "Vanilla control", string.Join(", ",entry.Cultivar?.traits.Select(t=>t.defName) ?? Enumerable.Empty<string>()), Backend(entry.Plant), maskSources.TryGetValue(entry.Plant.thingIDNumber, out var sources) ? string.Join(", ", sources.OrderBy(x => x)) : "not styled"));
+                    entry.Cultivar?.customName ?? "Vanilla control", string.Join(", ",entry.Cultivar?.traits.Select(t=>t.defName) ?? Enumerable.Empty<string>()), Backend(entry.Plant), maskSources.TryGetValue(entry.Plant.thingIDNumber, out var sources) ? string.Join(", ", sources.OrderBy(x => x)) : "not styled",
+                    string.Join(" + ",entry.Cultivar?.traits.Select(t=>t.label) ?? Enumerable.Empty<string>()),
+                    string.Join(" + ",entry.Cultivar?.traits.Select(t=>TraitAppearanceCatalog.TryGet(t,out var p)?p.Tier:"External") ?? Enumerable.Empty<string>()),
+                    string.Join(" + ",entry.Cultivar?.traits.Select(t=>TraitAppearanceCatalog.TryGet(t,out var p)?p.Motif:"External") ?? Enumerable.Empty<string>())));
             File.WriteAllLines(Path.Combine(root,"HNS-garden-inventory.tsv"),lines);
-            Require(inventory.Count == 72 && inventory.Count(r=>r.Cultivar != null)==60 && chosen.Count == 12,"complete garden inventory");
-            Require(inventory.Where(r=>r.Cultivar != null).All(r=>maskSources.TryGetValue(r.Plant.thingIDNumber, out var sources) && sources.All(x=>x.EndsWith(":local") || x.EndsWith(":bundled") || x.EndsWith(":none"))), "automatic-only provenance for all cultivars");
+            Require(inventory.Count == (catalogGarden ? 108 : 72) && inventory.Count(r=>r.Cultivar != null)==(catalogGarden ? 90 : 60) && (catalogGarden || chosen.Count == 12),"complete garden inventory");
+            if (catalogGarden)
+            {
+                // Geometry-only traits need no texture treatment. For actual
+                // shader motifs require a GPU print, not merely a placed plant.
+                var patternCases = inventory.Where(r=>r.Cultivar?.traits.Any(t=>TraitAppearanceCatalog.TryPattern(t,out _,out _)) == true).ToList();
+                Require(patternCases.All(r=>WaylithPhenotypeShader.ProceduralPlants.Contains(r.Plant.thingIDNumber)), "every motif case reached the procedural GPU");
+                Require(inventory.Where(r=>r.Cultivar == null).All(r=>Backend(r.Plant)=="Vanilla"), "all controls vanilla");
+                Log.Message("[HNS Garden] procedural cases=" + patternCases.Count + "; materials=" + WaylithPhenotypeShader.MaterialCount);
+            }
+            Require(inventory.Where(r=>r.Cultivar != null && (!catalogGarden || legacy.Contains(r.Plant.thingIDNumber) || WaylithPhenotypeShader.PrintedPlants.Contains(r.Plant.thingIDNumber))).All(r=>maskSources.TryGetValue(r.Plant.thingIDNumber, out var sources) && sources.All(x=>x.EndsWith(":local") || x.EndsWith(":bundled") || x.EndsWith(":none"))), "automatic-only provenance for all cultivars");
             if (patternGarden)
             {
                 Require(inventory.Where(r => r.Cultivar != null).All(r => Backend(r.Plant) == "GPU procedural, no mask"), "every pattern cultivar printed on mask-free GPU path");

@@ -184,7 +184,7 @@ namespace HorticultureNovelSeeds
                 bool allowed = i == trait.visualMaskIndex || trait.visualMaskIndex == 0 && i == 3;
                 visual.targetPlantProduce = allowed && i == 0; visual.targetPlantLeaves = allowed && i == 1; visual.targetPlantStem = allowed && i == 2;
                 visual.targetProduceProduce = allowed && i == 3; visual.targetProduceLeaves = allowed && i == 4; visual.targetProduceContainer = allowed && i == 5;
-                if (allowed) { visual.tintRed *= trait.tintRed; visual.tintGreen *= trait.tintGreen; visual.tintBlue *= trait.tintBlue; }
+                if (allowed) { visual.tintRed *= Mathf.Lerp(1f, trait.tintRed, .52f); visual.tintGreen *= Mathf.Lerp(1f, trait.tintGreen, .52f); visual.tintBlue *= Mathf.Lerp(1f, trait.tintBlue, .52f); }
                 result.Add(visual);
             }
             return result;

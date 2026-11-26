@@ -129,7 +129,7 @@ vec3 hnsPattern(vec3 rgb, vec4 src, vec2 localUv, vec2 sampleUv)
         target = mix(vec3(.64,.42,.08),vec3(1.0,.86,.30),lightness);
         blend = max(spot*.98,mottle*.42);
     }
-    else
+    else if (p.x < 5.5)
     {
         // Stylized branching light markings, not actual anatomy or light emission.
         float curve = .045*sin(localUv.y*12.0+seed)+.035*(n-.5);
@@ -142,6 +142,61 @@ vec3 hnsPattern(vec3 rgb, vec4 src, vec2 localUv, vec2 sampleUv)
         vec3 cyan = mix(vec3(.08,.73,.59),vec3(.60,1.0,.92),lightness);
         target = mix(jade,cyan,veins);
         blend = .77+.23*veins;
+    }
+    else if (p.x < 6.5)
+    {
+        float tip = smoothstep(.3,.93,localUv.y + .28*(n-.5));
+        target = mix(vec3(.55,.34,.09),vec3(.95,.77,.34),lightness);
+        blend = .20 + .80*tip;
+    }
+    else if (p.x < 7.5)
+    {
+        float lesion = smoothstep(.51,.77,hnsNoise(q*7.0)+.16*fine);
+        target = mix(vec3(.20,.12,.16),vec3(.65,.38,.24),value);
+        blend = .14+.86*lesion;
+    }
+    else if (p.x < 8.5)
+    {
+        target = mix(vec3(.08,.24,.12),vec3(.48,.79,.39),lightness);
+        blend = .66 + .34*n;
+    }
+    else if (p.x < 9.5)
+    {
+        vec2 cells = q*11.0;
+        vec2 id = floor(cells);
+        vec2 center = vec2(hnsHash(id+vec2(2,7)),hnsHash(id+vec2(9,1)))*.5+.25;
+        float dotMask = (1.0-smoothstep(.13,.24,length(fract(cells)-center))) * step(.32,hnsHash(id));
+        target = vec3(.88,.81,.62)*lightness;
+        blend = .11+.89*dotMask;
+    }
+    else if (p.x < 10.5)
+    {
+        float ripple = sin((localUv.y*4.0+localUv.x*.65+n*.50)*6.283185);
+        target = mix(vec3(.08,.37,.36),vec3(.52,.91,.84),lightness);
+        blend = .28+.72*smoothstep(-.1,.75,ripple);
+    }
+    else if (p.x < 14.5)
+    {
+        vec2 cells = q*7.5;
+        vec2 id = floor(cells);
+        vec2 center = vec2(hnsHash(id+vec2(3,7)),hnsHash(id+vec2(9,2)))*.45+.28;
+        vec2 delta = fract(cells)-center;
+        float bead = (1.0-smoothstep(.18,.29,length(delta))) * step(.32,hnsHash(id));
+        float gleam = (1.0-smoothstep(.035,.11,length(delta+vec2(.06,.07))))*bead;
+        vec3 resin = p.x < 11.5 ? vec3(.95,.66,.15) :
+                     p.x < 12.5 ? vec3(.43,.20,.63) :
+                     p.x < 13.5 ? vec3(.94,.30,.08) : vec3(.58,.95,.16);
+        target = mix(resin*(.48+.52*value),vec3(1.0,.94,.75),gleam*.85);
+        blend = .18+.82*bead;
+    }
+    else
+    {
+        vec2 stepUv = 1.5 / vec2(textureSize(_MainTex,0));
+        float edge = 1.0-min(min(texture(_MainTex,sampleUv+vec2(stepUv.x,0)).a,texture(_MainTex,sampleUv-vec2(stepUv.x,0)).a),
+                              min(texture(_MainTex,sampleUv+vec2(0,stepUv.y)).a,texture(_MainTex,sampleUv-vec2(0,stepUv.y)).a));
+        float serration = step(.15,sin(localUv.y*63.0+localUv.x*19.0));
+        target = mix(vec3(.16,.10,.06),vec3(.66,.49,.26),value);
+        blend = .12+.88*edge*serration;
     }
     return clamp(mix(rgb,target,clamp(blend*p.z*shade,0.0,1.0)),0.0,1.0);
 }

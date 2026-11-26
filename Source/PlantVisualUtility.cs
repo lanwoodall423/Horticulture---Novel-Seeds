@@ -23,7 +23,7 @@ namespace HorticultureNovelSeeds
 #endif
             var comp = plant.TryGetComp<CompPlantVariety>();
             bool procedural = WaylithPhenotypeShader.Enabled && ProceduralPhenotypeUtility.Resolve(comp).x > 0f;
-            bool proceduralOnly = procedural && !NovelSeedUtility.HasPlantMaskVisual(comp);
+            bool proceduralOnly = procedural && !NovelSeedUtility.HasRegionalPlantColor(comp);
             if (!proceduralOnly && TryPrintIndependentMaskLayers(plant, layer, visual)) return false;
             Vector3 trueCenter = plant.TrueCenter();
             bool wantSnowOverlay = plant.Position.GetSnowDepth(plant.Map) > 0.8f;
@@ -65,7 +65,7 @@ namespace HorticultureNovelSeeds
                     variationIndex = PlantMaskUtility.VariationIndexForTexture(plant.def, material?.mainTexture, variationIndex);
 
                     Vector2[] uvs = null;
-                    if (procedural || NeedsStyledMaterial(visual) || PlantMaskUtility.HasActiveMasks(plant.def))
+                    if (procedural || NeedsStyledMaterial(visual) || (NovelSeedUtility.HasPlantMaskVisual(comp) && PlantMaskUtility.HasActiveMasks(plant.def)))
                     {
                         material = GetStyledMaterial(material, visual, plant, out bool preservesWind, -2, variationIndex);
                         if (preservesWind) PlantUtility.SetWindExposureColors(WorkingColors, plant);

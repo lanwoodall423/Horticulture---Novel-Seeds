@@ -50,12 +50,11 @@ namespace HorticultureNovelSeeds
             if (!Enabled || isolatedMaskLayer != -2 || plant == null || source == null) return false;
             var comp = plant.TryGetComp<CompPlantVariety>();
             Vector4 pattern = ProceduralPhenotypeUtility.Resolve(comp);
-            if (pattern.x > 0f && !NovelSeedUtility.HasPlantMaskVisual(comp))
+            if (!NovelSeedUtility.HasRegionalPlantColor(comp) && (pattern.x > 0f || !PlantMaskUtility.HasActiveMasks(plant.def) || NovelSeedUtility.HasPlantMaskVisual(comp)))
             {
                 if (!TryGetCore(source, null, visual, PlantVisualParameters.Default, PlantVisualParameters.Default, pattern, out material)) return false;
 #if HNS_NATIVE_FIXTURE
-                ProceduralPlants.Add(plant.thingIDNumber);
-                MaskFreeProceduralPlants.Add(plant.thingIDNumber);
+                if (pattern.x > 0f) { ProceduralPlants.Add(plant.thingIDNumber); MaskFreeProceduralPlants.Add(plant.thingIDNumber); }
                 PrintedPlants.Add(plant.thingIDNumber);
 #endif
                 return true;
