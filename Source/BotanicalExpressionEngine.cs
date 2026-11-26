@@ -73,9 +73,9 @@ namespace HorticultureNovelSeeds
             v.scale=v.width=v.height=v.density=v.spread=v.shadowScale=1f;
             v.rotation=v.rotationVariation=v.scaleVariation=v.offsetX=v.offsetZ=0f;
             // Retain the native geometry of existing gameplay traits. Replace
-            // only their default catalog brightness/saturation with the new
+            // only their default catalog fallback tint/brightness/saturation with the new
             // anatomical cue; explicit user visual overrides are excluded.
-            if(functional!=0){v.brightness=v.saturation=1f;}
+            if(functional!=0){v.brightness=v.saturation=v.tintRed=v.tintGreen=v.tintBlue=1f;}
             return v.IsDefault;
         }
         internal static void Request(Plant p)
