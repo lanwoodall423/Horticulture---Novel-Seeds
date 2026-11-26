@@ -199,3 +199,19 @@ Require(SurfaceFinishMath.Environment(.5f,1f,.01f).Rain==.03125f,"quantized weat
     Require(ResponsiveHabitMath.Controls(ResponsiveHabitKind.Rainbowed,.625f,1,.5f,false,false).Droop>.25f,"rain bows canopy");
     Require(ResponsiveHabitMath.Controls(ResponsiveHabitKind.Raincup,.625f,1,.5f,true,false).Contraction==0f,"shelter suppresses rain response");
 }
+
+
+{
+    var green=new OrganSpriteMath.Pixel(44,130,53,255);
+    var petal=new OrganSpriteMath.Pixel(230,133,47,255);
+    var pal=GroundHabitMath.Sample(Enumerable.Repeat(green,100).Concat(Enumerable.Repeat(petal,100)).ToArray());
+    Require(pal.Leaf==green&&pal.Petal==petal&&pal.HasPetal,"ground pigments sampled from actual source colors");
+    foreach(var k in Enum.GetValues<GroundHabitKind>().Where(GroundHabitMath.Valid))
+    {
+        var p=GroundHabitMath.Generate(k,pal,72);
+        Require(p.SequenceEqual(GroundHabitMath.Generate(k,pal,72)),k+" deterministic ground footprint");
+        Require(p.Count(c=>c.A>=90)>100&&p.Count(c=>c.A>=90)<p.Length*.55f,k+" bounded visible ground detail");
+        Require(p[0].A==0&&p[GroundHabitMath.Size-1].A==0&&p[^1].A==0,k+" transparent corners");
+    }
+    Require(GroundHabitMath.Generate(GroundHabitKind.PetalDrift,pal with {HasPetal=false},72).All(c=>c.A==0),"uncertain petal palette falls back");
+}

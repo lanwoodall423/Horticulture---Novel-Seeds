@@ -35,7 +35,8 @@ namespace HorticultureNovelSeeds
             var pose=wantSnowOverlay||procedural||wind||surface||!visual.IsDefault||NovelSeedUtility.HasRegionalPlantColor(comp)||form.Valid?ResponsiveHabitKind.None:ResponsiveHabitExperiment.Resolve(comp);
             var architecture=pose!=ResponsiveHabitKind.None||wantSnowOverlay||procedural||wind||surface||!visual.IsDefault||NovelSeedUtility.HasRegionalPlantColor(comp)||form.Valid||plant.Growth<.8f||plant.def.plant.maxMeshCount!=1?CanopyArchitectureKind.None:CanopyArchitectureExperiment.Resolve(comp);
             var detail=pose!=ResponsiveHabitKind.None||architecture!=CanopyArchitectureKind.None||wantSnowOverlay||procedural||wind||surface||!visual.IsDefault||NovelSeedUtility.HasRegionalPlantColor(comp)||form.Valid?BotanicalDetailKind.None:BotanicalDetailExperiment.Resolve(comp);
-            var organ = pose!=ResponsiveHabitKind.None || architecture!=CanopyArchitectureKind.None || detail!=BotanicalDetailKind.None || wantSnowOverlay || procedural || wind || surface || !visual.IsDefault || NovelSeedUtility.HasRegionalPlantColor(comp) ? OrganFormKind.None : OrganSpriteExperiment.Resolve(comp);
+            var ground=wantSnowOverlay||procedural||wind||surface||!visual.IsDefault||NovelSeedUtility.HasRegionalPlantColor(comp)||form.Valid||pose!=ResponsiveHabitKind.None||architecture!=CanopyArchitectureKind.None||detail!=BotanicalDetailKind.None?GroundHabitKind.None:GroundHabitExperiment.Resolve(comp);
+            var organ = ground!=GroundHabitKind.None || pose!=ResponsiveHabitKind.None || architecture!=CanopyArchitectureKind.None || detail!=BotanicalDetailKind.None || wantSnowOverlay || procedural || wind || surface || !visual.IsDefault || NovelSeedUtility.HasRegionalPlantColor(comp) ? OrganFormKind.None : OrganSpriteExperiment.Resolve(comp);
             Rand.PushState();
             Rand.Seed = plant.Position.GetHashCode();
             try
@@ -47,6 +48,7 @@ namespace HorticultureNovelSeeds
                 bool clampedBottom = false;
                 int positionCount = Mathf.Max(positions.Length, meshCount);
                 int visualSeed = plant.Position.GetHashCode();
+                Material groundSource=null;
 
                 for (int i = 0; i < positionCount && i < meshCount; i++)
                 {
@@ -74,6 +76,7 @@ namespace HorticultureNovelSeeds
                     variationIndex = PlantMaskUtility.VariationIndexForTexture(plant.def, material?.mainTexture, variationIndex);
 
                     Material originalMaterial=material;
+                    groundSource??=originalMaterial;
                     Vector2[] uvs = null;
                     if(ResponsiveHabitExperiment.TryMaterial(plant,material,pose,flipped,out var poseMaterial))
                     { material=poseMaterial; PlantUtility.SetWindExposureColors(WorkingColors,plant); }
@@ -84,7 +87,7 @@ namespace HorticultureNovelSeeds
                         material=organMaterial;
                         PlantUtility.SetWindExposureColors(WorkingColors,plant);
                     }
-                    else if (architecture==CanopyArchitectureKind.None && (procedural || wind || surface || NeedsStyledMaterial(visual) || (NovelSeedUtility.HasPlantMaskVisual(comp) && PlantMaskUtility.HasActiveMasks(plant.def))))
+                    else if (ground==GroundHabitKind.None && architecture==CanopyArchitectureKind.None && (procedural || wind || surface || NeedsStyledMaterial(visual) || (NovelSeedUtility.HasPlantMaskVisual(comp) && PlantMaskUtility.HasActiveMasks(plant.def))))
                     {
                         material = GetStyledMaterial(material, visual, plant, out bool preservesWind, -2, variationIndex);
                         if (preservesWind) PlantUtility.SetWindExposureColors(WorkingColors, plant);
@@ -107,6 +110,7 @@ namespace HorticultureNovelSeeds
                     }
                 }
 
+                GroundHabitExperiment.Print(plant,layer,groundSource,ground,graphicSize);
                 float effectSize = Mathf.Max(graphicSize.x * visual.width, graphicSize.y * visual.height);
                 if (visual.radiance > 0f) PrintEffect(plant, layer, effectSize, visual.radiance, visual.radianceScale, visual.RadianceColor, false, visual.offsetX, visual.offsetZ);
                 if (visual.gloom > 0f) PrintEffect(plant, layer, effectSize, visual.gloom, visual.gloomScale, visual.GloomColor, true, visual.offsetX, visual.offsetZ);

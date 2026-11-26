@@ -942,4 +942,60 @@
     <exclusionTags><li>responsiveHabit</li></exclusionTags>
     <responsiveHabit>Raincup</responsiveHabit>
   </HorticultureNovelSeeds.VarietyTraitDef>
+  <!-- Experimental ground-level botanical details. -->
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_Rootflare</defName>
+    <label>Rootflare</label>
+    <description>Visible, branching surface roots around the base of a mature plant.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>groundHabit</li></exclusionTags>
+    <groundHabit>Rootflare</groundHabit>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_RunnerHabit</defName>
+    <label>Runner Habit</label>
+    <description>Low creeping stems with small leafy daughter shoots.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>groundHabit</li></exclusionTags>
+    <groundHabit>RunnerHabit</groundHabit>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_BasalCarpet</defName>
+    <label>Basal Carpet</label>
+    <description>A low rosette of broad leaves surrounding the main stem.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>groundHabit</li></exclusionTags>
+    <groundHabit>BasalCarpet</groundHabit>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_LeafLitter</defName>
+    <label>Leaf Litter</label>
+    <description>A few naturally shed, differently oriented leaves near the plant.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>groundHabit</li></exclusionTags>
+    <groundHabit>LeafLitter</groundHabit>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_PetalDrift</defName>
+    <label>Petal Drift</label>
+    <description>Scattered colorful petals beneath flowering plants.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>groundHabit</li></exclusionTags>
+    <groundHabit>PetalDrift</groundHabit>
+  </HorticultureNovelSeeds.VarietyTraitDef>
 </Defs>

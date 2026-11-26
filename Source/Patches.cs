@@ -376,7 +376,7 @@ namespace HorticultureNovelSeeds
             }
             PlantVisualParameters visual = NovelSeedUtility.ResolveVisualParameters(comp);
             bool procedural = WaylithPhenotypeShader.Enabled && ProceduralPhenotypeUtility.Resolve(comp).x > 0f;
-            if (!procedural && ResponsiveHabitExperiment.Resolve(comp)==ResponsiveHabitKind.None && CanopyArchitectureExperiment.Resolve(comp)==CanopyArchitectureKind.None && BotanicalDetailExperiment.Resolve(comp)==BotanicalDetailKind.None && SurfaceFinishUtility.Resolve(comp)==SurfaceFinishKind.None && WindHabitUtility.Resolve(comp)==WindHabitKind.None && !PlantFormMesh.Resolve(comp).Valid && OrganSpriteExperiment.Resolve(comp)==OrganFormKind.None && visual.IsDefault && (!NovelSeedUtility.HasPlantMaskVisual(comp) || !PlantMaskUtility.HasActiveMasks(__instance.def)))
+            if (!procedural && GroundHabitExperiment.Resolve(comp)==GroundHabitKind.None && ResponsiveHabitExperiment.Resolve(comp)==ResponsiveHabitKind.None && CanopyArchitectureExperiment.Resolve(comp)==CanopyArchitectureKind.None && BotanicalDetailExperiment.Resolve(comp)==BotanicalDetailKind.None && SurfaceFinishUtility.Resolve(comp)==SurfaceFinishKind.None && WindHabitUtility.Resolve(comp)==WindHabitKind.None && !PlantFormMesh.Resolve(comp).Valid && OrganSpriteExperiment.Resolve(comp)==OrganFormKind.None && visual.IsDefault && (!NovelSeedUtility.HasPlantMaskVisual(comp) || !PlantMaskUtility.HasActiveMasks(__instance.def)))
             {
 #if HNS_NATIVE_FIXTURE
                 NativeGardenProbe.RecordPrint(__instance, false);
