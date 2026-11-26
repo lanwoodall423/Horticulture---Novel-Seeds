@@ -1,0 +1,55 @@
+Panel	Row	Column	Species	Cultivar	Trait IDs	Renderer	Automatic mask sources	Trait labels	Tiers	Motifs
+1	1	1	Plant_Corn	Vanilla control		Vanilla	not styled			
+1	1	2	Plant_Corn	Garden corn plant 1	HNS_HoneyHarvest	GPU procedural, no mask	1:none	Honey Harvest	Uncommon	Honey-gold pigmentation in contrasting fruit, seed or flower tissue; foliage remains green.
+1	1	3	Plant_Corn	Garden corn plant 2	HNS_IvoryHarvest	GPU procedural, no mask	1:none	Ivory Harvest	Rare	Cream-white reproductive tissue with retained natural shading.
+1	1	4	Plant_Corn	Garden corn plant 3	HNS_MulberryHarvest	GPU procedural, no mask	0:none	Mulberry Harvest	Rare	Deep mulberry and plum pigmentation in contrasting fruit or flower tissue.
+1	1	5	Plant_Corn	Garden corn plant 4	HNS_RoseHarvest	GPU procedural, no mask	1:none	Rose Harvest	Rare	Soft rose-colored fruit and flower tissue, distinct from green foliage.
+1	1	6	Plant_Corn	Garden corn plant 5	HNS_BicolorHarvest	GPU procedural, no mask	1:none	Bicolor Harvest	Exceptional	Cream and red-blushed sectors in contrasting fruit or flower tissue.
+1	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled			
+1	2	2	Plant_Cotton	Garden cotton plant 1	HNS_HoneyHarvest	GPU procedural, no mask	1:none	Honey Harvest	Uncommon	Honey-gold pigmentation in contrasting fruit, seed or flower tissue; foliage remains green.
+1	2	3	Plant_Cotton	Garden cotton plant 2	HNS_IvoryHarvest	GPU procedural, no mask	1:none	Ivory Harvest	Rare	Cream-white reproductive tissue with retained natural shading.
+1	2	4	Plant_Cotton	Garden cotton plant 3	HNS_MulberryHarvest	GPU procedural, no mask	0:none	Mulberry Harvest	Rare	Deep mulberry and plum pigmentation in contrasting fruit or flower tissue.
+1	2	5	Plant_Cotton	Garden cotton plant 4	HNS_RoseHarvest	GPU procedural, no mask	0:none	Rose Harvest	Rare	Soft rose-colored fruit and flower tissue, distinct from green foliage.
+1	2	6	Plant_Cotton	Garden cotton plant 5	HNS_BicolorHarvest	GPU procedural, no mask	1:none	Bicolor Harvest	Exceptional	Cream and red-blushed sectors in contrasting fruit or flower tissue.
+1	3	1	Plant_Strawberry	Vanilla control		Vanilla	not styled			
+1	3	2	Plant_Strawberry	Garden strawberry plant 1	HNS_HoneyHarvest	GPU procedural, no mask	0:none	Honey Harvest	Uncommon	Honey-gold pigmentation in contrasting fruit, seed or flower tissue; foliage remains green.
+1	3	3	Plant_Strawberry	Garden strawberry plant 2	HNS_IvoryHarvest	GPU procedural, no mask	0:none	Ivory Harvest	Rare	Cream-white reproductive tissue with retained natural shading.
+1	3	4	Plant_Strawberry	Garden strawberry plant 3	HNS_MulberryHarvest	GPU procedural, no mask	0:none	Mulberry Harvest	Rare	Deep mulberry and plum pigmentation in contrasting fruit or flower tissue.
+1	3	5	Plant_Strawberry	Garden strawberry plant 4	HNS_RoseHarvest	GPU procedural, no mask	0:none	Rose Harvest	Rare	Soft rose-colored fruit and flower tissue, distinct from green foliage.
+1	3	6	Plant_Strawberry	Garden strawberry plant 5	HNS_BicolorHarvest	GPU procedural, no mask	0:none	Bicolor Harvest	Exceptional	Cream and red-blushed sectors in contrasting fruit or flower tissue.
+2	1	1	Plant_Corn	Vanilla control		Vanilla	not styled			
+2	1	2	Plant_Corn	Garden corn plant 1	HNS_CreamMargins	GPU procedural, no mask	1:none	Cream Margins	Rare	Irregular cream leaf margins with a retained green center.
+2	1	3	Plant_Corn	Garden corn plant 2	HNS_LimeHeart	GPU procedural, no mask	1:none	Lime Heart	Uncommon	Yellow-green leaf centers and darker outer foliage.
+2	1	4	Plant_Corn	Garden corn plant 3	HNS_CopperTips	GPU procedural, no mask	0:none	Copper Tips	Uncommon	Bronze and copper pigmentation concentrated in upper foliage.
+2	1	5	Plant_Corn	Garden corn plant 4	HNS_IvorySpeckle	GPU procedural, no mask	1:none	Ivory Speckle	Rare	Scattered ivory leaf spots with irregular natural spacing.
+2	1	6	Plant_Corn	Garden corn plant 5	HNS_BurgundyMargins	GPU procedural, no mask	1:none	Burgundy Margins	Rare	Wine-red leaf margins and dark green interior tissue.
+2	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled			
+2	2	2	Plant_Cotton	Garden cotton plant 1	HNS_CreamMargins	GPU procedural, no mask	1:none	Cream Margins	Rare	Irregular cream leaf margins with a retained green center.
+2	2	3	Plant_Cotton	Garden cotton plant 2	HNS_LimeHeart	GPU procedural, no mask	1:none	Lime Heart	Uncommon	Yellow-green leaf centers and darker outer foliage.
+2	2	4	Plant_Cotton	Garden cotton plant 3	HNS_CopperTips	GPU procedural, no mask	0:none	Copper Tips	Uncommon	Bronze and copper pigmentation concentrated in upper foliage.
+2	2	5	Plant_Cotton	Garden cotton plant 4	HNS_IvorySpeckle	GPU procedural, no mask	0:none	Ivory Speckle	Rare	Scattered ivory leaf spots with irregular natural spacing.
+2	2	6	Plant_Cotton	Garden cotton plant 5	HNS_BurgundyMargins	GPU procedural, no mask	1:none	Burgundy Margins	Rare	Wine-red leaf margins and dark green interior tissue.
+2	3	1	Plant_Strawberry	Vanilla control		Vanilla	not styled			
+2	3	2	Plant_Strawberry	Garden strawberry plant 1	HNS_CreamMargins	GPU procedural, no mask	0:none	Cream Margins	Rare	Irregular cream leaf margins with a retained green center.
+2	3	3	Plant_Strawberry	Garden strawberry plant 2	HNS_LimeHeart	GPU procedural, no mask	0:none	Lime Heart	Uncommon	Yellow-green leaf centers and darker outer foliage.
+2	3	4	Plant_Strawberry	Garden strawberry plant 3	HNS_CopperTips	GPU procedural, no mask	0:none	Copper Tips	Uncommon	Bronze and copper pigmentation concentrated in upper foliage.
+2	3	5	Plant_Strawberry	Garden strawberry plant 4	HNS_IvorySpeckle	GPU procedural, no mask	0:none	Ivory Speckle	Rare	Scattered ivory leaf spots with irregular natural spacing.
+2	3	6	Plant_Strawberry	Garden strawberry plant 5	HNS_BurgundyMargins	GPU procedural, no mask	0:none	Burgundy Margins	Rare	Wine-red leaf margins and dark green interior tissue.
+3	1	1	Plant_Corn	Vanilla control		Vanilla	not styled			
+3	1	2	Plant_Corn	Garden corn plant 1	HNS_RubyStalk	GPU procedural, no mask	1:none	Ruby Stalk	Uncommon	Wine-red pigmentation concentrated in lower central green tissue; approximate stalk targeting.
+3	1	3	Plant_Corn	Garden corn plant 2	HNS_AmberStalk	GPU procedural, no mask	1:none	Amber Stalk	Uncommon	Golden ochre lower central tissue with naturally green outer leaves.
+3	1	4	Plant_Corn	Garden corn plant 3	HNS_StripedStalk	GPU procedural, no mask	0:none	Striped Stalk	Rare	Alternating wine and green markings on lower central tissue.
+3	1	5	Plant_Corn	Garden corn plant 4	HNS_BlueJade	GPU procedural, no mask	1:none	Blue Jade	Uncommon	Muted blue-green foliage with jade highlights, retaining original fruit colors.
+3	1	6	Plant_Corn	Garden corn plant 5	HNS_TwoToneCanopy	GPU procedural, no mask	1:none	Two-Tone Canopy	Rare	Deep green lower foliage with lighter lime-green upper growth.
+3	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled			
+3	2	2	Plant_Cotton	Garden cotton plant 1	HNS_RubyStalk	GPU procedural, no mask	1:none	Ruby Stalk	Uncommon	Wine-red pigmentation concentrated in lower central green tissue; approximate stalk targeting.
+3	2	3	Plant_Cotton	Garden cotton plant 2	HNS_AmberStalk	GPU procedural, no mask	1:none	Amber Stalk	Uncommon	Golden ochre lower central tissue with naturally green outer leaves.
+3	2	4	Plant_Cotton	Garden cotton plant 3	HNS_StripedStalk	GPU procedural, no mask	0:none	Striped Stalk	Rare	Alternating wine and green markings on lower central tissue.
+3	2	5	Plant_Cotton	Garden cotton plant 4	HNS_BlueJade	GPU procedural, no mask	0:none	Blue Jade	Uncommon	Muted blue-green foliage with jade highlights, retaining original fruit colors.
+3	2	6	Plant_Cotton	Garden cotton plant 5	HNS_TwoToneCanopy	GPU procedural, no mask	1:none	Two-Tone Canopy	Rare	Deep green lower foliage with lighter lime-green upper growth.
+3	3	1	Plant_Strawberry	Vanilla control		Vanilla	not styled			
+3	3	2	Plant_Strawberry	Garden strawberry plant 1	HNS_RubyStalk	GPU procedural, no mask	0:none	Ruby Stalk	Uncommon	Wine-red pigmentation concentrated in lower central green tissue; approximate stalk targeting.
+3	3	3	Plant_Strawberry	Garden strawberry plant 2	HNS_AmberStalk	GPU procedural, no mask	0:none	Amber Stalk	Uncommon	Golden ochre lower central tissue with naturally green outer leaves.
+3	3	4	Plant_Strawberry	Garden strawberry plant 3	HNS_StripedStalk	GPU procedural, no mask	0:none	Striped Stalk	Rare	Alternating wine and green markings on lower central tissue.
+3	3	5	Plant_Strawberry	Garden strawberry plant 4	HNS_BlueJade	GPU procedural, no mask	0:none	Blue Jade	Uncommon	Muted blue-green foliage with jade highlights, retaining original fruit colors.
+3	3	6	Plant_Strawberry	Garden strawberry plant 5	HNS_TwoToneCanopy	GPU procedural, no mask	0:none	Two-Tone Canopy	Rare	Deep green lower foliage with lighter lime-green upper growth.
