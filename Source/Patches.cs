@@ -375,7 +375,8 @@ namespace HorticultureNovelSeeds
                 return true;
             }
             PlantVisualParameters visual = NovelSeedUtility.ResolveVisualParameters(comp);
-            if (visual.IsDefault && (!NovelSeedUtility.HasPlantMaskVisual(comp) || !PlantMaskUtility.HasActiveMasks(__instance.def)))
+            bool procedural = WaylithPhenotypeShader.Enabled && ProceduralPhenotypeUtility.Resolve(comp).x > 0f;
+            if (!procedural && visual.IsDefault && (!NovelSeedUtility.HasPlantMaskVisual(comp) || !PlantMaskUtility.HasActiveMasks(__instance.def)))
             {
 #if HNS_NATIVE_FIXTURE
                 NativeGardenProbe.RecordPrint(__instance, false);

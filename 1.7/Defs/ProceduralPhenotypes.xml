@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <!-- Experimental native shader traits; zero default mutation weight until
+       ordinary renderer activation and visual/gameplay qualification. -->
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_Variegated</defName>
+    <label>Ivory Variegation</label>
+    <description>Cream-colored sectors and marbled highlights across the plant.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
+    <proceduralPhenotype>Variegated</proceduralPhenotype>
+    <proceduralStrength>0.86</proceduralStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_Anthocyanin</defName>
+    <label>Crimson Blush</label>
+    <description>A wine-red and violet pigment gradient, strongest near the tips.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
+    <proceduralPhenotype>Anthocyanin</proceduralPhenotype>
+    <proceduralStrength>0.92</proceduralStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_MoonFrost</defName>
+    <label>Moonfrost</label>
+    <description>Blue-silver wax bloom with pale rim highlights.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
+    <proceduralPhenotype>MoonFrost</proceduralPhenotype>
+    <proceduralStrength>0.92</proceduralStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_GoldFreckled</defName>
+    <label>Goldfreckled</label>
+    <description>Golden freckles and organic mottling across the plant.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
+    <proceduralPhenotype>GoldFreckled</proceduralPhenotype>
+    <proceduralStrength>0.9</proceduralStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_AuroraVeins</defName>
+    <label>Aurora Veins</label>
+    <description>Turquoise luminous-looking branching markings over dark jade tissue. Cosmetic only; does not emit light.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
+    <proceduralPhenotype>AuroraVeins</proceduralPhenotype>
+    <proceduralStrength>0.95</proceduralStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+</Defs>

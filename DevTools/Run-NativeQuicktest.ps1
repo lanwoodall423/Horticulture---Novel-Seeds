@@ -3,8 +3,10 @@ param(
     [ValidateSet('AllPerformance','BothLoading','Minimal')][string]$Loadout='AllPerformance',
     [ValidateRange(30,300)][int]$TimeoutSeconds=180,
     [switch]$ShaderProbe,
-    [switch]$GardenProbe
+    [switch]$GardenProbe,
+    [switch]$PatternGarden
 )
+if($PatternGarden){$GardenProbe=$true}
 $ErrorActionPreference='Stop'
 $repo=Split-Path -Parent $PSScriptRoot
 $game='C:\Games\Steam\steamapps\common\RimWorld'
@@ -19,7 +21,7 @@ $temp=Join-Path ([IO.Path]::GetTempPath()) ('hns-native-'+$run)
 $stage=Join-Path $repo ('DevTools\Staged\Native17Package-'+$run)
 $installed=Join-Path $game ('Mods\HNS-NativeFixture-'+$run)
 $outDir=Join-Path $repo ('DevTools\TestResults\native-'+$run)
-$receipt=[ordered]@{schemaVersion=1;run=$run;loadout=$Loadout;shaderProbe=[bool]$ShaderProbe;gardenProbe=[bool]$GardenProbe;status='BLOCKED';reason='NOT_STARTED';sourceHead=$null;version=$null;assemblySha256=$null;activePackages=@();optimizerIdentities=@();stages=@();fixtureLine=$null;processId=$null;testProcessStopped=$false;testPackageRemoved=$false;normalConfigUnchanged=$null;normalPrefsUnchanged=$null;normalSavesUnchanged=$null;isolatedSaveDirectory=$temp;startedUtc=$null;finishedUtc=$null}
+$receipt=[ordered]@{schemaVersion=1;run=$run;loadout=$Loadout;shaderProbe=[bool]$ShaderProbe;gardenProbe=[bool]$GardenProbe;patternGarden=[bool]$PatternGarden;status='BLOCKED';reason='NOT_STARTED';sourceHead=$null;version=$null;assemblySha256=$null;activePackages=@();optimizerIdentities=@();stages=@();fixtureLine=$null;processId=$null;testProcessStopped=$false;testPackageRemoved=$false;normalConfigUnchanged=$null;normalPrefsUnchanged=$null;normalSavesUnchanged=$null;isolatedSaveDirectory=$temp;startedUtc=$null;finishedUtc=$null}
 $proc=$null; $installedByRun=$false; $before=$null; $started=$null; $capturedPlayerBaseline=$false
 $utf8=New-Object Text.UTF8Encoding($false)
 function Assert-Closed {
@@ -88,6 +90,7 @@ try {
     $doc.Save($defaults)
     $receipt.retiredManualDefaultNodes=$nodes.Count
     Copy-Item -LiteralPath (Join-Path $repo '1.7\Defs\ThingDefs_Items.xml') -Destination (Join-Path $stage '1.7\Defs\ThingDefs_Items.xml') -Force
+    Copy-Item -LiteralPath (Join-Path $repo '1.7\Defs\ProceduralPhenotypes.xml') -Destination (Join-Path $stage '1.7\Defs')
     if($ShaderProbe -or $GardenProbe){
         Copy-Item -LiteralPath (Join-Path $repo 'DevTools\ShaderPrototype\Defs\HNS_PhenotypeShaders.xml') -Destination (Join-Path $stage '1.7\Defs')
         Copy-Item -LiteralPath (Join-Path $repo 'DevTools\ShaderPrototype\Shaders') -Destination (Join-Path $stage '1.7') -Recurse
@@ -134,6 +137,7 @@ try {
     $psi.EnvironmentVariables['HNS_NATIVE_DLL']=$sha
     if($ShaderProbe){$psi.EnvironmentVariables['HNS_NATIVE_SHADER_PROBE']='1'}
     if($GardenProbe){$psi.EnvironmentVariables['HNS_NATIVE_GARDEN_PROBE']='1'}
+    if($PatternGarden){$psi.EnvironmentVariables['HNS_NATIVE_PATTERN_GARDEN']='1'}
     $receipt.startedUtc=[DateTime]::UtcNow.ToString('o')
     $proc=[Diagnostics.Process]::Start($psi)
     $started=$proc.StartTime

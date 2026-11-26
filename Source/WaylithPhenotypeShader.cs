@@ -21,6 +21,8 @@ namespace HorticultureNovelSeeds
 #if HNS_NATIVE_FIXTURE
         internal static readonly HashSet<int> PrintedPlants = new();
         internal static readonly HashSet<int> MaskedPlants = new();
+        internal static readonly HashSet<int> ProceduralPlants = new();
+        internal static readonly HashSet<int> MaskFreeProceduralPlants = new();
 #endif
 
         // Caller must prepare from the main-thread editor/load boundary, not a print.
@@ -46,54 +48,66 @@ namespace HorticultureNovelSeeds
         {
             material = null;
             if (!Enabled || isolatedMaskLayer != -2 || plant == null || source == null) return false;
+            var comp = plant.TryGetComp<CompPlantVariety>();
+            Vector4 pattern = ProceduralPhenotypeUtility.Resolve(comp);
+            if (pattern.x > 0f && !NovelSeedUtility.HasPlantMaskVisual(comp))
+            {
+                if (!TryGetCore(source, null, visual, PlantVisualParameters.Default, PlantVisualParameters.Default, pattern, out material)) return false;
+#if HNS_NATIVE_FIXTURE
+                ProceduralPlants.Add(plant.thingIDNumber);
+                MaskFreeProceduralPlants.Add(plant.thingIDNumber);
+                PrintedPlants.Add(plant.thingIDNumber);
+#endif
+                return true;
+            }
             var layers = PlantMaskUtility.LayersForVariation(plant.def, variationIndex, false);
             if (layers == null)
             {
-                if (!TryGet(source, visual, out material)) return false;
+                if (!TryGetCore(source, null, visual, PlantVisualParameters.Default, PlantVisualParameters.Default, pattern, out material)) return false;
             }
             else
             {
                 if (!masks.TryGetValue((plant.def, variationIndex), out var prepared) ||
                     !prepared.Matches(source.mainTexture, layers)) return false;
-                var comp = plant.TryGetComp<CompPlantVariety>();
                 var a = NovelSeedUtility.ResolvePlantTextureParameters(comp, 0);
                 var b = NovelSeedUtility.ResolvePlantTextureParameters(comp, 1);
                 var c = NovelSeedUtility.ResolvePlantTextureParameters(comp, 2);
 #if HNS_NATIVE_FIXTURE
                 NativeShaderProbe.TryOverrideMaskStyles(plant, ref a, ref b, ref c);
 #endif
-                if (!TryGetMasked(source, prepared.Texture, a, b, c, out material)) return false;
+                if (!TryGetCore(source, prepared.Texture, a, b, c, pattern, out material)) return false;
 #if HNS_NATIVE_FIXTURE
                 MaskedPlants.Add(plant.thingIDNumber);
 #endif
             }
 #if HNS_NATIVE_FIXTURE
             PrintedPlants.Add(plant.thingIDNumber);
+            if (pattern.x > 0f) ProceduralPlants.Add(plant.thingIDNumber);
 #endif
             return true;
         }
 
         internal static bool TryGet(Material source, PlantVisualParameters visual, out Material material) =>
-            TryGetCore(source, null, visual, PlantVisualParameters.Default, PlantVisualParameters.Default, out material);
+            TryGetCore(source, null, visual, PlantVisualParameters.Default, PlantVisualParameters.Default, Vector4.zero, out material);
 
         internal static bool TryGetMasked(Material source, Texture2D mask, PlantVisualParameters a,
             PlantVisualParameters b, PlantVisualParameters c, out Material material)
         {
             material = null;
-            return mask != null && TryGetCore(source, mask, a, b, c, out material);
+            return mask != null && TryGetCore(source, mask, a, b, c, Vector4.zero, out material);
         }
 
-        private static bool TryGetCore(Material source, Texture2D mask, PlantVisualParameters a,
-            PlantVisualParameters b, PlantVisualParameters c, out Material material)
+        internal static bool TryGetCore(Material source, Texture2D mask, PlantVisualParameters a,
+            PlantVisualParameters b, PlantVisualParameters c, Vector4 pattern, out Material material)
         {
             material = null;
             if (!Enabled || unavailable || source == null || source.shader != ShaderDatabase.CutoutPlant ||
                 source.mainTexture is not Texture2D texture || !source.HasProperty("_FallBehaviorEnabled") ||
                 source.GetFloat("_FallBehaviorEnabled") != 0f || a.opacity != 1f || b.opacity != 1f || c.opacity != 1f) return false;
             var s0 = new Style(a); var s1 = new Style(b); var s2 = new Style(c);
-            if (!s0.Valid || !s1.Valid || !s2.Valid) return false;
+            if (!s0.Valid || !s1.Valid || !s2.Valid || !Finite(pattern)) return false;
             var key = new MaterialKey(source, texture, source.renderQueue, source.mainTextureScale,
-                source.mainTextureOffset, mask, s0, s1, s2);
+                source.mainTextureOffset, mask, s0, s1, s2, pattern);
             if (materials.TryGetValue(key, out material)) return true;
             if (materials.Count >= MaterialLimit) return false;
             Material candidate = null;
@@ -113,6 +127,7 @@ namespace HorticultureNovelSeeds
                     !shader.HasProperty(Shader.PropertyToID("_HnsTint2")) ||
                     !shader.HasProperty(Shader.PropertyToID("_HnsControls2")) ||
                     !shader.HasProperty(Shader.PropertyToID("_HnsDullness2")) ||
+                    !shader.HasProperty(Shader.PropertyToID("_HnsPattern")) ||
                     !shader.HasProperty(Shader.PropertyToID("_SwayHead")))
                     throw new InvalidOperationException("Phenotype shader or material layout unavailable.");
                 candidate = new Material(shader)
@@ -123,6 +138,7 @@ namespace HorticultureNovelSeeds
                     mainTextureOffset = source.mainTextureOffset,
                     renderQueue = source.renderQueue
                 };
+                candidate.SetVector("_HnsPattern", pattern);
                 s0.Apply(candidate, "");
                 s1.Apply(candidate, "1");
                 s2.Apply(candidate, "2");
@@ -158,7 +174,7 @@ namespace HorticultureNovelSeeds
             }
         }
         private readonly record struct MaterialKey(Material Source, Texture2D Texture, int Queue, Vector2 Scale,
-            Vector2 Offset, Texture2D Mask, Style A, Style B, Style C);
+            Vector2 Offset, Texture2D Mask, Style A, Style B, Style C, Vector4 Pattern);
         private sealed record PreparedMask(Texture2D Source, Texture2D Texture, VisualMaskLayerRecord[] Layers, int[] Hashes)
         {
             internal bool Matches(Texture source, IReadOnlyList<VisualMaskLayerRecord> layers)

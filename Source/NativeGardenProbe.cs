@@ -38,6 +38,8 @@ namespace HorticultureNovelSeeds
         {
             if (!active || plant == null) return;
             if (!maskSources.TryGetValue(plant.thingIDNumber, out var sources)) maskSources.Add(plant.thingIDNumber, sources = new());
+            if (patternGarden && ProceduralPhenotypeUtility.Resolve(plant.TryGetComp<CompPlantVariety>()).x > 0f)
+            { sources.Add(variation + ":none"); return; }
             var layers = PlantMaskUtility.LayersForVariation(plant.def, variation, false);
             sources.Add(variation + ":" + (layers == null ? "none" : PlantAutoMaskCache.RecordSource(plant.def, variation, false)));
         }
@@ -49,6 +51,8 @@ namespace HorticultureNovelSeeds
         private static int panel, frames, captureAge;
         private static string capture;
         private static bool active;
+        private static bool patternGarden;
+        private static readonly string[] PatternTraits = { "Variegated", "Anthocyanin", "MoonFrost", "GoldFreckled", "AuroraVeins" };
         private sealed record Row(int Panel, int RowNumber, int Column, Plant Plant, VarietyRecord Cultivar);
         internal static void RecordPrint(Plant plant, bool customPrint)
         {
@@ -61,8 +65,9 @@ namespace HorticultureNovelSeeds
             if (active) legacy.Add(plant.thingIDNumber);
         }
 
-        internal static void Begin(string path, Action<string> stage, Action<string,string> completed)
+        internal static void Begin(string path, Action<string> stage, Action<string,string> completed, bool procedural = false)
         {
+            patternGarden = procedural;
             root = path; onStage = stage; finish = completed;
             try
             {
@@ -135,6 +140,7 @@ namespace HorticultureNovelSeeds
         {
             // Deliberate extremes of real trait definitions; no changes to trait
             // defs/settings and no claims about natural mutation eligibility.
+            if (patternGarden) return col == 0 ? new() : new() { Trait(PatternTraits[col - 1]) };
             return col switch
             {
                 1 => new() { Trait(row % 3 == 0 ? "Humongous" : "Giant"), Trait("HighYield"), Trait("Robust") },
@@ -154,12 +160,13 @@ namespace HorticultureNovelSeeds
             Require(registry != null, "registry");
             for (int r = 0; r < 3; r++)
             {
-                var def = Choose(SpeciesOptions[panel][r]);
+                var def = Choose(patternGarden && panel == 3 && r == 1 ? "Plant_Haygrass" : SpeciesOptions[panel][r]);
                 // Prewarm actual resolved masks before rendering. If shared
                 // manual or seasonal materials cannot use the experimental
                 // backend, their existing CPU path is intentionally retained.
-                for (int v = 0; v < PlantMaskUtility.VariationCount(def); v++)
-                    WaylithPhenotypeShader.PrepareMask(def, v);
+                if (!patternGarden)
+                    for (int v = 0; v < PlantMaskUtility.VariationCount(def); v++)
+                        WaylithPhenotypeShader.PrepareMask(def, v);
                 for (int c = 0; c < 6; c++)
                 {
                     var plant = (Plant)ThingMaker.MakeThing(def);
@@ -227,6 +234,7 @@ namespace HorticultureNovelSeeds
         {
             int id = p.thingIDNumber;
             bool gpu = WaylithPhenotypeShader.PrintedPlants.Contains(id), cpu = legacy.Contains(id);
+            if (WaylithPhenotypeShader.MaskFreeProceduralPlants.Contains(id)) return cpu ? "Mixed procedural/legacy" : "GPU procedural, no mask";
             return gpu ? (cpu ? "Mixed GPU/legacy" : WaylithPhenotypeShader.MaskedPlants.Contains(id) ? "GPU masked" : "GPU whole") :
                 cpu ? "Legacy material" : custom.Contains(id) ? "Geometry/effects only" : "Vanilla";
         }
@@ -239,6 +247,11 @@ namespace HorticultureNovelSeeds
             File.WriteAllLines(Path.Combine(root,"HNS-garden-inventory.tsv"),lines);
             Require(inventory.Count == 72 && inventory.Count(r=>r.Cultivar != null)==60 && chosen.Count == 12,"complete garden inventory");
             Require(inventory.Where(r=>r.Cultivar != null).All(r=>maskSources.TryGetValue(r.Plant.thingIDNumber, out var sources) && sources.All(x=>x.EndsWith(":local") || x.EndsWith(":bundled") || x.EndsWith(":none"))), "automatic-only provenance for all cultivars");
+            if (patternGarden)
+            {
+                Require(inventory.Where(r => r.Cultivar != null).All(r => Backend(r.Plant) == "GPU procedural, no mask"), "every pattern cultivar printed on mask-free GPU path");
+                Require(WaylithPhenotypeShader.MaskCount == 0, "no prepared masks in pattern garden");
+            }
             Log.Message("[HNS Garden] renderer counts: " + string.Join("; ",inventory.GroupBy(r=>Backend(r.Plant)).Select(g=>g.Key+"="+g.Count())));
         }
         private static void Require(bool value, string label) { if (!value) throw new InvalidOperationException(label); }
