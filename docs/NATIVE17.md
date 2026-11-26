@@ -1317,3 +1317,35 @@ response, same-cultivar individual variation, combined effects, natural
 activation and dense-field performance remain unqualified.
 
 Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/161a3a19bb2464ee1b6c017274b5bcec6f08e314
+
+### Responsive Botanical Life: twenty shared-anatomy visual prototypes
+
+Twenty additional zero-weight cosmetic candidates use a combined art-derived
+foliage/reproductive data map, three original-alpha-preserving structural
+atlases, one native shader with separate modes and optional bounded ground,
+pollen, rear-foliage or additive post-light planes. Per-specimen growth,
+stress and neighbor context are encoded in native vertex RGB; native wind
+exposure alpha remains intact. Existing stable mesh seed provides individual
+variation; light, rain, local day and season controls are shared material
+uniforms. Successful render paths report active phenotype facts.
+
+Native LifeSuite Garden 2f913ca27ff74a23a0243bf778345541, source 485698e,
+RimWorld 1.7.5014 rev1195 AllPerformance: all eleven stages passed.
+Four paired gardens, 72 distinct subjects (60 modified, 12 controls),
+120 accepted modified native material states, 93 active, 27 dormant,
+zero fallbacks; every mode active on all three species at least once.
+Three structural modes accepted all six states each, eight prepared
+source maps. Builds and anatomy/regression rules passed. Normal saves,
+prefs, config unchanged and temporary test package/process removed.
+
+Temperature and season were controlled fixture inputs; native light, rain,
+maturity and actual neighbors were sampled. Effects are visual approximations,
+not hydraulic, pollination, nutrient-transfer or physical-optics simulations.
+Event-driven expression covers rain. Parallax is a screen-relative foliage
+layer proxy. Static captures and renderer assertions do not prove continuous
+animation, ordinary activation, automatic refresh of changing local inputs
+without fixture invalidation, multi-allele compatibility or dense-field
+performance. Some fine effects remain subtle at game scale. Existing visual
+families retained; separate unfinished historical-growth extensions excluded.
+
+Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/1c6222ac71dc896fe0c15787a84b0de0f1f43325
