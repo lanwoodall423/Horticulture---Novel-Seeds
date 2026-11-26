@@ -903,3 +903,42 @@ Preparation SHA256: AA7427526FD11C20290092DD4C41AC8FEF12496FB22BF58389DE5BA0B75E
 Reproduce with RimWorld closed:
 
     powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -ArchitectureGarden
+
+## Leaf texture synthesis and tapered occlusion refinement (2026-11-25)
+
+Source 1b94adc7e564113ecf1d5c0270cc288db5007eef refines the foliage-only
+module. Small reproductive-component exclusion halos remove pale fringe
+from donor sampling. Reflected source-leaf texture and neighboring donor
+colors replace original fruit luminance. For eligible exposed connected
+regions, a tapered lamina envelope trims only pixels accessible from
+exterior air; enclosed real gaps and embedded tissue are preserved.
+Original source and independent reproductive module unchanged.
+
+AllPerformance run 6b89f61d1c794cc6a52bd943666eab99, RimWorld 1.7.5014
+rev1195: all five stages passed; 36 mature plants, 28 rendered candidates,
+two hops reproductive fallbacks, 98 additional planes, nine module sets,
+16 module materials. Zero custom phenotype shader materials and prepared
+GPU masks. Both builds clean; all prior and four new regression tests passed.
+Preservation/owned cleanup checks passed; no relevant HNS error in captured log.
+Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/96424555d02d995a003a989538f1bec5654b9226
+
+Same-source strips compare original, prior repair and refined modules.
+Corn/cotton former pale fruit highlights are substantially reduced; round
+cotton foliage and flatter reconstructed shading remain. Tapering occurred
+on rose (1192 pixels) and two daylily sources (1139/1806), not on corn,
+cotton or strawberry. Rose still has 899 unreachable reproductive pixels;
+hops fruit modules remain unavailable. The technique remains approximate
+2D anatomy, with cropped lower module edges and limited texture fidelity.
+Natural growth, attached wind, combined traits, field-scale performance,
+seasonal art and ordinary activation remain unqualified. No mechanics,
+manual masks, historical assets or previous approved feature changes.
+
+DLL SHA256: 0307636275F767F251BE1FFCC080556B4FCAE32D3F0B7374DDE340D5C7B4A5A1.
+Receipt SHA256: 85EE4D9F0C7F61363F51C47D807DA01267EFD5CA5B037C1661544A8DCA0D53FB.
+Log SHA256: 0D8D2AAA57316B9144173EDB066B5E39CDE0E7D513D43D5BC69AB541330F829C.
+Architecture inventory SHA256: E3DBEE52D0B5B80AD1456A3C2D93C1618FD337C3BD1FDFE9C253A3B6AE45A0E4.
+Preparation SHA256: B315F4BE880C73EC4F905AB4238ED898BBCBB56FEADB3DF992050EDAE2D27226.
+
+Reproduce with RimWorld closed:
+
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -ArchitectureGarden
