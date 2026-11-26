@@ -182,6 +182,8 @@ namespace HorticultureNovelSeeds
                 BotanicalDetailExperiment.Enabled=detailGarden;
                 VascularExperiment.Enabled=vascularGarden;
                 LifeSuiteExperiment.Enabled=lifeSuiteGarden;
+                lifeSuiteMotion=lifeSuiteGarden&&Environment.GetEnvironmentVariable("HNS_NATIVE_LIFE_MOTION")=="1";
+                Environment.SetEnvironmentVariable("HNS_NATIVE_LIFE_MOTION",null);
                 CanopyArchitectureExperiment.Enabled=architectureGarden;
                 ResponsiveHabitExperiment.Enabled=poseGarden;
                 ResponsiveHabitExperiment.ArticulationEnabled=articulationGarden;
@@ -631,6 +633,8 @@ namespace HorticultureNovelSeeds
                         nativeInspector.CloseOpenTab();
                         Find.Selector.ClearSelection();
                     }
+                    if(!CaptureLifeSuiteMotion())return;
+                    lifeMotionFrame=0;lifeMotionAge=0;
                     onStage("GardenPanel" + (panel+1));
                     if (++panel == PanelCount)
                     {
@@ -990,6 +994,58 @@ namespace HorticultureNovelSeeds
         private static readonly List<Plant> LifeSuiteNeighbors=new();
         private static readonly List<string> LifeSuiteEvidence=new(){"Panel\tSpecies\tColumn\tPlant ID\tTrait\tMode\tMaterial ID\tExtra material ID\tAtlas\tExtra planes\tFoliage territories\tReproductive components\tLight\tWetness\tDay\tSeason input\tGrowth\tStress input\tLateral links\tActive\tDescription"};
         private static readonly HashSet<int> LifeSuiteAcceptedModes=new(),LifeSuiteActiveModes=new(),LifeSuiteAtlasModes=new();
+        // Motion evidence uses only native captures from the isolated game.
+        // Advance the native wind manager and actual local solar time. The
+        // seasonal/temperature inputs remain explicit experimental controls.
+        private static bool lifeSuiteMotion;
+        private const int LifeMotionFrames=12;
+        private static int lifeMotionFrame,lifeMotionAge;
+        private static readonly List<string> LifeMotionEvidence=new(){"Panel\tFrame\tLocal day\tSky glow\tRain rate\tSeason input\tTemperature input\tFirst plant growth\tNative wind head"};
+        private static bool CaptureLifeSuiteMotion()
+        {
+            if(!lifeSuiteMotion)return true;
+            if(lifeMotionFrame>=LifeMotionFrames)return true;
+            string path=Path.Combine(root,$"HNS-garden-motion-{panel+1:D2}-{lifeMotionFrame:D2}.png");
+            if(lifeMotionAge==0)
+            {
+                float t=lifeMotionFrame/(float)(LifeMotionFrames-1);
+                int group=panel/2;bool second=panel%2==1;
+                float target=group switch
+                {
+                    0=>second?.005f+.065f*t:.215f+.165f*t,
+                    1=>second?.005f+.065f*t:.44f+.12f*t,
+                    2=>second?.57f+.13f*t:.34f+.14f*t,
+                    _=>.43f+.14f*t
+                };
+                int advance=Mathf.RoundToInt(Mathf.Repeat(target-GenLocalDate.DayPercent(map),1f)*60000f);
+                Find.TickManager.DebugSetTicksGame(Find.TickManager.TicksGame+advance);
+                if(group==0&&!second)LifeSuiteExperiment.TemperatureOverride=43f-13f*t;
+                if(group==1)LifeSuiteExperiment.SeasonOverride=second?.87f+.13f*t:.28f+.62f*t;
+                if(group==3&&!second)
+                    foreach(var p in current)p.Growth=.72f+.24f*t;
+                if(group==3&&second)LifeSuiteExperiment.TemperatureOverride=3f-11f*t;
+                if(group==0&&!second||group==3)
+                    foreach(var p in current)p.DirtyMapMesh(map);
+                map.skyManager.SkyManagerUpdate();
+                var first=current.Select(p=>LifeSuiteExperiment.Prints.TryGetValue(p.thingIDNumber,out var pr)?pr.Base:null).FirstOrDefault(m=>m!=null);
+                Require(first!=null,"motion uses native accepted plant material");
+                float before=first.GetFloat("_SwayHead");int updates=0;
+                do{map.windManager.WindManagerTick();updates++;}
+                while(first.GetFloat("_SwayHead")<before+1.3f&&updates<250);
+                float head=first.GetFloat("_SwayHead");
+                Require(float.IsFinite(head)&&head>before,"actual motion wind phase advanced");
+                LifeSuiteExperiment.Refresh(map);
+                LifeMotionEvidence.Add(string.Join("\t",panel+1,lifeMotionFrame,GenLocalDate.DayPercent(map),map.skyManager.CurSkyGlow,map.weatherManager.RainRate,LifeSuiteExperiment.SeasonOverride,LifeSuiteExperiment.TemperatureOverride,current[0].Growth,head));
+                lifeMotionAge=1;return false;
+            }
+            if(++lifeMotionAge==7){ScreenCapture.CaptureScreenshot(path);return false;}
+            if(lifeMotionAge<11||!File.Exists(path)||new FileInfo(path).Length<1000)return false;
+            lifeMotionFrame++;lifeMotionAge=0;
+            File.WriteAllLines(Path.Combine(root,"HNS-garden-motion.tsv"),LifeMotionEvidence);
+            if(lifeMotionFrame<LifeMotionFrames)return false;
+            Log.Message("[HNS LifeMotion] "+(panel+1)+"; "+LifeMotionFrames+" native frames");
+            return true;
+        }
         private static void SetLifeSuiteTime()
         {
             int group=panel/2;bool second=panel%2==1;
@@ -1087,6 +1143,7 @@ namespace HorticultureNovelSeeds
             Require(inventory.Where(r=>r.Cultivar==null).All(r=>Backend(r.Plant)=="Vanilla"),"original controls");
             Require(LifeSuiteAcceptedModes.Count==20&&LifeSuiteActiveModes.Count==20,"all twenty modes accepted and active in at least one native specimen");
             Require(LifeSuiteAtlasModes.SetEquals(new[]{2,11,19}),"three atlas-driven structural modes");
+            if(lifeSuiteMotion)Require(LifeMotionEvidence.Count==1+8*LifeMotionFrames,"all native motion frames captured");
             File.WriteAllLines(Path.Combine(root,"HNS-garden-life-suite.tsv"),LifeSuiteEvidence);
             File.WriteAllLines(Path.Combine(root,"HNS-garden-life-suite-preparation.tsv"),new[]{"Species\tVariation\tSource\tAtlas mode\tFoliage territories\tOrgan count\tOrgan pixels\tDistinct frames\tChanged pixels"}.Concat(LifeSuiteExperiment.Preparation));
             Log.Message("[HNS LifeSuite] 20 modes; "+LifeSuiteExperiment.MapCount+" maps; "+LifeSuiteExperiment.MaterialCount+" materials; "+LifeSuiteEvidence.Count+" evidence lines");
