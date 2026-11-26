@@ -376,7 +376,7 @@ namespace HorticultureNovelSeeds
             }
             PlantVisualParameters visual = NovelSeedUtility.ResolveVisualParameters(comp);
             bool procedural = WaylithPhenotypeShader.Enabled && ProceduralPhenotypeUtility.Resolve(comp).x > 0f;
-            if (!procedural && !PlantFormMesh.Resolve(comp).Valid && visual.IsDefault && (!NovelSeedUtility.HasPlantMaskVisual(comp) || !PlantMaskUtility.HasActiveMasks(__instance.def)))
+            if (!procedural && !PlantFormMesh.Resolve(comp).Valid && OrganSpriteExperiment.Resolve(comp)==OrganFormKind.None && visual.IsDefault && (!NovelSeedUtility.HasPlantMaskVisual(comp) || !PlantMaskUtility.HasActiveMasks(__instance.def)))
             {
 #if HNS_NATIVE_FIXTURE
                 NativeGardenProbe.RecordPrint(__instance, false);

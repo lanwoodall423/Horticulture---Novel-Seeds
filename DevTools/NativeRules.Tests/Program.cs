@@ -59,3 +59,25 @@ foreach (PlantFormKind kind in Enum.GetValues<PlantFormKind>().Where(k=>k!=Plant
 }
 Require(PlantFormMath.Warp(PlantFormKind.Weeping,float.NaN,.3f,.8f,false)==(.3f,.8f),"invalid form falls back");
 Console.WriteLine("Plant form geometry tests passed.");
+
+// Synthetic organ components: distinguish red fruit from green foliage, enlarge
+// the fruit without changing a remote leaf, and reject a whole-plant region.
+{
+    const int n=32;
+    var p=new OrganSpriteMath.Pixel[n*n];
+    var green=new OrganSpriteMath.Pixel(35,155,47,255);
+    var red=new OrganSpriteMath.Pixel(198,35,44,255);
+    for(int y=5;y<27;y++)for(int x=5;x<27;x++)p[y*n+x]=green;
+    for(int y=14;y<18;y++)for(int x=14;x<18;x++)p[y*n+x]=red;
+    Require(OrganSpriteMath.Reproductive(red)&&!OrganSpriteMath.Reproductive(green),"organ palette separates fruit and foliage");
+    var selected=p.Select(OrganSpriteMath.Reproductive).ToArray();
+    var parts=OrganSpriteMath.Parts(selected,n,n,22*22,false);
+    Require(parts.Count==1&&parts[0].Indices.Length==16,"connected organ recognized");
+    foreach(var kind in Enum.GetValues<OrganFormKind>().Where(k=>k!=OrganFormKind.None&&k!=OrganFormKind.ThickStalk))
+    {
+        var outp=OrganSpriteMath.Compose(p,n,n,parts,kind);
+        Require(outp.Count(v=>v==red)>16&&outp[6*n+6]==green&&p.Count(v=>v==red)==16,kind+" localized original-preserving enlargement");
+    }
+    Require(OrganSpriteMath.Parts(Enumerable.Repeat(true,n*n).ToArray(),n,n,n*n,false).Count==0,"whole sprite rejected");
+    Require(OrganSpriteMath.Compose(p,n,n,new(),OrganFormKind.PlumpFruit).SequenceEqual(p),"missing organ unchanged");
+}

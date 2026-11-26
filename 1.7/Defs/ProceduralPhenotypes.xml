@@ -545,4 +545,60 @@
     <plantForm>Spired</plantForm>
     <plantFormStrength>0.94</plantFormStrength>
   </HorticultureNovelSeeds.VarietyTraitDef>
+  <!-- Experimental local organ geometry. -->
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_PlumpFruit</defName>
+    <label>Plump Fruit</label>
+    <description>Larger rounded fruit or flower structures, with the original foliage retained.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>organForm</li></exclusionTags>
+    <organForm>PlumpFruit</organForm>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_LongFruit</defName>
+    <label>Long Fruit</label>
+    <description>Elongated fruit or reproductive structures.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>organForm</li></exclusionTags>
+    <organForm>LongFruit</organForm>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_BroadFruit</defName>
+    <label>Broad Fruit</label>
+    <description>Wider fruit or flower structures, leaving the canopy intact.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>organForm</li></exclusionTags>
+    <organForm>BroadFruit</organForm>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_ClusteredFruit</defName>
+    <label>Clustered Fruit</label>
+    <description>Closely overlapping reproductive lobes derived from the original art.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>organForm</li></exclusionTags>
+    <organForm>ClusteredFruit</organForm>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_ThickStalk</defName>
+    <label>Thick Stalk</label>
+    <description>Broadened automatically identified stem tissue; unchanged when anatomy is uncertain.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>organForm</li></exclusionTags>
+    <organForm>ThickStalk</organForm>
+  </HorticultureNovelSeeds.VarietyTraitDef>
 </Defs>

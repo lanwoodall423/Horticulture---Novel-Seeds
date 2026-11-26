@@ -51,14 +51,16 @@ namespace HorticultureNovelSeeds
         private static int panel, frames, captureAge;
         private static string capture;
         private static bool active;
-        private static bool patternGarden, catalogGarden, creativeGarden, cultivarGarden, formGarden;
+        private static bool patternGarden, catalogGarden, creativeGarden, cultivarGarden, formGarden, organGarden;
+        private static readonly string[] OrganTraits = { "PlumpFruit", "LongFruit", "BroadFruit", "ClusteredFruit", "ThickStalk" };
+        private static readonly string[] OrganCrops = { "Plant_Corn","Plant_Cotton","Plant_Strawberry","Plant_Rose","Plant_Daylily","Plant_Hops" };
         private static readonly string[] FormTraits = { "Arching", "FanCrowned", "Rounded", "Weeping", "Spired" };
         private static readonly string[] FormPigments = { "RoseHarvest", "Variegated", "CopperTips", "RubyStalk", "BlueJade" };
         private static readonly string[] CultivarTraits = { "HoneyHarvest", "IvoryHarvest", "MulberryHarvest", "RoseHarvest", "BicolorHarvest", "CreamMargins", "LimeHeart", "CopperTips", "IvorySpeckle", "BurgundyMargins", "RubyStalk", "AmberStalk", "StripedStalk", "BlueJade", "TwoToneCanopy" };
         private static readonly string[] CreativeTraits = { "Velvetleaf", "Lacquered", "Dustbloom", "Silvered", "HaloEdged", "Netveined", "Tigerstriped", "Marbled", "Opaline", "Crystalline", "Bioluminescent", "NebulaMottle", "Coralbranch", "Prismatic", "Saltbloom", "Ashen", "Boggloss", "Waxbound", "Peatstained", "ScorchedMargins", "Variegated", "Anthocyanin", "MoonFrost", "GoldFreckled", "AuroraVeins" };
         private static readonly string[] CreativeCrops = { "Plant_Corn", "Plant_Cotton", "Plant_Strawberry" };
         private static List<List<VarietyTraitDef>> catalogCases;
-        private static int PanelCount => formGarden ? 2 : catalogGarden ? 6 : cultivarGarden ? 3 : creativeGarden ? 5 : SpeciesOptions.Length;
+        private static int PanelCount => organGarden ? 2 : formGarden ? 2 : catalogGarden ? 6 : cultivarGarden ? 3 : creativeGarden ? 5 : SpeciesOptions.Length;
         private static readonly string[] CatalogCrops = {
             "Plant_Rice","Plant_Cotton","Plant_Corn", "Plant_Potato","Plant_Cotton","Plant_Hops",
             "Plant_Cotton","Plant_Healroot","Plant_Strawberry", "Plant_Corn","Plant_Corn","Plant_Corn",
@@ -91,7 +93,7 @@ namespace HorticultureNovelSeeds
             var all = DefDatabase<VarietyTraitDef>.AllDefsListForReading.Where(t => t.defName.StartsWith("HNS_", StringComparison.Ordinal)).ToList();
             Require(all.All(t => TraitAppearanceCatalog.TryGet(t, out _)), "all loaded HNS definitions have appearance rules");
             var singles = result.Where(x=>x.Count==1).Select(x=>x[0]).ToHashSet();
-            Require(all.Where(t=>!t.configRoot && !t.generated && !ProceduralPhenotypeUtility.IsCreativeMode(t.proceduralPhenotype) && !ProceduralPhenotypeUtility.IsCultivarMode(t.proceduralPhenotype) && t.plantForm == PlantFormKind.None).All(singles.Contains), "every baseline authored concrete trait has an individual fixture; creative candidates use CreativeGarden");
+            Require(all.Where(t=>!t.configRoot && !t.generated && !ProceduralPhenotypeUtility.IsCreativeMode(t.proceduralPhenotype) && !ProceduralPhenotypeUtility.IsCultivarMode(t.proceduralPhenotype) && t.plantForm == PlantFormKind.None && t.organForm == OrganFormKind.None).All(singles.Contains), "every baseline authored concrete trait has an individual fixture; creative candidates use CreativeGarden");
             var manifest = new List<string> { "Trait ID\tLabel\tGenerated\tConfig root\tTier\tMotif\tPattern\tStrength\tScale\tWidth\tHeight\tDensity\tSampled individually" };
             foreach (var t in all.OrderBy(t=>t.defName))
             {
@@ -118,16 +120,23 @@ namespace HorticultureNovelSeeds
             if (active) legacy.Add(plant.thingIDNumber);
         }
 
-        internal static void Begin(string path, Action<string> stage, Action<string,string> completed, bool procedural = false, bool catalog = false, bool creative = false, bool cultivar = false, bool form = false)
+        internal static void Begin(string path, Action<string> stage, Action<string,string> completed, bool procedural = false, bool catalog = false, bool creative = false, bool cultivar = false, bool form = false, bool organ = false)
         {
-            patternGarden = procedural || creative || cultivar || form; catalogGarden = catalog; creativeGarden = creative; cultivarGarden = cultivar; formGarden = form;
+            patternGarden = procedural || creative || cultivar || form || organ; catalogGarden = catalog; creativeGarden = creative; cultivarGarden = cultivar; formGarden = form; organGarden = organ;
             root = path; onStage = stage; finish = completed;
             try
             {
                 map = Find.CurrentMap;
                 Require(map != null, "current map");
-                WaylithPhenotypeShader.Enabled = true;
+                WaylithPhenotypeShader.Enabled = !organGarden;
                 PlantFormMesh.Enabled = formGarden;
+                OrganSpriteExperiment.Enabled = organGarden;
+                if (organGarden)
+                {
+                    var defs=DefDatabase<VarietyTraitDef>.AllDefsListForReading.Where(t=>OrganSpriteMath.Valid(t.organForm)).ToList();
+                    Require(defs.Count==5 && defs.All(t=>t.commonality==0f && TraitAppearanceCatalog.TryGet(t,out _)), "five neutral organ alleles");
+                    Require(TraitCatalogValidation.Validate(DefDatabase<VarietyTraitDef>.AllDefsListForReading).Count==0,"trait catalog validation");
+                }
                 if (formGarden)
                 {
                     var defs=DefDatabase<VarietyTraitDef>.AllDefsListForReading.Where(t=>t.plantForm!=PlantFormKind.None).ToList();
@@ -174,7 +183,7 @@ namespace HorticultureNovelSeeds
                     p.Position.x >= start.x - 7 && p.Position.x <= start.x + 22 &&
                     p.Position.z >= start.z - 7 && p.Position.z <= start.z + 16).ToArray();
                 foreach (var plant in vegetation) if (plant.Spawned) plant.Destroy(DestroyMode.Vanish);
-                if (creativeGarden || cultivarGarden || formGarden)
+                if (creativeGarden || cultivarGarden || formGarden || organGarden)
                 {
                     // Remove dropped starter supplies only from this disposable visual plot.
                     var items = map.listerThings.AllThings.Where(t => t.def.category == ThingCategory.Item &&
@@ -228,6 +237,7 @@ namespace HorticultureNovelSeeds
         {
             // Deliberate extremes of real trait definitions; no changes to trait
             // defs/settings and no claims about natural mutation eligibility.
+            if (organGarden) return col==0 ? new() : new() { Trait(OrganTraits[col-1]) };
             if (formGarden) return col==0 ? new() : row<3 ? new() { Trait(FormTraits[col-1]) } : new() { Trait(FormTraits[col-1]), Trait(FormPigments[col-1]) };
             if (cultivarGarden) return col == 0 ? new() : new() { Trait(CultivarTraits[(row / 3) * 5 + col - 1]) };
             if (creativeGarden) return col == 0 ? new() : new() { Trait(CreativeTraits[(row / 3) * 5 + col - 1]) };
@@ -252,12 +262,14 @@ namespace HorticultureNovelSeeds
             Require(registry != null, "registry");
             for (int r = 0; r < 3; r++)
             {
-                var def = (creativeGarden || cultivarGarden || formGarden) ? DefDatabase<ThingDef>.GetNamed(CreativeCrops[r]) : catalogGarden ? DefDatabase<ThingDef>.GetNamed(CatalogCrops[panel*3+r]) : Choose(patternGarden && panel == 3 && r == 1 ? "Plant_Haygrass" : SpeciesOptions[panel][r]);
+                var def = organGarden ? Choose(OrganCrops[panel*3+r]) : (creativeGarden || cultivarGarden || formGarden) ? DefDatabase<ThingDef>.GetNamed(CreativeCrops[r]) : catalogGarden ? DefDatabase<ThingDef>.GetNamed(CatalogCrops[panel*3+r]) : Choose(patternGarden && panel == 3 && r == 1 ? "Plant_Haygrass" : SpeciesOptions[panel][r]);
                 Require(HorticulturePlantPolicy.IsSupported(def), "supported garden crop");
                 if (catalogGarden || creativeGarden || cultivarGarden || formGarden) chosen.Add(def);
                 // Prewarm actual resolved masks before rendering. If shared
                 // manual or seasonal materials cannot use the experimental
                 // backend, their existing CPU path is intentionally retained.
+                if (organGarden)
+                    for(int v=0;v<PlantMaskUtility.VariationCount(def);v++) OrganSpriteExperiment.Prepare(def,v);
                 if (!patternGarden)
                     for (int v = 0; v < PlantMaskUtility.VariationCount(def); v++)
                         WaylithPhenotypeShader.PrepareMask(def, v);
@@ -311,7 +323,7 @@ namespace HorticultureNovelSeeds
                     {
                         WriteInventory();
                         onStage("GardenInventory");
-                        End("PASS", formGarden ? "36 plants; 30 genetically deformed cultivars; 15 pure morphology and 15 morphology plus pigmentation; two daylight screenshots" : cultivarGarden ? "54 plants; 15 organ-aware botanical candidates across three species; three daylight screenshots; 45 mask-free GPU cultivars" : creativeGarden ? "90 garden plants; 25 refined botanical traits across three species; five daylight screenshots; 75 mask-free GPU cultivars" : catalogGarden ? "108 garden plants; 90 baseline trait cases; six daylight screenshots; every loaded HNS appearance rule covered" : "72 garden plants, 60 registered cultivars, 12 species, four daylight screenshots");
+                        End("PASS", organGarden ? "36 plants; 30 organ-form cases; eligible components composited; uncertain organs fall back; two daylight screenshots" : formGarden ? "36 plants; 30 genetically deformed cultivars; 15 pure morphology and 15 morphology plus pigmentation; two daylight screenshots" : cultivarGarden ? "54 plants; 15 organ-aware botanical candidates across three species; three daylight screenshots; 45 mask-free GPU cultivars" : creativeGarden ? "90 garden plants; 25 refined botanical traits across three species; five daylight screenshots; 75 mask-free GPU cultivars" : catalogGarden ? "108 garden plants; 90 baseline trait cases; six daylight screenshots; every loaded HNS appearance rule covered" : "72 garden plants, 60 registered cultivars, 12 species, four daylight screenshots");
                         return;
                     }
                     foreach (var plant in current) if (plant.Spawned) plant.Destroy(DestroyMode.Vanish);
@@ -327,6 +339,8 @@ namespace HorticultureNovelSeeds
         private static string Backend(Plant p)
         {
             int id = p.thingIDNumber;
+            if (OrganSpriteExperiment.PrintedPlants.Contains(id)) return "Organ composite, original shader";
+            if (OrganSpriteExperiment.FallbackPlants.Contains(id)) return "Organ unavailable, original path";
             bool gpu = WaylithPhenotypeShader.PrintedPlants.Contains(id), cpu = legacy.Contains(id);
             if (WaylithPhenotypeShader.MaskFreeProceduralPlants.Contains(id)) return cpu ? "Mixed procedural/legacy" : "GPU procedural, no mask";
             return gpu ? (cpu ? "Mixed GPU/legacy" : WaylithPhenotypeShader.MaskedPlants.Contains(id) ? "GPU masked" : "GPU whole") :
@@ -343,7 +357,18 @@ namespace HorticultureNovelSeeds
                     string.Join(" + ",entry.Cultivar?.traits.Select(t=>TraitAppearanceCatalog.TryGet(t,out var p)?p.Motif:"External") ?? Enumerable.Empty<string>()),
                     PlantFormMesh.PrintedPlants.Contains(entry.Plant.thingIDNumber) ? "Deformed" : "Original"));
             File.WriteAllLines(Path.Combine(root,"HNS-garden-inventory.tsv"),lines);
-            Require(inventory.Count == (formGarden ? 36 : catalogGarden ? 108 : cultivarGarden ? 54 : creativeGarden ? 90 : 72) && inventory.Count(r=>r.Cultivar != null)==(formGarden ? 30 : catalogGarden ? 90 : cultivarGarden ? 45 : creativeGarden ? 75 : 60) && (catalogGarden || chosen.Count == ((creativeGarden || cultivarGarden || formGarden) ? 3 : 12)),"complete garden inventory");
+            Require(inventory.Count == (organGarden ? 36 : formGarden ? 36 : catalogGarden ? 108 : cultivarGarden ? 54 : creativeGarden ? 90 : 72) && inventory.Count(r=>r.Cultivar != null)==(organGarden ? 30 : formGarden ? 30 : catalogGarden ? 90 : cultivarGarden ? 45 : creativeGarden ? 75 : 60) && (catalogGarden || chosen.Count == (organGarden ? 6 : (creativeGarden || cultivarGarden || formGarden) ? 3 : 12)),"complete garden inventory");
+            if (organGarden)
+            {
+                File.WriteAllLines(Path.Combine(root,"HNS-garden-organ-preparation.tsv"),new[]{"Species\tVariation\tLabel\tTexture\tWidth\tHeight\tReproductive parts\tStem parts\tReproductive pixels\tStem pixels"}.Concat(OrganSpriteExperiment.Preparation));
+                var styled=inventory.Where(r=>r.Cultivar!=null).ToList();
+                Require(styled.All(r=>OrganSpriteExperiment.PrintedPlants.Contains(r.Plant.thingIDNumber)||OrganSpriteExperiment.FallbackPlants.Contains(r.Plant.thingIDNumber)),"all 30 cases explicitly accounted for");
+                Require(inventory.Where(r=>r.Cultivar==null).All(r=>Backend(r.Plant)=="Vanilla"),"six untouched controls");
+                Require(styled.Count(r=>r.Panel==1 && r.Column<6 && OrganSpriteExperiment.PrintedPlants.Contains(r.Plant.thingIDNumber))==12,"all twelve core crop reproductive variants printed");
+                Require(WaylithPhenotypeShader.MaterialCount==0 && WaylithPhenotypeShader.MaskCount==0,"no custom shader or GPU mask preparation");
+                Log.Message("[HNS Organ] rendered="+styled.Count(r=>OrganSpriteExperiment.PrintedPlants.Contains(r.Plant.thingIDNumber))+"; fallback="+styled.Count(r=>!OrganSpriteExperiment.PrintedPlants.Contains(r.Plant.thingIDNumber))+"; prepared textures="+OrganSpriteExperiment.PreparedCount+"; stem="+styled.Count(r=>r.Column==6 && OrganSpriteExperiment.PrintedPlants.Contains(r.Plant.thingIDNumber)));
+                return;
+            }
             if (catalogGarden)
             {
                 // Geometry-only traits need no texture treatment. For actual
@@ -382,6 +407,7 @@ namespace HorticultureNovelSeeds
             active = false;
             WaylithPhenotypeShader.Enabled = false;
             PlantFormMesh.Enabled = false;
+            OrganSpriteExperiment.Enabled = false;
             if (Find.TickManager != null) Find.TickManager.CurTimeSpeed = TimeSpeed.Paused;
             finish(status,message);
         }

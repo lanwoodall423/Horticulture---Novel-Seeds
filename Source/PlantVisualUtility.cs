@@ -30,6 +30,7 @@ namespace HorticultureNovelSeeds
             // Snow-overlay alignment and independently transformed mask layers
             // are deliberately outside this initial form proof.
             var form = wantSnowOverlay ? default : PlantFormMesh.Resolve(comp);
+            var organ = wantSnowOverlay || procedural || !visual.IsDefault || NovelSeedUtility.HasRegionalPlantColor(comp) ? OrganFormKind.None : OrganSpriteExperiment.Resolve(comp);
             Rand.PushState();
             Rand.Seed = plant.Position.GetHashCode();
             try
@@ -68,7 +69,12 @@ namespace HorticultureNovelSeeds
                     variationIndex = PlantMaskUtility.VariationIndexForTexture(plant.def, material?.mainTexture, variationIndex);
 
                     Vector2[] uvs = null;
-                    if (procedural || NeedsStyledMaterial(visual) || (NovelSeedUtility.HasPlantMaskVisual(comp) && PlantMaskUtility.HasActiveMasks(plant.def)))
+                    if (OrganSpriteExperiment.TryMaterial(plant,material,organ,out var organMaterial))
+                    {
+                        material=organMaterial;
+                        PlantUtility.SetWindExposureColors(WorkingColors,plant);
+                    }
+                    else if (procedural || NeedsStyledMaterial(visual) || (NovelSeedUtility.HasPlantMaskVisual(comp) && PlantMaskUtility.HasActiveMasks(plant.def)))
                     {
                         material = GetStyledMaterial(material, visual, plant, out bool preservesWind, -2, variationIndex);
                         if (preservesWind) PlantUtility.SetWindExposureColors(WorkingColors, plant);

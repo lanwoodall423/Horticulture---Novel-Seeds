@@ -109,6 +109,11 @@ namespace HorticultureNovelSeeds
             ["HNS_Rounded"] = new("Common", "A fuller middle canopy with compact rounded upper growth.", 1f, 1f, 1f, 1f, 0, 0f, 1f, 1f, 0f),
             ["HNS_Weeping"] = new("Rare", "A spreading canopy with drooping outer foliage.", 1f, 1f, 1f, 1f, 0, 0f, 1f, 1f, 0f),
             ["HNS_Spired"] = new("Rare", "A tapered, elongated upright canopy with narrow upper growth.", 1f, 1f, 1f, 1f, 0, 0f, 1f, 1f, 0f),
+            ["HNS_PlumpFruit"] = new("Rare", "Larger rounded fruit or flower structures, with the original foliage retained.", 1f, 1f, 1f, 1f, 0, 0f, 1f, 1f, 0f),
+            ["HNS_LongFruit"] = new("Uncommon", "Elongated fruit or reproductive structures.", 1f, 1f, 1f, 1f, 0, 0f, 1f, 1f, 0f),
+            ["HNS_BroadFruit"] = new("Uncommon", "Wider fruit or flower structures, leaving the canopy intact.", 1f, 1f, 1f, 1f, 0, 0f, 1f, 1f, 0f),
+            ["HNS_ClusteredFruit"] = new("Rare", "Closely overlapping reproductive lobes derived from the original art.", 1f, 1f, 1f, 1f, 0, 0f, 1f, 1f, 0f),
+            ["HNS_ThickStalk"] = new("Uncommon", "Broadened automatically identified stem tissue; unchanged when anatomy is uncertain.", 1f, 1f, 1f, 1f, 0, 0f, 1f, 1f, 0f),
         };
 
         internal static bool TryGet(VarietyTraitDef trait, out Profile profile)
