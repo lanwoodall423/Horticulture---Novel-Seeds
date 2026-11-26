@@ -62,7 +62,12 @@ namespace HorticultureNovelSeeds
         }
         internal static bool CompatibleVisual(CompPlantVariety c,PlantVisualParameters v)
         {
-            if(!CanAttempt(c)||NovelSeedUtility.HasRegionalPlantColor(c)||NovelSeedUtility.HasPlantMaskVisual(c))return false;
+            var functional=FunctionalCues(c);
+            // Catalog defaults can set whole-sprite brightness/saturation
+            // and therefore appear in the generic mask-color query. Only
+            // bypass that query for the fully qualified no-override group;
+            // real regional coloration and all custom overrides still defer.
+            if(!CanAttempt(c)||NovelSeedUtility.HasRegionalPlantColor(c)||functional==0&&NovelSeedUtility.HasPlantMaskVisual(c))return false;
             // Geometry is already applied by the native plane construction.
             // Never discard legacy texture/overlay coloration or custom masks.
             v.scale=v.width=v.height=v.density=v.spread=v.shadowScale=1f;
@@ -70,7 +75,7 @@ namespace HorticultureNovelSeeds
             // Retain the native geometry of existing gameplay traits. Replace
             // only their default catalog brightness/saturation with the new
             // anatomical cue; explicit user visual overrides are excluded.
-            if(FunctionalCues(c)!=0){v.brightness=v.saturation=1f;}
+            if(functional!=0){v.brightness=v.saturation=1f;}
             return v.IsDefault;
         }
         internal static void Request(Plant p)

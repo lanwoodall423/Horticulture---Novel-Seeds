@@ -158,7 +158,11 @@ namespace HorticultureNovelSeeds
             {
                 age++;Redraw();
                 if(Find.WindowStack.TryRemove(typeof(EditWindow_Log),false)){age=0;Redraw();return;}
-                Require(age<2600,"adaptive stage timeout "+phase+" states "+string.Join(";",plants.Select(p=>p.thingIDNumber+":"+(BotanicalExpressionEngine.Prints.TryGetValue(p.thingIDNumber,out var pr)?pr.Function.Cues+":"+pr.Band+":"+pr.Function.Blocked+":"+pr.Function.Regrown:"fallback"))));
+                if(age>=2600)
+                {
+                    var states=plants.Select(p=>{var c=Comp(p);return p.thingIDNumber+":"+(BotanicalExpressionEngine.Prints.TryGetValue(p.thingIDNumber,out var pr)?pr.Function.Cues+":"+pr.Band+":"+pr.Function.Blocked+":"+pr.Function.Regrown:"fallback/eligible="+BotanicalExpressionEngine.CanAttempt(c)+"/compatible="+BotanicalExpressionEngine.CompatibleVisual(c,NovelSeedUtility.ResolveVisualParameters(c))+"/cues="+BotanicalExpressionEngine.FunctionalCues(c));});
+                    throw new InvalidOperationException("adaptive timeout "+phase+" states "+string.Join(";",states)+"; jobs="+BotanicalExpressionEngine.PrepareJobs+"; sources="+BotanicalExpressionEngine.SourceCount+"; materials="+BotanicalExpressionEngine.MaterialCount);
+                }
                 if(phase==0)
                 {
                     if(!Ready()||!Capture("01-young"))return;
