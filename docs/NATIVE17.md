@@ -1233,3 +1233,28 @@ Legacy 1.6 data unchanged. The separate historical frost/recovery/wind/seasonal
 extensions are not included in this commit.
 
 Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/522f51061b4bdbc0ecc8fb544c19ce8fc5ddc03f
+
+### Native Phenotype inspector tab
+
+The renderer-backed Field notes now appear in a native
+ITab_PlantPhenotype beside Cultivar. The old modal, gizmo and long
+inspect-string paragraph are removed. The tab uses native typography,
+labeled reference species art, a maturity meter, botanical region
+accents, three recorded growth-history diagrams and separately authorized
+cultivar potential. It resets scrolling on selection changes and
+preserves the game UI font, color and anchor states. No new save data.
+
+Native Chronicle Garden d6211ef28f71400fa45cc17a12fb0bc4, source
+18dc0591425354e9ee9d314c83d0fb987d8db0f9: all eight stages passed.
+90 plants, 75 historical morphologies, 225 growth observations, 75 Scribe
+value checks. The actual native inspector tab was selected and its
+repaint verified against a real corn specimen with three history samples.
+Both builds and rule tests passed; normal saves/preferences/config
+unchanged and temporary test package/process removed.
+
+Other renderer paths share the same tab, but UI-specific native
+verification here covers the Chronicle garden. Reference art is not an
+individual portrait. Other UI scales and translated body text remain
+unqualified. Legacy 1.6 assembly untouched (shared English key added).
+
+Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/dd3fc1bb88533839732ba8cc9e4603639218279d
