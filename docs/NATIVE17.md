@@ -392,3 +392,52 @@ Catalog SHA256: 4DBFEEB2B5EC1922C9BA8B83E9B8A63F311EECBA55DE7822C5B21EA6EEB09449
 Reproduce with RimWorld closed:
 
     powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -CatalogGarden
+
+## Creative phenotype prototypes (2026-11-25)
+
+Owner approved a second creativity pass before auditing existing and proposed
+traits. Commit 1ee47312928b75fbd950ca531a366977dba1a464 adds 20 zero-default-
+weight cosmetic genetic candidates, using stable shader modes 16 through 35;
+existing modes, genetics, mechanical values and mutation weights are retained.
+The traits are Velvetleaf, Lacquered, Dustbloom, Silvered, Halo-Edged, Netveined,
+Tigerstriped, Marbled, Opaline, Crystalline, Bioluminescent, Nebula Mottle,
+Coralbranch, Prismatic, Saltbloom, Ashen, Boggloss, Waxbound, Peatstained and
+Scorched Margins. Artistic tiers and intensities remain provisional.
+All effects are deterministic static, opaque surface illusions: no actual
+light emission, changing view-dependent iridescence, animated materials,
+physical mineral geometry, translucency or new environmental mechanics.
+Existing fallback and experimental activation remain unchanged.
+
+RimWorld 1.7.5014 rev1195, native AllPerformance run
+4ff1cbbf51664e3994dc11de929aad8c: all seven stages passed. All 20 candidates
+were assigned to actual single-trait cultivars on corn, cotton and strawberry.
+72 plants, 12 vanilla controls, all 60 styled cultivars used mask-free GPU
+rendering. 60 cached materials and zero prepared masks. Startup automatic
+classifier still generated 87 variations, unused by the creative garden.
+Four actual screenshots at local noon, sky glow 1. The creative fixture also
+clears dropped supplies inside the disposable test plot. No relevant HNS
+errors identified in captured log. Catalog validation passed in fixture,
+ordinary and fixture builds clean, all 12 journal rule tests passed.
+All normal player preservation and test cleanup booleans true.
+
+Gallery, enlarged screenshot crops, untouched raw screenshots and exact
+per-plant genetics/renderer inventory:
+https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/89ae5b148f03a7cfb494e49b1ebc4a89ef38e22b
+
+Tigerstriped, Crystalline, Nebula Mottle, Coralbranch and Prismatic are
+particularly distinct in the captures. Subtler finishes remain candidates
+for refinement or reuse as existing-trait motifs. Crops and scaling are
+presentation only, no source plant pixels retouched. Visual review is not
+a performance, breeding, produce, editor, seasonal or production-renderer
+qualification. Prior CatalogGarden samples the 90 baseline cases and checks
+coverage of loaded definitions; the new candidates are covered by CreativeGarden
+rather than extending that run past its existing bounded material cache.
+
+DLL SHA256: A16BA31BC4BED63BCFB5FBB58B038F4EDCC80176C62CDD4A11A903E58E1A6B9D.
+Receipt SHA256: 197775B26CD9624E95CA312016CA55395257CA0B2CDD1E16FF6A71EDA76E9C54.
+Player log SHA256: 2BD2901FA7AE831534BC1B2F8B89795BEAB5C5B82493A7F5FCC5A213D884FD26.
+Inventory SHA256: FEED7511C2C122DD4404C200F2B8FAE731018B16431C4BC74AD74C6AA1984AF2.
+
+Reproduce with RimWorld closed:
+
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -CreativeGarden
