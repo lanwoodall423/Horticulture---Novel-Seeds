@@ -1464,3 +1464,25 @@ dismissal, exact specimen portraits, complete Breeding Studio and lineage/
 chronicle improvements remain pending. Existing 1.6 release untouched.
 
 Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/87708b313574ea45c8b1f99b8a2e6b5080695ede
+
+### Adaptive Cultivation: first gameplay-linked phenotype slice
+
+Source 6ae45a0, native run 384e8ba8c9e049f5999c25cb6cf0f206,
+AllPerformance, all six stages PASS. Five cue families: source-derived
+fuller reproductive structures (High-Yield), silvery and warm wax-like
+foliage (thermal adaptations), resource gate-driven reversible ochre
+margins, and existing harvest-cycle-driven perennial tissue coloration.
+Native mesh/texture preparation preserves original occupied pixels;
+functional state is composed with ornamental channels, bounded by existing
+cache limits. Actual resource delivery clears growth gate and visual cue;
+actual perennial harvest retains same plant at 30% growth and cycle 1.
+15 plants, 75 observations, 64 native readbacks, six native screenshots,
+five GIFs. Documented phenotype explanation, undisclosed genotype
+preserved. Both build variants and regression tests passed in development.
+Two initial fixture attempts exposed legacy fallback-color compatibility;
+final qualified no-override group accepts default tint/brightness/saturation
+without overriding explicit visual customization. Opt-in beta remains;
+no new gameplay modifiers or serialized fields, new cue save/reload,
+broader compatibility, breeding budget and performance still unqualified.
+Normal config/prefs/saves unchanged, owned process and package removed.
+Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/e3c897f27f356c7d0d48fb4d17f58fbf4b964151

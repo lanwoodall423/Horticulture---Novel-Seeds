@@ -32,6 +32,26 @@ It remains opt-in. Do not interpret this as universal renderer, migration,
 performance or release qualification. The 1.6 release baseline is unchanged.
 
 
+
+## Adaptive Cultivation gameplay integration (2026-11-26)
+
+- First gameplay-linked visual slice: five cue families (High-Yield, cold
+  resistance, heat resistance, resource-dependent, perennial), composed
+  with existing visual traits under the opt-in Botanical Expression beta.
+  Native six-stage pass: corn/cotton; real resource payment, actual
+  perennial harvest, documented phenotype explanation; 64 GPU previews
+  and six map/UI screenshots. No changes to underlying gameplay stats.
+  [Proof GIFs and receipt](https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/e3c897f27f356c7d0d48fb4d17f58fbf4b964151).
+- Next: independently balance ornamental inheritance slots; design
+  Breeding Studio and accurate spatial donor overlay using existing
+  sowing/eligibility rules; add comparative cultivation records and
+  connect environmental/historical observations. Test natural breeding
+  probabilities and mixed gameplay/appearance combinations before
+  promoting further traits. Keep existing gameplay authority, unknown
+  discoveries, and explicit player visual overrides intact.
+- Gates remaining: new cue save/reload, daylily and wider species, visual
+  override and large-field stress tests, full progression balance.
+  Do not enable the beta by default on this evidence.
 ## 1. Product direction and decisions
 
 Horticulture is a plant genetics, cultivation, and visual phenotype mod. Its core loop is growing plants, encountering unusual variation, preserving novel seeds, naming cultivars, and breeding plants with desirable combinations of traits. Keep that loop accessible through ordinary RimWorld farming rather than introducing seed-stack micromanagement or a generalized knowledge simulation.
