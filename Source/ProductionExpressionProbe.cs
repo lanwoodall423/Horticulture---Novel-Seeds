@@ -276,24 +276,28 @@ namespace HorticultureNovelSeeds
         private static void SaveReload()
         {
             active=false;AwaitingReload=true;saveName="HNS-Expression-"+run;
+            Log.Message("[HNS Expression] Queueing full isolated colony save; no GUI repaint dependency");
             LongEventHandler.QueueLongEvent(()=>
             {
                 try
                 {
                     string path=Path.GetFullPath(GenFilePaths.FilePathForSavedGame(saveName));
                     Require(path.StartsWith(Path.GetFullPath(root).TrimEnd(Path.DirectorySeparatorChar)+Path.DirectorySeparatorChar,StringComparison.OrdinalIgnoreCase)&&!File.Exists(path),"isolated save path");
+                    Log.Message("[HNS Expression] Save routine entered");
                     GameDataSaveLoader.SaveGame(saveName);Require(File.Exists(path)&&new FileInfo(path).Length>0,"full colony save created");
                     File.WriteAllText(Path.Combine(root,"HNS-garden-production-save.txt"),"Saved bytes: "+new FileInfo(path).Length+"\nSHA256: "+Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(File.ReadAllBytes(path))));
+                    Log.Message("[HNS Expression] Save complete bytes="+new FileInfo(path).Length);
                     BotanicalExpressionEngine.ClearPending();BotanicalExpressionEngine.Prints.Clear();BotanicalExpressionEngine.MeshPayload.Clear();
-                    LongEventHandler.ExecuteWhenFinished(()=>{try{GameDataSaveLoader.LoadGame(saveName);}catch(Exception e){Fail(e);}});
+                    LongEventHandler.ExecuteWhenFinished(()=>{try{Log.Message("[HNS Expression] Starting normal load routine");GameDataSaveLoader.LoadGame(saveName);}catch(Exception e){Fail(e);}});
                 }
                 catch(Exception e){Fail(e);}
-            },"SavingLongEvent",false,null);
+            },null,false,null,forceHideUI:true);
         }
         internal static void AfterReload()
         {
             try
             {
+                Log.Message("[HNS Expression] LoadedGame callback reached");
                 AwaitingReload=false;
                 Require(Path.GetFullPath(GenFilePaths.SaveDataFolderPath).TrimEnd(Path.DirectorySeparatorChar).Equals(Path.GetFullPath(root).TrimEnd(Path.DirectorySeparatorChar),StringComparison.OrdinalIgnoreCase),"actual reload isolation");
                 map=Find.CurrentMap;Require(map!=null,"reloaded current map");
