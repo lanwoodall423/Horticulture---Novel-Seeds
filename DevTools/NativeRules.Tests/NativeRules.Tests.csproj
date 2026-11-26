@@ -13,5 +13,6 @@
     <Compile Include="../../Source/WindHabitMath.cs" Link="WindHabitMath.cs" />
     <Compile Include="../../Source/SurfaceFinishMath.cs" Link="SurfaceFinishMath.cs" />
     <Compile Include="../../Source/BotanicalDetailMath.cs" Link="BotanicalDetailMath.cs" />
+    <Compile Include="../../Source/CanopyArchitectureMath.cs" Link="CanopyArchitectureMath.cs" />
   </ItemGroup>
 </Project>

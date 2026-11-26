@@ -830,4 +830,60 @@
     <exclusionTags><li>botanicalDetail</li></exclusionTags>
     <botanicalDetail>LanternBuds</botanicalDetail>
   </HorticultureNovelSeeds.VarietyTraitDef>
+  <!-- Experimental modular canopy architecture. -->
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_ForkedCrown</defName>
+    <label>Forked Crown</label>
+    <description>Two broad, diverging foliage crowns above the original growth.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>canopyArchitecture</li></exclusionTags>
+    <canopyArchitecture>ForkedCrown</canopyArchitecture>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_TieredCanopy</defName>
+    <label>Tiered Canopy</label>
+    <description>Overlapping tiers of foliage with a dense upper canopy.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>canopyArchitecture</li></exclusionTags>
+    <canopyArchitecture>TieredCanopy</canopyArchitecture>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_SpreadingRosette</defName>
+    <label>Spreading Rosette</label>
+    <description>Low, outward-growing leafy structures around the original plant.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>canopyArchitecture</li></exclusionTags>
+    <canopyArchitecture>SpreadingRosette</canopyArchitecture>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_FlowerSpray</defName>
+    <label>Flower Spray</label>
+    <description>Additional leafy sprays carrying blossoms or fruit derived from the original artwork.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>canopyArchitecture</li></exclusionTags>
+    <canopyArchitecture>FlowerSpray</canopyArchitecture>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_AbundantClusters</defName>
+    <label>Abundant Clusters</label>
+    <description>Additional reproductive structures distributed on existing foliage.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>canopyArchitecture</li></exclusionTags>
+    <canopyArchitecture>AbundantClusters</canopyArchitecture>
+  </HorticultureNovelSeeds.VarietyTraitDef>
 </Defs>

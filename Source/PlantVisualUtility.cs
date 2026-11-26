@@ -32,8 +32,9 @@ namespace HorticultureNovelSeeds
             // Snow-overlay alignment and independently transformed mask layers
             // are deliberately outside this initial form proof.
             var form = wantSnowOverlay ? default : PlantFormMesh.Resolve(comp);
-            var detail=wantSnowOverlay||procedural||wind||surface||!visual.IsDefault||NovelSeedUtility.HasRegionalPlantColor(comp)||form.Valid?BotanicalDetailKind.None:BotanicalDetailExperiment.Resolve(comp);
-            var organ = detail!=BotanicalDetailKind.None || wantSnowOverlay || procedural || wind || surface || !visual.IsDefault || NovelSeedUtility.HasRegionalPlantColor(comp) ? OrganFormKind.None : OrganSpriteExperiment.Resolve(comp);
+            var architecture=wantSnowOverlay||procedural||wind||surface||!visual.IsDefault||NovelSeedUtility.HasRegionalPlantColor(comp)||form.Valid||plant.Growth<.8f||plant.def.plant.maxMeshCount!=1?CanopyArchitectureKind.None:CanopyArchitectureExperiment.Resolve(comp);
+            var detail=architecture!=CanopyArchitectureKind.None||wantSnowOverlay||procedural||wind||surface||!visual.IsDefault||NovelSeedUtility.HasRegionalPlantColor(comp)||form.Valid?BotanicalDetailKind.None:BotanicalDetailExperiment.Resolve(comp);
+            var organ = architecture!=CanopyArchitectureKind.None || detail!=BotanicalDetailKind.None || wantSnowOverlay || procedural || wind || surface || !visual.IsDefault || NovelSeedUtility.HasRegionalPlantColor(comp) ? OrganFormKind.None : OrganSpriteExperiment.Resolve(comp);
             Rand.PushState();
             Rand.Seed = plant.Position.GetHashCode();
             try
@@ -94,6 +95,7 @@ namespace HorticultureNovelSeeds
 
                     PlantFormMesh.Print(plant, layer, adjustedCenter, planeSize, material, rotation, flipped, uvs, WorkingColors, Plant.TopVerticesAltitudeBias, plant.HashOffset() % 1024, form);
                     BotanicalDetailExperiment.PrintGlow(plant,layer,originalMaterial,detail,adjustedCenter,planeSize,rotation,flipped,WorkingColors);
+                    CanopyArchitectureExperiment.Print(plant,layer,originalMaterial,architecture,adjustedCenter,planeSize,rotation,flipped,WorkingColors);
 
                     if (wantSnowOverlay && snowMaterial != null)
                     {

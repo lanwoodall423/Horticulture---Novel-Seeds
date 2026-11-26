@@ -114,3 +114,20 @@ Require(SurfaceFinishMath.Environment(.5f,1f,.01f).Rain==.03125f,"quantized weat
     Require(BotanicalDetailMath.Edit(new OrganSpriteMath.Pixel[w*h],w,h,BotanicalDetailKind.SideShoots).Added==0,"no floating shoots on empty art");
     Require(BotanicalDetailMath.Darkness(1f)==0f&&BotanicalDetailMath.Darkness(.1f)==1f&&BotanicalDetailMath.Darkness(float.NaN)==0f,"day/night emission bounded");
 }
+
+{
+    const int n=64;var p=new OrganSpriteMath.Pixel[n*n];
+    var green=new OrganSpriteMath.Pixel(40,145,48,255);var red=new OrganSpriteMath.Pixel(196,40,38,255);
+    for(int y=12;y<50;y++)for(int x=18;x<46;x++)p[y*n+x]=green;
+    for(int y=32;y<38;y++)for(int x=29;x<35;x++)p[y*n+x]=red;
+    var parts=CanopyArchitectureMath.Extract(p,n,n);
+    Require(parts?.Leaves!=null&&parts.Fruit!=null&&parts.Anchors.Length>=3,"separate reusable canopy and fruit modules");
+    Require(parts.Leaves.Pixels.All(v=>v!=red)&&parts.Fruit.Pixels.Any(v=>v==red),"organ-specific source modules");
+    foreach(var k in Enum.GetValues<CanopyArchitectureKind>().Where(CanopyArchitectureMath.Valid))
+    {
+        var recipe=CanopyArchitectureMath.Recipe(k,parts);
+        Require(recipe.Length>=2&&recipe.Length<=5&&recipe.All(a=>a.X>=0f&&a.X<=1f&&a.Y>=0f&&a.Y<=1.1f&&a.Scale>0f&&a.Scale<=1.3f&&Math.Abs(a.Angle)<=60f),k+" bounded modular arrangement");
+    }
+    Require(CanopyArchitectureMath.Extract(new OrganSpriteMath.Pixel[n*n],n,n)==null,"no modules on empty sprite");
+    Require(CanopyArchitectureMath.Recipe(CanopyArchitectureKind.FlowerSpray,parts with {Fruit=null}).Length==0,"missing fruit falls back");
+}
