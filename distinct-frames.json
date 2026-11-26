@@ -1,0 +1,302 @@
+[
+  {
+    "effect": "Banyan Props",
+    "species": "Plant_Corn",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Banyan Props",
+    "species": "Plant_Cotton",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Banyan Props",
+    "species": "Plant_Daylily",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Candelabra Tips",
+    "species": "Plant_Corn",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Candelabra Tips",
+    "species": "Plant_Cotton",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Candelabra Tips",
+    "species": "Plant_Daylily",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Stolon Daughters",
+    "species": "Plant_Corn",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Stolon Daughters",
+    "species": "Plant_Cotton",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Stolon Daughters",
+    "species": "Plant_Daylily",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Braided Leaders",
+    "species": "Plant_Corn",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Braided Leaders",
+    "species": "Plant_Cotton",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Braided Leaders",
+    "species": "Plant_Daylily",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Winged Petioles",
+    "species": "Plant_Corn",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Winged Petioles",
+    "species": "Plant_Cotton",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Winged Petioles",
+    "species": "Plant_Daylily",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Pitcher Leaves",
+    "species": "Plant_Corn",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Pitcher Leaves",
+    "species": "Plant_Cotton",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Pitcher Leaves",
+    "species": "Plant_Daylily",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Hooded Spathes",
+    "species": "Plant_Corn",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Hooded Spathes",
+    "species": "Plant_Cotton",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Hooded Spathes",
+    "species": "Plant_Daylily",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Epiphyllous Bloom",
+    "species": "Plant_Corn",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Epiphyllous Bloom",
+    "species": "Plant_Cotton",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Epiphyllous Bloom",
+    "species": "Plant_Daylily",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Scale Phyllotaxis",
+    "species": "Plant_Corn",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Scale Phyllotaxis",
+    "species": "Plant_Cotton",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Scale Phyllotaxis",
+    "species": "Plant_Daylily",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Serrated Lamina",
+    "species": "Plant_Corn",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Serrated Lamina",
+    "species": "Plant_Cotton",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Serrated Lamina",
+    "species": "Plant_Daylily",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Dehiscent Capsules",
+    "species": "Plant_Corn",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Dehiscent Capsules",
+    "species": "Plant_Cotton",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Dehiscent Capsules",
+    "species": "Plant_Daylily",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Winged Samaras",
+    "species": "Plant_Corn",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Winged Samaras",
+    "species": "Plant_Cotton",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Winged Samaras",
+    "species": "Plant_Daylily",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Anther Emergence",
+    "species": "Plant_Corn",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Anther Emergence",
+    "species": "Plant_Cotton",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Anther Emergence",
+    "species": "Plant_Daylily",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Petaloid Doubling",
+    "species": "Plant_Corn",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Petaloid Doubling",
+    "species": "Plant_Cotton",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Petaloid Doubling",
+    "species": "Plant_Daylily",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Seed Shedding",
+    "species": "Plant_Corn",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Seed Shedding",
+    "species": "Plant_Cotton",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Seed Shedding",
+    "species": "Plant_Daylily",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Prismatic Lamina",
+    "species": "Plant_Corn",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Prismatic Lamina",
+    "species": "Plant_Cotton",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Prismatic Lamina",
+    "species": "Plant_Daylily",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Rolling Lamina",
+    "species": "Plant_Corn",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Rolling Lamina",
+    "species": "Plant_Cotton",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Rolling Lamina",
+    "species": "Plant_Daylily",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Amber Resin",
+    "species": "Plant_Corn",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Amber Resin",
+    "species": "Plant_Cotton",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Amber Resin",
+    "species": "Plant_Daylily",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Exfoliating Bark",
+    "species": "Plant_Corn",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Exfoliating Bark",
+    "species": "Plant_Cotton",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Exfoliating Bark",
+    "species": "Plant_Daylily",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Self-Shadow Lace",
+    "species": "Plant_Corn",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Self-Shadow Lace",
+    "species": "Plant_Cotton",
+    "unique_frames": 9
+  },
+  {
+    "effect": "Self-Shadow Lace",
+    "species": "Plant_Daylily",
+    "unique_frames": 9
+  }
+]

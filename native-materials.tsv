@@ -1,0 +1,541 @@
+Frame	Species	Column	Plant ID	Trait	Mode	Material ID	Atlas width	Atlas height	Phase	Native wind head	Description
+1	Plant_Corn	2	17967	BanyanProps	26	-16529	288	288	0	0	This specimen displays lateral branches with descending aerial support roots.
+1	Plant_Corn	3	17968	CandelabraTips	27	-16547	288	288	0	0	This specimen displays candelabra-like upright branch tips.
+1	Plant_Corn	4	17969	StolonDaughters	28	-16549	288	288	0	0	This specimen displays creeping stolons with miniature daughter rosettes.
+1	Plant_Corn	5	17970	BraidedLeaders	29	-16551	288	288	0	0	This specimen displays paired intertwining leafy leaders.
+1	Plant_Corn	6	17971	WingedPetioles	30	-16553	288	288	0	0	This specimen displays winged petioles with paired leaf blades.
+1	Plant_Cotton	2	17973	BanyanProps	26	-16527	288	288	0	0	This specimen displays lateral branches with descending aerial support roots.
+1	Plant_Cotton	3	17974	CandelabraTips	27	-16539	288	288	0	0	This specimen displays candelabra-like upright branch tips.
+1	Plant_Cotton	4	17975	StolonDaughters	28	-16541	288	288	0	0	This specimen displays creeping stolons with miniature daughter rosettes.
+1	Plant_Cotton	5	17976	BraidedLeaders	29	-16543	288	288	0	0	This specimen displays paired intertwining leafy leaders.
+1	Plant_Cotton	6	17977	WingedPetioles	30	-16545	288	288	0	0	This specimen displays winged petioles with paired leaf blades.
+1	Plant_Daylily	2	17979	BanyanProps	26	-16525	288	288	0	0	This specimen displays lateral branches with descending aerial support roots.
+1	Plant_Daylily	3	17980	CandelabraTips	27	-16531	288	288	0	0	This specimen displays candelabra-like upright branch tips.
+1	Plant_Daylily	4	17981	StolonDaughters	28	-16533	288	288	0	0	This specimen displays creeping stolons with miniature daughter rosettes.
+1	Plant_Daylily	5	17982	BraidedLeaders	29	-16535	288	288	0	0	This specimen displays paired intertwining leafy leaders.
+1	Plant_Daylily	6	17983	WingedPetioles	30	-16537	288	288	0	0	This specimen displays winged petioles with paired leaf blades.
+2	Plant_Corn	2	17967	BanyanProps	26	-16529	288	288	0.125	0	This specimen displays lateral branches with descending aerial support roots.
+2	Plant_Corn	3	17968	CandelabraTips	27	-16547	288	288	0.125	0	This specimen displays candelabra-like upright branch tips.
+2	Plant_Corn	4	17969	StolonDaughters	28	-16549	288	288	0.125	0	This specimen displays creeping stolons with miniature daughter rosettes.
+2	Plant_Corn	5	17970	BraidedLeaders	29	-16551	288	288	0.125	0	This specimen displays paired intertwining leafy leaders.
+2	Plant_Corn	6	17971	WingedPetioles	30	-16553	288	288	0.125	0	This specimen displays winged petioles with paired leaf blades.
+2	Plant_Cotton	2	17973	BanyanProps	26	-16527	288	288	0.125	0	This specimen displays lateral branches with descending aerial support roots.
+2	Plant_Cotton	3	17974	CandelabraTips	27	-16539	288	288	0.125	0	This specimen displays candelabra-like upright branch tips.
+2	Plant_Cotton	4	17975	StolonDaughters	28	-16541	288	288	0.125	0	This specimen displays creeping stolons with miniature daughter rosettes.
+2	Plant_Cotton	5	17976	BraidedLeaders	29	-16543	288	288	0.125	0	This specimen displays paired intertwining leafy leaders.
+2	Plant_Cotton	6	17977	WingedPetioles	30	-16545	288	288	0.125	0	This specimen displays winged petioles with paired leaf blades.
+2	Plant_Daylily	2	17979	BanyanProps	26	-16525	288	288	0.125	0	This specimen displays lateral branches with descending aerial support roots.
+2	Plant_Daylily	3	17980	CandelabraTips	27	-16531	288	288	0.125	0	This specimen displays candelabra-like upright branch tips.
+2	Plant_Daylily	4	17981	StolonDaughters	28	-16533	288	288	0.125	0	This specimen displays creeping stolons with miniature daughter rosettes.
+2	Plant_Daylily	5	17982	BraidedLeaders	29	-16535	288	288	0.125	0	This specimen displays paired intertwining leafy leaders.
+2	Plant_Daylily	6	17983	WingedPetioles	30	-16537	288	288	0.125	0	This specimen displays winged petioles with paired leaf blades.
+3	Plant_Corn	2	17967	BanyanProps	26	-16529	288	288	0.25	0	This specimen displays lateral branches with descending aerial support roots.
+3	Plant_Corn	3	17968	CandelabraTips	27	-16547	288	288	0.25	0	This specimen displays candelabra-like upright branch tips.
+3	Plant_Corn	4	17969	StolonDaughters	28	-16549	288	288	0.25	0	This specimen displays creeping stolons with miniature daughter rosettes.
+3	Plant_Corn	5	17970	BraidedLeaders	29	-16551	288	288	0.25	0	This specimen displays paired intertwining leafy leaders.
+3	Plant_Corn	6	17971	WingedPetioles	30	-16553	288	288	0.25	0	This specimen displays winged petioles with paired leaf blades.
+3	Plant_Cotton	2	17973	BanyanProps	26	-16527	288	288	0.25	0	This specimen displays lateral branches with descending aerial support roots.
+3	Plant_Cotton	3	17974	CandelabraTips	27	-16539	288	288	0.25	0	This specimen displays candelabra-like upright branch tips.
+3	Plant_Cotton	4	17975	StolonDaughters	28	-16541	288	288	0.25	0	This specimen displays creeping stolons with miniature daughter rosettes.
+3	Plant_Cotton	5	17976	BraidedLeaders	29	-16543	288	288	0.25	0	This specimen displays paired intertwining leafy leaders.
+3	Plant_Cotton	6	17977	WingedPetioles	30	-16545	288	288	0.25	0	This specimen displays winged petioles with paired leaf blades.
+3	Plant_Daylily	2	17979	BanyanProps	26	-16525	288	288	0.25	0	This specimen displays lateral branches with descending aerial support roots.
+3	Plant_Daylily	3	17980	CandelabraTips	27	-16531	288	288	0.25	0	This specimen displays candelabra-like upright branch tips.
+3	Plant_Daylily	4	17981	StolonDaughters	28	-16533	288	288	0.25	0	This specimen displays creeping stolons with miniature daughter rosettes.
+3	Plant_Daylily	5	17982	BraidedLeaders	29	-16535	288	288	0.25	0	This specimen displays paired intertwining leafy leaders.
+3	Plant_Daylily	6	17983	WingedPetioles	30	-16537	288	288	0.25	0	This specimen displays winged petioles with paired leaf blades.
+4	Plant_Corn	2	17967	BanyanProps	26	-16529	288	288	0.375	0	This specimen displays lateral branches with descending aerial support roots.
+4	Plant_Corn	3	17968	CandelabraTips	27	-16547	288	288	0.375	0	This specimen displays candelabra-like upright branch tips.
+4	Plant_Corn	4	17969	StolonDaughters	28	-16549	288	288	0.375	0	This specimen displays creeping stolons with miniature daughter rosettes.
+4	Plant_Corn	5	17970	BraidedLeaders	29	-16551	288	288	0.375	0	This specimen displays paired intertwining leafy leaders.
+4	Plant_Corn	6	17971	WingedPetioles	30	-16553	288	288	0.375	0	This specimen displays winged petioles with paired leaf blades.
+4	Plant_Cotton	2	17973	BanyanProps	26	-16527	288	288	0.375	0	This specimen displays lateral branches with descending aerial support roots.
+4	Plant_Cotton	3	17974	CandelabraTips	27	-16539	288	288	0.375	0	This specimen displays candelabra-like upright branch tips.
+4	Plant_Cotton	4	17975	StolonDaughters	28	-16541	288	288	0.375	0	This specimen displays creeping stolons with miniature daughter rosettes.
+4	Plant_Cotton	5	17976	BraidedLeaders	29	-16543	288	288	0.375	0	This specimen displays paired intertwining leafy leaders.
+4	Plant_Cotton	6	17977	WingedPetioles	30	-16545	288	288	0.375	0	This specimen displays winged petioles with paired leaf blades.
+4	Plant_Daylily	2	17979	BanyanProps	26	-16525	288	288	0.375	0	This specimen displays lateral branches with descending aerial support roots.
+4	Plant_Daylily	3	17980	CandelabraTips	27	-16531	288	288	0.375	0	This specimen displays candelabra-like upright branch tips.
+4	Plant_Daylily	4	17981	StolonDaughters	28	-16533	288	288	0.375	0	This specimen displays creeping stolons with miniature daughter rosettes.
+4	Plant_Daylily	5	17982	BraidedLeaders	29	-16535	288	288	0.375	0	This specimen displays paired intertwining leafy leaders.
+4	Plant_Daylily	6	17983	WingedPetioles	30	-16537	288	288	0.375	0	This specimen displays winged petioles with paired leaf blades.
+5	Plant_Corn	2	17967	BanyanProps	26	-16529	288	288	0.5	0	This specimen displays lateral branches with descending aerial support roots.
+5	Plant_Corn	3	17968	CandelabraTips	27	-16547	288	288	0.5	0	This specimen displays candelabra-like upright branch tips.
+5	Plant_Corn	4	17969	StolonDaughters	28	-16549	288	288	0.5	0	This specimen displays creeping stolons with miniature daughter rosettes.
+5	Plant_Corn	5	17970	BraidedLeaders	29	-16551	288	288	0.5	0	This specimen displays paired intertwining leafy leaders.
+5	Plant_Corn	6	17971	WingedPetioles	30	-16553	288	288	0.5	0	This specimen displays winged petioles with paired leaf blades.
+5	Plant_Cotton	2	17973	BanyanProps	26	-16527	288	288	0.5	0	This specimen displays lateral branches with descending aerial support roots.
+5	Plant_Cotton	3	17974	CandelabraTips	27	-16539	288	288	0.5	0	This specimen displays candelabra-like upright branch tips.
+5	Plant_Cotton	4	17975	StolonDaughters	28	-16541	288	288	0.5	0	This specimen displays creeping stolons with miniature daughter rosettes.
+5	Plant_Cotton	5	17976	BraidedLeaders	29	-16543	288	288	0.5	0	This specimen displays paired intertwining leafy leaders.
+5	Plant_Cotton	6	17977	WingedPetioles	30	-16545	288	288	0.5	0	This specimen displays winged petioles with paired leaf blades.
+5	Plant_Daylily	2	17979	BanyanProps	26	-16525	288	288	0.5	0	This specimen displays lateral branches with descending aerial support roots.
+5	Plant_Daylily	3	17980	CandelabraTips	27	-16531	288	288	0.5	0	This specimen displays candelabra-like upright branch tips.
+5	Plant_Daylily	4	17981	StolonDaughters	28	-16533	288	288	0.5	0	This specimen displays creeping stolons with miniature daughter rosettes.
+5	Plant_Daylily	5	17982	BraidedLeaders	29	-16535	288	288	0.5	0	This specimen displays paired intertwining leafy leaders.
+5	Plant_Daylily	6	17983	WingedPetioles	30	-16537	288	288	0.5	0	This specimen displays winged petioles with paired leaf blades.
+6	Plant_Corn	2	17967	BanyanProps	26	-16529	288	288	0.625	0	This specimen displays lateral branches with descending aerial support roots.
+6	Plant_Corn	3	17968	CandelabraTips	27	-16547	288	288	0.625	0	This specimen displays candelabra-like upright branch tips.
+6	Plant_Corn	4	17969	StolonDaughters	28	-16549	288	288	0.625	0	This specimen displays creeping stolons with miniature daughter rosettes.
+6	Plant_Corn	5	17970	BraidedLeaders	29	-16551	288	288	0.625	0	This specimen displays paired intertwining leafy leaders.
+6	Plant_Corn	6	17971	WingedPetioles	30	-16553	288	288	0.625	0	This specimen displays winged petioles with paired leaf blades.
+6	Plant_Cotton	2	17973	BanyanProps	26	-16527	288	288	0.625	0	This specimen displays lateral branches with descending aerial support roots.
+6	Plant_Cotton	3	17974	CandelabraTips	27	-16539	288	288	0.625	0	This specimen displays candelabra-like upright branch tips.
+6	Plant_Cotton	4	17975	StolonDaughters	28	-16541	288	288	0.625	0	This specimen displays creeping stolons with miniature daughter rosettes.
+6	Plant_Cotton	5	17976	BraidedLeaders	29	-16543	288	288	0.625	0	This specimen displays paired intertwining leafy leaders.
+6	Plant_Cotton	6	17977	WingedPetioles	30	-16545	288	288	0.625	0	This specimen displays winged petioles with paired leaf blades.
+6	Plant_Daylily	2	17979	BanyanProps	26	-16525	288	288	0.625	0	This specimen displays lateral branches with descending aerial support roots.
+6	Plant_Daylily	3	17980	CandelabraTips	27	-16531	288	288	0.625	0	This specimen displays candelabra-like upright branch tips.
+6	Plant_Daylily	4	17981	StolonDaughters	28	-16533	288	288	0.625	0	This specimen displays creeping stolons with miniature daughter rosettes.
+6	Plant_Daylily	5	17982	BraidedLeaders	29	-16535	288	288	0.625	0	This specimen displays paired intertwining leafy leaders.
+6	Plant_Daylily	6	17983	WingedPetioles	30	-16537	288	288	0.625	0	This specimen displays winged petioles with paired leaf blades.
+7	Plant_Corn	2	17967	BanyanProps	26	-16529	288	288	0.75	0	This specimen displays lateral branches with descending aerial support roots.
+7	Plant_Corn	3	17968	CandelabraTips	27	-16547	288	288	0.75	0	This specimen displays candelabra-like upright branch tips.
+7	Plant_Corn	4	17969	StolonDaughters	28	-16549	288	288	0.75	0	This specimen displays creeping stolons with miniature daughter rosettes.
+7	Plant_Corn	5	17970	BraidedLeaders	29	-16551	288	288	0.75	0	This specimen displays paired intertwining leafy leaders.
+7	Plant_Corn	6	17971	WingedPetioles	30	-16553	288	288	0.75	0	This specimen displays winged petioles with paired leaf blades.
+7	Plant_Cotton	2	17973	BanyanProps	26	-16527	288	288	0.75	0	This specimen displays lateral branches with descending aerial support roots.
+7	Plant_Cotton	3	17974	CandelabraTips	27	-16539	288	288	0.75	0	This specimen displays candelabra-like upright branch tips.
+7	Plant_Cotton	4	17975	StolonDaughters	28	-16541	288	288	0.75	0	This specimen displays creeping stolons with miniature daughter rosettes.
+7	Plant_Cotton	5	17976	BraidedLeaders	29	-16543	288	288	0.75	0	This specimen displays paired intertwining leafy leaders.
+7	Plant_Cotton	6	17977	WingedPetioles	30	-16545	288	288	0.75	0	This specimen displays winged petioles with paired leaf blades.
+7	Plant_Daylily	2	17979	BanyanProps	26	-16525	288	288	0.75	0	This specimen displays lateral branches with descending aerial support roots.
+7	Plant_Daylily	3	17980	CandelabraTips	27	-16531	288	288	0.75	0	This specimen displays candelabra-like upright branch tips.
+7	Plant_Daylily	4	17981	StolonDaughters	28	-16533	288	288	0.75	0	This specimen displays creeping stolons with miniature daughter rosettes.
+7	Plant_Daylily	5	17982	BraidedLeaders	29	-16535	288	288	0.75	0	This specimen displays paired intertwining leafy leaders.
+7	Plant_Daylily	6	17983	WingedPetioles	30	-16537	288	288	0.75	0	This specimen displays winged petioles with paired leaf blades.
+8	Plant_Corn	2	17967	BanyanProps	26	-16529	288	288	0.875	0	This specimen displays lateral branches with descending aerial support roots.
+8	Plant_Corn	3	17968	CandelabraTips	27	-16547	288	288	0.875	0	This specimen displays candelabra-like upright branch tips.
+8	Plant_Corn	4	17969	StolonDaughters	28	-16549	288	288	0.875	0	This specimen displays creeping stolons with miniature daughter rosettes.
+8	Plant_Corn	5	17970	BraidedLeaders	29	-16551	288	288	0.875	0	This specimen displays paired intertwining leafy leaders.
+8	Plant_Corn	6	17971	WingedPetioles	30	-16553	288	288	0.875	0	This specimen displays winged petioles with paired leaf blades.
+8	Plant_Cotton	2	17973	BanyanProps	26	-16527	288	288	0.875	0	This specimen displays lateral branches with descending aerial support roots.
+8	Plant_Cotton	3	17974	CandelabraTips	27	-16539	288	288	0.875	0	This specimen displays candelabra-like upright branch tips.
+8	Plant_Cotton	4	17975	StolonDaughters	28	-16541	288	288	0.875	0	This specimen displays creeping stolons with miniature daughter rosettes.
+8	Plant_Cotton	5	17976	BraidedLeaders	29	-16543	288	288	0.875	0	This specimen displays paired intertwining leafy leaders.
+8	Plant_Cotton	6	17977	WingedPetioles	30	-16545	288	288	0.875	0	This specimen displays winged petioles with paired leaf blades.
+8	Plant_Daylily	2	17979	BanyanProps	26	-16525	288	288	0.875	0	This specimen displays lateral branches with descending aerial support roots.
+8	Plant_Daylily	3	17980	CandelabraTips	27	-16531	288	288	0.875	0	This specimen displays candelabra-like upright branch tips.
+8	Plant_Daylily	4	17981	StolonDaughters	28	-16533	288	288	0.875	0	This specimen displays creeping stolons with miniature daughter rosettes.
+8	Plant_Daylily	5	17982	BraidedLeaders	29	-16535	288	288	0.875	0	This specimen displays paired intertwining leafy leaders.
+8	Plant_Daylily	6	17983	WingedPetioles	30	-16537	288	288	0.875	0	This specimen displays winged petioles with paired leaf blades.
+9	Plant_Corn	2	17967	BanyanProps	26	-16529	288	288	1	0	This specimen displays lateral branches with descending aerial support roots.
+9	Plant_Corn	3	17968	CandelabraTips	27	-16547	288	288	1	0	This specimen displays candelabra-like upright branch tips.
+9	Plant_Corn	4	17969	StolonDaughters	28	-16549	288	288	1	0	This specimen displays creeping stolons with miniature daughter rosettes.
+9	Plant_Corn	5	17970	BraidedLeaders	29	-16551	288	288	1	0	This specimen displays paired intertwining leafy leaders.
+9	Plant_Corn	6	17971	WingedPetioles	30	-16553	288	288	1	0	This specimen displays winged petioles with paired leaf blades.
+9	Plant_Cotton	2	17973	BanyanProps	26	-16527	288	288	1	0	This specimen displays lateral branches with descending aerial support roots.
+9	Plant_Cotton	3	17974	CandelabraTips	27	-16539	288	288	1	0	This specimen displays candelabra-like upright branch tips.
+9	Plant_Cotton	4	17975	StolonDaughters	28	-16541	288	288	1	0	This specimen displays creeping stolons with miniature daughter rosettes.
+9	Plant_Cotton	5	17976	BraidedLeaders	29	-16543	288	288	1	0	This specimen displays paired intertwining leafy leaders.
+9	Plant_Cotton	6	17977	WingedPetioles	30	-16545	288	288	1	0	This specimen displays winged petioles with paired leaf blades.
+9	Plant_Daylily	2	17979	BanyanProps	26	-16525	288	288	1	0	This specimen displays lateral branches with descending aerial support roots.
+9	Plant_Daylily	3	17980	CandelabraTips	27	-16531	288	288	1	0	This specimen displays candelabra-like upright branch tips.
+9	Plant_Daylily	4	17981	StolonDaughters	28	-16533	288	288	1	0	This specimen displays creeping stolons with miniature daughter rosettes.
+9	Plant_Daylily	5	17982	BraidedLeaders	29	-16535	288	288	1	0	This specimen displays paired intertwining leafy leaders.
+9	Plant_Daylily	6	17983	WingedPetioles	30	-16537	288	288	1	0	This specimen displays winged petioles with paired leaf blades.
+10	Plant_Corn	2	17985	PitcherLeaves	31	-17302	288	288	0	0	This specimen displays tubular pitcher-like leaf organs.
+10	Plant_Corn	3	17986	HoodedSpathes	32	-17320	288	288	0	0	This specimen displays unfolding hooded reproductive bracts.
+10	Plant_Corn	4	17987	EpiphyllousBloom	33	-17322	288	288	0	0	This specimen displays leaf-borne reproductive clusters.
+10	Plant_Corn	5	17988	ScalePhyllotaxis	34	-17324	288	288	0	0	This specimen displays an overlapping spiral of scale leaves.
+10	Plant_Corn	6	17989	SerratedLamina	35	-17326	288	288	0	0	This specimen displays compound leaves with pronounced serrated margins.
+10	Plant_Cotton	2	17991	PitcherLeaves	31	-17300	288	288	0	0	This specimen displays tubular pitcher-like leaf organs.
+10	Plant_Cotton	3	17992	HoodedSpathes	32	-17312	288	288	0	0	This specimen displays unfolding hooded reproductive bracts.
+10	Plant_Cotton	4	17993	EpiphyllousBloom	33	-17314	288	288	0	0	This specimen displays leaf-borne reproductive clusters.
+10	Plant_Cotton	5	17994	ScalePhyllotaxis	34	-17316	288	288	0	0	This specimen displays an overlapping spiral of scale leaves.
+10	Plant_Cotton	6	17995	SerratedLamina	35	-17318	288	288	0	0	This specimen displays compound leaves with pronounced serrated margins.
+10	Plant_Daylily	2	17997	PitcherLeaves	31	-17298	288	288	0	0	This specimen displays tubular pitcher-like leaf organs.
+10	Plant_Daylily	3	17998	HoodedSpathes	32	-17304	288	288	0	0	This specimen displays unfolding hooded reproductive bracts.
+10	Plant_Daylily	4	17999	EpiphyllousBloom	33	-17306	288	288	0	0	This specimen displays leaf-borne reproductive clusters.
+10	Plant_Daylily	5	18000	ScalePhyllotaxis	34	-17308	288	288	0	0	This specimen displays an overlapping spiral of scale leaves.
+10	Plant_Daylily	6	18001	SerratedLamina	35	-17310	288	288	0	0	This specimen displays compound leaves with pronounced serrated margins.
+11	Plant_Corn	2	17985	PitcherLeaves	31	-17302	288	288	0.125	0	This specimen displays tubular pitcher-like leaf organs.
+11	Plant_Corn	3	17986	HoodedSpathes	32	-17320	288	288	0.125	0	This specimen displays unfolding hooded reproductive bracts.
+11	Plant_Corn	4	17987	EpiphyllousBloom	33	-17322	288	288	0.125	0	This specimen displays leaf-borne reproductive clusters.
+11	Plant_Corn	5	17988	ScalePhyllotaxis	34	-17324	288	288	0.125	0	This specimen displays an overlapping spiral of scale leaves.
+11	Plant_Corn	6	17989	SerratedLamina	35	-17326	288	288	0.125	0	This specimen displays compound leaves with pronounced serrated margins.
+11	Plant_Cotton	2	17991	PitcherLeaves	31	-17300	288	288	0.125	0	This specimen displays tubular pitcher-like leaf organs.
+11	Plant_Cotton	3	17992	HoodedSpathes	32	-17312	288	288	0.125	0	This specimen displays unfolding hooded reproductive bracts.
+11	Plant_Cotton	4	17993	EpiphyllousBloom	33	-17314	288	288	0.125	0	This specimen displays leaf-borne reproductive clusters.
+11	Plant_Cotton	5	17994	ScalePhyllotaxis	34	-17316	288	288	0.125	0	This specimen displays an overlapping spiral of scale leaves.
+11	Plant_Cotton	6	17995	SerratedLamina	35	-17318	288	288	0.125	0	This specimen displays compound leaves with pronounced serrated margins.
+11	Plant_Daylily	2	17997	PitcherLeaves	31	-17298	288	288	0.125	0	This specimen displays tubular pitcher-like leaf organs.
+11	Plant_Daylily	3	17998	HoodedSpathes	32	-17304	288	288	0.125	0	This specimen displays unfolding hooded reproductive bracts.
+11	Plant_Daylily	4	17999	EpiphyllousBloom	33	-17306	288	288	0.125	0	This specimen displays leaf-borne reproductive clusters.
+11	Plant_Daylily	5	18000	ScalePhyllotaxis	34	-17308	288	288	0.125	0	This specimen displays an overlapping spiral of scale leaves.
+11	Plant_Daylily	6	18001	SerratedLamina	35	-17310	288	288	0.125	0	This specimen displays compound leaves with pronounced serrated margins.
+12	Plant_Corn	2	17985	PitcherLeaves	31	-17302	288	288	0.25	0	This specimen displays tubular pitcher-like leaf organs.
+12	Plant_Corn	3	17986	HoodedSpathes	32	-17320	288	288	0.25	0	This specimen displays unfolding hooded reproductive bracts.
+12	Plant_Corn	4	17987	EpiphyllousBloom	33	-17322	288	288	0.25	0	This specimen displays leaf-borne reproductive clusters.
+12	Plant_Corn	5	17988	ScalePhyllotaxis	34	-17324	288	288	0.25	0	This specimen displays an overlapping spiral of scale leaves.
+12	Plant_Corn	6	17989	SerratedLamina	35	-17326	288	288	0.25	0	This specimen displays compound leaves with pronounced serrated margins.
+12	Plant_Cotton	2	17991	PitcherLeaves	31	-17300	288	288	0.25	0	This specimen displays tubular pitcher-like leaf organs.
+12	Plant_Cotton	3	17992	HoodedSpathes	32	-17312	288	288	0.25	0	This specimen displays unfolding hooded reproductive bracts.
+12	Plant_Cotton	4	17993	EpiphyllousBloom	33	-17314	288	288	0.25	0	This specimen displays leaf-borne reproductive clusters.
+12	Plant_Cotton	5	17994	ScalePhyllotaxis	34	-17316	288	288	0.25	0	This specimen displays an overlapping spiral of scale leaves.
+12	Plant_Cotton	6	17995	SerratedLamina	35	-17318	288	288	0.25	0	This specimen displays compound leaves with pronounced serrated margins.
+12	Plant_Daylily	2	17997	PitcherLeaves	31	-17298	288	288	0.25	0	This specimen displays tubular pitcher-like leaf organs.
+12	Plant_Daylily	3	17998	HoodedSpathes	32	-17304	288	288	0.25	0	This specimen displays unfolding hooded reproductive bracts.
+12	Plant_Daylily	4	17999	EpiphyllousBloom	33	-17306	288	288	0.25	0	This specimen displays leaf-borne reproductive clusters.
+12	Plant_Daylily	5	18000	ScalePhyllotaxis	34	-17308	288	288	0.25	0	This specimen displays an overlapping spiral of scale leaves.
+12	Plant_Daylily	6	18001	SerratedLamina	35	-17310	288	288	0.25	0	This specimen displays compound leaves with pronounced serrated margins.
+13	Plant_Corn	2	17985	PitcherLeaves	31	-17302	288	288	0.375	0	This specimen displays tubular pitcher-like leaf organs.
+13	Plant_Corn	3	17986	HoodedSpathes	32	-17320	288	288	0.375	0	This specimen displays unfolding hooded reproductive bracts.
+13	Plant_Corn	4	17987	EpiphyllousBloom	33	-17322	288	288	0.375	0	This specimen displays leaf-borne reproductive clusters.
+13	Plant_Corn	5	17988	ScalePhyllotaxis	34	-17324	288	288	0.375	0	This specimen displays an overlapping spiral of scale leaves.
+13	Plant_Corn	6	17989	SerratedLamina	35	-17326	288	288	0.375	0	This specimen displays compound leaves with pronounced serrated margins.
+13	Plant_Cotton	2	17991	PitcherLeaves	31	-17300	288	288	0.375	0	This specimen displays tubular pitcher-like leaf organs.
+13	Plant_Cotton	3	17992	HoodedSpathes	32	-17312	288	288	0.375	0	This specimen displays unfolding hooded reproductive bracts.
+13	Plant_Cotton	4	17993	EpiphyllousBloom	33	-17314	288	288	0.375	0	This specimen displays leaf-borne reproductive clusters.
+13	Plant_Cotton	5	17994	ScalePhyllotaxis	34	-17316	288	288	0.375	0	This specimen displays an overlapping spiral of scale leaves.
+13	Plant_Cotton	6	17995	SerratedLamina	35	-17318	288	288	0.375	0	This specimen displays compound leaves with pronounced serrated margins.
+13	Plant_Daylily	2	17997	PitcherLeaves	31	-17298	288	288	0.375	0	This specimen displays tubular pitcher-like leaf organs.
+13	Plant_Daylily	3	17998	HoodedSpathes	32	-17304	288	288	0.375	0	This specimen displays unfolding hooded reproductive bracts.
+13	Plant_Daylily	4	17999	EpiphyllousBloom	33	-17306	288	288	0.375	0	This specimen displays leaf-borne reproductive clusters.
+13	Plant_Daylily	5	18000	ScalePhyllotaxis	34	-17308	288	288	0.375	0	This specimen displays an overlapping spiral of scale leaves.
+13	Plant_Daylily	6	18001	SerratedLamina	35	-17310	288	288	0.375	0	This specimen displays compound leaves with pronounced serrated margins.
+14	Plant_Corn	2	17985	PitcherLeaves	31	-17302	288	288	0.5	0	This specimen displays tubular pitcher-like leaf organs.
+14	Plant_Corn	3	17986	HoodedSpathes	32	-17320	288	288	0.5	0	This specimen displays unfolding hooded reproductive bracts.
+14	Plant_Corn	4	17987	EpiphyllousBloom	33	-17322	288	288	0.5	0	This specimen displays leaf-borne reproductive clusters.
+14	Plant_Corn	5	17988	ScalePhyllotaxis	34	-17324	288	288	0.5	0	This specimen displays an overlapping spiral of scale leaves.
+14	Plant_Corn	6	17989	SerratedLamina	35	-17326	288	288	0.5	0	This specimen displays compound leaves with pronounced serrated margins.
+14	Plant_Cotton	2	17991	PitcherLeaves	31	-17300	288	288	0.5	0	This specimen displays tubular pitcher-like leaf organs.
+14	Plant_Cotton	3	17992	HoodedSpathes	32	-17312	288	288	0.5	0	This specimen displays unfolding hooded reproductive bracts.
+14	Plant_Cotton	4	17993	EpiphyllousBloom	33	-17314	288	288	0.5	0	This specimen displays leaf-borne reproductive clusters.
+14	Plant_Cotton	5	17994	ScalePhyllotaxis	34	-17316	288	288	0.5	0	This specimen displays an overlapping spiral of scale leaves.
+14	Plant_Cotton	6	17995	SerratedLamina	35	-17318	288	288	0.5	0	This specimen displays compound leaves with pronounced serrated margins.
+14	Plant_Daylily	2	17997	PitcherLeaves	31	-17298	288	288	0.5	0	This specimen displays tubular pitcher-like leaf organs.
+14	Plant_Daylily	3	17998	HoodedSpathes	32	-17304	288	288	0.5	0	This specimen displays unfolding hooded reproductive bracts.
+14	Plant_Daylily	4	17999	EpiphyllousBloom	33	-17306	288	288	0.5	0	This specimen displays leaf-borne reproductive clusters.
+14	Plant_Daylily	5	18000	ScalePhyllotaxis	34	-17308	288	288	0.5	0	This specimen displays an overlapping spiral of scale leaves.
+14	Plant_Daylily	6	18001	SerratedLamina	35	-17310	288	288	0.5	0	This specimen displays compound leaves with pronounced serrated margins.
+15	Plant_Corn	2	17985	PitcherLeaves	31	-17302	288	288	0.625	0	This specimen displays tubular pitcher-like leaf organs.
+15	Plant_Corn	3	17986	HoodedSpathes	32	-17320	288	288	0.625	0	This specimen displays unfolding hooded reproductive bracts.
+15	Plant_Corn	4	17987	EpiphyllousBloom	33	-17322	288	288	0.625	0	This specimen displays leaf-borne reproductive clusters.
+15	Plant_Corn	5	17988	ScalePhyllotaxis	34	-17324	288	288	0.625	0	This specimen displays an overlapping spiral of scale leaves.
+15	Plant_Corn	6	17989	SerratedLamina	35	-17326	288	288	0.625	0	This specimen displays compound leaves with pronounced serrated margins.
+15	Plant_Cotton	2	17991	PitcherLeaves	31	-17300	288	288	0.625	0	This specimen displays tubular pitcher-like leaf organs.
+15	Plant_Cotton	3	17992	HoodedSpathes	32	-17312	288	288	0.625	0	This specimen displays unfolding hooded reproductive bracts.
+15	Plant_Cotton	4	17993	EpiphyllousBloom	33	-17314	288	288	0.625	0	This specimen displays leaf-borne reproductive clusters.
+15	Plant_Cotton	5	17994	ScalePhyllotaxis	34	-17316	288	288	0.625	0	This specimen displays an overlapping spiral of scale leaves.
+15	Plant_Cotton	6	17995	SerratedLamina	35	-17318	288	288	0.625	0	This specimen displays compound leaves with pronounced serrated margins.
+15	Plant_Daylily	2	17997	PitcherLeaves	31	-17298	288	288	0.625	0	This specimen displays tubular pitcher-like leaf organs.
+15	Plant_Daylily	3	17998	HoodedSpathes	32	-17304	288	288	0.625	0	This specimen displays unfolding hooded reproductive bracts.
+15	Plant_Daylily	4	17999	EpiphyllousBloom	33	-17306	288	288	0.625	0	This specimen displays leaf-borne reproductive clusters.
+15	Plant_Daylily	5	18000	ScalePhyllotaxis	34	-17308	288	288	0.625	0	This specimen displays an overlapping spiral of scale leaves.
+15	Plant_Daylily	6	18001	SerratedLamina	35	-17310	288	288	0.625	0	This specimen displays compound leaves with pronounced serrated margins.
+16	Plant_Corn	2	17985	PitcherLeaves	31	-17302	288	288	0.75	0	This specimen displays tubular pitcher-like leaf organs.
+16	Plant_Corn	3	17986	HoodedSpathes	32	-17320	288	288	0.75	0	This specimen displays unfolding hooded reproductive bracts.
+16	Plant_Corn	4	17987	EpiphyllousBloom	33	-17322	288	288	0.75	0	This specimen displays leaf-borne reproductive clusters.
+16	Plant_Corn	5	17988	ScalePhyllotaxis	34	-17324	288	288	0.75	0	This specimen displays an overlapping spiral of scale leaves.
+16	Plant_Corn	6	17989	SerratedLamina	35	-17326	288	288	0.75	0	This specimen displays compound leaves with pronounced serrated margins.
+16	Plant_Cotton	2	17991	PitcherLeaves	31	-17300	288	288	0.75	0	This specimen displays tubular pitcher-like leaf organs.
+16	Plant_Cotton	3	17992	HoodedSpathes	32	-17312	288	288	0.75	0	This specimen displays unfolding hooded reproductive bracts.
+16	Plant_Cotton	4	17993	EpiphyllousBloom	33	-17314	288	288	0.75	0	This specimen displays leaf-borne reproductive clusters.
+16	Plant_Cotton	5	17994	ScalePhyllotaxis	34	-17316	288	288	0.75	0	This specimen displays an overlapping spiral of scale leaves.
+16	Plant_Cotton	6	17995	SerratedLamina	35	-17318	288	288	0.75	0	This specimen displays compound leaves with pronounced serrated margins.
+16	Plant_Daylily	2	17997	PitcherLeaves	31	-17298	288	288	0.75	0	This specimen displays tubular pitcher-like leaf organs.
+16	Plant_Daylily	3	17998	HoodedSpathes	32	-17304	288	288	0.75	0	This specimen displays unfolding hooded reproductive bracts.
+16	Plant_Daylily	4	17999	EpiphyllousBloom	33	-17306	288	288	0.75	0	This specimen displays leaf-borne reproductive clusters.
+16	Plant_Daylily	5	18000	ScalePhyllotaxis	34	-17308	288	288	0.75	0	This specimen displays an overlapping spiral of scale leaves.
+16	Plant_Daylily	6	18001	SerratedLamina	35	-17310	288	288	0.75	0	This specimen displays compound leaves with pronounced serrated margins.
+17	Plant_Corn	2	17985	PitcherLeaves	31	-17302	288	288	0.875	0	This specimen displays tubular pitcher-like leaf organs.
+17	Plant_Corn	3	17986	HoodedSpathes	32	-17320	288	288	0.875	0	This specimen displays unfolding hooded reproductive bracts.
+17	Plant_Corn	4	17987	EpiphyllousBloom	33	-17322	288	288	0.875	0	This specimen displays leaf-borne reproductive clusters.
+17	Plant_Corn	5	17988	ScalePhyllotaxis	34	-17324	288	288	0.875	0	This specimen displays an overlapping spiral of scale leaves.
+17	Plant_Corn	6	17989	SerratedLamina	35	-17326	288	288	0.875	0	This specimen displays compound leaves with pronounced serrated margins.
+17	Plant_Cotton	2	17991	PitcherLeaves	31	-17300	288	288	0.875	0	This specimen displays tubular pitcher-like leaf organs.
+17	Plant_Cotton	3	17992	HoodedSpathes	32	-17312	288	288	0.875	0	This specimen displays unfolding hooded reproductive bracts.
+17	Plant_Cotton	4	17993	EpiphyllousBloom	33	-17314	288	288	0.875	0	This specimen displays leaf-borne reproductive clusters.
+17	Plant_Cotton	5	17994	ScalePhyllotaxis	34	-17316	288	288	0.875	0	This specimen displays an overlapping spiral of scale leaves.
+17	Plant_Cotton	6	17995	SerratedLamina	35	-17318	288	288	0.875	0	This specimen displays compound leaves with pronounced serrated margins.
+17	Plant_Daylily	2	17997	PitcherLeaves	31	-17298	288	288	0.875	0	This specimen displays tubular pitcher-like leaf organs.
+17	Plant_Daylily	3	17998	HoodedSpathes	32	-17304	288	288	0.875	0	This specimen displays unfolding hooded reproductive bracts.
+17	Plant_Daylily	4	17999	EpiphyllousBloom	33	-17306	288	288	0.875	0	This specimen displays leaf-borne reproductive clusters.
+17	Plant_Daylily	5	18000	ScalePhyllotaxis	34	-17308	288	288	0.875	0	This specimen displays an overlapping spiral of scale leaves.
+17	Plant_Daylily	6	18001	SerratedLamina	35	-17310	288	288	0.875	0	This specimen displays compound leaves with pronounced serrated margins.
+18	Plant_Corn	2	17985	PitcherLeaves	31	-17302	288	288	1	0	This specimen displays tubular pitcher-like leaf organs.
+18	Plant_Corn	3	17986	HoodedSpathes	32	-17320	288	288	1	0	This specimen displays unfolding hooded reproductive bracts.
+18	Plant_Corn	4	17987	EpiphyllousBloom	33	-17322	288	288	1	0	This specimen displays leaf-borne reproductive clusters.
+18	Plant_Corn	5	17988	ScalePhyllotaxis	34	-17324	288	288	1	0	This specimen displays an overlapping spiral of scale leaves.
+18	Plant_Corn	6	17989	SerratedLamina	35	-17326	288	288	1	0	This specimen displays compound leaves with pronounced serrated margins.
+18	Plant_Cotton	2	17991	PitcherLeaves	31	-17300	288	288	1	0	This specimen displays tubular pitcher-like leaf organs.
+18	Plant_Cotton	3	17992	HoodedSpathes	32	-17312	288	288	1	0	This specimen displays unfolding hooded reproductive bracts.
+18	Plant_Cotton	4	17993	EpiphyllousBloom	33	-17314	288	288	1	0	This specimen displays leaf-borne reproductive clusters.
+18	Plant_Cotton	5	17994	ScalePhyllotaxis	34	-17316	288	288	1	0	This specimen displays an overlapping spiral of scale leaves.
+18	Plant_Cotton	6	17995	SerratedLamina	35	-17318	288	288	1	0	This specimen displays compound leaves with pronounced serrated margins.
+18	Plant_Daylily	2	17997	PitcherLeaves	31	-17298	288	288	1	0	This specimen displays tubular pitcher-like leaf organs.
+18	Plant_Daylily	3	17998	HoodedSpathes	32	-17304	288	288	1	0	This specimen displays unfolding hooded reproductive bracts.
+18	Plant_Daylily	4	17999	EpiphyllousBloom	33	-17306	288	288	1	0	This specimen displays leaf-borne reproductive clusters.
+18	Plant_Daylily	5	18000	ScalePhyllotaxis	34	-17308	288	288	1	0	This specimen displays an overlapping spiral of scale leaves.
+18	Plant_Daylily	6	18001	SerratedLamina	35	-17310	288	288	1	0	This specimen displays compound leaves with pronounced serrated margins.
+19	Plant_Corn	2	18003	DehiscentCapsules	36	-17782	288	288	0	0	This specimen displays opening seed capsules with exposed seeds.
+19	Plant_Corn	3	18004	WingedSamaras	37	-17800	288	288	0	0	This specimen displays unfolding paired winged seeds.
+19	Plant_Corn	4	18005	AntherEmergence	38	-17802	288	288	0	0	This specimen displays extended anther filaments.
+19	Plant_Corn	5	18006	PetaloidDoubling	39	-17804	288	288	0	0	This specimen displays double whorls of reproductive tissue.
+19	Plant_Corn	6	18007	SeedShedding	40	-17806	288	288	0	0	This specimen displays a sparse descending trail of ornamental seeds.
+19	Plant_Cotton	2	18009	DehiscentCapsules	36	-17780	288	288	0	0	This specimen displays opening seed capsules with exposed seeds.
+19	Plant_Cotton	3	18010	WingedSamaras	37	-17792	288	288	0	0	This specimen displays unfolding paired winged seeds.
+19	Plant_Cotton	4	18011	AntherEmergence	38	-17794	288	288	0	0	This specimen displays extended anther filaments.
+19	Plant_Cotton	5	18012	PetaloidDoubling	39	-17796	288	288	0	0	This specimen displays double whorls of reproductive tissue.
+19	Plant_Cotton	6	18013	SeedShedding	40	-17798	288	288	0	0	This specimen displays a sparse descending trail of ornamental seeds.
+19	Plant_Daylily	2	18015	DehiscentCapsules	36	-17778	288	288	0	0	This specimen displays opening seed capsules with exposed seeds.
+19	Plant_Daylily	3	18016	WingedSamaras	37	-17784	288	288	0	0	This specimen displays unfolding paired winged seeds.
+19	Plant_Daylily	4	18017	AntherEmergence	38	-17786	288	288	0	0	This specimen displays extended anther filaments.
+19	Plant_Daylily	5	18018	PetaloidDoubling	39	-17788	288	288	0	0	This specimen displays double whorls of reproductive tissue.
+19	Plant_Daylily	6	18019	SeedShedding	40	-17790	288	288	0	0	This specimen displays a sparse descending trail of ornamental seeds.
+20	Plant_Corn	2	18003	DehiscentCapsules	36	-17782	288	288	0.125	0	This specimen displays opening seed capsules with exposed seeds.
+20	Plant_Corn	3	18004	WingedSamaras	37	-17800	288	288	0.125	0	This specimen displays unfolding paired winged seeds.
+20	Plant_Corn	4	18005	AntherEmergence	38	-17802	288	288	0.125	0	This specimen displays extended anther filaments.
+20	Plant_Corn	5	18006	PetaloidDoubling	39	-17804	288	288	0.125	0	This specimen displays double whorls of reproductive tissue.
+20	Plant_Corn	6	18007	SeedShedding	40	-17806	288	288	0.125	0	This specimen displays a sparse descending trail of ornamental seeds.
+20	Plant_Cotton	2	18009	DehiscentCapsules	36	-17780	288	288	0.125	0	This specimen displays opening seed capsules with exposed seeds.
+20	Plant_Cotton	3	18010	WingedSamaras	37	-17792	288	288	0.125	0	This specimen displays unfolding paired winged seeds.
+20	Plant_Cotton	4	18011	AntherEmergence	38	-17794	288	288	0.125	0	This specimen displays extended anther filaments.
+20	Plant_Cotton	5	18012	PetaloidDoubling	39	-17796	288	288	0.125	0	This specimen displays double whorls of reproductive tissue.
+20	Plant_Cotton	6	18013	SeedShedding	40	-17798	288	288	0.125	0	This specimen displays a sparse descending trail of ornamental seeds.
+20	Plant_Daylily	2	18015	DehiscentCapsules	36	-17778	288	288	0.125	0	This specimen displays opening seed capsules with exposed seeds.
+20	Plant_Daylily	3	18016	WingedSamaras	37	-17784	288	288	0.125	0	This specimen displays unfolding paired winged seeds.
+20	Plant_Daylily	4	18017	AntherEmergence	38	-17786	288	288	0.125	0	This specimen displays extended anther filaments.
+20	Plant_Daylily	5	18018	PetaloidDoubling	39	-17788	288	288	0.125	0	This specimen displays double whorls of reproductive tissue.
+20	Plant_Daylily	6	18019	SeedShedding	40	-17790	288	288	0.125	0	This specimen displays a sparse descending trail of ornamental seeds.
+21	Plant_Corn	2	18003	DehiscentCapsules	36	-17782	288	288	0.25	0	This specimen displays opening seed capsules with exposed seeds.
+21	Plant_Corn	3	18004	WingedSamaras	37	-17800	288	288	0.25	0	This specimen displays unfolding paired winged seeds.
+21	Plant_Corn	4	18005	AntherEmergence	38	-17802	288	288	0.25	0	This specimen displays extended anther filaments.
+21	Plant_Corn	5	18006	PetaloidDoubling	39	-17804	288	288	0.25	0	This specimen displays double whorls of reproductive tissue.
+21	Plant_Corn	6	18007	SeedShedding	40	-17806	288	288	0.25	0	This specimen displays a sparse descending trail of ornamental seeds.
+21	Plant_Cotton	2	18009	DehiscentCapsules	36	-17780	288	288	0.25	0	This specimen displays opening seed capsules with exposed seeds.
+21	Plant_Cotton	3	18010	WingedSamaras	37	-17792	288	288	0.25	0	This specimen displays unfolding paired winged seeds.
+21	Plant_Cotton	4	18011	AntherEmergence	38	-17794	288	288	0.25	0	This specimen displays extended anther filaments.
+21	Plant_Cotton	5	18012	PetaloidDoubling	39	-17796	288	288	0.25	0	This specimen displays double whorls of reproductive tissue.
+21	Plant_Cotton	6	18013	SeedShedding	40	-17798	288	288	0.25	0	This specimen displays a sparse descending trail of ornamental seeds.
+21	Plant_Daylily	2	18015	DehiscentCapsules	36	-17778	288	288	0.25	0	This specimen displays opening seed capsules with exposed seeds.
+21	Plant_Daylily	3	18016	WingedSamaras	37	-17784	288	288	0.25	0	This specimen displays unfolding paired winged seeds.
+21	Plant_Daylily	4	18017	AntherEmergence	38	-17786	288	288	0.25	0	This specimen displays extended anther filaments.
+21	Plant_Daylily	5	18018	PetaloidDoubling	39	-17788	288	288	0.25	0	This specimen displays double whorls of reproductive tissue.
+21	Plant_Daylily	6	18019	SeedShedding	40	-17790	288	288	0.25	0	This specimen displays a sparse descending trail of ornamental seeds.
+22	Plant_Corn	2	18003	DehiscentCapsules	36	-17782	288	288	0.375	0	This specimen displays opening seed capsules with exposed seeds.
+22	Plant_Corn	3	18004	WingedSamaras	37	-17800	288	288	0.375	0	This specimen displays unfolding paired winged seeds.
+22	Plant_Corn	4	18005	AntherEmergence	38	-17802	288	288	0.375	0	This specimen displays extended anther filaments.
+22	Plant_Corn	5	18006	PetaloidDoubling	39	-17804	288	288	0.375	0	This specimen displays double whorls of reproductive tissue.
+22	Plant_Corn	6	18007	SeedShedding	40	-17806	288	288	0.375	0	This specimen displays a sparse descending trail of ornamental seeds.
+22	Plant_Cotton	2	18009	DehiscentCapsules	36	-17780	288	288	0.375	0	This specimen displays opening seed capsules with exposed seeds.
+22	Plant_Cotton	3	18010	WingedSamaras	37	-17792	288	288	0.375	0	This specimen displays unfolding paired winged seeds.
+22	Plant_Cotton	4	18011	AntherEmergence	38	-17794	288	288	0.375	0	This specimen displays extended anther filaments.
+22	Plant_Cotton	5	18012	PetaloidDoubling	39	-17796	288	288	0.375	0	This specimen displays double whorls of reproductive tissue.
+22	Plant_Cotton	6	18013	SeedShedding	40	-17798	288	288	0.375	0	This specimen displays a sparse descending trail of ornamental seeds.
+22	Plant_Daylily	2	18015	DehiscentCapsules	36	-17778	288	288	0.375	0	This specimen displays opening seed capsules with exposed seeds.
+22	Plant_Daylily	3	18016	WingedSamaras	37	-17784	288	288	0.375	0	This specimen displays unfolding paired winged seeds.
+22	Plant_Daylily	4	18017	AntherEmergence	38	-17786	288	288	0.375	0	This specimen displays extended anther filaments.
+22	Plant_Daylily	5	18018	PetaloidDoubling	39	-17788	288	288	0.375	0	This specimen displays double whorls of reproductive tissue.
+22	Plant_Daylily	6	18019	SeedShedding	40	-17790	288	288	0.375	0	This specimen displays a sparse descending trail of ornamental seeds.
+23	Plant_Corn	2	18003	DehiscentCapsules	36	-17782	288	288	0.5	0	This specimen displays opening seed capsules with exposed seeds.
+23	Plant_Corn	3	18004	WingedSamaras	37	-17800	288	288	0.5	0	This specimen displays unfolding paired winged seeds.
+23	Plant_Corn	4	18005	AntherEmergence	38	-17802	288	288	0.5	0	This specimen displays extended anther filaments.
+23	Plant_Corn	5	18006	PetaloidDoubling	39	-17804	288	288	0.5	0	This specimen displays double whorls of reproductive tissue.
+23	Plant_Corn	6	18007	SeedShedding	40	-17806	288	288	0.5	0	This specimen displays a sparse descending trail of ornamental seeds.
+23	Plant_Cotton	2	18009	DehiscentCapsules	36	-17780	288	288	0.5	0	This specimen displays opening seed capsules with exposed seeds.
+23	Plant_Cotton	3	18010	WingedSamaras	37	-17792	288	288	0.5	0	This specimen displays unfolding paired winged seeds.
+23	Plant_Cotton	4	18011	AntherEmergence	38	-17794	288	288	0.5	0	This specimen displays extended anther filaments.
+23	Plant_Cotton	5	18012	PetaloidDoubling	39	-17796	288	288	0.5	0	This specimen displays double whorls of reproductive tissue.
+23	Plant_Cotton	6	18013	SeedShedding	40	-17798	288	288	0.5	0	This specimen displays a sparse descending trail of ornamental seeds.
+23	Plant_Daylily	2	18015	DehiscentCapsules	36	-17778	288	288	0.5	0	This specimen displays opening seed capsules with exposed seeds.
+23	Plant_Daylily	3	18016	WingedSamaras	37	-17784	288	288	0.5	0	This specimen displays unfolding paired winged seeds.
+23	Plant_Daylily	4	18017	AntherEmergence	38	-17786	288	288	0.5	0	This specimen displays extended anther filaments.
+23	Plant_Daylily	5	18018	PetaloidDoubling	39	-17788	288	288	0.5	0	This specimen displays double whorls of reproductive tissue.
+23	Plant_Daylily	6	18019	SeedShedding	40	-17790	288	288	0.5	0	This specimen displays a sparse descending trail of ornamental seeds.
+24	Plant_Corn	2	18003	DehiscentCapsules	36	-17782	288	288	0.625	0	This specimen displays opening seed capsules with exposed seeds.
+24	Plant_Corn	3	18004	WingedSamaras	37	-17800	288	288	0.625	0	This specimen displays unfolding paired winged seeds.
+24	Plant_Corn	4	18005	AntherEmergence	38	-17802	288	288	0.625	0	This specimen displays extended anther filaments.
+24	Plant_Corn	5	18006	PetaloidDoubling	39	-17804	288	288	0.625	0	This specimen displays double whorls of reproductive tissue.
+24	Plant_Corn	6	18007	SeedShedding	40	-17806	288	288	0.625	0	This specimen displays a sparse descending trail of ornamental seeds.
+24	Plant_Cotton	2	18009	DehiscentCapsules	36	-17780	288	288	0.625	0	This specimen displays opening seed capsules with exposed seeds.
+24	Plant_Cotton	3	18010	WingedSamaras	37	-17792	288	288	0.625	0	This specimen displays unfolding paired winged seeds.
+24	Plant_Cotton	4	18011	AntherEmergence	38	-17794	288	288	0.625	0	This specimen displays extended anther filaments.
+24	Plant_Cotton	5	18012	PetaloidDoubling	39	-17796	288	288	0.625	0	This specimen displays double whorls of reproductive tissue.
+24	Plant_Cotton	6	18013	SeedShedding	40	-17798	288	288	0.625	0	This specimen displays a sparse descending trail of ornamental seeds.
+24	Plant_Daylily	2	18015	DehiscentCapsules	36	-17778	288	288	0.625	0	This specimen displays opening seed capsules with exposed seeds.
+24	Plant_Daylily	3	18016	WingedSamaras	37	-17784	288	288	0.625	0	This specimen displays unfolding paired winged seeds.
+24	Plant_Daylily	4	18017	AntherEmergence	38	-17786	288	288	0.625	0	This specimen displays extended anther filaments.
+24	Plant_Daylily	5	18018	PetaloidDoubling	39	-17788	288	288	0.625	0	This specimen displays double whorls of reproductive tissue.
+24	Plant_Daylily	6	18019	SeedShedding	40	-17790	288	288	0.625	0	This specimen displays a sparse descending trail of ornamental seeds.
+25	Plant_Corn	2	18003	DehiscentCapsules	36	-17782	288	288	0.75	0	This specimen displays opening seed capsules with exposed seeds.
+25	Plant_Corn	3	18004	WingedSamaras	37	-17800	288	288	0.75	0	This specimen displays unfolding paired winged seeds.
+25	Plant_Corn	4	18005	AntherEmergence	38	-17802	288	288	0.75	0	This specimen displays extended anther filaments.
+25	Plant_Corn	5	18006	PetaloidDoubling	39	-17804	288	288	0.75	0	This specimen displays double whorls of reproductive tissue.
+25	Plant_Corn	6	18007	SeedShedding	40	-17806	288	288	0.75	0	This specimen displays a sparse descending trail of ornamental seeds.
+25	Plant_Cotton	2	18009	DehiscentCapsules	36	-17780	288	288	0.75	0	This specimen displays opening seed capsules with exposed seeds.
+25	Plant_Cotton	3	18010	WingedSamaras	37	-17792	288	288	0.75	0	This specimen displays unfolding paired winged seeds.
+25	Plant_Cotton	4	18011	AntherEmergence	38	-17794	288	288	0.75	0	This specimen displays extended anther filaments.
+25	Plant_Cotton	5	18012	PetaloidDoubling	39	-17796	288	288	0.75	0	This specimen displays double whorls of reproductive tissue.
+25	Plant_Cotton	6	18013	SeedShedding	40	-17798	288	288	0.75	0	This specimen displays a sparse descending trail of ornamental seeds.
+25	Plant_Daylily	2	18015	DehiscentCapsules	36	-17778	288	288	0.75	0	This specimen displays opening seed capsules with exposed seeds.
+25	Plant_Daylily	3	18016	WingedSamaras	37	-17784	288	288	0.75	0	This specimen displays unfolding paired winged seeds.
+25	Plant_Daylily	4	18017	AntherEmergence	38	-17786	288	288	0.75	0	This specimen displays extended anther filaments.
+25	Plant_Daylily	5	18018	PetaloidDoubling	39	-17788	288	288	0.75	0	This specimen displays double whorls of reproductive tissue.
+25	Plant_Daylily	6	18019	SeedShedding	40	-17790	288	288	0.75	0	This specimen displays a sparse descending trail of ornamental seeds.
+26	Plant_Corn	2	18003	DehiscentCapsules	36	-17782	288	288	0.875	0	This specimen displays opening seed capsules with exposed seeds.
+26	Plant_Corn	3	18004	WingedSamaras	37	-17800	288	288	0.875	0	This specimen displays unfolding paired winged seeds.
+26	Plant_Corn	4	18005	AntherEmergence	38	-17802	288	288	0.875	0	This specimen displays extended anther filaments.
+26	Plant_Corn	5	18006	PetaloidDoubling	39	-17804	288	288	0.875	0	This specimen displays double whorls of reproductive tissue.
+26	Plant_Corn	6	18007	SeedShedding	40	-17806	288	288	0.875	0	This specimen displays a sparse descending trail of ornamental seeds.
+26	Plant_Cotton	2	18009	DehiscentCapsules	36	-17780	288	288	0.875	0	This specimen displays opening seed capsules with exposed seeds.
+26	Plant_Cotton	3	18010	WingedSamaras	37	-17792	288	288	0.875	0	This specimen displays unfolding paired winged seeds.
+26	Plant_Cotton	4	18011	AntherEmergence	38	-17794	288	288	0.875	0	This specimen displays extended anther filaments.
+26	Plant_Cotton	5	18012	PetaloidDoubling	39	-17796	288	288	0.875	0	This specimen displays double whorls of reproductive tissue.
+26	Plant_Cotton	6	18013	SeedShedding	40	-17798	288	288	0.875	0	This specimen displays a sparse descending trail of ornamental seeds.
+26	Plant_Daylily	2	18015	DehiscentCapsules	36	-17778	288	288	0.875	0	This specimen displays opening seed capsules with exposed seeds.
+26	Plant_Daylily	3	18016	WingedSamaras	37	-17784	288	288	0.875	0	This specimen displays unfolding paired winged seeds.
+26	Plant_Daylily	4	18017	AntherEmergence	38	-17786	288	288	0.875	0	This specimen displays extended anther filaments.
+26	Plant_Daylily	5	18018	PetaloidDoubling	39	-17788	288	288	0.875	0	This specimen displays double whorls of reproductive tissue.
+26	Plant_Daylily	6	18019	SeedShedding	40	-17790	288	288	0.875	0	This specimen displays a sparse descending trail of ornamental seeds.
+27	Plant_Corn	2	18003	DehiscentCapsules	36	-17782	288	288	1	0	This specimen displays opening seed capsules with exposed seeds.
+27	Plant_Corn	3	18004	WingedSamaras	37	-17800	288	288	1	0	This specimen displays unfolding paired winged seeds.
+27	Plant_Corn	4	18005	AntherEmergence	38	-17802	288	288	1	0	This specimen displays extended anther filaments.
+27	Plant_Corn	5	18006	PetaloidDoubling	39	-17804	288	288	1	0	This specimen displays double whorls of reproductive tissue.
+27	Plant_Corn	6	18007	SeedShedding	40	-17806	288	288	1	0	This specimen displays a sparse descending trail of ornamental seeds.
+27	Plant_Cotton	2	18009	DehiscentCapsules	36	-17780	288	288	1	0	This specimen displays opening seed capsules with exposed seeds.
+27	Plant_Cotton	3	18010	WingedSamaras	37	-17792	288	288	1	0	This specimen displays unfolding paired winged seeds.
+27	Plant_Cotton	4	18011	AntherEmergence	38	-17794	288	288	1	0	This specimen displays extended anther filaments.
+27	Plant_Cotton	5	18012	PetaloidDoubling	39	-17796	288	288	1	0	This specimen displays double whorls of reproductive tissue.
+27	Plant_Cotton	6	18013	SeedShedding	40	-17798	288	288	1	0	This specimen displays a sparse descending trail of ornamental seeds.
+27	Plant_Daylily	2	18015	DehiscentCapsules	36	-17778	288	288	1	0	This specimen displays opening seed capsules with exposed seeds.
+27	Plant_Daylily	3	18016	WingedSamaras	37	-17784	288	288	1	0	This specimen displays unfolding paired winged seeds.
+27	Plant_Daylily	4	18017	AntherEmergence	38	-17786	288	288	1	0	This specimen displays extended anther filaments.
+27	Plant_Daylily	5	18018	PetaloidDoubling	39	-17788	288	288	1	0	This specimen displays double whorls of reproductive tissue.
+27	Plant_Daylily	6	18019	SeedShedding	40	-17790	288	288	1	0	This specimen displays a sparse descending trail of ornamental seeds.
+28	Plant_Corn	2	18021	PrismaticLamina	41	-18262	288	288	0	0	It also shows localized prismatic foliage sheen.
+28	Plant_Corn	3	18022	RollingLamina	42	-18280	288	288	0	0	This specimen displays unrolling leaf blades with contrasting backs.
+28	Plant_Corn	4	18023	AmberResin	43	-18282	288	288	0	0	It also shows elongated amber resin droplets.
+28	Plant_Corn	5	18024	ExfoliatingBark	44	-18284	288	288	0	0	This specimen displays curling bark-like ribbons at the base.
+28	Plant_Corn	6	18025	SelfShadowLace	45	-18286	288	288	0	0	It also shows shifting local self-shadow patterns.
+28	Plant_Cotton	2	18027	PrismaticLamina	41	-18260	288	288	0	0	It also shows localized prismatic foliage sheen.
+28	Plant_Cotton	3	18028	RollingLamina	42	-18272	288	288	0	0	This specimen displays unrolling leaf blades with contrasting backs.
+28	Plant_Cotton	4	18029	AmberResin	43	-18274	288	288	0	0	It also shows elongated amber resin droplets.
+28	Plant_Cotton	5	18030	ExfoliatingBark	44	-18276	288	288	0	0	This specimen displays curling bark-like ribbons at the base.
+28	Plant_Cotton	6	18031	SelfShadowLace	45	-18278	288	288	0	0	It also shows shifting local self-shadow patterns.
+28	Plant_Daylily	2	18033	PrismaticLamina	41	-18258	288	288	0	0	It also shows localized prismatic foliage sheen.
+28	Plant_Daylily	3	18034	RollingLamina	42	-18264	288	288	0	0	This specimen displays unrolling leaf blades with contrasting backs.
+28	Plant_Daylily	4	18035	AmberResin	43	-18266	288	288	0	0	It also shows elongated amber resin droplets.
+28	Plant_Daylily	5	18036	ExfoliatingBark	44	-18268	288	288	0	0	This specimen displays curling bark-like ribbons at the base.
+28	Plant_Daylily	6	18037	SelfShadowLace	45	-18270	288	288	0	0	It also shows shifting local self-shadow patterns.
+29	Plant_Corn	2	18021	PrismaticLamina	41	-18262	288	288	0.125	0	It also shows localized prismatic foliage sheen.
+29	Plant_Corn	3	18022	RollingLamina	42	-18280	288	288	0.125	0	This specimen displays unrolling leaf blades with contrasting backs.
+29	Plant_Corn	4	18023	AmberResin	43	-18282	288	288	0.125	0	It also shows elongated amber resin droplets.
+29	Plant_Corn	5	18024	ExfoliatingBark	44	-18284	288	288	0.125	0	This specimen displays curling bark-like ribbons at the base.
+29	Plant_Corn	6	18025	SelfShadowLace	45	-18286	288	288	0.125	0	It also shows shifting local self-shadow patterns.
+29	Plant_Cotton	2	18027	PrismaticLamina	41	-18260	288	288	0.125	0	It also shows localized prismatic foliage sheen.
+29	Plant_Cotton	3	18028	RollingLamina	42	-18272	288	288	0.125	0	This specimen displays unrolling leaf blades with contrasting backs.
+29	Plant_Cotton	4	18029	AmberResin	43	-18274	288	288	0.125	0	It also shows elongated amber resin droplets.
+29	Plant_Cotton	5	18030	ExfoliatingBark	44	-18276	288	288	0.125	0	This specimen displays curling bark-like ribbons at the base.
+29	Plant_Cotton	6	18031	SelfShadowLace	45	-18278	288	288	0.125	0	It also shows shifting local self-shadow patterns.
+29	Plant_Daylily	2	18033	PrismaticLamina	41	-18258	288	288	0.125	0	It also shows localized prismatic foliage sheen.
+29	Plant_Daylily	3	18034	RollingLamina	42	-18264	288	288	0.125	0	This specimen displays unrolling leaf blades with contrasting backs.
+29	Plant_Daylily	4	18035	AmberResin	43	-18266	288	288	0.125	0	It also shows elongated amber resin droplets.
+29	Plant_Daylily	5	18036	ExfoliatingBark	44	-18268	288	288	0.125	0	This specimen displays curling bark-like ribbons at the base.
+29	Plant_Daylily	6	18037	SelfShadowLace	45	-18270	288	288	0.125	0	It also shows shifting local self-shadow patterns.
+30	Plant_Corn	2	18021	PrismaticLamina	41	-18262	288	288	0.25	0	It also shows localized prismatic foliage sheen.
+30	Plant_Corn	3	18022	RollingLamina	42	-18280	288	288	0.25	0	This specimen displays unrolling leaf blades with contrasting backs.
+30	Plant_Corn	4	18023	AmberResin	43	-18282	288	288	0.25	0	It also shows elongated amber resin droplets.
+30	Plant_Corn	5	18024	ExfoliatingBark	44	-18284	288	288	0.25	0	This specimen displays curling bark-like ribbons at the base.
+30	Plant_Corn	6	18025	SelfShadowLace	45	-18286	288	288	0.25	0	It also shows shifting local self-shadow patterns.
+30	Plant_Cotton	2	18027	PrismaticLamina	41	-18260	288	288	0.25	0	It also shows localized prismatic foliage sheen.
+30	Plant_Cotton	3	18028	RollingLamina	42	-18272	288	288	0.25	0	This specimen displays unrolling leaf blades with contrasting backs.
+30	Plant_Cotton	4	18029	AmberResin	43	-18274	288	288	0.25	0	It also shows elongated amber resin droplets.
+30	Plant_Cotton	5	18030	ExfoliatingBark	44	-18276	288	288	0.25	0	This specimen displays curling bark-like ribbons at the base.
+30	Plant_Cotton	6	18031	SelfShadowLace	45	-18278	288	288	0.25	0	It also shows shifting local self-shadow patterns.
+30	Plant_Daylily	2	18033	PrismaticLamina	41	-18258	288	288	0.25	0	It also shows localized prismatic foliage sheen.
+30	Plant_Daylily	3	18034	RollingLamina	42	-18264	288	288	0.25	0	This specimen displays unrolling leaf blades with contrasting backs.
+30	Plant_Daylily	4	18035	AmberResin	43	-18266	288	288	0.25	0	It also shows elongated amber resin droplets.
+30	Plant_Daylily	5	18036	ExfoliatingBark	44	-18268	288	288	0.25	0	This specimen displays curling bark-like ribbons at the base.
+30	Plant_Daylily	6	18037	SelfShadowLace	45	-18270	288	288	0.25	0	It also shows shifting local self-shadow patterns.
+31	Plant_Corn	2	18021	PrismaticLamina	41	-18262	288	288	0.375	0	It also shows localized prismatic foliage sheen.
+31	Plant_Corn	3	18022	RollingLamina	42	-18280	288	288	0.375	0	This specimen displays unrolling leaf blades with contrasting backs.
+31	Plant_Corn	4	18023	AmberResin	43	-18282	288	288	0.375	0	It also shows elongated amber resin droplets.
+31	Plant_Corn	5	18024	ExfoliatingBark	44	-18284	288	288	0.375	0	This specimen displays curling bark-like ribbons at the base.
+31	Plant_Corn	6	18025	SelfShadowLace	45	-18286	288	288	0.375	0	It also shows shifting local self-shadow patterns.
+31	Plant_Cotton	2	18027	PrismaticLamina	41	-18260	288	288	0.375	0	It also shows localized prismatic foliage sheen.
+31	Plant_Cotton	3	18028	RollingLamina	42	-18272	288	288	0.375	0	This specimen displays unrolling leaf blades with contrasting backs.
+31	Plant_Cotton	4	18029	AmberResin	43	-18274	288	288	0.375	0	It also shows elongated amber resin droplets.
+31	Plant_Cotton	5	18030	ExfoliatingBark	44	-18276	288	288	0.375	0	This specimen displays curling bark-like ribbons at the base.
+31	Plant_Cotton	6	18031	SelfShadowLace	45	-18278	288	288	0.375	0	It also shows shifting local self-shadow patterns.
+31	Plant_Daylily	2	18033	PrismaticLamina	41	-18258	288	288	0.375	0	It also shows localized prismatic foliage sheen.
+31	Plant_Daylily	3	18034	RollingLamina	42	-18264	288	288	0.375	0	This specimen displays unrolling leaf blades with contrasting backs.
+31	Plant_Daylily	4	18035	AmberResin	43	-18266	288	288	0.375	0	It also shows elongated amber resin droplets.
+31	Plant_Daylily	5	18036	ExfoliatingBark	44	-18268	288	288	0.375	0	This specimen displays curling bark-like ribbons at the base.
+31	Plant_Daylily	6	18037	SelfShadowLace	45	-18270	288	288	0.375	0	It also shows shifting local self-shadow patterns.
+32	Plant_Corn	2	18021	PrismaticLamina	41	-18262	288	288	0.5	0	It also shows localized prismatic foliage sheen.
+32	Plant_Corn	3	18022	RollingLamina	42	-18280	288	288	0.5	0	This specimen displays unrolling leaf blades with contrasting backs.
+32	Plant_Corn	4	18023	AmberResin	43	-18282	288	288	0.5	0	It also shows elongated amber resin droplets.
+32	Plant_Corn	5	18024	ExfoliatingBark	44	-18284	288	288	0.5	0	This specimen displays curling bark-like ribbons at the base.
+32	Plant_Corn	6	18025	SelfShadowLace	45	-18286	288	288	0.5	0	It also shows shifting local self-shadow patterns.
+32	Plant_Cotton	2	18027	PrismaticLamina	41	-18260	288	288	0.5	0	It also shows localized prismatic foliage sheen.
+32	Plant_Cotton	3	18028	RollingLamina	42	-18272	288	288	0.5	0	This specimen displays unrolling leaf blades with contrasting backs.
+32	Plant_Cotton	4	18029	AmberResin	43	-18274	288	288	0.5	0	It also shows elongated amber resin droplets.
+32	Plant_Cotton	5	18030	ExfoliatingBark	44	-18276	288	288	0.5	0	This specimen displays curling bark-like ribbons at the base.
+32	Plant_Cotton	6	18031	SelfShadowLace	45	-18278	288	288	0.5	0	It also shows shifting local self-shadow patterns.
+32	Plant_Daylily	2	18033	PrismaticLamina	41	-18258	288	288	0.5	0	It also shows localized prismatic foliage sheen.
+32	Plant_Daylily	3	18034	RollingLamina	42	-18264	288	288	0.5	0	This specimen displays unrolling leaf blades with contrasting backs.
+32	Plant_Daylily	4	18035	AmberResin	43	-18266	288	288	0.5	0	It also shows elongated amber resin droplets.
+32	Plant_Daylily	5	18036	ExfoliatingBark	44	-18268	288	288	0.5	0	This specimen displays curling bark-like ribbons at the base.
+32	Plant_Daylily	6	18037	SelfShadowLace	45	-18270	288	288	0.5	0	It also shows shifting local self-shadow patterns.
+33	Plant_Corn	2	18021	PrismaticLamina	41	-18262	288	288	0.625	0	It also shows localized prismatic foliage sheen.
+33	Plant_Corn	3	18022	RollingLamina	42	-18280	288	288	0.625	0	This specimen displays unrolling leaf blades with contrasting backs.
+33	Plant_Corn	4	18023	AmberResin	43	-18282	288	288	0.625	0	It also shows elongated amber resin droplets.
+33	Plant_Corn	5	18024	ExfoliatingBark	44	-18284	288	288	0.625	0	This specimen displays curling bark-like ribbons at the base.
+33	Plant_Corn	6	18025	SelfShadowLace	45	-18286	288	288	0.625	0	It also shows shifting local self-shadow patterns.
+33	Plant_Cotton	2	18027	PrismaticLamina	41	-18260	288	288	0.625	0	It also shows localized prismatic foliage sheen.
+33	Plant_Cotton	3	18028	RollingLamina	42	-18272	288	288	0.625	0	This specimen displays unrolling leaf blades with contrasting backs.
+33	Plant_Cotton	4	18029	AmberResin	43	-18274	288	288	0.625	0	It also shows elongated amber resin droplets.
+33	Plant_Cotton	5	18030	ExfoliatingBark	44	-18276	288	288	0.625	0	This specimen displays curling bark-like ribbons at the base.
+33	Plant_Cotton	6	18031	SelfShadowLace	45	-18278	288	288	0.625	0	It also shows shifting local self-shadow patterns.
+33	Plant_Daylily	2	18033	PrismaticLamina	41	-18258	288	288	0.625	0	It also shows localized prismatic foliage sheen.
+33	Plant_Daylily	3	18034	RollingLamina	42	-18264	288	288	0.625	0	This specimen displays unrolling leaf blades with contrasting backs.
+33	Plant_Daylily	4	18035	AmberResin	43	-18266	288	288	0.625	0	It also shows elongated amber resin droplets.
+33	Plant_Daylily	5	18036	ExfoliatingBark	44	-18268	288	288	0.625	0	This specimen displays curling bark-like ribbons at the base.
+33	Plant_Daylily	6	18037	SelfShadowLace	45	-18270	288	288	0.625	0	It also shows shifting local self-shadow patterns.
+34	Plant_Corn	2	18021	PrismaticLamina	41	-18262	288	288	0.75	0	It also shows localized prismatic foliage sheen.
+34	Plant_Corn	3	18022	RollingLamina	42	-18280	288	288	0.75	0	This specimen displays unrolling leaf blades with contrasting backs.
+34	Plant_Corn	4	18023	AmberResin	43	-18282	288	288	0.75	0	It also shows elongated amber resin droplets.
+34	Plant_Corn	5	18024	ExfoliatingBark	44	-18284	288	288	0.75	0	This specimen displays curling bark-like ribbons at the base.
+34	Plant_Corn	6	18025	SelfShadowLace	45	-18286	288	288	0.75	0	It also shows shifting local self-shadow patterns.
+34	Plant_Cotton	2	18027	PrismaticLamina	41	-18260	288	288	0.75	0	It also shows localized prismatic foliage sheen.
+34	Plant_Cotton	3	18028	RollingLamina	42	-18272	288	288	0.75	0	This specimen displays unrolling leaf blades with contrasting backs.
+34	Plant_Cotton	4	18029	AmberResin	43	-18274	288	288	0.75	0	It also shows elongated amber resin droplets.
+34	Plant_Cotton	5	18030	ExfoliatingBark	44	-18276	288	288	0.75	0	This specimen displays curling bark-like ribbons at the base.
+34	Plant_Cotton	6	18031	SelfShadowLace	45	-18278	288	288	0.75	0	It also shows shifting local self-shadow patterns.
+34	Plant_Daylily	2	18033	PrismaticLamina	41	-18258	288	288	0.75	0	It also shows localized prismatic foliage sheen.
+34	Plant_Daylily	3	18034	RollingLamina	42	-18264	288	288	0.75	0	This specimen displays unrolling leaf blades with contrasting backs.
+34	Plant_Daylily	4	18035	AmberResin	43	-18266	288	288	0.75	0	It also shows elongated amber resin droplets.
+34	Plant_Daylily	5	18036	ExfoliatingBark	44	-18268	288	288	0.75	0	This specimen displays curling bark-like ribbons at the base.
+34	Plant_Daylily	6	18037	SelfShadowLace	45	-18270	288	288	0.75	0	It also shows shifting local self-shadow patterns.
+35	Plant_Corn	2	18021	PrismaticLamina	41	-18262	288	288	0.875	0	It also shows localized prismatic foliage sheen.
+35	Plant_Corn	3	18022	RollingLamina	42	-18280	288	288	0.875	0	This specimen displays unrolling leaf blades with contrasting backs.
+35	Plant_Corn	4	18023	AmberResin	43	-18282	288	288	0.875	0	It also shows elongated amber resin droplets.
+35	Plant_Corn	5	18024	ExfoliatingBark	44	-18284	288	288	0.875	0	This specimen displays curling bark-like ribbons at the base.
+35	Plant_Corn	6	18025	SelfShadowLace	45	-18286	288	288	0.875	0	It also shows shifting local self-shadow patterns.
+35	Plant_Cotton	2	18027	PrismaticLamina	41	-18260	288	288	0.875	0	It also shows localized prismatic foliage sheen.
+35	Plant_Cotton	3	18028	RollingLamina	42	-18272	288	288	0.875	0	This specimen displays unrolling leaf blades with contrasting backs.
+35	Plant_Cotton	4	18029	AmberResin	43	-18274	288	288	0.875	0	It also shows elongated amber resin droplets.
+35	Plant_Cotton	5	18030	ExfoliatingBark	44	-18276	288	288	0.875	0	This specimen displays curling bark-like ribbons at the base.
+35	Plant_Cotton	6	18031	SelfShadowLace	45	-18278	288	288	0.875	0	It also shows shifting local self-shadow patterns.
+35	Plant_Daylily	2	18033	PrismaticLamina	41	-18258	288	288	0.875	0	It also shows localized prismatic foliage sheen.
+35	Plant_Daylily	3	18034	RollingLamina	42	-18264	288	288	0.875	0	This specimen displays unrolling leaf blades with contrasting backs.
+35	Plant_Daylily	4	18035	AmberResin	43	-18266	288	288	0.875	0	It also shows elongated amber resin droplets.
+35	Plant_Daylily	5	18036	ExfoliatingBark	44	-18268	288	288	0.875	0	This specimen displays curling bark-like ribbons at the base.
+35	Plant_Daylily	6	18037	SelfShadowLace	45	-18270	288	288	0.875	0	It also shows shifting local self-shadow patterns.
+36	Plant_Corn	2	18021	PrismaticLamina	41	-18262	288	288	1	0	It also shows localized prismatic foliage sheen.
+36	Plant_Corn	3	18022	RollingLamina	42	-18280	288	288	1	0	This specimen displays unrolling leaf blades with contrasting backs.
+36	Plant_Corn	4	18023	AmberResin	43	-18282	288	288	1	0	It also shows elongated amber resin droplets.
+36	Plant_Corn	5	18024	ExfoliatingBark	44	-18284	288	288	1	0	This specimen displays curling bark-like ribbons at the base.
+36	Plant_Corn	6	18025	SelfShadowLace	45	-18286	288	288	1	0	It also shows shifting local self-shadow patterns.
+36	Plant_Cotton	2	18027	PrismaticLamina	41	-18260	288	288	1	0	It also shows localized prismatic foliage sheen.
+36	Plant_Cotton	3	18028	RollingLamina	42	-18272	288	288	1	0	This specimen displays unrolling leaf blades with contrasting backs.
+36	Plant_Cotton	4	18029	AmberResin	43	-18274	288	288	1	0	It also shows elongated amber resin droplets.
+36	Plant_Cotton	5	18030	ExfoliatingBark	44	-18276	288	288	1	0	This specimen displays curling bark-like ribbons at the base.
+36	Plant_Cotton	6	18031	SelfShadowLace	45	-18278	288	288	1	0	It also shows shifting local self-shadow patterns.
+36	Plant_Daylily	2	18033	PrismaticLamina	41	-18258	288	288	1	0	It also shows localized prismatic foliage sheen.
+36	Plant_Daylily	3	18034	RollingLamina	42	-18264	288	288	1	0	This specimen displays unrolling leaf blades with contrasting backs.
+36	Plant_Daylily	4	18035	AmberResin	43	-18266	288	288	1	0	It also shows elongated amber resin droplets.
+36	Plant_Daylily	5	18036	ExfoliatingBark	44	-18268	288	288	1	0	This specimen displays curling bark-like ribbons at the base.
+36	Plant_Daylily	6	18037	SelfShadowLace	45	-18270	288	288	1	0	It also shows shifting local self-shadow patterns.

@@ -1,0 +1,649 @@
+Panel	Species	Column	Plant ID	Cultivar	Facts	Individual phenotype	Botanical observations	Recorded history	Cultivar potential
+1	Plant_Corn	1	17966	Vanilla	0				
+1	Plant_Corn	2	17967	HNS_Plant_Corn_1	1	This specimen displays lateral branches with descending aerial support roots.	Growth habit: lateral branches with descending aerial support roots.		Growth habit: lateral branches with descending aerial support roots.
+1	Plant_Corn	3	17968	HNS_Plant_Corn_2	1	This specimen displays candelabra-like upright branch tips.	Growth habit: candelabra-like upright branch tips.		Growth habit: candelabra-like upright branch tips.
+1	Plant_Corn	4	17969	HNS_Plant_Corn_3	1	This specimen displays creeping stolons with miniature daughter rosettes.	Growth habit: creeping stolons with miniature daughter rosettes.		Growth habit: creeping stolons with miniature daughter rosettes.
+1	Plant_Corn	5	17970	HNS_Plant_Corn_4	1	This specimen displays paired intertwining leafy leaders.	Growth habit: paired intertwining leafy leaders.		Growth habit: paired intertwining leafy leaders.
+1	Plant_Corn	6	17971	HNS_Plant_Corn_5	1	This specimen displays winged petioles with paired leaf blades.	Growth habit: winged petioles with paired leaf blades.		Growth habit: winged petioles with paired leaf blades.
+1	Plant_Cotton	1	17972	Vanilla	0				
+1	Plant_Cotton	2	17973	HNS_Plant_Cotton_6	1	This specimen displays lateral branches with descending aerial support roots.	Growth habit: lateral branches with descending aerial support roots.		Growth habit: lateral branches with descending aerial support roots.
+1	Plant_Cotton	3	17974	HNS_Plant_Cotton_7	1	This specimen displays candelabra-like upright branch tips.	Growth habit: candelabra-like upright branch tips.		Growth habit: candelabra-like upright branch tips.
+1	Plant_Cotton	4	17975	HNS_Plant_Cotton_8	1	This specimen displays creeping stolons with miniature daughter rosettes.	Growth habit: creeping stolons with miniature daughter rosettes.		Growth habit: creeping stolons with miniature daughter rosettes.
+1	Plant_Cotton	5	17976	HNS_Plant_Cotton_9	1	This specimen displays paired intertwining leafy leaders.	Growth habit: paired intertwining leafy leaders.		Growth habit: paired intertwining leafy leaders.
+1	Plant_Cotton	6	17977	HNS_Plant_Cotton_10	1	This specimen displays winged petioles with paired leaf blades.	Growth habit: winged petioles with paired leaf blades.		Growth habit: winged petioles with paired leaf blades.
+1	Plant_Daylily	1	17978	Vanilla	0				
+1	Plant_Daylily	2	17979	HNS_Plant_Daylily_11	1	This specimen displays lateral branches with descending aerial support roots.	Growth habit: lateral branches with descending aerial support roots.		Growth habit: lateral branches with descending aerial support roots.
+1	Plant_Daylily	3	17980	HNS_Plant_Daylily_12	1	This specimen displays candelabra-like upright branch tips.	Growth habit: candelabra-like upright branch tips.		Growth habit: candelabra-like upright branch tips.
+1	Plant_Daylily	4	17981	HNS_Plant_Daylily_13	1	This specimen displays creeping stolons with miniature daughter rosettes.	Growth habit: creeping stolons with miniature daughter rosettes.		Growth habit: creeping stolons with miniature daughter rosettes.
+1	Plant_Daylily	5	17982	HNS_Plant_Daylily_14	1	This specimen displays paired intertwining leafy leaders.	Growth habit: paired intertwining leafy leaders.		Growth habit: paired intertwining leafy leaders.
+1	Plant_Daylily	6	17983	HNS_Plant_Daylily_15	1	This specimen displays winged petioles with paired leaf blades.	Growth habit: winged petioles with paired leaf blades.		Growth habit: winged petioles with paired leaf blades.
+2	Plant_Corn	1	17966	Vanilla	0				
+2	Plant_Corn	2	17967	HNS_Plant_Corn_1	1	This specimen displays lateral branches with descending aerial support roots.	Growth habit: lateral branches with descending aerial support roots.		Growth habit: lateral branches with descending aerial support roots.
+2	Plant_Corn	3	17968	HNS_Plant_Corn_2	1	This specimen displays candelabra-like upright branch tips.	Growth habit: candelabra-like upright branch tips.		Growth habit: candelabra-like upright branch tips.
+2	Plant_Corn	4	17969	HNS_Plant_Corn_3	1	This specimen displays creeping stolons with miniature daughter rosettes.	Growth habit: creeping stolons with miniature daughter rosettes.		Growth habit: creeping stolons with miniature daughter rosettes.
+2	Plant_Corn	5	17970	HNS_Plant_Corn_4	1	This specimen displays paired intertwining leafy leaders.	Growth habit: paired intertwining leafy leaders.		Growth habit: paired intertwining leafy leaders.
+2	Plant_Corn	6	17971	HNS_Plant_Corn_5	1	This specimen displays winged petioles with paired leaf blades.	Growth habit: winged petioles with paired leaf blades.		Growth habit: winged petioles with paired leaf blades.
+2	Plant_Cotton	1	17972	Vanilla	0				
+2	Plant_Cotton	2	17973	HNS_Plant_Cotton_6	1	This specimen displays lateral branches with descending aerial support roots.	Growth habit: lateral branches with descending aerial support roots.		Growth habit: lateral branches with descending aerial support roots.
+2	Plant_Cotton	3	17974	HNS_Plant_Cotton_7	1	This specimen displays candelabra-like upright branch tips.	Growth habit: candelabra-like upright branch tips.		Growth habit: candelabra-like upright branch tips.
+2	Plant_Cotton	4	17975	HNS_Plant_Cotton_8	1	This specimen displays creeping stolons with miniature daughter rosettes.	Growth habit: creeping stolons with miniature daughter rosettes.		Growth habit: creeping stolons with miniature daughter rosettes.
+2	Plant_Cotton	5	17976	HNS_Plant_Cotton_9	1	This specimen displays paired intertwining leafy leaders.	Growth habit: paired intertwining leafy leaders.		Growth habit: paired intertwining leafy leaders.
+2	Plant_Cotton	6	17977	HNS_Plant_Cotton_10	1	This specimen displays winged petioles with paired leaf blades.	Growth habit: winged petioles with paired leaf blades.		Growth habit: winged petioles with paired leaf blades.
+2	Plant_Daylily	1	17978	Vanilla	0				
+2	Plant_Daylily	2	17979	HNS_Plant_Daylily_11	1	This specimen displays lateral branches with descending aerial support roots.	Growth habit: lateral branches with descending aerial support roots.		Growth habit: lateral branches with descending aerial support roots.
+2	Plant_Daylily	3	17980	HNS_Plant_Daylily_12	1	This specimen displays candelabra-like upright branch tips.	Growth habit: candelabra-like upright branch tips.		Growth habit: candelabra-like upright branch tips.
+2	Plant_Daylily	4	17981	HNS_Plant_Daylily_13	1	This specimen displays creeping stolons with miniature daughter rosettes.	Growth habit: creeping stolons with miniature daughter rosettes.		Growth habit: creeping stolons with miniature daughter rosettes.
+2	Plant_Daylily	5	17982	HNS_Plant_Daylily_14	1	This specimen displays paired intertwining leafy leaders.	Growth habit: paired intertwining leafy leaders.		Growth habit: paired intertwining leafy leaders.
+2	Plant_Daylily	6	17983	HNS_Plant_Daylily_15	1	This specimen displays winged petioles with paired leaf blades.	Growth habit: winged petioles with paired leaf blades.		Growth habit: winged petioles with paired leaf blades.
+3	Plant_Corn	1	17966	Vanilla	0				
+3	Plant_Corn	2	17967	HNS_Plant_Corn_1	1	This specimen displays lateral branches with descending aerial support roots.	Growth habit: lateral branches with descending aerial support roots.		Growth habit: lateral branches with descending aerial support roots.
+3	Plant_Corn	3	17968	HNS_Plant_Corn_2	1	This specimen displays candelabra-like upright branch tips.	Growth habit: candelabra-like upright branch tips.		Growth habit: candelabra-like upright branch tips.
+3	Plant_Corn	4	17969	HNS_Plant_Corn_3	1	This specimen displays creeping stolons with miniature daughter rosettes.	Growth habit: creeping stolons with miniature daughter rosettes.		Growth habit: creeping stolons with miniature daughter rosettes.
+3	Plant_Corn	5	17970	HNS_Plant_Corn_4	1	This specimen displays paired intertwining leafy leaders.	Growth habit: paired intertwining leafy leaders.		Growth habit: paired intertwining leafy leaders.
+3	Plant_Corn	6	17971	HNS_Plant_Corn_5	1	This specimen displays winged petioles with paired leaf blades.	Growth habit: winged petioles with paired leaf blades.		Growth habit: winged petioles with paired leaf blades.
+3	Plant_Cotton	1	17972	Vanilla	0				
+3	Plant_Cotton	2	17973	HNS_Plant_Cotton_6	1	This specimen displays lateral branches with descending aerial support roots.	Growth habit: lateral branches with descending aerial support roots.		Growth habit: lateral branches with descending aerial support roots.
+3	Plant_Cotton	3	17974	HNS_Plant_Cotton_7	1	This specimen displays candelabra-like upright branch tips.	Growth habit: candelabra-like upright branch tips.		Growth habit: candelabra-like upright branch tips.
+3	Plant_Cotton	4	17975	HNS_Plant_Cotton_8	1	This specimen displays creeping stolons with miniature daughter rosettes.	Growth habit: creeping stolons with miniature daughter rosettes.		Growth habit: creeping stolons with miniature daughter rosettes.
+3	Plant_Cotton	5	17976	HNS_Plant_Cotton_9	1	This specimen displays paired intertwining leafy leaders.	Growth habit: paired intertwining leafy leaders.		Growth habit: paired intertwining leafy leaders.
+3	Plant_Cotton	6	17977	HNS_Plant_Cotton_10	1	This specimen displays winged petioles with paired leaf blades.	Growth habit: winged petioles with paired leaf blades.		Growth habit: winged petioles with paired leaf blades.
+3	Plant_Daylily	1	17978	Vanilla	0				
+3	Plant_Daylily	2	17979	HNS_Plant_Daylily_11	1	This specimen displays lateral branches with descending aerial support roots.	Growth habit: lateral branches with descending aerial support roots.		Growth habit: lateral branches with descending aerial support roots.
+3	Plant_Daylily	3	17980	HNS_Plant_Daylily_12	1	This specimen displays candelabra-like upright branch tips.	Growth habit: candelabra-like upright branch tips.		Growth habit: candelabra-like upright branch tips.
+3	Plant_Daylily	4	17981	HNS_Plant_Daylily_13	1	This specimen displays creeping stolons with miniature daughter rosettes.	Growth habit: creeping stolons with miniature daughter rosettes.		Growth habit: creeping stolons with miniature daughter rosettes.
+3	Plant_Daylily	5	17982	HNS_Plant_Daylily_14	1	This specimen displays paired intertwining leafy leaders.	Growth habit: paired intertwining leafy leaders.		Growth habit: paired intertwining leafy leaders.
+3	Plant_Daylily	6	17983	HNS_Plant_Daylily_15	1	This specimen displays winged petioles with paired leaf blades.	Growth habit: winged petioles with paired leaf blades.		Growth habit: winged petioles with paired leaf blades.
+4	Plant_Corn	1	17966	Vanilla	0				
+4	Plant_Corn	2	17967	HNS_Plant_Corn_1	1	This specimen displays lateral branches with descending aerial support roots.	Growth habit: lateral branches with descending aerial support roots.		Growth habit: lateral branches with descending aerial support roots.
+4	Plant_Corn	3	17968	HNS_Plant_Corn_2	1	This specimen displays candelabra-like upright branch tips.	Growth habit: candelabra-like upright branch tips.		Growth habit: candelabra-like upright branch tips.
+4	Plant_Corn	4	17969	HNS_Plant_Corn_3	1	This specimen displays creeping stolons with miniature daughter rosettes.	Growth habit: creeping stolons with miniature daughter rosettes.		Growth habit: creeping stolons with miniature daughter rosettes.
+4	Plant_Corn	5	17970	HNS_Plant_Corn_4	1	This specimen displays paired intertwining leafy leaders.	Growth habit: paired intertwining leafy leaders.		Growth habit: paired intertwining leafy leaders.
+4	Plant_Corn	6	17971	HNS_Plant_Corn_5	1	This specimen displays winged petioles with paired leaf blades.	Growth habit: winged petioles with paired leaf blades.		Growth habit: winged petioles with paired leaf blades.
+4	Plant_Cotton	1	17972	Vanilla	0				
+4	Plant_Cotton	2	17973	HNS_Plant_Cotton_6	1	This specimen displays lateral branches with descending aerial support roots.	Growth habit: lateral branches with descending aerial support roots.		Growth habit: lateral branches with descending aerial support roots.
+4	Plant_Cotton	3	17974	HNS_Plant_Cotton_7	1	This specimen displays candelabra-like upright branch tips.	Growth habit: candelabra-like upright branch tips.		Growth habit: candelabra-like upright branch tips.
+4	Plant_Cotton	4	17975	HNS_Plant_Cotton_8	1	This specimen displays creeping stolons with miniature daughter rosettes.	Growth habit: creeping stolons with miniature daughter rosettes.		Growth habit: creeping stolons with miniature daughter rosettes.
+4	Plant_Cotton	5	17976	HNS_Plant_Cotton_9	1	This specimen displays paired intertwining leafy leaders.	Growth habit: paired intertwining leafy leaders.		Growth habit: paired intertwining leafy leaders.
+4	Plant_Cotton	6	17977	HNS_Plant_Cotton_10	1	This specimen displays winged petioles with paired leaf blades.	Growth habit: winged petioles with paired leaf blades.		Growth habit: winged petioles with paired leaf blades.
+4	Plant_Daylily	1	17978	Vanilla	0				
+4	Plant_Daylily	2	17979	HNS_Plant_Daylily_11	1	This specimen displays lateral branches with descending aerial support roots.	Growth habit: lateral branches with descending aerial support roots.		Growth habit: lateral branches with descending aerial support roots.
+4	Plant_Daylily	3	17980	HNS_Plant_Daylily_12	1	This specimen displays candelabra-like upright branch tips.	Growth habit: candelabra-like upright branch tips.		Growth habit: candelabra-like upright branch tips.
+4	Plant_Daylily	4	17981	HNS_Plant_Daylily_13	1	This specimen displays creeping stolons with miniature daughter rosettes.	Growth habit: creeping stolons with miniature daughter rosettes.		Growth habit: creeping stolons with miniature daughter rosettes.
+4	Plant_Daylily	5	17982	HNS_Plant_Daylily_14	1	This specimen displays paired intertwining leafy leaders.	Growth habit: paired intertwining leafy leaders.		Growth habit: paired intertwining leafy leaders.
+4	Plant_Daylily	6	17983	HNS_Plant_Daylily_15	1	This specimen displays winged petioles with paired leaf blades.	Growth habit: winged petioles with paired leaf blades.		Growth habit: winged petioles with paired leaf blades.
+5	Plant_Corn	1	17966	Vanilla	0				
+5	Plant_Corn	2	17967	HNS_Plant_Corn_1	1	This specimen displays lateral branches with descending aerial support roots.	Growth habit: lateral branches with descending aerial support roots.		Growth habit: lateral branches with descending aerial support roots.
+5	Plant_Corn	3	17968	HNS_Plant_Corn_2	1	This specimen displays candelabra-like upright branch tips.	Growth habit: candelabra-like upright branch tips.		Growth habit: candelabra-like upright branch tips.
+5	Plant_Corn	4	17969	HNS_Plant_Corn_3	1	This specimen displays creeping stolons with miniature daughter rosettes.	Growth habit: creeping stolons with miniature daughter rosettes.		Growth habit: creeping stolons with miniature daughter rosettes.
+5	Plant_Corn	5	17970	HNS_Plant_Corn_4	1	This specimen displays paired intertwining leafy leaders.	Growth habit: paired intertwining leafy leaders.		Growth habit: paired intertwining leafy leaders.
+5	Plant_Corn	6	17971	HNS_Plant_Corn_5	1	This specimen displays winged petioles with paired leaf blades.	Growth habit: winged petioles with paired leaf blades.		Growth habit: winged petioles with paired leaf blades.
+5	Plant_Cotton	1	17972	Vanilla	0				
+5	Plant_Cotton	2	17973	HNS_Plant_Cotton_6	1	This specimen displays lateral branches with descending aerial support roots.	Growth habit: lateral branches with descending aerial support roots.		Growth habit: lateral branches with descending aerial support roots.
+5	Plant_Cotton	3	17974	HNS_Plant_Cotton_7	1	This specimen displays candelabra-like upright branch tips.	Growth habit: candelabra-like upright branch tips.		Growth habit: candelabra-like upright branch tips.
+5	Plant_Cotton	4	17975	HNS_Plant_Cotton_8	1	This specimen displays creeping stolons with miniature daughter rosettes.	Growth habit: creeping stolons with miniature daughter rosettes.		Growth habit: creeping stolons with miniature daughter rosettes.
+5	Plant_Cotton	5	17976	HNS_Plant_Cotton_9	1	This specimen displays paired intertwining leafy leaders.	Growth habit: paired intertwining leafy leaders.		Growth habit: paired intertwining leafy leaders.
+5	Plant_Cotton	6	17977	HNS_Plant_Cotton_10	1	This specimen displays winged petioles with paired leaf blades.	Growth habit: winged petioles with paired leaf blades.		Growth habit: winged petioles with paired leaf blades.
+5	Plant_Daylily	1	17978	Vanilla	0				
+5	Plant_Daylily	2	17979	HNS_Plant_Daylily_11	1	This specimen displays lateral branches with descending aerial support roots.	Growth habit: lateral branches with descending aerial support roots.		Growth habit: lateral branches with descending aerial support roots.
+5	Plant_Daylily	3	17980	HNS_Plant_Daylily_12	1	This specimen displays candelabra-like upright branch tips.	Growth habit: candelabra-like upright branch tips.		Growth habit: candelabra-like upright branch tips.
+5	Plant_Daylily	4	17981	HNS_Plant_Daylily_13	1	This specimen displays creeping stolons with miniature daughter rosettes.	Growth habit: creeping stolons with miniature daughter rosettes.		Growth habit: creeping stolons with miniature daughter rosettes.
+5	Plant_Daylily	5	17982	HNS_Plant_Daylily_14	1	This specimen displays paired intertwining leafy leaders.	Growth habit: paired intertwining leafy leaders.		Growth habit: paired intertwining leafy leaders.
+5	Plant_Daylily	6	17983	HNS_Plant_Daylily_15	1	This specimen displays winged petioles with paired leaf blades.	Growth habit: winged petioles with paired leaf blades.		Growth habit: winged petioles with paired leaf blades.
+6	Plant_Corn	1	17966	Vanilla	0				
+6	Plant_Corn	2	17967	HNS_Plant_Corn_1	1	This specimen displays lateral branches with descending aerial support roots.	Growth habit: lateral branches with descending aerial support roots.		Growth habit: lateral branches with descending aerial support roots.
+6	Plant_Corn	3	17968	HNS_Plant_Corn_2	1	This specimen displays candelabra-like upright branch tips.	Growth habit: candelabra-like upright branch tips.		Growth habit: candelabra-like upright branch tips.
+6	Plant_Corn	4	17969	HNS_Plant_Corn_3	1	This specimen displays creeping stolons with miniature daughter rosettes.	Growth habit: creeping stolons with miniature daughter rosettes.		Growth habit: creeping stolons with miniature daughter rosettes.
+6	Plant_Corn	5	17970	HNS_Plant_Corn_4	1	This specimen displays paired intertwining leafy leaders.	Growth habit: paired intertwining leafy leaders.		Growth habit: paired intertwining leafy leaders.
+6	Plant_Corn	6	17971	HNS_Plant_Corn_5	1	This specimen displays winged petioles with paired leaf blades.	Growth habit: winged petioles with paired leaf blades.		Growth habit: winged petioles with paired leaf blades.
+6	Plant_Cotton	1	17972	Vanilla	0				
+6	Plant_Cotton	2	17973	HNS_Plant_Cotton_6	1	This specimen displays lateral branches with descending aerial support roots.	Growth habit: lateral branches with descending aerial support roots.		Growth habit: lateral branches with descending aerial support roots.
+6	Plant_Cotton	3	17974	HNS_Plant_Cotton_7	1	This specimen displays candelabra-like upright branch tips.	Growth habit: candelabra-like upright branch tips.		Growth habit: candelabra-like upright branch tips.
+6	Plant_Cotton	4	17975	HNS_Plant_Cotton_8	1	This specimen displays creeping stolons with miniature daughter rosettes.	Growth habit: creeping stolons with miniature daughter rosettes.		Growth habit: creeping stolons with miniature daughter rosettes.
+6	Plant_Cotton	5	17976	HNS_Plant_Cotton_9	1	This specimen displays paired intertwining leafy leaders.	Growth habit: paired intertwining leafy leaders.		Growth habit: paired intertwining leafy leaders.
+6	Plant_Cotton	6	17977	HNS_Plant_Cotton_10	1	This specimen displays winged petioles with paired leaf blades.	Growth habit: winged petioles with paired leaf blades.		Growth habit: winged petioles with paired leaf blades.
+6	Plant_Daylily	1	17978	Vanilla	0				
+6	Plant_Daylily	2	17979	HNS_Plant_Daylily_11	1	This specimen displays lateral branches with descending aerial support roots.	Growth habit: lateral branches with descending aerial support roots.		Growth habit: lateral branches with descending aerial support roots.
+6	Plant_Daylily	3	17980	HNS_Plant_Daylily_12	1	This specimen displays candelabra-like upright branch tips.	Growth habit: candelabra-like upright branch tips.		Growth habit: candelabra-like upright branch tips.
+6	Plant_Daylily	4	17981	HNS_Plant_Daylily_13	1	This specimen displays creeping stolons with miniature daughter rosettes.	Growth habit: creeping stolons with miniature daughter rosettes.		Growth habit: creeping stolons with miniature daughter rosettes.
+6	Plant_Daylily	5	17982	HNS_Plant_Daylily_14	1	This specimen displays paired intertwining leafy leaders.	Growth habit: paired intertwining leafy leaders.		Growth habit: paired intertwining leafy leaders.
+6	Plant_Daylily	6	17983	HNS_Plant_Daylily_15	1	This specimen displays winged petioles with paired leaf blades.	Growth habit: winged petioles with paired leaf blades.		Growth habit: winged petioles with paired leaf blades.
+7	Plant_Corn	1	17966	Vanilla	0				
+7	Plant_Corn	2	17967	HNS_Plant_Corn_1	1	This specimen displays lateral branches with descending aerial support roots.	Growth habit: lateral branches with descending aerial support roots.		Growth habit: lateral branches with descending aerial support roots.
+7	Plant_Corn	3	17968	HNS_Plant_Corn_2	1	This specimen displays candelabra-like upright branch tips.	Growth habit: candelabra-like upright branch tips.		Growth habit: candelabra-like upright branch tips.
+7	Plant_Corn	4	17969	HNS_Plant_Corn_3	1	This specimen displays creeping stolons with miniature daughter rosettes.	Growth habit: creeping stolons with miniature daughter rosettes.		Growth habit: creeping stolons with miniature daughter rosettes.
+7	Plant_Corn	5	17970	HNS_Plant_Corn_4	1	This specimen displays paired intertwining leafy leaders.	Growth habit: paired intertwining leafy leaders.		Growth habit: paired intertwining leafy leaders.
+7	Plant_Corn	6	17971	HNS_Plant_Corn_5	1	This specimen displays winged petioles with paired leaf blades.	Growth habit: winged petioles with paired leaf blades.		Growth habit: winged petioles with paired leaf blades.
+7	Plant_Cotton	1	17972	Vanilla	0				
+7	Plant_Cotton	2	17973	HNS_Plant_Cotton_6	1	This specimen displays lateral branches with descending aerial support roots.	Growth habit: lateral branches with descending aerial support roots.		Growth habit: lateral branches with descending aerial support roots.
+7	Plant_Cotton	3	17974	HNS_Plant_Cotton_7	1	This specimen displays candelabra-like upright branch tips.	Growth habit: candelabra-like upright branch tips.		Growth habit: candelabra-like upright branch tips.
+7	Plant_Cotton	4	17975	HNS_Plant_Cotton_8	1	This specimen displays creeping stolons with miniature daughter rosettes.	Growth habit: creeping stolons with miniature daughter rosettes.		Growth habit: creeping stolons with miniature daughter rosettes.
+7	Plant_Cotton	5	17976	HNS_Plant_Cotton_9	1	This specimen displays paired intertwining leafy leaders.	Growth habit: paired intertwining leafy leaders.		Growth habit: paired intertwining leafy leaders.
+7	Plant_Cotton	6	17977	HNS_Plant_Cotton_10	1	This specimen displays winged petioles with paired leaf blades.	Growth habit: winged petioles with paired leaf blades.		Growth habit: winged petioles with paired leaf blades.
+7	Plant_Daylily	1	17978	Vanilla	0				
+7	Plant_Daylily	2	17979	HNS_Plant_Daylily_11	1	This specimen displays lateral branches with descending aerial support roots.	Growth habit: lateral branches with descending aerial support roots.		Growth habit: lateral branches with descending aerial support roots.
+7	Plant_Daylily	3	17980	HNS_Plant_Daylily_12	1	This specimen displays candelabra-like upright branch tips.	Growth habit: candelabra-like upright branch tips.		Growth habit: candelabra-like upright branch tips.
+7	Plant_Daylily	4	17981	HNS_Plant_Daylily_13	1	This specimen displays creeping stolons with miniature daughter rosettes.	Growth habit: creeping stolons with miniature daughter rosettes.		Growth habit: creeping stolons with miniature daughter rosettes.
+7	Plant_Daylily	5	17982	HNS_Plant_Daylily_14	1	This specimen displays paired intertwining leafy leaders.	Growth habit: paired intertwining leafy leaders.		Growth habit: paired intertwining leafy leaders.
+7	Plant_Daylily	6	17983	HNS_Plant_Daylily_15	1	This specimen displays winged petioles with paired leaf blades.	Growth habit: winged petioles with paired leaf blades.		Growth habit: winged petioles with paired leaf blades.
+8	Plant_Corn	1	17966	Vanilla	0				
+8	Plant_Corn	2	17967	HNS_Plant_Corn_1	1	This specimen displays lateral branches with descending aerial support roots.	Growth habit: lateral branches with descending aerial support roots.		Growth habit: lateral branches with descending aerial support roots.
+8	Plant_Corn	3	17968	HNS_Plant_Corn_2	1	This specimen displays candelabra-like upright branch tips.	Growth habit: candelabra-like upright branch tips.		Growth habit: candelabra-like upright branch tips.
+8	Plant_Corn	4	17969	HNS_Plant_Corn_3	1	This specimen displays creeping stolons with miniature daughter rosettes.	Growth habit: creeping stolons with miniature daughter rosettes.		Growth habit: creeping stolons with miniature daughter rosettes.
+8	Plant_Corn	5	17970	HNS_Plant_Corn_4	1	This specimen displays paired intertwining leafy leaders.	Growth habit: paired intertwining leafy leaders.		Growth habit: paired intertwining leafy leaders.
+8	Plant_Corn	6	17971	HNS_Plant_Corn_5	1	This specimen displays winged petioles with paired leaf blades.	Growth habit: winged petioles with paired leaf blades.		Growth habit: winged petioles with paired leaf blades.
+8	Plant_Cotton	1	17972	Vanilla	0				
+8	Plant_Cotton	2	17973	HNS_Plant_Cotton_6	1	This specimen displays lateral branches with descending aerial support roots.	Growth habit: lateral branches with descending aerial support roots.		Growth habit: lateral branches with descending aerial support roots.
+8	Plant_Cotton	3	17974	HNS_Plant_Cotton_7	1	This specimen displays candelabra-like upright branch tips.	Growth habit: candelabra-like upright branch tips.		Growth habit: candelabra-like upright branch tips.
+8	Plant_Cotton	4	17975	HNS_Plant_Cotton_8	1	This specimen displays creeping stolons with miniature daughter rosettes.	Growth habit: creeping stolons with miniature daughter rosettes.		Growth habit: creeping stolons with miniature daughter rosettes.
+8	Plant_Cotton	5	17976	HNS_Plant_Cotton_9	1	This specimen displays paired intertwining leafy leaders.	Growth habit: paired intertwining leafy leaders.		Growth habit: paired intertwining leafy leaders.
+8	Plant_Cotton	6	17977	HNS_Plant_Cotton_10	1	This specimen displays winged petioles with paired leaf blades.	Growth habit: winged petioles with paired leaf blades.		Growth habit: winged petioles with paired leaf blades.
+8	Plant_Daylily	1	17978	Vanilla	0				
+8	Plant_Daylily	2	17979	HNS_Plant_Daylily_11	1	This specimen displays lateral branches with descending aerial support roots.	Growth habit: lateral branches with descending aerial support roots.		Growth habit: lateral branches with descending aerial support roots.
+8	Plant_Daylily	3	17980	HNS_Plant_Daylily_12	1	This specimen displays candelabra-like upright branch tips.	Growth habit: candelabra-like upright branch tips.		Growth habit: candelabra-like upright branch tips.
+8	Plant_Daylily	4	17981	HNS_Plant_Daylily_13	1	This specimen displays creeping stolons with miniature daughter rosettes.	Growth habit: creeping stolons with miniature daughter rosettes.		Growth habit: creeping stolons with miniature daughter rosettes.
+8	Plant_Daylily	5	17982	HNS_Plant_Daylily_14	1	This specimen displays paired intertwining leafy leaders.	Growth habit: paired intertwining leafy leaders.		Growth habit: paired intertwining leafy leaders.
+8	Plant_Daylily	6	17983	HNS_Plant_Daylily_15	1	This specimen displays winged petioles with paired leaf blades.	Growth habit: winged petioles with paired leaf blades.		Growth habit: winged petioles with paired leaf blades.
+9	Plant_Corn	1	17966	Vanilla	0				
+9	Plant_Corn	2	17967	HNS_Plant_Corn_1	1	This specimen displays lateral branches with descending aerial support roots.	Growth habit: lateral branches with descending aerial support roots.		Growth habit: lateral branches with descending aerial support roots.
+9	Plant_Corn	3	17968	HNS_Plant_Corn_2	1	This specimen displays candelabra-like upright branch tips.	Growth habit: candelabra-like upright branch tips.		Growth habit: candelabra-like upright branch tips.
+9	Plant_Corn	4	17969	HNS_Plant_Corn_3	1	This specimen displays creeping stolons with miniature daughter rosettes.	Growth habit: creeping stolons with miniature daughter rosettes.		Growth habit: creeping stolons with miniature daughter rosettes.
+9	Plant_Corn	5	17970	HNS_Plant_Corn_4	1	This specimen displays paired intertwining leafy leaders.	Growth habit: paired intertwining leafy leaders.		Growth habit: paired intertwining leafy leaders.
+9	Plant_Corn	6	17971	HNS_Plant_Corn_5	1	This specimen displays winged petioles with paired leaf blades.	Growth habit: winged petioles with paired leaf blades.		Growth habit: winged petioles with paired leaf blades.
+9	Plant_Cotton	1	17972	Vanilla	0				
+9	Plant_Cotton	2	17973	HNS_Plant_Cotton_6	1	This specimen displays lateral branches with descending aerial support roots.	Growth habit: lateral branches with descending aerial support roots.		Growth habit: lateral branches with descending aerial support roots.
+9	Plant_Cotton	3	17974	HNS_Plant_Cotton_7	1	This specimen displays candelabra-like upright branch tips.	Growth habit: candelabra-like upright branch tips.		Growth habit: candelabra-like upright branch tips.
+9	Plant_Cotton	4	17975	HNS_Plant_Cotton_8	1	This specimen displays creeping stolons with miniature daughter rosettes.	Growth habit: creeping stolons with miniature daughter rosettes.		Growth habit: creeping stolons with miniature daughter rosettes.
+9	Plant_Cotton	5	17976	HNS_Plant_Cotton_9	1	This specimen displays paired intertwining leafy leaders.	Growth habit: paired intertwining leafy leaders.		Growth habit: paired intertwining leafy leaders.
+9	Plant_Cotton	6	17977	HNS_Plant_Cotton_10	1	This specimen displays winged petioles with paired leaf blades.	Growth habit: winged petioles with paired leaf blades.		Growth habit: winged petioles with paired leaf blades.
+9	Plant_Daylily	1	17978	Vanilla	0				
+9	Plant_Daylily	2	17979	HNS_Plant_Daylily_11	1	This specimen displays lateral branches with descending aerial support roots.	Growth habit: lateral branches with descending aerial support roots.		Growth habit: lateral branches with descending aerial support roots.
+9	Plant_Daylily	3	17980	HNS_Plant_Daylily_12	1	This specimen displays candelabra-like upright branch tips.	Growth habit: candelabra-like upright branch tips.		Growth habit: candelabra-like upright branch tips.
+9	Plant_Daylily	4	17981	HNS_Plant_Daylily_13	1	This specimen displays creeping stolons with miniature daughter rosettes.	Growth habit: creeping stolons with miniature daughter rosettes.		Growth habit: creeping stolons with miniature daughter rosettes.
+9	Plant_Daylily	5	17982	HNS_Plant_Daylily_14	1	This specimen displays paired intertwining leafy leaders.	Growth habit: paired intertwining leafy leaders.		Growth habit: paired intertwining leafy leaders.
+9	Plant_Daylily	6	17983	HNS_Plant_Daylily_15	1	This specimen displays winged petioles with paired leaf blades.	Growth habit: winged petioles with paired leaf blades.		Growth habit: winged petioles with paired leaf blades.
+10	Plant_Corn	1	17984	Vanilla	0				
+10	Plant_Corn	2	17985	HNS_Plant_Corn_16	1	This specimen displays tubular pitcher-like leaf organs.	Growth habit: tubular pitcher-like leaf organs.		Growth habit: tubular pitcher-like leaf organs.
+10	Plant_Corn	3	17986	HNS_Plant_Corn_17	1	This specimen displays unfolding hooded reproductive bracts.	Reproductive structures: unfolding hooded reproductive bracts.		Reproductive structures: unfolding hooded reproductive bracts.
+10	Plant_Corn	4	17987	HNS_Plant_Corn_18	1	This specimen displays leaf-borne reproductive clusters.	Reproductive structures: leaf-borne reproductive clusters.		Reproductive structures: leaf-borne reproductive clusters.
+10	Plant_Corn	5	17988	HNS_Plant_Corn_19	1	This specimen displays an overlapping spiral of scale leaves.	Growth habit: an overlapping spiral of scale leaves.		Growth habit: an overlapping spiral of scale leaves.
+10	Plant_Corn	6	17989	HNS_Plant_Corn_20	1	This specimen displays compound leaves with pronounced serrated margins.	Growth habit: compound leaves with pronounced serrated margins.		Growth habit: compound leaves with pronounced serrated margins.
+10	Plant_Cotton	1	17990	Vanilla	0				
+10	Plant_Cotton	2	17991	HNS_Plant_Cotton_21	1	This specimen displays tubular pitcher-like leaf organs.	Growth habit: tubular pitcher-like leaf organs.		Growth habit: tubular pitcher-like leaf organs.
+10	Plant_Cotton	3	17992	HNS_Plant_Cotton_22	1	This specimen displays unfolding hooded reproductive bracts.	Reproductive structures: unfolding hooded reproductive bracts.		Reproductive structures: unfolding hooded reproductive bracts.
+10	Plant_Cotton	4	17993	HNS_Plant_Cotton_23	1	This specimen displays leaf-borne reproductive clusters.	Reproductive structures: leaf-borne reproductive clusters.		Reproductive structures: leaf-borne reproductive clusters.
+10	Plant_Cotton	5	17994	HNS_Plant_Cotton_24	1	This specimen displays an overlapping spiral of scale leaves.	Growth habit: an overlapping spiral of scale leaves.		Growth habit: an overlapping spiral of scale leaves.
+10	Plant_Cotton	6	17995	HNS_Plant_Cotton_25	1	This specimen displays compound leaves with pronounced serrated margins.	Growth habit: compound leaves with pronounced serrated margins.		Growth habit: compound leaves with pronounced serrated margins.
+10	Plant_Daylily	1	17996	Vanilla	0				
+10	Plant_Daylily	2	17997	HNS_Plant_Daylily_26	1	This specimen displays tubular pitcher-like leaf organs.	Growth habit: tubular pitcher-like leaf organs.		Growth habit: tubular pitcher-like leaf organs.
+10	Plant_Daylily	3	17998	HNS_Plant_Daylily_27	1	This specimen displays unfolding hooded reproductive bracts.	Reproductive structures: unfolding hooded reproductive bracts.		Reproductive structures: unfolding hooded reproductive bracts.
+10	Plant_Daylily	4	17999	HNS_Plant_Daylily_28	1	This specimen displays leaf-borne reproductive clusters.	Reproductive structures: leaf-borne reproductive clusters.		Reproductive structures: leaf-borne reproductive clusters.
+10	Plant_Daylily	5	18000	HNS_Plant_Daylily_29	1	This specimen displays an overlapping spiral of scale leaves.	Growth habit: an overlapping spiral of scale leaves.		Growth habit: an overlapping spiral of scale leaves.
+10	Plant_Daylily	6	18001	HNS_Plant_Daylily_30	1	This specimen displays compound leaves with pronounced serrated margins.	Growth habit: compound leaves with pronounced serrated margins.		Growth habit: compound leaves with pronounced serrated margins.
+11	Plant_Corn	1	17984	Vanilla	0				
+11	Plant_Corn	2	17985	HNS_Plant_Corn_16	1	This specimen displays tubular pitcher-like leaf organs.	Growth habit: tubular pitcher-like leaf organs.		Growth habit: tubular pitcher-like leaf organs.
+11	Plant_Corn	3	17986	HNS_Plant_Corn_17	1	This specimen displays unfolding hooded reproductive bracts.	Reproductive structures: unfolding hooded reproductive bracts.		Reproductive structures: unfolding hooded reproductive bracts.
+11	Plant_Corn	4	17987	HNS_Plant_Corn_18	1	This specimen displays leaf-borne reproductive clusters.	Reproductive structures: leaf-borne reproductive clusters.		Reproductive structures: leaf-borne reproductive clusters.
+11	Plant_Corn	5	17988	HNS_Plant_Corn_19	1	This specimen displays an overlapping spiral of scale leaves.	Growth habit: an overlapping spiral of scale leaves.		Growth habit: an overlapping spiral of scale leaves.
+11	Plant_Corn	6	17989	HNS_Plant_Corn_20	1	This specimen displays compound leaves with pronounced serrated margins.	Growth habit: compound leaves with pronounced serrated margins.		Growth habit: compound leaves with pronounced serrated margins.
+11	Plant_Cotton	1	17990	Vanilla	0				
+11	Plant_Cotton	2	17991	HNS_Plant_Cotton_21	1	This specimen displays tubular pitcher-like leaf organs.	Growth habit: tubular pitcher-like leaf organs.		Growth habit: tubular pitcher-like leaf organs.
+11	Plant_Cotton	3	17992	HNS_Plant_Cotton_22	1	This specimen displays unfolding hooded reproductive bracts.	Reproductive structures: unfolding hooded reproductive bracts.		Reproductive structures: unfolding hooded reproductive bracts.
+11	Plant_Cotton	4	17993	HNS_Plant_Cotton_23	1	This specimen displays leaf-borne reproductive clusters.	Reproductive structures: leaf-borne reproductive clusters.		Reproductive structures: leaf-borne reproductive clusters.
+11	Plant_Cotton	5	17994	HNS_Plant_Cotton_24	1	This specimen displays an overlapping spiral of scale leaves.	Growth habit: an overlapping spiral of scale leaves.		Growth habit: an overlapping spiral of scale leaves.
+11	Plant_Cotton	6	17995	HNS_Plant_Cotton_25	1	This specimen displays compound leaves with pronounced serrated margins.	Growth habit: compound leaves with pronounced serrated margins.		Growth habit: compound leaves with pronounced serrated margins.
+11	Plant_Daylily	1	17996	Vanilla	0				
+11	Plant_Daylily	2	17997	HNS_Plant_Daylily_26	1	This specimen displays tubular pitcher-like leaf organs.	Growth habit: tubular pitcher-like leaf organs.		Growth habit: tubular pitcher-like leaf organs.
+11	Plant_Daylily	3	17998	HNS_Plant_Daylily_27	1	This specimen displays unfolding hooded reproductive bracts.	Reproductive structures: unfolding hooded reproductive bracts.		Reproductive structures: unfolding hooded reproductive bracts.
+11	Plant_Daylily	4	17999	HNS_Plant_Daylily_28	1	This specimen displays leaf-borne reproductive clusters.	Reproductive structures: leaf-borne reproductive clusters.		Reproductive structures: leaf-borne reproductive clusters.
+11	Plant_Daylily	5	18000	HNS_Plant_Daylily_29	1	This specimen displays an overlapping spiral of scale leaves.	Growth habit: an overlapping spiral of scale leaves.		Growth habit: an overlapping spiral of scale leaves.
+11	Plant_Daylily	6	18001	HNS_Plant_Daylily_30	1	This specimen displays compound leaves with pronounced serrated margins.	Growth habit: compound leaves with pronounced serrated margins.		Growth habit: compound leaves with pronounced serrated margins.
+12	Plant_Corn	1	17984	Vanilla	0				
+12	Plant_Corn	2	17985	HNS_Plant_Corn_16	1	This specimen displays tubular pitcher-like leaf organs.	Growth habit: tubular pitcher-like leaf organs.		Growth habit: tubular pitcher-like leaf organs.
+12	Plant_Corn	3	17986	HNS_Plant_Corn_17	1	This specimen displays unfolding hooded reproductive bracts.	Reproductive structures: unfolding hooded reproductive bracts.		Reproductive structures: unfolding hooded reproductive bracts.
+12	Plant_Corn	4	17987	HNS_Plant_Corn_18	1	This specimen displays leaf-borne reproductive clusters.	Reproductive structures: leaf-borne reproductive clusters.		Reproductive structures: leaf-borne reproductive clusters.
+12	Plant_Corn	5	17988	HNS_Plant_Corn_19	1	This specimen displays an overlapping spiral of scale leaves.	Growth habit: an overlapping spiral of scale leaves.		Growth habit: an overlapping spiral of scale leaves.
+12	Plant_Corn	6	17989	HNS_Plant_Corn_20	1	This specimen displays compound leaves with pronounced serrated margins.	Growth habit: compound leaves with pronounced serrated margins.		Growth habit: compound leaves with pronounced serrated margins.
+12	Plant_Cotton	1	17990	Vanilla	0				
+12	Plant_Cotton	2	17991	HNS_Plant_Cotton_21	1	This specimen displays tubular pitcher-like leaf organs.	Growth habit: tubular pitcher-like leaf organs.		Growth habit: tubular pitcher-like leaf organs.
+12	Plant_Cotton	3	17992	HNS_Plant_Cotton_22	1	This specimen displays unfolding hooded reproductive bracts.	Reproductive structures: unfolding hooded reproductive bracts.		Reproductive structures: unfolding hooded reproductive bracts.
+12	Plant_Cotton	4	17993	HNS_Plant_Cotton_23	1	This specimen displays leaf-borne reproductive clusters.	Reproductive structures: leaf-borne reproductive clusters.		Reproductive structures: leaf-borne reproductive clusters.
+12	Plant_Cotton	5	17994	HNS_Plant_Cotton_24	1	This specimen displays an overlapping spiral of scale leaves.	Growth habit: an overlapping spiral of scale leaves.		Growth habit: an overlapping spiral of scale leaves.
+12	Plant_Cotton	6	17995	HNS_Plant_Cotton_25	1	This specimen displays compound leaves with pronounced serrated margins.	Growth habit: compound leaves with pronounced serrated margins.		Growth habit: compound leaves with pronounced serrated margins.
+12	Plant_Daylily	1	17996	Vanilla	0				
+12	Plant_Daylily	2	17997	HNS_Plant_Daylily_26	1	This specimen displays tubular pitcher-like leaf organs.	Growth habit: tubular pitcher-like leaf organs.		Growth habit: tubular pitcher-like leaf organs.
+12	Plant_Daylily	3	17998	HNS_Plant_Daylily_27	1	This specimen displays unfolding hooded reproductive bracts.	Reproductive structures: unfolding hooded reproductive bracts.		Reproductive structures: unfolding hooded reproductive bracts.
+12	Plant_Daylily	4	17999	HNS_Plant_Daylily_28	1	This specimen displays leaf-borne reproductive clusters.	Reproductive structures: leaf-borne reproductive clusters.		Reproductive structures: leaf-borne reproductive clusters.
+12	Plant_Daylily	5	18000	HNS_Plant_Daylily_29	1	This specimen displays an overlapping spiral of scale leaves.	Growth habit: an overlapping spiral of scale leaves.		Growth habit: an overlapping spiral of scale leaves.
+12	Plant_Daylily	6	18001	HNS_Plant_Daylily_30	1	This specimen displays compound leaves with pronounced serrated margins.	Growth habit: compound leaves with pronounced serrated margins.		Growth habit: compound leaves with pronounced serrated margins.
+13	Plant_Corn	1	17984	Vanilla	0				
+13	Plant_Corn	2	17985	HNS_Plant_Corn_16	1	This specimen displays tubular pitcher-like leaf organs.	Growth habit: tubular pitcher-like leaf organs.		Growth habit: tubular pitcher-like leaf organs.
+13	Plant_Corn	3	17986	HNS_Plant_Corn_17	1	This specimen displays unfolding hooded reproductive bracts.	Reproductive structures: unfolding hooded reproductive bracts.		Reproductive structures: unfolding hooded reproductive bracts.
+13	Plant_Corn	4	17987	HNS_Plant_Corn_18	1	This specimen displays leaf-borne reproductive clusters.	Reproductive structures: leaf-borne reproductive clusters.		Reproductive structures: leaf-borne reproductive clusters.
+13	Plant_Corn	5	17988	HNS_Plant_Corn_19	1	This specimen displays an overlapping spiral of scale leaves.	Growth habit: an overlapping spiral of scale leaves.		Growth habit: an overlapping spiral of scale leaves.
+13	Plant_Corn	6	17989	HNS_Plant_Corn_20	1	This specimen displays compound leaves with pronounced serrated margins.	Growth habit: compound leaves with pronounced serrated margins.		Growth habit: compound leaves with pronounced serrated margins.
+13	Plant_Cotton	1	17990	Vanilla	0				
+13	Plant_Cotton	2	17991	HNS_Plant_Cotton_21	1	This specimen displays tubular pitcher-like leaf organs.	Growth habit: tubular pitcher-like leaf organs.		Growth habit: tubular pitcher-like leaf organs.
+13	Plant_Cotton	3	17992	HNS_Plant_Cotton_22	1	This specimen displays unfolding hooded reproductive bracts.	Reproductive structures: unfolding hooded reproductive bracts.		Reproductive structures: unfolding hooded reproductive bracts.
+13	Plant_Cotton	4	17993	HNS_Plant_Cotton_23	1	This specimen displays leaf-borne reproductive clusters.	Reproductive structures: leaf-borne reproductive clusters.		Reproductive structures: leaf-borne reproductive clusters.
+13	Plant_Cotton	5	17994	HNS_Plant_Cotton_24	1	This specimen displays an overlapping spiral of scale leaves.	Growth habit: an overlapping spiral of scale leaves.		Growth habit: an overlapping spiral of scale leaves.
+13	Plant_Cotton	6	17995	HNS_Plant_Cotton_25	1	This specimen displays compound leaves with pronounced serrated margins.	Growth habit: compound leaves with pronounced serrated margins.		Growth habit: compound leaves with pronounced serrated margins.
+13	Plant_Daylily	1	17996	Vanilla	0				
+13	Plant_Daylily	2	17997	HNS_Plant_Daylily_26	1	This specimen displays tubular pitcher-like leaf organs.	Growth habit: tubular pitcher-like leaf organs.		Growth habit: tubular pitcher-like leaf organs.
+13	Plant_Daylily	3	17998	HNS_Plant_Daylily_27	1	This specimen displays unfolding hooded reproductive bracts.	Reproductive structures: unfolding hooded reproductive bracts.		Reproductive structures: unfolding hooded reproductive bracts.
+13	Plant_Daylily	4	17999	HNS_Plant_Daylily_28	1	This specimen displays leaf-borne reproductive clusters.	Reproductive structures: leaf-borne reproductive clusters.		Reproductive structures: leaf-borne reproductive clusters.
+13	Plant_Daylily	5	18000	HNS_Plant_Daylily_29	1	This specimen displays an overlapping spiral of scale leaves.	Growth habit: an overlapping spiral of scale leaves.		Growth habit: an overlapping spiral of scale leaves.
+13	Plant_Daylily	6	18001	HNS_Plant_Daylily_30	1	This specimen displays compound leaves with pronounced serrated margins.	Growth habit: compound leaves with pronounced serrated margins.		Growth habit: compound leaves with pronounced serrated margins.
+14	Plant_Corn	1	17984	Vanilla	0				
+14	Plant_Corn	2	17985	HNS_Plant_Corn_16	1	This specimen displays tubular pitcher-like leaf organs.	Growth habit: tubular pitcher-like leaf organs.		Growth habit: tubular pitcher-like leaf organs.
+14	Plant_Corn	3	17986	HNS_Plant_Corn_17	1	This specimen displays unfolding hooded reproductive bracts.	Reproductive structures: unfolding hooded reproductive bracts.		Reproductive structures: unfolding hooded reproductive bracts.
+14	Plant_Corn	4	17987	HNS_Plant_Corn_18	1	This specimen displays leaf-borne reproductive clusters.	Reproductive structures: leaf-borne reproductive clusters.		Reproductive structures: leaf-borne reproductive clusters.
+14	Plant_Corn	5	17988	HNS_Plant_Corn_19	1	This specimen displays an overlapping spiral of scale leaves.	Growth habit: an overlapping spiral of scale leaves.		Growth habit: an overlapping spiral of scale leaves.
+14	Plant_Corn	6	17989	HNS_Plant_Corn_20	1	This specimen displays compound leaves with pronounced serrated margins.	Growth habit: compound leaves with pronounced serrated margins.		Growth habit: compound leaves with pronounced serrated margins.
+14	Plant_Cotton	1	17990	Vanilla	0				
+14	Plant_Cotton	2	17991	HNS_Plant_Cotton_21	1	This specimen displays tubular pitcher-like leaf organs.	Growth habit: tubular pitcher-like leaf organs.		Growth habit: tubular pitcher-like leaf organs.
+14	Plant_Cotton	3	17992	HNS_Plant_Cotton_22	1	This specimen displays unfolding hooded reproductive bracts.	Reproductive structures: unfolding hooded reproductive bracts.		Reproductive structures: unfolding hooded reproductive bracts.
+14	Plant_Cotton	4	17993	HNS_Plant_Cotton_23	1	This specimen displays leaf-borne reproductive clusters.	Reproductive structures: leaf-borne reproductive clusters.		Reproductive structures: leaf-borne reproductive clusters.
+14	Plant_Cotton	5	17994	HNS_Plant_Cotton_24	1	This specimen displays an overlapping spiral of scale leaves.	Growth habit: an overlapping spiral of scale leaves.		Growth habit: an overlapping spiral of scale leaves.
+14	Plant_Cotton	6	17995	HNS_Plant_Cotton_25	1	This specimen displays compound leaves with pronounced serrated margins.	Growth habit: compound leaves with pronounced serrated margins.		Growth habit: compound leaves with pronounced serrated margins.
+14	Plant_Daylily	1	17996	Vanilla	0				
+14	Plant_Daylily	2	17997	HNS_Plant_Daylily_26	1	This specimen displays tubular pitcher-like leaf organs.	Growth habit: tubular pitcher-like leaf organs.		Growth habit: tubular pitcher-like leaf organs.
+14	Plant_Daylily	3	17998	HNS_Plant_Daylily_27	1	This specimen displays unfolding hooded reproductive bracts.	Reproductive structures: unfolding hooded reproductive bracts.		Reproductive structures: unfolding hooded reproductive bracts.
+14	Plant_Daylily	4	17999	HNS_Plant_Daylily_28	1	This specimen displays leaf-borne reproductive clusters.	Reproductive structures: leaf-borne reproductive clusters.		Reproductive structures: leaf-borne reproductive clusters.
+14	Plant_Daylily	5	18000	HNS_Plant_Daylily_29	1	This specimen displays an overlapping spiral of scale leaves.	Growth habit: an overlapping spiral of scale leaves.		Growth habit: an overlapping spiral of scale leaves.
+14	Plant_Daylily	6	18001	HNS_Plant_Daylily_30	1	This specimen displays compound leaves with pronounced serrated margins.	Growth habit: compound leaves with pronounced serrated margins.		Growth habit: compound leaves with pronounced serrated margins.
+15	Plant_Corn	1	17984	Vanilla	0				
+15	Plant_Corn	2	17985	HNS_Plant_Corn_16	1	This specimen displays tubular pitcher-like leaf organs.	Growth habit: tubular pitcher-like leaf organs.		Growth habit: tubular pitcher-like leaf organs.
+15	Plant_Corn	3	17986	HNS_Plant_Corn_17	1	This specimen displays unfolding hooded reproductive bracts.	Reproductive structures: unfolding hooded reproductive bracts.		Reproductive structures: unfolding hooded reproductive bracts.
+15	Plant_Corn	4	17987	HNS_Plant_Corn_18	1	This specimen displays leaf-borne reproductive clusters.	Reproductive structures: leaf-borne reproductive clusters.		Reproductive structures: leaf-borne reproductive clusters.
+15	Plant_Corn	5	17988	HNS_Plant_Corn_19	1	This specimen displays an overlapping spiral of scale leaves.	Growth habit: an overlapping spiral of scale leaves.		Growth habit: an overlapping spiral of scale leaves.
+15	Plant_Corn	6	17989	HNS_Plant_Corn_20	1	This specimen displays compound leaves with pronounced serrated margins.	Growth habit: compound leaves with pronounced serrated margins.		Growth habit: compound leaves with pronounced serrated margins.
+15	Plant_Cotton	1	17990	Vanilla	0				
+15	Plant_Cotton	2	17991	HNS_Plant_Cotton_21	1	This specimen displays tubular pitcher-like leaf organs.	Growth habit: tubular pitcher-like leaf organs.		Growth habit: tubular pitcher-like leaf organs.
+15	Plant_Cotton	3	17992	HNS_Plant_Cotton_22	1	This specimen displays unfolding hooded reproductive bracts.	Reproductive structures: unfolding hooded reproductive bracts.		Reproductive structures: unfolding hooded reproductive bracts.
+15	Plant_Cotton	4	17993	HNS_Plant_Cotton_23	1	This specimen displays leaf-borne reproductive clusters.	Reproductive structures: leaf-borne reproductive clusters.		Reproductive structures: leaf-borne reproductive clusters.
+15	Plant_Cotton	5	17994	HNS_Plant_Cotton_24	1	This specimen displays an overlapping spiral of scale leaves.	Growth habit: an overlapping spiral of scale leaves.		Growth habit: an overlapping spiral of scale leaves.
+15	Plant_Cotton	6	17995	HNS_Plant_Cotton_25	1	This specimen displays compound leaves with pronounced serrated margins.	Growth habit: compound leaves with pronounced serrated margins.		Growth habit: compound leaves with pronounced serrated margins.
+15	Plant_Daylily	1	17996	Vanilla	0				
+15	Plant_Daylily	2	17997	HNS_Plant_Daylily_26	1	This specimen displays tubular pitcher-like leaf organs.	Growth habit: tubular pitcher-like leaf organs.		Growth habit: tubular pitcher-like leaf organs.
+15	Plant_Daylily	3	17998	HNS_Plant_Daylily_27	1	This specimen displays unfolding hooded reproductive bracts.	Reproductive structures: unfolding hooded reproductive bracts.		Reproductive structures: unfolding hooded reproductive bracts.
+15	Plant_Daylily	4	17999	HNS_Plant_Daylily_28	1	This specimen displays leaf-borne reproductive clusters.	Reproductive structures: leaf-borne reproductive clusters.		Reproductive structures: leaf-borne reproductive clusters.
+15	Plant_Daylily	5	18000	HNS_Plant_Daylily_29	1	This specimen displays an overlapping spiral of scale leaves.	Growth habit: an overlapping spiral of scale leaves.		Growth habit: an overlapping spiral of scale leaves.
+15	Plant_Daylily	6	18001	HNS_Plant_Daylily_30	1	This specimen displays compound leaves with pronounced serrated margins.	Growth habit: compound leaves with pronounced serrated margins.		Growth habit: compound leaves with pronounced serrated margins.
+16	Plant_Corn	1	17984	Vanilla	0				
+16	Plant_Corn	2	17985	HNS_Plant_Corn_16	1	This specimen displays tubular pitcher-like leaf organs.	Growth habit: tubular pitcher-like leaf organs.		Growth habit: tubular pitcher-like leaf organs.
+16	Plant_Corn	3	17986	HNS_Plant_Corn_17	1	This specimen displays unfolding hooded reproductive bracts.	Reproductive structures: unfolding hooded reproductive bracts.		Reproductive structures: unfolding hooded reproductive bracts.
+16	Plant_Corn	4	17987	HNS_Plant_Corn_18	1	This specimen displays leaf-borne reproductive clusters.	Reproductive structures: leaf-borne reproductive clusters.		Reproductive structures: leaf-borne reproductive clusters.
+16	Plant_Corn	5	17988	HNS_Plant_Corn_19	1	This specimen displays an overlapping spiral of scale leaves.	Growth habit: an overlapping spiral of scale leaves.		Growth habit: an overlapping spiral of scale leaves.
+16	Plant_Corn	6	17989	HNS_Plant_Corn_20	1	This specimen displays compound leaves with pronounced serrated margins.	Growth habit: compound leaves with pronounced serrated margins.		Growth habit: compound leaves with pronounced serrated margins.
+16	Plant_Cotton	1	17990	Vanilla	0				
+16	Plant_Cotton	2	17991	HNS_Plant_Cotton_21	1	This specimen displays tubular pitcher-like leaf organs.	Growth habit: tubular pitcher-like leaf organs.		Growth habit: tubular pitcher-like leaf organs.
+16	Plant_Cotton	3	17992	HNS_Plant_Cotton_22	1	This specimen displays unfolding hooded reproductive bracts.	Reproductive structures: unfolding hooded reproductive bracts.		Reproductive structures: unfolding hooded reproductive bracts.
+16	Plant_Cotton	4	17993	HNS_Plant_Cotton_23	1	This specimen displays leaf-borne reproductive clusters.	Reproductive structures: leaf-borne reproductive clusters.		Reproductive structures: leaf-borne reproductive clusters.
+16	Plant_Cotton	5	17994	HNS_Plant_Cotton_24	1	This specimen displays an overlapping spiral of scale leaves.	Growth habit: an overlapping spiral of scale leaves.		Growth habit: an overlapping spiral of scale leaves.
+16	Plant_Cotton	6	17995	HNS_Plant_Cotton_25	1	This specimen displays compound leaves with pronounced serrated margins.	Growth habit: compound leaves with pronounced serrated margins.		Growth habit: compound leaves with pronounced serrated margins.
+16	Plant_Daylily	1	17996	Vanilla	0				
+16	Plant_Daylily	2	17997	HNS_Plant_Daylily_26	1	This specimen displays tubular pitcher-like leaf organs.	Growth habit: tubular pitcher-like leaf organs.		Growth habit: tubular pitcher-like leaf organs.
+16	Plant_Daylily	3	17998	HNS_Plant_Daylily_27	1	This specimen displays unfolding hooded reproductive bracts.	Reproductive structures: unfolding hooded reproductive bracts.		Reproductive structures: unfolding hooded reproductive bracts.
+16	Plant_Daylily	4	17999	HNS_Plant_Daylily_28	1	This specimen displays leaf-borne reproductive clusters.	Reproductive structures: leaf-borne reproductive clusters.		Reproductive structures: leaf-borne reproductive clusters.
+16	Plant_Daylily	5	18000	HNS_Plant_Daylily_29	1	This specimen displays an overlapping spiral of scale leaves.	Growth habit: an overlapping spiral of scale leaves.		Growth habit: an overlapping spiral of scale leaves.
+16	Plant_Daylily	6	18001	HNS_Plant_Daylily_30	1	This specimen displays compound leaves with pronounced serrated margins.	Growth habit: compound leaves with pronounced serrated margins.		Growth habit: compound leaves with pronounced serrated margins.
+17	Plant_Corn	1	17984	Vanilla	0				
+17	Plant_Corn	2	17985	HNS_Plant_Corn_16	1	This specimen displays tubular pitcher-like leaf organs.	Growth habit: tubular pitcher-like leaf organs.		Growth habit: tubular pitcher-like leaf organs.
+17	Plant_Corn	3	17986	HNS_Plant_Corn_17	1	This specimen displays unfolding hooded reproductive bracts.	Reproductive structures: unfolding hooded reproductive bracts.		Reproductive structures: unfolding hooded reproductive bracts.
+17	Plant_Corn	4	17987	HNS_Plant_Corn_18	1	This specimen displays leaf-borne reproductive clusters.	Reproductive structures: leaf-borne reproductive clusters.		Reproductive structures: leaf-borne reproductive clusters.
+17	Plant_Corn	5	17988	HNS_Plant_Corn_19	1	This specimen displays an overlapping spiral of scale leaves.	Growth habit: an overlapping spiral of scale leaves.		Growth habit: an overlapping spiral of scale leaves.
+17	Plant_Corn	6	17989	HNS_Plant_Corn_20	1	This specimen displays compound leaves with pronounced serrated margins.	Growth habit: compound leaves with pronounced serrated margins.		Growth habit: compound leaves with pronounced serrated margins.
+17	Plant_Cotton	1	17990	Vanilla	0				
+17	Plant_Cotton	2	17991	HNS_Plant_Cotton_21	1	This specimen displays tubular pitcher-like leaf organs.	Growth habit: tubular pitcher-like leaf organs.		Growth habit: tubular pitcher-like leaf organs.
+17	Plant_Cotton	3	17992	HNS_Plant_Cotton_22	1	This specimen displays unfolding hooded reproductive bracts.	Reproductive structures: unfolding hooded reproductive bracts.		Reproductive structures: unfolding hooded reproductive bracts.
+17	Plant_Cotton	4	17993	HNS_Plant_Cotton_23	1	This specimen displays leaf-borne reproductive clusters.	Reproductive structures: leaf-borne reproductive clusters.		Reproductive structures: leaf-borne reproductive clusters.
+17	Plant_Cotton	5	17994	HNS_Plant_Cotton_24	1	This specimen displays an overlapping spiral of scale leaves.	Growth habit: an overlapping spiral of scale leaves.		Growth habit: an overlapping spiral of scale leaves.
+17	Plant_Cotton	6	17995	HNS_Plant_Cotton_25	1	This specimen displays compound leaves with pronounced serrated margins.	Growth habit: compound leaves with pronounced serrated margins.		Growth habit: compound leaves with pronounced serrated margins.
+17	Plant_Daylily	1	17996	Vanilla	0				
+17	Plant_Daylily	2	17997	HNS_Plant_Daylily_26	1	This specimen displays tubular pitcher-like leaf organs.	Growth habit: tubular pitcher-like leaf organs.		Growth habit: tubular pitcher-like leaf organs.
+17	Plant_Daylily	3	17998	HNS_Plant_Daylily_27	1	This specimen displays unfolding hooded reproductive bracts.	Reproductive structures: unfolding hooded reproductive bracts.		Reproductive structures: unfolding hooded reproductive bracts.
+17	Plant_Daylily	4	17999	HNS_Plant_Daylily_28	1	This specimen displays leaf-borne reproductive clusters.	Reproductive structures: leaf-borne reproductive clusters.		Reproductive structures: leaf-borne reproductive clusters.
+17	Plant_Daylily	5	18000	HNS_Plant_Daylily_29	1	This specimen displays an overlapping spiral of scale leaves.	Growth habit: an overlapping spiral of scale leaves.		Growth habit: an overlapping spiral of scale leaves.
+17	Plant_Daylily	6	18001	HNS_Plant_Daylily_30	1	This specimen displays compound leaves with pronounced serrated margins.	Growth habit: compound leaves with pronounced serrated margins.		Growth habit: compound leaves with pronounced serrated margins.
+18	Plant_Corn	1	17984	Vanilla	0				
+18	Plant_Corn	2	17985	HNS_Plant_Corn_16	1	This specimen displays tubular pitcher-like leaf organs.	Growth habit: tubular pitcher-like leaf organs.		Growth habit: tubular pitcher-like leaf organs.
+18	Plant_Corn	3	17986	HNS_Plant_Corn_17	1	This specimen displays unfolding hooded reproductive bracts.	Reproductive structures: unfolding hooded reproductive bracts.		Reproductive structures: unfolding hooded reproductive bracts.
+18	Plant_Corn	4	17987	HNS_Plant_Corn_18	1	This specimen displays leaf-borne reproductive clusters.	Reproductive structures: leaf-borne reproductive clusters.		Reproductive structures: leaf-borne reproductive clusters.
+18	Plant_Corn	5	17988	HNS_Plant_Corn_19	1	This specimen displays an overlapping spiral of scale leaves.	Growth habit: an overlapping spiral of scale leaves.		Growth habit: an overlapping spiral of scale leaves.
+18	Plant_Corn	6	17989	HNS_Plant_Corn_20	1	This specimen displays compound leaves with pronounced serrated margins.	Growth habit: compound leaves with pronounced serrated margins.		Growth habit: compound leaves with pronounced serrated margins.
+18	Plant_Cotton	1	17990	Vanilla	0				
+18	Plant_Cotton	2	17991	HNS_Plant_Cotton_21	1	This specimen displays tubular pitcher-like leaf organs.	Growth habit: tubular pitcher-like leaf organs.		Growth habit: tubular pitcher-like leaf organs.
+18	Plant_Cotton	3	17992	HNS_Plant_Cotton_22	1	This specimen displays unfolding hooded reproductive bracts.	Reproductive structures: unfolding hooded reproductive bracts.		Reproductive structures: unfolding hooded reproductive bracts.
+18	Plant_Cotton	4	17993	HNS_Plant_Cotton_23	1	This specimen displays leaf-borne reproductive clusters.	Reproductive structures: leaf-borne reproductive clusters.		Reproductive structures: leaf-borne reproductive clusters.
+18	Plant_Cotton	5	17994	HNS_Plant_Cotton_24	1	This specimen displays an overlapping spiral of scale leaves.	Growth habit: an overlapping spiral of scale leaves.		Growth habit: an overlapping spiral of scale leaves.
+18	Plant_Cotton	6	17995	HNS_Plant_Cotton_25	1	This specimen displays compound leaves with pronounced serrated margins.	Growth habit: compound leaves with pronounced serrated margins.		Growth habit: compound leaves with pronounced serrated margins.
+18	Plant_Daylily	1	17996	Vanilla	0				
+18	Plant_Daylily	2	17997	HNS_Plant_Daylily_26	1	This specimen displays tubular pitcher-like leaf organs.	Growth habit: tubular pitcher-like leaf organs.		Growth habit: tubular pitcher-like leaf organs.
+18	Plant_Daylily	3	17998	HNS_Plant_Daylily_27	1	This specimen displays unfolding hooded reproductive bracts.	Reproductive structures: unfolding hooded reproductive bracts.		Reproductive structures: unfolding hooded reproductive bracts.
+18	Plant_Daylily	4	17999	HNS_Plant_Daylily_28	1	This specimen displays leaf-borne reproductive clusters.	Reproductive structures: leaf-borne reproductive clusters.		Reproductive structures: leaf-borne reproductive clusters.
+18	Plant_Daylily	5	18000	HNS_Plant_Daylily_29	1	This specimen displays an overlapping spiral of scale leaves.	Growth habit: an overlapping spiral of scale leaves.		Growth habit: an overlapping spiral of scale leaves.
+18	Plant_Daylily	6	18001	HNS_Plant_Daylily_30	1	This specimen displays compound leaves with pronounced serrated margins.	Growth habit: compound leaves with pronounced serrated margins.		Growth habit: compound leaves with pronounced serrated margins.
+19	Plant_Corn	1	18002	Vanilla	0				
+19	Plant_Corn	2	18003	HNS_Plant_Corn_31	1	This specimen displays opening seed capsules with exposed seeds.	Reproductive structures: opening seed capsules with exposed seeds.		Reproductive structures: opening seed capsules with exposed seeds.
+19	Plant_Corn	3	18004	HNS_Plant_Corn_32	1	This specimen displays unfolding paired winged seeds.	Reproductive structures: unfolding paired winged seeds.		Reproductive structures: unfolding paired winged seeds.
+19	Plant_Corn	4	18005	HNS_Plant_Corn_33	1	This specimen displays extended anther filaments.	Reproductive structures: extended anther filaments.		Reproductive structures: extended anther filaments.
+19	Plant_Corn	5	18006	HNS_Plant_Corn_34	1	This specimen displays double whorls of reproductive tissue.	Reproductive structures: double whorls of reproductive tissue.		Reproductive structures: double whorls of reproductive tissue.
+19	Plant_Corn	6	18007	HNS_Plant_Corn_35	1	This specimen displays a sparse descending trail of ornamental seeds.	Reproductive structures: a sparse descending trail of ornamental seeds.		Reproductive structures: a sparse descending trail of ornamental seeds.
+19	Plant_Cotton	1	18008	Vanilla	0				
+19	Plant_Cotton	2	18009	HNS_Plant_Cotton_36	1	This specimen displays opening seed capsules with exposed seeds.	Reproductive structures: opening seed capsules with exposed seeds.		Reproductive structures: opening seed capsules with exposed seeds.
+19	Plant_Cotton	3	18010	HNS_Plant_Cotton_37	1	This specimen displays unfolding paired winged seeds.	Reproductive structures: unfolding paired winged seeds.		Reproductive structures: unfolding paired winged seeds.
+19	Plant_Cotton	4	18011	HNS_Plant_Cotton_38	1	This specimen displays extended anther filaments.	Reproductive structures: extended anther filaments.		Reproductive structures: extended anther filaments.
+19	Plant_Cotton	5	18012	HNS_Plant_Cotton_39	1	This specimen displays double whorls of reproductive tissue.	Reproductive structures: double whorls of reproductive tissue.		Reproductive structures: double whorls of reproductive tissue.
+19	Plant_Cotton	6	18013	HNS_Plant_Cotton_40	1	This specimen displays a sparse descending trail of ornamental seeds.	Reproductive structures: a sparse descending trail of ornamental seeds.		Reproductive structures: a sparse descending trail of ornamental seeds.
+19	Plant_Daylily	1	18014	Vanilla	0				
+19	Plant_Daylily	2	18015	HNS_Plant_Daylily_41	1	This specimen displays opening seed capsules with exposed seeds.	Reproductive structures: opening seed capsules with exposed seeds.		Reproductive structures: opening seed capsules with exposed seeds.
+19	Plant_Daylily	3	18016	HNS_Plant_Daylily_42	1	This specimen displays unfolding paired winged seeds.	Reproductive structures: unfolding paired winged seeds.		Reproductive structures: unfolding paired winged seeds.
+19	Plant_Daylily	4	18017	HNS_Plant_Daylily_43	1	This specimen displays extended anther filaments.	Reproductive structures: extended anther filaments.		Reproductive structures: extended anther filaments.
+19	Plant_Daylily	5	18018	HNS_Plant_Daylily_44	1	This specimen displays double whorls of reproductive tissue.	Reproductive structures: double whorls of reproductive tissue.		Reproductive structures: double whorls of reproductive tissue.
+19	Plant_Daylily	6	18019	HNS_Plant_Daylily_45	1	This specimen displays a sparse descending trail of ornamental seeds.	Reproductive structures: a sparse descending trail of ornamental seeds.		Reproductive structures: a sparse descending trail of ornamental seeds.
+20	Plant_Corn	1	18002	Vanilla	0				
+20	Plant_Corn	2	18003	HNS_Plant_Corn_31	1	This specimen displays opening seed capsules with exposed seeds.	Reproductive structures: opening seed capsules with exposed seeds.		Reproductive structures: opening seed capsules with exposed seeds.
+20	Plant_Corn	3	18004	HNS_Plant_Corn_32	1	This specimen displays unfolding paired winged seeds.	Reproductive structures: unfolding paired winged seeds.		Reproductive structures: unfolding paired winged seeds.
+20	Plant_Corn	4	18005	HNS_Plant_Corn_33	1	This specimen displays extended anther filaments.	Reproductive structures: extended anther filaments.		Reproductive structures: extended anther filaments.
+20	Plant_Corn	5	18006	HNS_Plant_Corn_34	1	This specimen displays double whorls of reproductive tissue.	Reproductive structures: double whorls of reproductive tissue.		Reproductive structures: double whorls of reproductive tissue.
+20	Plant_Corn	6	18007	HNS_Plant_Corn_35	1	This specimen displays a sparse descending trail of ornamental seeds.	Reproductive structures: a sparse descending trail of ornamental seeds.		Reproductive structures: a sparse descending trail of ornamental seeds.
+20	Plant_Cotton	1	18008	Vanilla	0				
+20	Plant_Cotton	2	18009	HNS_Plant_Cotton_36	1	This specimen displays opening seed capsules with exposed seeds.	Reproductive structures: opening seed capsules with exposed seeds.		Reproductive structures: opening seed capsules with exposed seeds.
+20	Plant_Cotton	3	18010	HNS_Plant_Cotton_37	1	This specimen displays unfolding paired winged seeds.	Reproductive structures: unfolding paired winged seeds.		Reproductive structures: unfolding paired winged seeds.
+20	Plant_Cotton	4	18011	HNS_Plant_Cotton_38	1	This specimen displays extended anther filaments.	Reproductive structures: extended anther filaments.		Reproductive structures: extended anther filaments.
+20	Plant_Cotton	5	18012	HNS_Plant_Cotton_39	1	This specimen displays double whorls of reproductive tissue.	Reproductive structures: double whorls of reproductive tissue.		Reproductive structures: double whorls of reproductive tissue.
+20	Plant_Cotton	6	18013	HNS_Plant_Cotton_40	1	This specimen displays a sparse descending trail of ornamental seeds.	Reproductive structures: a sparse descending trail of ornamental seeds.		Reproductive structures: a sparse descending trail of ornamental seeds.
+20	Plant_Daylily	1	18014	Vanilla	0				
+20	Plant_Daylily	2	18015	HNS_Plant_Daylily_41	1	This specimen displays opening seed capsules with exposed seeds.	Reproductive structures: opening seed capsules with exposed seeds.		Reproductive structures: opening seed capsules with exposed seeds.
+20	Plant_Daylily	3	18016	HNS_Plant_Daylily_42	1	This specimen displays unfolding paired winged seeds.	Reproductive structures: unfolding paired winged seeds.		Reproductive structures: unfolding paired winged seeds.
+20	Plant_Daylily	4	18017	HNS_Plant_Daylily_43	1	This specimen displays extended anther filaments.	Reproductive structures: extended anther filaments.		Reproductive structures: extended anther filaments.
+20	Plant_Daylily	5	18018	HNS_Plant_Daylily_44	1	This specimen displays double whorls of reproductive tissue.	Reproductive structures: double whorls of reproductive tissue.		Reproductive structures: double whorls of reproductive tissue.
+20	Plant_Daylily	6	18019	HNS_Plant_Daylily_45	1	This specimen displays a sparse descending trail of ornamental seeds.	Reproductive structures: a sparse descending trail of ornamental seeds.		Reproductive structures: a sparse descending trail of ornamental seeds.
+21	Plant_Corn	1	18002	Vanilla	0				
+21	Plant_Corn	2	18003	HNS_Plant_Corn_31	1	This specimen displays opening seed capsules with exposed seeds.	Reproductive structures: opening seed capsules with exposed seeds.		Reproductive structures: opening seed capsules with exposed seeds.
+21	Plant_Corn	3	18004	HNS_Plant_Corn_32	1	This specimen displays unfolding paired winged seeds.	Reproductive structures: unfolding paired winged seeds.		Reproductive structures: unfolding paired winged seeds.
+21	Plant_Corn	4	18005	HNS_Plant_Corn_33	1	This specimen displays extended anther filaments.	Reproductive structures: extended anther filaments.		Reproductive structures: extended anther filaments.
+21	Plant_Corn	5	18006	HNS_Plant_Corn_34	1	This specimen displays double whorls of reproductive tissue.	Reproductive structures: double whorls of reproductive tissue.		Reproductive structures: double whorls of reproductive tissue.
+21	Plant_Corn	6	18007	HNS_Plant_Corn_35	1	This specimen displays a sparse descending trail of ornamental seeds.	Reproductive structures: a sparse descending trail of ornamental seeds.		Reproductive structures: a sparse descending trail of ornamental seeds.
+21	Plant_Cotton	1	18008	Vanilla	0				
+21	Plant_Cotton	2	18009	HNS_Plant_Cotton_36	1	This specimen displays opening seed capsules with exposed seeds.	Reproductive structures: opening seed capsules with exposed seeds.		Reproductive structures: opening seed capsules with exposed seeds.
+21	Plant_Cotton	3	18010	HNS_Plant_Cotton_37	1	This specimen displays unfolding paired winged seeds.	Reproductive structures: unfolding paired winged seeds.		Reproductive structures: unfolding paired winged seeds.
+21	Plant_Cotton	4	18011	HNS_Plant_Cotton_38	1	This specimen displays extended anther filaments.	Reproductive structures: extended anther filaments.		Reproductive structures: extended anther filaments.
+21	Plant_Cotton	5	18012	HNS_Plant_Cotton_39	1	This specimen displays double whorls of reproductive tissue.	Reproductive structures: double whorls of reproductive tissue.		Reproductive structures: double whorls of reproductive tissue.
+21	Plant_Cotton	6	18013	HNS_Plant_Cotton_40	1	This specimen displays a sparse descending trail of ornamental seeds.	Reproductive structures: a sparse descending trail of ornamental seeds.		Reproductive structures: a sparse descending trail of ornamental seeds.
+21	Plant_Daylily	1	18014	Vanilla	0				
+21	Plant_Daylily	2	18015	HNS_Plant_Daylily_41	1	This specimen displays opening seed capsules with exposed seeds.	Reproductive structures: opening seed capsules with exposed seeds.		Reproductive structures: opening seed capsules with exposed seeds.
+21	Plant_Daylily	3	18016	HNS_Plant_Daylily_42	1	This specimen displays unfolding paired winged seeds.	Reproductive structures: unfolding paired winged seeds.		Reproductive structures: unfolding paired winged seeds.
+21	Plant_Daylily	4	18017	HNS_Plant_Daylily_43	1	This specimen displays extended anther filaments.	Reproductive structures: extended anther filaments.		Reproductive structures: extended anther filaments.
+21	Plant_Daylily	5	18018	HNS_Plant_Daylily_44	1	This specimen displays double whorls of reproductive tissue.	Reproductive structures: double whorls of reproductive tissue.		Reproductive structures: double whorls of reproductive tissue.
+21	Plant_Daylily	6	18019	HNS_Plant_Daylily_45	1	This specimen displays a sparse descending trail of ornamental seeds.	Reproductive structures: a sparse descending trail of ornamental seeds.		Reproductive structures: a sparse descending trail of ornamental seeds.
+22	Plant_Corn	1	18002	Vanilla	0				
+22	Plant_Corn	2	18003	HNS_Plant_Corn_31	1	This specimen displays opening seed capsules with exposed seeds.	Reproductive structures: opening seed capsules with exposed seeds.		Reproductive structures: opening seed capsules with exposed seeds.
+22	Plant_Corn	3	18004	HNS_Plant_Corn_32	1	This specimen displays unfolding paired winged seeds.	Reproductive structures: unfolding paired winged seeds.		Reproductive structures: unfolding paired winged seeds.
+22	Plant_Corn	4	18005	HNS_Plant_Corn_33	1	This specimen displays extended anther filaments.	Reproductive structures: extended anther filaments.		Reproductive structures: extended anther filaments.
+22	Plant_Corn	5	18006	HNS_Plant_Corn_34	1	This specimen displays double whorls of reproductive tissue.	Reproductive structures: double whorls of reproductive tissue.		Reproductive structures: double whorls of reproductive tissue.
+22	Plant_Corn	6	18007	HNS_Plant_Corn_35	1	This specimen displays a sparse descending trail of ornamental seeds.	Reproductive structures: a sparse descending trail of ornamental seeds.		Reproductive structures: a sparse descending trail of ornamental seeds.
+22	Plant_Cotton	1	18008	Vanilla	0				
+22	Plant_Cotton	2	18009	HNS_Plant_Cotton_36	1	This specimen displays opening seed capsules with exposed seeds.	Reproductive structures: opening seed capsules with exposed seeds.		Reproductive structures: opening seed capsules with exposed seeds.
+22	Plant_Cotton	3	18010	HNS_Plant_Cotton_37	1	This specimen displays unfolding paired winged seeds.	Reproductive structures: unfolding paired winged seeds.		Reproductive structures: unfolding paired winged seeds.
+22	Plant_Cotton	4	18011	HNS_Plant_Cotton_38	1	This specimen displays extended anther filaments.	Reproductive structures: extended anther filaments.		Reproductive structures: extended anther filaments.
+22	Plant_Cotton	5	18012	HNS_Plant_Cotton_39	1	This specimen displays double whorls of reproductive tissue.	Reproductive structures: double whorls of reproductive tissue.		Reproductive structures: double whorls of reproductive tissue.
+22	Plant_Cotton	6	18013	HNS_Plant_Cotton_40	1	This specimen displays a sparse descending trail of ornamental seeds.	Reproductive structures: a sparse descending trail of ornamental seeds.		Reproductive structures: a sparse descending trail of ornamental seeds.
+22	Plant_Daylily	1	18014	Vanilla	0				
+22	Plant_Daylily	2	18015	HNS_Plant_Daylily_41	1	This specimen displays opening seed capsules with exposed seeds.	Reproductive structures: opening seed capsules with exposed seeds.		Reproductive structures: opening seed capsules with exposed seeds.
+22	Plant_Daylily	3	18016	HNS_Plant_Daylily_42	1	This specimen displays unfolding paired winged seeds.	Reproductive structures: unfolding paired winged seeds.		Reproductive structures: unfolding paired winged seeds.
+22	Plant_Daylily	4	18017	HNS_Plant_Daylily_43	1	This specimen displays extended anther filaments.	Reproductive structures: extended anther filaments.		Reproductive structures: extended anther filaments.
+22	Plant_Daylily	5	18018	HNS_Plant_Daylily_44	1	This specimen displays double whorls of reproductive tissue.	Reproductive structures: double whorls of reproductive tissue.		Reproductive structures: double whorls of reproductive tissue.
+22	Plant_Daylily	6	18019	HNS_Plant_Daylily_45	1	This specimen displays a sparse descending trail of ornamental seeds.	Reproductive structures: a sparse descending trail of ornamental seeds.		Reproductive structures: a sparse descending trail of ornamental seeds.
+23	Plant_Corn	1	18002	Vanilla	0				
+23	Plant_Corn	2	18003	HNS_Plant_Corn_31	1	This specimen displays opening seed capsules with exposed seeds.	Reproductive structures: opening seed capsules with exposed seeds.		Reproductive structures: opening seed capsules with exposed seeds.
+23	Plant_Corn	3	18004	HNS_Plant_Corn_32	1	This specimen displays unfolding paired winged seeds.	Reproductive structures: unfolding paired winged seeds.		Reproductive structures: unfolding paired winged seeds.
+23	Plant_Corn	4	18005	HNS_Plant_Corn_33	1	This specimen displays extended anther filaments.	Reproductive structures: extended anther filaments.		Reproductive structures: extended anther filaments.
+23	Plant_Corn	5	18006	HNS_Plant_Corn_34	1	This specimen displays double whorls of reproductive tissue.	Reproductive structures: double whorls of reproductive tissue.		Reproductive structures: double whorls of reproductive tissue.
+23	Plant_Corn	6	18007	HNS_Plant_Corn_35	1	This specimen displays a sparse descending trail of ornamental seeds.	Reproductive structures: a sparse descending trail of ornamental seeds.		Reproductive structures: a sparse descending trail of ornamental seeds.
+23	Plant_Cotton	1	18008	Vanilla	0				
+23	Plant_Cotton	2	18009	HNS_Plant_Cotton_36	1	This specimen displays opening seed capsules with exposed seeds.	Reproductive structures: opening seed capsules with exposed seeds.		Reproductive structures: opening seed capsules with exposed seeds.
+23	Plant_Cotton	3	18010	HNS_Plant_Cotton_37	1	This specimen displays unfolding paired winged seeds.	Reproductive structures: unfolding paired winged seeds.		Reproductive structures: unfolding paired winged seeds.
+23	Plant_Cotton	4	18011	HNS_Plant_Cotton_38	1	This specimen displays extended anther filaments.	Reproductive structures: extended anther filaments.		Reproductive structures: extended anther filaments.
+23	Plant_Cotton	5	18012	HNS_Plant_Cotton_39	1	This specimen displays double whorls of reproductive tissue.	Reproductive structures: double whorls of reproductive tissue.		Reproductive structures: double whorls of reproductive tissue.
+23	Plant_Cotton	6	18013	HNS_Plant_Cotton_40	1	This specimen displays a sparse descending trail of ornamental seeds.	Reproductive structures: a sparse descending trail of ornamental seeds.		Reproductive structures: a sparse descending trail of ornamental seeds.
+23	Plant_Daylily	1	18014	Vanilla	0				
+23	Plant_Daylily	2	18015	HNS_Plant_Daylily_41	1	This specimen displays opening seed capsules with exposed seeds.	Reproductive structures: opening seed capsules with exposed seeds.		Reproductive structures: opening seed capsules with exposed seeds.
+23	Plant_Daylily	3	18016	HNS_Plant_Daylily_42	1	This specimen displays unfolding paired winged seeds.	Reproductive structures: unfolding paired winged seeds.		Reproductive structures: unfolding paired winged seeds.
+23	Plant_Daylily	4	18017	HNS_Plant_Daylily_43	1	This specimen displays extended anther filaments.	Reproductive structures: extended anther filaments.		Reproductive structures: extended anther filaments.
+23	Plant_Daylily	5	18018	HNS_Plant_Daylily_44	1	This specimen displays double whorls of reproductive tissue.	Reproductive structures: double whorls of reproductive tissue.		Reproductive structures: double whorls of reproductive tissue.
+23	Plant_Daylily	6	18019	HNS_Plant_Daylily_45	1	This specimen displays a sparse descending trail of ornamental seeds.	Reproductive structures: a sparse descending trail of ornamental seeds.		Reproductive structures: a sparse descending trail of ornamental seeds.
+24	Plant_Corn	1	18002	Vanilla	0				
+24	Plant_Corn	2	18003	HNS_Plant_Corn_31	1	This specimen displays opening seed capsules with exposed seeds.	Reproductive structures: opening seed capsules with exposed seeds.		Reproductive structures: opening seed capsules with exposed seeds.
+24	Plant_Corn	3	18004	HNS_Plant_Corn_32	1	This specimen displays unfolding paired winged seeds.	Reproductive structures: unfolding paired winged seeds.		Reproductive structures: unfolding paired winged seeds.
+24	Plant_Corn	4	18005	HNS_Plant_Corn_33	1	This specimen displays extended anther filaments.	Reproductive structures: extended anther filaments.		Reproductive structures: extended anther filaments.
+24	Plant_Corn	5	18006	HNS_Plant_Corn_34	1	This specimen displays double whorls of reproductive tissue.	Reproductive structures: double whorls of reproductive tissue.		Reproductive structures: double whorls of reproductive tissue.
+24	Plant_Corn	6	18007	HNS_Plant_Corn_35	1	This specimen displays a sparse descending trail of ornamental seeds.	Reproductive structures: a sparse descending trail of ornamental seeds.		Reproductive structures: a sparse descending trail of ornamental seeds.
+24	Plant_Cotton	1	18008	Vanilla	0				
+24	Plant_Cotton	2	18009	HNS_Plant_Cotton_36	1	This specimen displays opening seed capsules with exposed seeds.	Reproductive structures: opening seed capsules with exposed seeds.		Reproductive structures: opening seed capsules with exposed seeds.
+24	Plant_Cotton	3	18010	HNS_Plant_Cotton_37	1	This specimen displays unfolding paired winged seeds.	Reproductive structures: unfolding paired winged seeds.		Reproductive structures: unfolding paired winged seeds.
+24	Plant_Cotton	4	18011	HNS_Plant_Cotton_38	1	This specimen displays extended anther filaments.	Reproductive structures: extended anther filaments.		Reproductive structures: extended anther filaments.
+24	Plant_Cotton	5	18012	HNS_Plant_Cotton_39	1	This specimen displays double whorls of reproductive tissue.	Reproductive structures: double whorls of reproductive tissue.		Reproductive structures: double whorls of reproductive tissue.
+24	Plant_Cotton	6	18013	HNS_Plant_Cotton_40	1	This specimen displays a sparse descending trail of ornamental seeds.	Reproductive structures: a sparse descending trail of ornamental seeds.		Reproductive structures: a sparse descending trail of ornamental seeds.
+24	Plant_Daylily	1	18014	Vanilla	0				
+24	Plant_Daylily	2	18015	HNS_Plant_Daylily_41	1	This specimen displays opening seed capsules with exposed seeds.	Reproductive structures: opening seed capsules with exposed seeds.		Reproductive structures: opening seed capsules with exposed seeds.
+24	Plant_Daylily	3	18016	HNS_Plant_Daylily_42	1	This specimen displays unfolding paired winged seeds.	Reproductive structures: unfolding paired winged seeds.		Reproductive structures: unfolding paired winged seeds.
+24	Plant_Daylily	4	18017	HNS_Plant_Daylily_43	1	This specimen displays extended anther filaments.	Reproductive structures: extended anther filaments.		Reproductive structures: extended anther filaments.
+24	Plant_Daylily	5	18018	HNS_Plant_Daylily_44	1	This specimen displays double whorls of reproductive tissue.	Reproductive structures: double whorls of reproductive tissue.		Reproductive structures: double whorls of reproductive tissue.
+24	Plant_Daylily	6	18019	HNS_Plant_Daylily_45	1	This specimen displays a sparse descending trail of ornamental seeds.	Reproductive structures: a sparse descending trail of ornamental seeds.		Reproductive structures: a sparse descending trail of ornamental seeds.
+25	Plant_Corn	1	18002	Vanilla	0				
+25	Plant_Corn	2	18003	HNS_Plant_Corn_31	1	This specimen displays opening seed capsules with exposed seeds.	Reproductive structures: opening seed capsules with exposed seeds.		Reproductive structures: opening seed capsules with exposed seeds.
+25	Plant_Corn	3	18004	HNS_Plant_Corn_32	1	This specimen displays unfolding paired winged seeds.	Reproductive structures: unfolding paired winged seeds.		Reproductive structures: unfolding paired winged seeds.
+25	Plant_Corn	4	18005	HNS_Plant_Corn_33	1	This specimen displays extended anther filaments.	Reproductive structures: extended anther filaments.		Reproductive structures: extended anther filaments.
+25	Plant_Corn	5	18006	HNS_Plant_Corn_34	1	This specimen displays double whorls of reproductive tissue.	Reproductive structures: double whorls of reproductive tissue.		Reproductive structures: double whorls of reproductive tissue.
+25	Plant_Corn	6	18007	HNS_Plant_Corn_35	1	This specimen displays a sparse descending trail of ornamental seeds.	Reproductive structures: a sparse descending trail of ornamental seeds.		Reproductive structures: a sparse descending trail of ornamental seeds.
+25	Plant_Cotton	1	18008	Vanilla	0				
+25	Plant_Cotton	2	18009	HNS_Plant_Cotton_36	1	This specimen displays opening seed capsules with exposed seeds.	Reproductive structures: opening seed capsules with exposed seeds.		Reproductive structures: opening seed capsules with exposed seeds.
+25	Plant_Cotton	3	18010	HNS_Plant_Cotton_37	1	This specimen displays unfolding paired winged seeds.	Reproductive structures: unfolding paired winged seeds.		Reproductive structures: unfolding paired winged seeds.
+25	Plant_Cotton	4	18011	HNS_Plant_Cotton_38	1	This specimen displays extended anther filaments.	Reproductive structures: extended anther filaments.		Reproductive structures: extended anther filaments.
+25	Plant_Cotton	5	18012	HNS_Plant_Cotton_39	1	This specimen displays double whorls of reproductive tissue.	Reproductive structures: double whorls of reproductive tissue.		Reproductive structures: double whorls of reproductive tissue.
+25	Plant_Cotton	6	18013	HNS_Plant_Cotton_40	1	This specimen displays a sparse descending trail of ornamental seeds.	Reproductive structures: a sparse descending trail of ornamental seeds.		Reproductive structures: a sparse descending trail of ornamental seeds.
+25	Plant_Daylily	1	18014	Vanilla	0				
+25	Plant_Daylily	2	18015	HNS_Plant_Daylily_41	1	This specimen displays opening seed capsules with exposed seeds.	Reproductive structures: opening seed capsules with exposed seeds.		Reproductive structures: opening seed capsules with exposed seeds.
+25	Plant_Daylily	3	18016	HNS_Plant_Daylily_42	1	This specimen displays unfolding paired winged seeds.	Reproductive structures: unfolding paired winged seeds.		Reproductive structures: unfolding paired winged seeds.
+25	Plant_Daylily	4	18017	HNS_Plant_Daylily_43	1	This specimen displays extended anther filaments.	Reproductive structures: extended anther filaments.		Reproductive structures: extended anther filaments.
+25	Plant_Daylily	5	18018	HNS_Plant_Daylily_44	1	This specimen displays double whorls of reproductive tissue.	Reproductive structures: double whorls of reproductive tissue.		Reproductive structures: double whorls of reproductive tissue.
+25	Plant_Daylily	6	18019	HNS_Plant_Daylily_45	1	This specimen displays a sparse descending trail of ornamental seeds.	Reproductive structures: a sparse descending trail of ornamental seeds.		Reproductive structures: a sparse descending trail of ornamental seeds.
+26	Plant_Corn	1	18002	Vanilla	0				
+26	Plant_Corn	2	18003	HNS_Plant_Corn_31	1	This specimen displays opening seed capsules with exposed seeds.	Reproductive structures: opening seed capsules with exposed seeds.		Reproductive structures: opening seed capsules with exposed seeds.
+26	Plant_Corn	3	18004	HNS_Plant_Corn_32	1	This specimen displays unfolding paired winged seeds.	Reproductive structures: unfolding paired winged seeds.		Reproductive structures: unfolding paired winged seeds.
+26	Plant_Corn	4	18005	HNS_Plant_Corn_33	1	This specimen displays extended anther filaments.	Reproductive structures: extended anther filaments.		Reproductive structures: extended anther filaments.
+26	Plant_Corn	5	18006	HNS_Plant_Corn_34	1	This specimen displays double whorls of reproductive tissue.	Reproductive structures: double whorls of reproductive tissue.		Reproductive structures: double whorls of reproductive tissue.
+26	Plant_Corn	6	18007	HNS_Plant_Corn_35	1	This specimen displays a sparse descending trail of ornamental seeds.	Reproductive structures: a sparse descending trail of ornamental seeds.		Reproductive structures: a sparse descending trail of ornamental seeds.
+26	Plant_Cotton	1	18008	Vanilla	0				
+26	Plant_Cotton	2	18009	HNS_Plant_Cotton_36	1	This specimen displays opening seed capsules with exposed seeds.	Reproductive structures: opening seed capsules with exposed seeds.		Reproductive structures: opening seed capsules with exposed seeds.
+26	Plant_Cotton	3	18010	HNS_Plant_Cotton_37	1	This specimen displays unfolding paired winged seeds.	Reproductive structures: unfolding paired winged seeds.		Reproductive structures: unfolding paired winged seeds.
+26	Plant_Cotton	4	18011	HNS_Plant_Cotton_38	1	This specimen displays extended anther filaments.	Reproductive structures: extended anther filaments.		Reproductive structures: extended anther filaments.
+26	Plant_Cotton	5	18012	HNS_Plant_Cotton_39	1	This specimen displays double whorls of reproductive tissue.	Reproductive structures: double whorls of reproductive tissue.		Reproductive structures: double whorls of reproductive tissue.
+26	Plant_Cotton	6	18013	HNS_Plant_Cotton_40	1	This specimen displays a sparse descending trail of ornamental seeds.	Reproductive structures: a sparse descending trail of ornamental seeds.		Reproductive structures: a sparse descending trail of ornamental seeds.
+26	Plant_Daylily	1	18014	Vanilla	0				
+26	Plant_Daylily	2	18015	HNS_Plant_Daylily_41	1	This specimen displays opening seed capsules with exposed seeds.	Reproductive structures: opening seed capsules with exposed seeds.		Reproductive structures: opening seed capsules with exposed seeds.
+26	Plant_Daylily	3	18016	HNS_Plant_Daylily_42	1	This specimen displays unfolding paired winged seeds.	Reproductive structures: unfolding paired winged seeds.		Reproductive structures: unfolding paired winged seeds.
+26	Plant_Daylily	4	18017	HNS_Plant_Daylily_43	1	This specimen displays extended anther filaments.	Reproductive structures: extended anther filaments.		Reproductive structures: extended anther filaments.
+26	Plant_Daylily	5	18018	HNS_Plant_Daylily_44	1	This specimen displays double whorls of reproductive tissue.	Reproductive structures: double whorls of reproductive tissue.		Reproductive structures: double whorls of reproductive tissue.
+26	Plant_Daylily	6	18019	HNS_Plant_Daylily_45	1	This specimen displays a sparse descending trail of ornamental seeds.	Reproductive structures: a sparse descending trail of ornamental seeds.		Reproductive structures: a sparse descending trail of ornamental seeds.
+27	Plant_Corn	1	18002	Vanilla	0				
+27	Plant_Corn	2	18003	HNS_Plant_Corn_31	1	This specimen displays opening seed capsules with exposed seeds.	Reproductive structures: opening seed capsules with exposed seeds.		Reproductive structures: opening seed capsules with exposed seeds.
+27	Plant_Corn	3	18004	HNS_Plant_Corn_32	1	This specimen displays unfolding paired winged seeds.	Reproductive structures: unfolding paired winged seeds.		Reproductive structures: unfolding paired winged seeds.
+27	Plant_Corn	4	18005	HNS_Plant_Corn_33	1	This specimen displays extended anther filaments.	Reproductive structures: extended anther filaments.		Reproductive structures: extended anther filaments.
+27	Plant_Corn	5	18006	HNS_Plant_Corn_34	1	This specimen displays double whorls of reproductive tissue.	Reproductive structures: double whorls of reproductive tissue.		Reproductive structures: double whorls of reproductive tissue.
+27	Plant_Corn	6	18007	HNS_Plant_Corn_35	1	This specimen displays a sparse descending trail of ornamental seeds.	Reproductive structures: a sparse descending trail of ornamental seeds.		Reproductive structures: a sparse descending trail of ornamental seeds.
+27	Plant_Cotton	1	18008	Vanilla	0				
+27	Plant_Cotton	2	18009	HNS_Plant_Cotton_36	1	This specimen displays opening seed capsules with exposed seeds.	Reproductive structures: opening seed capsules with exposed seeds.		Reproductive structures: opening seed capsules with exposed seeds.
+27	Plant_Cotton	3	18010	HNS_Plant_Cotton_37	1	This specimen displays unfolding paired winged seeds.	Reproductive structures: unfolding paired winged seeds.		Reproductive structures: unfolding paired winged seeds.
+27	Plant_Cotton	4	18011	HNS_Plant_Cotton_38	1	This specimen displays extended anther filaments.	Reproductive structures: extended anther filaments.		Reproductive structures: extended anther filaments.
+27	Plant_Cotton	5	18012	HNS_Plant_Cotton_39	1	This specimen displays double whorls of reproductive tissue.	Reproductive structures: double whorls of reproductive tissue.		Reproductive structures: double whorls of reproductive tissue.
+27	Plant_Cotton	6	18013	HNS_Plant_Cotton_40	1	This specimen displays a sparse descending trail of ornamental seeds.	Reproductive structures: a sparse descending trail of ornamental seeds.		Reproductive structures: a sparse descending trail of ornamental seeds.
+27	Plant_Daylily	1	18014	Vanilla	0				
+27	Plant_Daylily	2	18015	HNS_Plant_Daylily_41	1	This specimen displays opening seed capsules with exposed seeds.	Reproductive structures: opening seed capsules with exposed seeds.		Reproductive structures: opening seed capsules with exposed seeds.
+27	Plant_Daylily	3	18016	HNS_Plant_Daylily_42	1	This specimen displays unfolding paired winged seeds.	Reproductive structures: unfolding paired winged seeds.		Reproductive structures: unfolding paired winged seeds.
+27	Plant_Daylily	4	18017	HNS_Plant_Daylily_43	1	This specimen displays extended anther filaments.	Reproductive structures: extended anther filaments.		Reproductive structures: extended anther filaments.
+27	Plant_Daylily	5	18018	HNS_Plant_Daylily_44	1	This specimen displays double whorls of reproductive tissue.	Reproductive structures: double whorls of reproductive tissue.		Reproductive structures: double whorls of reproductive tissue.
+27	Plant_Daylily	6	18019	HNS_Plant_Daylily_45	1	This specimen displays a sparse descending trail of ornamental seeds.	Reproductive structures: a sparse descending trail of ornamental seeds.		Reproductive structures: a sparse descending trail of ornamental seeds.
+28	Plant_Corn	1	18020	Vanilla	0				
+28	Plant_Corn	2	18021	HNS_Plant_Corn_46	1	It also shows localized prismatic foliage sheen.	Surface: localized prismatic foliage sheen.		Surface: localized prismatic foliage sheen.
+28	Plant_Corn	3	18022	HNS_Plant_Corn_47	1	This specimen displays unrolling leaf blades with contrasting backs.	Growth habit: unrolling leaf blades with contrasting backs.		Growth habit: unrolling leaf blades with contrasting backs.
+28	Plant_Corn	4	18023	HNS_Plant_Corn_48	1	It also shows elongated amber resin droplets.	Surface: elongated amber resin droplets.		Surface: elongated amber resin droplets.
+28	Plant_Corn	5	18024	HNS_Plant_Corn_49	1	This specimen displays curling bark-like ribbons at the base.	Growth habit: curling bark-like ribbons at the base.		Growth habit: curling bark-like ribbons at the base.
+28	Plant_Corn	6	18025	HNS_Plant_Corn_50	1	It also shows shifting local self-shadow patterns.	Surface: shifting local self-shadow patterns.		Surface: shifting local self-shadow patterns.
+28	Plant_Cotton	1	18026	Vanilla	0				
+28	Plant_Cotton	2	18027	HNS_Plant_Cotton_51	1	It also shows localized prismatic foliage sheen.	Surface: localized prismatic foliage sheen.		Surface: localized prismatic foliage sheen.
+28	Plant_Cotton	3	18028	HNS_Plant_Cotton_52	1	This specimen displays unrolling leaf blades with contrasting backs.	Growth habit: unrolling leaf blades with contrasting backs.		Growth habit: unrolling leaf blades with contrasting backs.
+28	Plant_Cotton	4	18029	HNS_Plant_Cotton_53	1	It also shows elongated amber resin droplets.	Surface: elongated amber resin droplets.		Surface: elongated amber resin droplets.
+28	Plant_Cotton	5	18030	HNS_Plant_Cotton_54	1	This specimen displays curling bark-like ribbons at the base.	Growth habit: curling bark-like ribbons at the base.		Growth habit: curling bark-like ribbons at the base.
+28	Plant_Cotton	6	18031	HNS_Plant_Cotton_55	1	It also shows shifting local self-shadow patterns.	Surface: shifting local self-shadow patterns.		Surface: shifting local self-shadow patterns.
+28	Plant_Daylily	1	18032	Vanilla	0				
+28	Plant_Daylily	2	18033	HNS_Plant_Daylily_56	1	It also shows localized prismatic foliage sheen.	Surface: localized prismatic foliage sheen.		Surface: localized prismatic foliage sheen.
+28	Plant_Daylily	3	18034	HNS_Plant_Daylily_57	1	This specimen displays unrolling leaf blades with contrasting backs.	Growth habit: unrolling leaf blades with contrasting backs.		Growth habit: unrolling leaf blades with contrasting backs.
+28	Plant_Daylily	4	18035	HNS_Plant_Daylily_58	1	It also shows elongated amber resin droplets.	Surface: elongated amber resin droplets.		Surface: elongated amber resin droplets.
+28	Plant_Daylily	5	18036	HNS_Plant_Daylily_59	1	This specimen displays curling bark-like ribbons at the base.	Growth habit: curling bark-like ribbons at the base.		Growth habit: curling bark-like ribbons at the base.
+28	Plant_Daylily	6	18037	HNS_Plant_Daylily_60	1	It also shows shifting local self-shadow patterns.	Surface: shifting local self-shadow patterns.		Surface: shifting local self-shadow patterns.
+29	Plant_Corn	1	18020	Vanilla	0				
+29	Plant_Corn	2	18021	HNS_Plant_Corn_46	1	It also shows localized prismatic foliage sheen.	Surface: localized prismatic foliage sheen.		Surface: localized prismatic foliage sheen.
+29	Plant_Corn	3	18022	HNS_Plant_Corn_47	1	This specimen displays unrolling leaf blades with contrasting backs.	Growth habit: unrolling leaf blades with contrasting backs.		Growth habit: unrolling leaf blades with contrasting backs.
+29	Plant_Corn	4	18023	HNS_Plant_Corn_48	1	It also shows elongated amber resin droplets.	Surface: elongated amber resin droplets.		Surface: elongated amber resin droplets.
+29	Plant_Corn	5	18024	HNS_Plant_Corn_49	1	This specimen displays curling bark-like ribbons at the base.	Growth habit: curling bark-like ribbons at the base.		Growth habit: curling bark-like ribbons at the base.
+29	Plant_Corn	6	18025	HNS_Plant_Corn_50	1	It also shows shifting local self-shadow patterns.	Surface: shifting local self-shadow patterns.		Surface: shifting local self-shadow patterns.
+29	Plant_Cotton	1	18026	Vanilla	0				
+29	Plant_Cotton	2	18027	HNS_Plant_Cotton_51	1	It also shows localized prismatic foliage sheen.	Surface: localized prismatic foliage sheen.		Surface: localized prismatic foliage sheen.
+29	Plant_Cotton	3	18028	HNS_Plant_Cotton_52	1	This specimen displays unrolling leaf blades with contrasting backs.	Growth habit: unrolling leaf blades with contrasting backs.		Growth habit: unrolling leaf blades with contrasting backs.
+29	Plant_Cotton	4	18029	HNS_Plant_Cotton_53	1	It also shows elongated amber resin droplets.	Surface: elongated amber resin droplets.		Surface: elongated amber resin droplets.
+29	Plant_Cotton	5	18030	HNS_Plant_Cotton_54	1	This specimen displays curling bark-like ribbons at the base.	Growth habit: curling bark-like ribbons at the base.		Growth habit: curling bark-like ribbons at the base.
+29	Plant_Cotton	6	18031	HNS_Plant_Cotton_55	1	It also shows shifting local self-shadow patterns.	Surface: shifting local self-shadow patterns.		Surface: shifting local self-shadow patterns.
+29	Plant_Daylily	1	18032	Vanilla	0				
+29	Plant_Daylily	2	18033	HNS_Plant_Daylily_56	1	It also shows localized prismatic foliage sheen.	Surface: localized prismatic foliage sheen.		Surface: localized prismatic foliage sheen.
+29	Plant_Daylily	3	18034	HNS_Plant_Daylily_57	1	This specimen displays unrolling leaf blades with contrasting backs.	Growth habit: unrolling leaf blades with contrasting backs.		Growth habit: unrolling leaf blades with contrasting backs.
+29	Plant_Daylily	4	18035	HNS_Plant_Daylily_58	1	It also shows elongated amber resin droplets.	Surface: elongated amber resin droplets.		Surface: elongated amber resin droplets.
+29	Plant_Daylily	5	18036	HNS_Plant_Daylily_59	1	This specimen displays curling bark-like ribbons at the base.	Growth habit: curling bark-like ribbons at the base.		Growth habit: curling bark-like ribbons at the base.
+29	Plant_Daylily	6	18037	HNS_Plant_Daylily_60	1	It also shows shifting local self-shadow patterns.	Surface: shifting local self-shadow patterns.		Surface: shifting local self-shadow patterns.
+30	Plant_Corn	1	18020	Vanilla	0				
+30	Plant_Corn	2	18021	HNS_Plant_Corn_46	1	It also shows localized prismatic foliage sheen.	Surface: localized prismatic foliage sheen.		Surface: localized prismatic foliage sheen.
+30	Plant_Corn	3	18022	HNS_Plant_Corn_47	1	This specimen displays unrolling leaf blades with contrasting backs.	Growth habit: unrolling leaf blades with contrasting backs.		Growth habit: unrolling leaf blades with contrasting backs.
+30	Plant_Corn	4	18023	HNS_Plant_Corn_48	1	It also shows elongated amber resin droplets.	Surface: elongated amber resin droplets.		Surface: elongated amber resin droplets.
+30	Plant_Corn	5	18024	HNS_Plant_Corn_49	1	This specimen displays curling bark-like ribbons at the base.	Growth habit: curling bark-like ribbons at the base.		Growth habit: curling bark-like ribbons at the base.
+30	Plant_Corn	6	18025	HNS_Plant_Corn_50	1	It also shows shifting local self-shadow patterns.	Surface: shifting local self-shadow patterns.		Surface: shifting local self-shadow patterns.
+30	Plant_Cotton	1	18026	Vanilla	0				
+30	Plant_Cotton	2	18027	HNS_Plant_Cotton_51	1	It also shows localized prismatic foliage sheen.	Surface: localized prismatic foliage sheen.		Surface: localized prismatic foliage sheen.
+30	Plant_Cotton	3	18028	HNS_Plant_Cotton_52	1	This specimen displays unrolling leaf blades with contrasting backs.	Growth habit: unrolling leaf blades with contrasting backs.		Growth habit: unrolling leaf blades with contrasting backs.
+30	Plant_Cotton	4	18029	HNS_Plant_Cotton_53	1	It also shows elongated amber resin droplets.	Surface: elongated amber resin droplets.		Surface: elongated amber resin droplets.
+30	Plant_Cotton	5	18030	HNS_Plant_Cotton_54	1	This specimen displays curling bark-like ribbons at the base.	Growth habit: curling bark-like ribbons at the base.		Growth habit: curling bark-like ribbons at the base.
+30	Plant_Cotton	6	18031	HNS_Plant_Cotton_55	1	It also shows shifting local self-shadow patterns.	Surface: shifting local self-shadow patterns.		Surface: shifting local self-shadow patterns.
+30	Plant_Daylily	1	18032	Vanilla	0				
+30	Plant_Daylily	2	18033	HNS_Plant_Daylily_56	1	It also shows localized prismatic foliage sheen.	Surface: localized prismatic foliage sheen.		Surface: localized prismatic foliage sheen.
+30	Plant_Daylily	3	18034	HNS_Plant_Daylily_57	1	This specimen displays unrolling leaf blades with contrasting backs.	Growth habit: unrolling leaf blades with contrasting backs.		Growth habit: unrolling leaf blades with contrasting backs.
+30	Plant_Daylily	4	18035	HNS_Plant_Daylily_58	1	It also shows elongated amber resin droplets.	Surface: elongated amber resin droplets.		Surface: elongated amber resin droplets.
+30	Plant_Daylily	5	18036	HNS_Plant_Daylily_59	1	This specimen displays curling bark-like ribbons at the base.	Growth habit: curling bark-like ribbons at the base.		Growth habit: curling bark-like ribbons at the base.
+30	Plant_Daylily	6	18037	HNS_Plant_Daylily_60	1	It also shows shifting local self-shadow patterns.	Surface: shifting local self-shadow patterns.		Surface: shifting local self-shadow patterns.
+31	Plant_Corn	1	18020	Vanilla	0				
+31	Plant_Corn	2	18021	HNS_Plant_Corn_46	1	It also shows localized prismatic foliage sheen.	Surface: localized prismatic foliage sheen.		Surface: localized prismatic foliage sheen.
+31	Plant_Corn	3	18022	HNS_Plant_Corn_47	1	This specimen displays unrolling leaf blades with contrasting backs.	Growth habit: unrolling leaf blades with contrasting backs.		Growth habit: unrolling leaf blades with contrasting backs.
+31	Plant_Corn	4	18023	HNS_Plant_Corn_48	1	It also shows elongated amber resin droplets.	Surface: elongated amber resin droplets.		Surface: elongated amber resin droplets.
+31	Plant_Corn	5	18024	HNS_Plant_Corn_49	1	This specimen displays curling bark-like ribbons at the base.	Growth habit: curling bark-like ribbons at the base.		Growth habit: curling bark-like ribbons at the base.
+31	Plant_Corn	6	18025	HNS_Plant_Corn_50	1	It also shows shifting local self-shadow patterns.	Surface: shifting local self-shadow patterns.		Surface: shifting local self-shadow patterns.
+31	Plant_Cotton	1	18026	Vanilla	0				
+31	Plant_Cotton	2	18027	HNS_Plant_Cotton_51	1	It also shows localized prismatic foliage sheen.	Surface: localized prismatic foliage sheen.		Surface: localized prismatic foliage sheen.
+31	Plant_Cotton	3	18028	HNS_Plant_Cotton_52	1	This specimen displays unrolling leaf blades with contrasting backs.	Growth habit: unrolling leaf blades with contrasting backs.		Growth habit: unrolling leaf blades with contrasting backs.
+31	Plant_Cotton	4	18029	HNS_Plant_Cotton_53	1	It also shows elongated amber resin droplets.	Surface: elongated amber resin droplets.		Surface: elongated amber resin droplets.
+31	Plant_Cotton	5	18030	HNS_Plant_Cotton_54	1	This specimen displays curling bark-like ribbons at the base.	Growth habit: curling bark-like ribbons at the base.		Growth habit: curling bark-like ribbons at the base.
+31	Plant_Cotton	6	18031	HNS_Plant_Cotton_55	1	It also shows shifting local self-shadow patterns.	Surface: shifting local self-shadow patterns.		Surface: shifting local self-shadow patterns.
+31	Plant_Daylily	1	18032	Vanilla	0				
+31	Plant_Daylily	2	18033	HNS_Plant_Daylily_56	1	It also shows localized prismatic foliage sheen.	Surface: localized prismatic foliage sheen.		Surface: localized prismatic foliage sheen.
+31	Plant_Daylily	3	18034	HNS_Plant_Daylily_57	1	This specimen displays unrolling leaf blades with contrasting backs.	Growth habit: unrolling leaf blades with contrasting backs.		Growth habit: unrolling leaf blades with contrasting backs.
+31	Plant_Daylily	4	18035	HNS_Plant_Daylily_58	1	It also shows elongated amber resin droplets.	Surface: elongated amber resin droplets.		Surface: elongated amber resin droplets.
+31	Plant_Daylily	5	18036	HNS_Plant_Daylily_59	1	This specimen displays curling bark-like ribbons at the base.	Growth habit: curling bark-like ribbons at the base.		Growth habit: curling bark-like ribbons at the base.
+31	Plant_Daylily	6	18037	HNS_Plant_Daylily_60	1	It also shows shifting local self-shadow patterns.	Surface: shifting local self-shadow patterns.		Surface: shifting local self-shadow patterns.
+32	Plant_Corn	1	18020	Vanilla	0				
+32	Plant_Corn	2	18021	HNS_Plant_Corn_46	1	It also shows localized prismatic foliage sheen.	Surface: localized prismatic foliage sheen.		Surface: localized prismatic foliage sheen.
+32	Plant_Corn	3	18022	HNS_Plant_Corn_47	1	This specimen displays unrolling leaf blades with contrasting backs.	Growth habit: unrolling leaf blades with contrasting backs.		Growth habit: unrolling leaf blades with contrasting backs.
+32	Plant_Corn	4	18023	HNS_Plant_Corn_48	1	It also shows elongated amber resin droplets.	Surface: elongated amber resin droplets.		Surface: elongated amber resin droplets.
+32	Plant_Corn	5	18024	HNS_Plant_Corn_49	1	This specimen displays curling bark-like ribbons at the base.	Growth habit: curling bark-like ribbons at the base.		Growth habit: curling bark-like ribbons at the base.
+32	Plant_Corn	6	18025	HNS_Plant_Corn_50	1	It also shows shifting local self-shadow patterns.	Surface: shifting local self-shadow patterns.		Surface: shifting local self-shadow patterns.
+32	Plant_Cotton	1	18026	Vanilla	0				
+32	Plant_Cotton	2	18027	HNS_Plant_Cotton_51	1	It also shows localized prismatic foliage sheen.	Surface: localized prismatic foliage sheen.		Surface: localized prismatic foliage sheen.
+32	Plant_Cotton	3	18028	HNS_Plant_Cotton_52	1	This specimen displays unrolling leaf blades with contrasting backs.	Growth habit: unrolling leaf blades with contrasting backs.		Growth habit: unrolling leaf blades with contrasting backs.
+32	Plant_Cotton	4	18029	HNS_Plant_Cotton_53	1	It also shows elongated amber resin droplets.	Surface: elongated amber resin droplets.		Surface: elongated amber resin droplets.
+32	Plant_Cotton	5	18030	HNS_Plant_Cotton_54	1	This specimen displays curling bark-like ribbons at the base.	Growth habit: curling bark-like ribbons at the base.		Growth habit: curling bark-like ribbons at the base.
+32	Plant_Cotton	6	18031	HNS_Plant_Cotton_55	1	It also shows shifting local self-shadow patterns.	Surface: shifting local self-shadow patterns.		Surface: shifting local self-shadow patterns.
+32	Plant_Daylily	1	18032	Vanilla	0				
+32	Plant_Daylily	2	18033	HNS_Plant_Daylily_56	1	It also shows localized prismatic foliage sheen.	Surface: localized prismatic foliage sheen.		Surface: localized prismatic foliage sheen.
+32	Plant_Daylily	3	18034	HNS_Plant_Daylily_57	1	This specimen displays unrolling leaf blades with contrasting backs.	Growth habit: unrolling leaf blades with contrasting backs.		Growth habit: unrolling leaf blades with contrasting backs.
+32	Plant_Daylily	4	18035	HNS_Plant_Daylily_58	1	It also shows elongated amber resin droplets.	Surface: elongated amber resin droplets.		Surface: elongated amber resin droplets.
+32	Plant_Daylily	5	18036	HNS_Plant_Daylily_59	1	This specimen displays curling bark-like ribbons at the base.	Growth habit: curling bark-like ribbons at the base.		Growth habit: curling bark-like ribbons at the base.
+32	Plant_Daylily	6	18037	HNS_Plant_Daylily_60	1	It also shows shifting local self-shadow patterns.	Surface: shifting local self-shadow patterns.		Surface: shifting local self-shadow patterns.
+33	Plant_Corn	1	18020	Vanilla	0				
+33	Plant_Corn	2	18021	HNS_Plant_Corn_46	1	It also shows localized prismatic foliage sheen.	Surface: localized prismatic foliage sheen.		Surface: localized prismatic foliage sheen.
+33	Plant_Corn	3	18022	HNS_Plant_Corn_47	1	This specimen displays unrolling leaf blades with contrasting backs.	Growth habit: unrolling leaf blades with contrasting backs.		Growth habit: unrolling leaf blades with contrasting backs.
+33	Plant_Corn	4	18023	HNS_Plant_Corn_48	1	It also shows elongated amber resin droplets.	Surface: elongated amber resin droplets.		Surface: elongated amber resin droplets.
+33	Plant_Corn	5	18024	HNS_Plant_Corn_49	1	This specimen displays curling bark-like ribbons at the base.	Growth habit: curling bark-like ribbons at the base.		Growth habit: curling bark-like ribbons at the base.
+33	Plant_Corn	6	18025	HNS_Plant_Corn_50	1	It also shows shifting local self-shadow patterns.	Surface: shifting local self-shadow patterns.		Surface: shifting local self-shadow patterns.
+33	Plant_Cotton	1	18026	Vanilla	0				
+33	Plant_Cotton	2	18027	HNS_Plant_Cotton_51	1	It also shows localized prismatic foliage sheen.	Surface: localized prismatic foliage sheen.		Surface: localized prismatic foliage sheen.
+33	Plant_Cotton	3	18028	HNS_Plant_Cotton_52	1	This specimen displays unrolling leaf blades with contrasting backs.	Growth habit: unrolling leaf blades with contrasting backs.		Growth habit: unrolling leaf blades with contrasting backs.
+33	Plant_Cotton	4	18029	HNS_Plant_Cotton_53	1	It also shows elongated amber resin droplets.	Surface: elongated amber resin droplets.		Surface: elongated amber resin droplets.
+33	Plant_Cotton	5	18030	HNS_Plant_Cotton_54	1	This specimen displays curling bark-like ribbons at the base.	Growth habit: curling bark-like ribbons at the base.		Growth habit: curling bark-like ribbons at the base.
+33	Plant_Cotton	6	18031	HNS_Plant_Cotton_55	1	It also shows shifting local self-shadow patterns.	Surface: shifting local self-shadow patterns.		Surface: shifting local self-shadow patterns.
+33	Plant_Daylily	1	18032	Vanilla	0				
+33	Plant_Daylily	2	18033	HNS_Plant_Daylily_56	1	It also shows localized prismatic foliage sheen.	Surface: localized prismatic foliage sheen.		Surface: localized prismatic foliage sheen.
+33	Plant_Daylily	3	18034	HNS_Plant_Daylily_57	1	This specimen displays unrolling leaf blades with contrasting backs.	Growth habit: unrolling leaf blades with contrasting backs.		Growth habit: unrolling leaf blades with contrasting backs.
+33	Plant_Daylily	4	18035	HNS_Plant_Daylily_58	1	It also shows elongated amber resin droplets.	Surface: elongated amber resin droplets.		Surface: elongated amber resin droplets.
+33	Plant_Daylily	5	18036	HNS_Plant_Daylily_59	1	This specimen displays curling bark-like ribbons at the base.	Growth habit: curling bark-like ribbons at the base.		Growth habit: curling bark-like ribbons at the base.
+33	Plant_Daylily	6	18037	HNS_Plant_Daylily_60	1	It also shows shifting local self-shadow patterns.	Surface: shifting local self-shadow patterns.		Surface: shifting local self-shadow patterns.
+34	Plant_Corn	1	18020	Vanilla	0				
+34	Plant_Corn	2	18021	HNS_Plant_Corn_46	1	It also shows localized prismatic foliage sheen.	Surface: localized prismatic foliage sheen.		Surface: localized prismatic foliage sheen.
+34	Plant_Corn	3	18022	HNS_Plant_Corn_47	1	This specimen displays unrolling leaf blades with contrasting backs.	Growth habit: unrolling leaf blades with contrasting backs.		Growth habit: unrolling leaf blades with contrasting backs.
+34	Plant_Corn	4	18023	HNS_Plant_Corn_48	1	It also shows elongated amber resin droplets.	Surface: elongated amber resin droplets.		Surface: elongated amber resin droplets.
+34	Plant_Corn	5	18024	HNS_Plant_Corn_49	1	This specimen displays curling bark-like ribbons at the base.	Growth habit: curling bark-like ribbons at the base.		Growth habit: curling bark-like ribbons at the base.
+34	Plant_Corn	6	18025	HNS_Plant_Corn_50	1	It also shows shifting local self-shadow patterns.	Surface: shifting local self-shadow patterns.		Surface: shifting local self-shadow patterns.
+34	Plant_Cotton	1	18026	Vanilla	0				
+34	Plant_Cotton	2	18027	HNS_Plant_Cotton_51	1	It also shows localized prismatic foliage sheen.	Surface: localized prismatic foliage sheen.		Surface: localized prismatic foliage sheen.
+34	Plant_Cotton	3	18028	HNS_Plant_Cotton_52	1	This specimen displays unrolling leaf blades with contrasting backs.	Growth habit: unrolling leaf blades with contrasting backs.		Growth habit: unrolling leaf blades with contrasting backs.
+34	Plant_Cotton	4	18029	HNS_Plant_Cotton_53	1	It also shows elongated amber resin droplets.	Surface: elongated amber resin droplets.		Surface: elongated amber resin droplets.
+34	Plant_Cotton	5	18030	HNS_Plant_Cotton_54	1	This specimen displays curling bark-like ribbons at the base.	Growth habit: curling bark-like ribbons at the base.		Growth habit: curling bark-like ribbons at the base.
+34	Plant_Cotton	6	18031	HNS_Plant_Cotton_55	1	It also shows shifting local self-shadow patterns.	Surface: shifting local self-shadow patterns.		Surface: shifting local self-shadow patterns.
+34	Plant_Daylily	1	18032	Vanilla	0				
+34	Plant_Daylily	2	18033	HNS_Plant_Daylily_56	1	It also shows localized prismatic foliage sheen.	Surface: localized prismatic foliage sheen.		Surface: localized prismatic foliage sheen.
+34	Plant_Daylily	3	18034	HNS_Plant_Daylily_57	1	This specimen displays unrolling leaf blades with contrasting backs.	Growth habit: unrolling leaf blades with contrasting backs.		Growth habit: unrolling leaf blades with contrasting backs.
+34	Plant_Daylily	4	18035	HNS_Plant_Daylily_58	1	It also shows elongated amber resin droplets.	Surface: elongated amber resin droplets.		Surface: elongated amber resin droplets.
+34	Plant_Daylily	5	18036	HNS_Plant_Daylily_59	1	This specimen displays curling bark-like ribbons at the base.	Growth habit: curling bark-like ribbons at the base.		Growth habit: curling bark-like ribbons at the base.
+34	Plant_Daylily	6	18037	HNS_Plant_Daylily_60	1	It also shows shifting local self-shadow patterns.	Surface: shifting local self-shadow patterns.		Surface: shifting local self-shadow patterns.
+35	Plant_Corn	1	18020	Vanilla	0				
+35	Plant_Corn	2	18021	HNS_Plant_Corn_46	1	It also shows localized prismatic foliage sheen.	Surface: localized prismatic foliage sheen.		Surface: localized prismatic foliage sheen.
+35	Plant_Corn	3	18022	HNS_Plant_Corn_47	1	This specimen displays unrolling leaf blades with contrasting backs.	Growth habit: unrolling leaf blades with contrasting backs.		Growth habit: unrolling leaf blades with contrasting backs.
+35	Plant_Corn	4	18023	HNS_Plant_Corn_48	1	It also shows elongated amber resin droplets.	Surface: elongated amber resin droplets.		Surface: elongated amber resin droplets.
+35	Plant_Corn	5	18024	HNS_Plant_Corn_49	1	This specimen displays curling bark-like ribbons at the base.	Growth habit: curling bark-like ribbons at the base.		Growth habit: curling bark-like ribbons at the base.
+35	Plant_Corn	6	18025	HNS_Plant_Corn_50	1	It also shows shifting local self-shadow patterns.	Surface: shifting local self-shadow patterns.		Surface: shifting local self-shadow patterns.
+35	Plant_Cotton	1	18026	Vanilla	0				
+35	Plant_Cotton	2	18027	HNS_Plant_Cotton_51	1	It also shows localized prismatic foliage sheen.	Surface: localized prismatic foliage sheen.		Surface: localized prismatic foliage sheen.
+35	Plant_Cotton	3	18028	HNS_Plant_Cotton_52	1	This specimen displays unrolling leaf blades with contrasting backs.	Growth habit: unrolling leaf blades with contrasting backs.		Growth habit: unrolling leaf blades with contrasting backs.
+35	Plant_Cotton	4	18029	HNS_Plant_Cotton_53	1	It also shows elongated amber resin droplets.	Surface: elongated amber resin droplets.		Surface: elongated amber resin droplets.
+35	Plant_Cotton	5	18030	HNS_Plant_Cotton_54	1	This specimen displays curling bark-like ribbons at the base.	Growth habit: curling bark-like ribbons at the base.		Growth habit: curling bark-like ribbons at the base.
+35	Plant_Cotton	6	18031	HNS_Plant_Cotton_55	1	It also shows shifting local self-shadow patterns.	Surface: shifting local self-shadow patterns.		Surface: shifting local self-shadow patterns.
+35	Plant_Daylily	1	18032	Vanilla	0				
+35	Plant_Daylily	2	18033	HNS_Plant_Daylily_56	1	It also shows localized prismatic foliage sheen.	Surface: localized prismatic foliage sheen.		Surface: localized prismatic foliage sheen.
+35	Plant_Daylily	3	18034	HNS_Plant_Daylily_57	1	This specimen displays unrolling leaf blades with contrasting backs.	Growth habit: unrolling leaf blades with contrasting backs.		Growth habit: unrolling leaf blades with contrasting backs.
+35	Plant_Daylily	4	18035	HNS_Plant_Daylily_58	1	It also shows elongated amber resin droplets.	Surface: elongated amber resin droplets.		Surface: elongated amber resin droplets.
+35	Plant_Daylily	5	18036	HNS_Plant_Daylily_59	1	This specimen displays curling bark-like ribbons at the base.	Growth habit: curling bark-like ribbons at the base.		Growth habit: curling bark-like ribbons at the base.
+35	Plant_Daylily	6	18037	HNS_Plant_Daylily_60	1	It also shows shifting local self-shadow patterns.	Surface: shifting local self-shadow patterns.		Surface: shifting local self-shadow patterns.
+36	Plant_Corn	1	18020	Vanilla	0				
+36	Plant_Corn	2	18021	HNS_Plant_Corn_46	1	It also shows localized prismatic foliage sheen.	Surface: localized prismatic foliage sheen.		Surface: localized prismatic foliage sheen.
+36	Plant_Corn	3	18022	HNS_Plant_Corn_47	1	This specimen displays unrolling leaf blades with contrasting backs.	Growth habit: unrolling leaf blades with contrasting backs.		Growth habit: unrolling leaf blades with contrasting backs.
+36	Plant_Corn	4	18023	HNS_Plant_Corn_48	1	It also shows elongated amber resin droplets.	Surface: elongated amber resin droplets.		Surface: elongated amber resin droplets.
+36	Plant_Corn	5	18024	HNS_Plant_Corn_49	1	This specimen displays curling bark-like ribbons at the base.	Growth habit: curling bark-like ribbons at the base.		Growth habit: curling bark-like ribbons at the base.
+36	Plant_Corn	6	18025	HNS_Plant_Corn_50	1	It also shows shifting local self-shadow patterns.	Surface: shifting local self-shadow patterns.		Surface: shifting local self-shadow patterns.
+36	Plant_Cotton	1	18026	Vanilla	0				
+36	Plant_Cotton	2	18027	HNS_Plant_Cotton_51	1	It also shows localized prismatic foliage sheen.	Surface: localized prismatic foliage sheen.		Surface: localized prismatic foliage sheen.
+36	Plant_Cotton	3	18028	HNS_Plant_Cotton_52	1	This specimen displays unrolling leaf blades with contrasting backs.	Growth habit: unrolling leaf blades with contrasting backs.		Growth habit: unrolling leaf blades with contrasting backs.
+36	Plant_Cotton	4	18029	HNS_Plant_Cotton_53	1	It also shows elongated amber resin droplets.	Surface: elongated amber resin droplets.		Surface: elongated amber resin droplets.
+36	Plant_Cotton	5	18030	HNS_Plant_Cotton_54	1	This specimen displays curling bark-like ribbons at the base.	Growth habit: curling bark-like ribbons at the base.		Growth habit: curling bark-like ribbons at the base.
+36	Plant_Cotton	6	18031	HNS_Plant_Cotton_55	1	It also shows shifting local self-shadow patterns.	Surface: shifting local self-shadow patterns.		Surface: shifting local self-shadow patterns.
+36	Plant_Daylily	1	18032	Vanilla	0				
+36	Plant_Daylily	2	18033	HNS_Plant_Daylily_56	1	It also shows localized prismatic foliage sheen.	Surface: localized prismatic foliage sheen.		Surface: localized prismatic foliage sheen.
+36	Plant_Daylily	3	18034	HNS_Plant_Daylily_57	1	This specimen displays unrolling leaf blades with contrasting backs.	Growth habit: unrolling leaf blades with contrasting backs.		Growth habit: unrolling leaf blades with contrasting backs.
+36	Plant_Daylily	4	18035	HNS_Plant_Daylily_58	1	It also shows elongated amber resin droplets.	Surface: elongated amber resin droplets.		Surface: elongated amber resin droplets.
+36	Plant_Daylily	5	18036	HNS_Plant_Daylily_59	1	This specimen displays curling bark-like ribbons at the base.	Growth habit: curling bark-like ribbons at the base.		Growth habit: curling bark-like ribbons at the base.
+36	Plant_Daylily	6	18037	HNS_Plant_Daylily_60	1	It also shows shifting local self-shadow patterns.	Surface: shifting local self-shadow patterns.		Surface: shifting local self-shadow patterns.
