@@ -182,6 +182,7 @@ namespace HorticultureNovelSeeds
                     var defs=DefDatabase<VarietyTraitDef>.AllDefsListForReading.Where(t=>ResponsiveHabitMath.Valid(t.responsiveHabit)&&ArticulationMath.Valid(t.responsiveHabit)==articulationGarden).ToList();
                     Require(defs.Count==5&&defs.All(t=>t.commonality==0f&&TraitAppearanceCatalog.TryGet(t,out _)),"five neutral pose alleles");
                     Require(TraitCatalogValidation.Validate(DefDatabase<VarietyTraitDef>.AllDefsListForReading).Count==0,"trait catalog validation");
+                    if(articulationGarden)VerifyArticulationAtlasPixels();
                     PoseEvidence.Add("Panel\tSpecies\tColumn\tPlant ID\tTrait\tLocal hour\tWeather\tSky glow\tRain rate\tFlipped\tHeight\tContraction\tLean\tDroop\tMaterial ID");
                 }
                 if(architectureGarden)
@@ -537,6 +538,53 @@ namespace HorticultureNovelSeeds
                 PoseEvidence.Add(string.Join("\t",panel+1,row.Plant.def.defName,row.Column,id,trait.defName,GenLocalDate.HourOfDay(map),map.weatherManager.curWeather.defName,sky,rain,flip,controls.x,controls.y,controls.z,controls.w,mat.GetInstanceID()));
             }
             Log.Message("[HNS Pose] phase="+(panel+1)+"; sky="+sky+"; rain="+rain+"; materials="+poseInitialMaterials+"; uniform updates="+ResponsiveHabitExperiment.Updates);
+        }
+        // Explicit GPU readback of synthetic per-cell identifiers. The garden
+        // verifies material state; this verifies the actual selected atlas cell.
+        private static void VerifyArticulationAtlasPixels()
+        {
+            const int tile=32, side=tile*3;
+            var colors=new Color[side*side];
+            Color Swatch(int frame,int x,int y)=>new Color(.08f+.095f*frame,x>=tile/2?.65f:.25f,y>=tile/2?.65f:.25f,1f);
+            for(int y=0;y<side;y++)for(int x=0;x<side;x++)colors[y*side+x]=Swatch((y/tile)*3+x/tile,x%tile,y%tile);
+            var atlas=new Texture2D(side,side,TextureFormat.RGBA32,false,true){filterMode=FilterMode.Point,wrapMode=TextureWrapMode.Clamp};
+            atlas.SetPixels(colors);atlas.Apply();
+            var shader=DefDatabase<ShaderDef>.GetNamed(ArticulationAtlas.ShaderName).Shader;
+            var mat=new Material(shader){mainTexture=atlas};
+            mat.SetVector("_HnsAtlas",new Vector4(1f/tile,1f/tile,0f,0f));
+            var previous=RenderTexture.active;
+            var rt=RenderTexture.GetTemporary(tile,tile,0,RenderTextureFormat.ARGB32,RenderTextureReadWrite.Linear);
+            var read=new Texture2D(tile,tile,TextureFormat.RGBA32,false,true);
+            var observations=new List<string>{"Requested frame\tObserved frame\tMax swatch RGB error"};
+            float max=0;
+            try
+            {
+                for(int f=0;f<ArticulationMath.Frames;f++)
+                {
+                    mat.SetVector("_HnsPose",new Vector4(f/8f,0f,0f,0f));
+                    Graphics.Blit(atlas,rt,mat,0);RenderTexture.active=rt;
+                    read.ReadPixels(new Rect(0,0,tile,tile),0,0,false);read.Apply();
+                    var values=new[]{read.GetPixel(8,8),read.GetPixel(24,8),read.GetPixel(8,24),read.GetPixel(24,24)};
+                    int observed=(int)MathF.Round((values[0].r-.08f)/.095f);
+                    var expected=new[]{Swatch(f,8,8),Swatch(f,24,8),Swatch(f,8,24),Swatch(f,24,24)};
+                    float error=0;
+                    foreach(var v in values)
+                    {
+                        float e=expected.Min(c=>Math.Max(Math.Abs(c.r-v.r),Math.Max(Math.Abs(c.g-v.g),Math.Abs(c.b-v.b))));
+                        error=Math.Max(error,e);
+                    }
+                    max=Math.Max(max,error);
+                    observations.Add(string.Join("\t",f,observed,error.ToString("R",CultureInfo.InvariantCulture)));
+                }
+                File.WriteAllLines(Path.Combine(root,"HNS-garden-articulation-gpu-parity.tsv"),observations);
+                Log.Message("[HNS Articulation] atlas GPU frame parity: "+string.Join(" | ",observations.Skip(1))+"; max error="+max);
+                Require(max<.025f,"GPU samples correct atlas cells for all nine frame indices");
+            }
+            finally
+            {
+                RenderTexture.active=previous;RenderTexture.ReleaseTemporary(rt);
+                UnityEngine.Object.Destroy(read);UnityEngine.Object.Destroy(mat);UnityEngine.Object.Destroy(atlas);
+            }
         }
         private static readonly List<string> ArticulationEvidence=new(){"Panel\tSpecies\tColumn\tPlant ID\tTrait\tSky\tRain\tFrame\tSway head\tMaterial ID\tRenderer"};
         private static readonly Dictionary<int,int> ArticulationMorning=new();
