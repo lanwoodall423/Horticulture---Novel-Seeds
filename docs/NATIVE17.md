@@ -1405,3 +1405,37 @@ activation, map-scale appearance, combinations, reload and dense-field
 performance remain unqualified.
 
 Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/1e64d2531d9c7e36b9bba1492c1c415bbea30e8b
+
+### Botanical Expression Engine and Laboratory
+
+First bounded multi-channel composition integration: eighteen selected
+existing traits in five slots (architecture, tissue, reproductive, surface,
+history/current context). Deterministic compatibility, explicit species
+families, source-art qualification, unknown-trait fallback, stable saved
+thing-ID-derived individual seeds, growth-band and targeted neighbor
+invalidation, existing Scribe visual chronicle. Shared source architecture
+atlases and combined shader; 64 MiB texture budget and 160 material cap.
+Existing experimental paths remain separate and ordinary activation is off.
+
+Initial source 340fc36, isolated native 0e4b5e7b427a4a8591a468f97379cd12:
+nine registered five-trait identities, 18 actual subjects, 15 modified,
+six actual growth states, 90 accepted native mesh/material checks and 90
+native GPU readbacks plus 90 matched source controls. Five GIFs use
+accelerated captured states, not natural growth or colony-map screenshots.
+All 15 mature plants accepted five channels. Three same-cultivar
+individuals per species have distinct seeds and real prior crowding
+histories. First run receipt failed at lab GUI repaint; renderer
+evidence preserved, not a full PASS.
+
+Follow-up source 712f4c8738620175e437bd9f22cd0ca90e311570, native 7651faa60355450f9857d6c95e2d2517, status FAIL.
+Laboratory supports independent channel editing, selected documented
+cultivar/presets, growth/seed/environment controls, reference comparison
+and PNG export. Lab preview API and GUI repaint are separately qualified
+in the evidence; do not infer full UI verification from fixture status.
+Production activation, natural breeding/exclusion-tag migration,
+species inference beyond explicit families, full save/reload, map-scale
+appearance, large fields and all remaining catalog combinations are
+unqualified. No new mutation weights or mechanics. Normal player data
+unchanged, test process and package removed.
+
+Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/d227237137b57af356a2b475b3518440a085a3ec
