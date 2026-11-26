@@ -942,3 +942,47 @@ Preparation SHA256: B315F4BE880C73EC4F905AB4238ED898BBCBB56FEADB3DF992050EDAE2D2
 Reproduce with RimWorld closed:
 
     powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -ArchitectureGarden
+
+## Research pass: live environmental posture (2026-11-25)
+
+Owner approved and retained refined canopy synthesis. Native shader review:
+PlantWindSway provides source UV, exposure and fall seed; CutoutPlant samples
+original alpha; CutoutAnimated and TransparentShaking demonstrate independent
+material-time driven UV/vertex animation. Use a separate inverse-UV deformation
+fragment stage, with original wind vertex stage and bounded quantized controls.
+Five neutral zero-weight candidates: Nightfold, Sunseeker, Rainbowed, Nightbloom,
+Raincup. No new textures or geometry. Controls derive from actual sky glow,
+local solar time and rain rate, with preparation-time shelter and flip identity.
+The renderer retains a bounded source/habit/material cache, and does not
+request mesh reconstruction on environment changes. Prior systems untouched.
+
+Source 6aade3e74dc7d7d7031548d302ba5b209c8fbacc. Native AllPerformance
+run 6cd683627a914533a897ed11fbad8263, RimWorld 1.7.5014 rev1195:
+all eight stages passed. Same 18 mature plants (corn, cotton, daylily),
+15 cultivars and three controls. Clear morning, clear afternoon, rainy
+afternoon, clear midnight, clear morning restored (integer hour 8 on
+last capture due to tick rounding). 75 verified material states, 15
+stable material IDs, 33 changed uniform writes, no custom pigment materials
+or masks. Morning controls restored exactly. Both builds clean; seven
+new math checks including 3630 sampled forward/inverse positions passed.
+Normal save/config/preferences preservation and owned cleanup passed.
+No relevant HNS error identified in captured log. Evidence:
+https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/bcbfa0fca0556193ddf114eb1e5f6da107b644ff
+
+Sunseeker and rain folding/bowing are visible, especially on upright corn.
+Nighttime comparisons are darker due to original game lighting. Compact
+flowers respond less prominently. This warps the complete original sprite,
+not individually articulated leaves; some shapes compress rather than
+truly fold. Solar direction approximated from local time, not ray-traced.
+Wind disabled in fixture; natural progression, shelter transitions,
+combined traits, performance, seasonal art, editor and release activation
+unqualified. No mechanics or historical 1.6 changes.
+
+DLL SHA256: E982C28B5EB281C742C9426066D736E71C2B828D3607E177823E752A1A60C7F6.
+Receipt SHA256: C5ABE85F054952CCA59F71F20E1220AA50624F01F11EA137BEAF7B9F706116E3.
+Log SHA256: 79FBBDCE7454775A54111CEFEABF82CD6540E1FD946255DF325150C16855293F.
+Pose inventory SHA256: A0C9C220CFE0651FBD9986DC5469CA39EBC6602A371CDC1080C944859E895BFD.
+
+Reproduce with RimWorld closed:
+
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -PoseGarden
