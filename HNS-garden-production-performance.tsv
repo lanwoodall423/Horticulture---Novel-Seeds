@@ -1,0 +1,9 @@
+Phase	Plants	Rendered	Materials	Source maps	Texture bytes	Prepare jobs	Max prepare ms	Median update interval ms	P95 update interval ms
+showcase-0	18	15	8	8	5107712	9	168.34	6.94	7.53
+showcase-1	18	15	8	8	5107712	9	168.34	6.94	7.13
+showcase-2	18	15	8	8	5107712	9	168.34	6.94	7.12
+showcase-3	18	15	16	8	5107712	9	168.34	6.94	7.12
+showcase-4	18	15	16	8	5107712	9	168.34	6.94	7.05
+showcase-5	18	15	16	8	5107712	9	168.34	6.94	7.17
+dense-before-save	300	243	16	8	5107712	9	168.34	6.94	7.06
+dense-after-reload	300	243	16	8	5107712	9	168.34	6.94	7.15

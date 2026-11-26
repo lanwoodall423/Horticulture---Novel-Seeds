@@ -1,0 +1,27 @@
+[
+  {
+    "file": "corn-growth.gif",
+    "frames": 10,
+    "bytes": 144393
+  },
+  {
+    "file": "cotton-growth.gif",
+    "frames": 10,
+    "bytes": 180484
+  },
+  {
+    "file": "daylily-growth.gif",
+    "frames": 10,
+    "bytes": 193651
+  },
+  {
+    "file": "all-crossbred-growth.gif",
+    "frames": 10,
+    "bytes": 462233
+  },
+  {
+    "file": "save-reload.gif",
+    "frames": 2,
+    "bytes": 101905
+  }
+]

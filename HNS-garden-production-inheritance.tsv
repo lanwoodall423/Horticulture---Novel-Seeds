@@ -1,0 +1,4 @@
+Species	Mother	Donor	Child	Generation	Traits	Mutation draws	Promoted draws
+Plant_Corn	HNS_Plant_Corn_1	HNS_Plant_Corn_2	HNS_Plant_Corn_3	1	HNS_BronzeReticulum|HNS_CrookedChronicle|HNS_RipeningMosaic|HNS_SatinCuticle|HNS_WingedPetioles	320	14
+Plant_Cotton	HNS_Plant_Cotton_5	HNS_Plant_Cotton_6	HNS_Plant_Cotton_7	1	HNS_CrimsonNetwork|HNS_CrookedChronicle|HNS_PearlCuticle|HNS_PendantRaceme|HNS_SectorSport	320	22
+Plant_Daylily	HNS_Plant_Daylily_9	HNS_Plant_Daylily_10	HNS_Plant_Daylily_11	1	HNS_CrookedChronicle|HNS_IvoryNerves|HNS_SatinCuticle|HNS_SectorSport|HNS_UmbelCrown	320	16
