@@ -167,7 +167,7 @@ namespace HorticultureNovelSeeds
         private static bool Rendered(Plant p,int count)
         {
             if(!BotanicalExpressionEngine.Prints.TryGetValue(p.thingIDNumber,out var pr))return false;
-            return pr.Decision.Plan.Count==count&&pr.Band==E.Band(p.Growth)&&pr.Seed==E.Seed(p.thingIDNumber)&&
+            return (count<0?pr.Decision.Plan.Count>0&&pr.Decision.Accepted.Length+pr.Decision.Rejected.Length==5:pr.Decision.Plan.Count==count)&&pr.Band==E.Band(p.Growth)&&pr.Seed==E.Seed(p.thingIDNumber)&&
                 pr.Code==p.TryGetComp<CompPlantVariety>().VisualChronicle&&BotanicalExpressionEngine.MeshPayload.GetValueOrDefault(p.thingIDNumber)&&
                 pr.Material.GetVector("_HnsPreview")==Vector4.zero;
         }
@@ -222,11 +222,11 @@ namespace HorticultureNovelSeeds
                 if(lastStamp!=0&&frames>=20)intervals.Add((now-lastStamp)*1000d/System.Diagnostics.Stopwatch.Frequency);
                 lastStamp=now;
                 if(Find.WindowStack.TryRemove(typeof(EditWindow_Log),false)){frames=0;return;}
-                if(frames>1200)throw new InvalidOperationException("production field render/capture timeout phase="+phase+"; prepared="+BotanicalExpressionEngine.PendingCount);
+                if(frames>1200)throw new InvalidOperationException("production field render/capture timeout phase="+phase+"; prepared="+BotanicalExpressionEngine.PendingCount+"; jobs="+BotanicalExpressionEngine.PrepareJobs+"; materials="+BotanicalExpressionEngine.MaterialCount+"; capture="+shot+"; states="+string.Join(",",Styled(samples.Concat(dense)).Take(40).Select(p=>p.def.defName+":"+p.thingIDNumber+":"+(BotanicalExpressionEngine.Prints.TryGetValue(p.thingIDNumber,out var q)?q.Decision.Plan.Count+":"+q.Band+":"+BotanicalExpressionEngine.MeshPayload.GetValueOrDefault(p.thingIDNumber):"missing"))));
                 if(phase<6)
                 {
                     var styled=Styled(samples).ToArray();
-                    if(frames<90||BotanicalExpressionEngine.PendingCount!=0||!styled.All(p=>Rendered(p,5)))return;
+                    if(frames<90||BotanicalExpressionEngine.PendingCount!=0||!styled.All(p=>Rendered(p,phase==5?5:-1)))return;
                     if(!Capture("showcase-"+(phase+1).ToString("D2")))return;
                     Record(samples,"showcase-"+phase);CapturePerf("showcase-"+phase,samples.Count,styled.Length);
                     if(++phase<6){AdvanceGrowth();return;}
