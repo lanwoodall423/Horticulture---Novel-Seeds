@@ -86,3 +86,7 @@ Require(DevelopmentalPhenotype.Band(.39f)==0 && DevelopmentalPhenotype.Band(.4f)
 Require(!DevelopmentalPhenotype.Crossed(.42f,.78f)&&DevelopmentalPhenotype.Crossed(.8f,.3f),"stable within band and reset crossing");
 Require(DevelopmentalPhenotype.Phase(float.NaN)==0f&&DevelopmentalPhenotype.Phase(1f)==1f,"bounded finite phase");
 Require(!DevelopmentalPhenotype.IsMode(50)&&DevelopmentalPhenotype.IsMode(51)&&DevelopmentalPhenotype.IsMode(55)&&!DevelopmentalPhenotype.IsMode(56),"isolated mode range");
+
+foreach(var habit in Enum.GetValues<WindHabitKind>()){var c=WindHabitMath.Controls(habit);Require(c.X>=0f&&c.X+c.Flutter<=2.5f&&c.Z>=0f&&c.Z+c.Flutter<=2.5f&&c.Rate>=.5f&&c.Rate<=1.5f,habit+" bounded wind profile");}
+Require(WindHabitMath.Controls(WindHabitKind.None)==(1f,1f,1f,0f),"neutral wind profile");
+Require(WindHabitMath.Controls(WindHabitKind.RigidHabit).X<.2f&&WindHabitMath.Controls(WindHabitKind.Flutterleaf).Flutter>.3f,"distinct wind habits");

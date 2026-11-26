@@ -100,6 +100,7 @@ namespace HorticultureNovelSeeds
         public PlantFormKind plantForm;
         public float plantFormStrength = 1f;
         public OrganFormKind organForm;
+        public WindHabitKind windHabit;
         public float visualScale = 1f;
         public float yieldFactor = 1f;
         public float growthRateFactor = 1f;

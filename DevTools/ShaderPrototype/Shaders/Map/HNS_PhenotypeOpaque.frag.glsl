@@ -19,6 +19,7 @@ layout(set = 2, binding = 0) uniform MaterialUniforms
     vec4 _HnsControls2;
     float _HnsDullness2;
     vec4 _HnsPattern; // @default = vec4(0.0, 0.0, 0.0, 1.0)
+    vec4 _HnsWind; // @default = vec4(1.0, 1.0, 1.0, 0.0)
 } uMaterial;
 layout(set = 2, binding = 1) uniform sampler2D _MainTex;
 layout(set = 2, binding = 2) uniform sampler2D _HnsMask;

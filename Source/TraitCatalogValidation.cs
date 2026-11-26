@@ -17,7 +17,7 @@ namespace HorticultureNovelSeeds
                     errors.Add(trait.defName + " has an explicit balance value but still uses tag fallback.");
                 if (trait.requiredResourceDef != null && trait.requiredResourceCount != 1)
                     errors.Add(trait.defName + " must consume exactly one required resource unit.");
-                if (trait.proceduralPhenotype != ProceduralPhenotype.None || trait.plantForm != PlantFormKind.None || trait.organForm != OrganFormKind.None)
+                if (trait.proceduralPhenotype != ProceduralPhenotype.None || trait.plantForm != PlantFormKind.None || trait.organForm != OrganFormKind.None || trait.windHabit != WindHabitKind.None)
                 {
                     if (!ValidProceduralCosmetic(trait)) errors.Add(trait.defName + " has invalid procedural appearance or non-cosmetic mechanics.");
                     continue;
@@ -74,10 +74,11 @@ namespace HorticultureNovelSeeds
         // to bypass the tradeoff policy for actual mechanical traits.
         private static bool ValidProceduralCosmetic(VarietyTraitDef t)
         {
-            return ((t.organForm == OrganFormKind.None && t.plantForm == PlantFormKind.None && ProceduralPhenotypeUtility.IsExplicitMode(t.proceduralPhenotype)
+            return ((t.windHabit == WindHabitKind.None && t.organForm == OrganFormKind.None && t.plantForm == PlantFormKind.None && ProceduralPhenotypeUtility.IsExplicitMode(t.proceduralPhenotype)
                 && float.IsFinite(t.proceduralStrength) && t.proceduralStrength > 0f && t.proceduralStrength <= 1f) ||
-                (t.organForm == OrganFormKind.None && t.proceduralPhenotype == ProceduralPhenotype.None && PlantFormMath.IsValid(t.plantForm,t.plantFormStrength)) ||
-                (t.proceduralPhenotype == ProceduralPhenotype.None && t.plantForm == PlantFormKind.None && OrganSpriteMath.Valid(t.organForm)))
+                (t.windHabit == WindHabitKind.None && t.organForm == OrganFormKind.None && t.proceduralPhenotype == ProceduralPhenotype.None && PlantFormMath.IsValid(t.plantForm,t.plantFormStrength)) ||
+                (t.windHabit == WindHabitKind.None && t.proceduralPhenotype == ProceduralPhenotype.None && t.plantForm == PlantFormKind.None && OrganSpriteMath.Valid(t.organForm)) ||
+                (t.proceduralPhenotype == ProceduralPhenotype.None && t.plantForm == PlantFormKind.None && t.organForm == OrganFormKind.None && WindHabitMath.Valid(t.windHabit)))
                 && t.balanceValueExplicit && t.balanceValue == 0f && !t.positive && !t.produceOnlyVisual && !t.inheritToProduce
                 && t.yieldFactor == 1f && t.growthRateFactor == 1f && t.workFactor == 1f
                 && t.sowWorkFactor == 1f && t.harvestWorkFactor == 1f && t.blightChanceFactor == 1f && t.blightDamageFactor == 1f

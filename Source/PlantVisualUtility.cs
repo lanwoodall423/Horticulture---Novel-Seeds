@@ -23,14 +23,15 @@ namespace HorticultureNovelSeeds
 #endif
             var comp = plant.TryGetComp<CompPlantVariety>();
             bool procedural = WaylithPhenotypeShader.Enabled && ProceduralPhenotypeUtility.Resolve(comp).x > 0f;
-            bool proceduralOnly = procedural && !NovelSeedUtility.HasRegionalPlantColor(comp);
+            bool wind = WaylithPhenotypeShader.Enabled && WindHabitUtility.Resolve(comp)!=WindHabitKind.None;
+            bool proceduralOnly = (procedural || wind) && !NovelSeedUtility.HasRegionalPlantColor(comp);
             if (!proceduralOnly && TryPrintIndependentMaskLayers(plant, layer, visual)) return false;
             Vector3 trueCenter = plant.TrueCenter();
             bool wantSnowOverlay = plant.Position.GetSnowDepth(plant.Map) > 0.8f;
             // Snow-overlay alignment and independently transformed mask layers
             // are deliberately outside this initial form proof.
             var form = wantSnowOverlay ? default : PlantFormMesh.Resolve(comp);
-            var organ = wantSnowOverlay || procedural || !visual.IsDefault || NovelSeedUtility.HasRegionalPlantColor(comp) ? OrganFormKind.None : OrganSpriteExperiment.Resolve(comp);
+            var organ = wantSnowOverlay || procedural || wind || !visual.IsDefault || NovelSeedUtility.HasRegionalPlantColor(comp) ? OrganFormKind.None : OrganSpriteExperiment.Resolve(comp);
             Rand.PushState();
             Rand.Seed = plant.Position.GetHashCode();
             try
@@ -74,7 +75,7 @@ namespace HorticultureNovelSeeds
                         material=organMaterial;
                         PlantUtility.SetWindExposureColors(WorkingColors,plant);
                     }
-                    else if (procedural || NeedsStyledMaterial(visual) || (NovelSeedUtility.HasPlantMaskVisual(comp) && PlantMaskUtility.HasActiveMasks(plant.def)))
+                    else if (procedural || wind || NeedsStyledMaterial(visual) || (NovelSeedUtility.HasPlantMaskVisual(comp) && PlantMaskUtility.HasActiveMasks(plant.def)))
                     {
                         material = GetStyledMaterial(material, visual, plant, out bool preservesWind, -2, variationIndex);
                         if (preservesWind) PlantUtility.SetWindExposureColors(WorkingColors, plant);

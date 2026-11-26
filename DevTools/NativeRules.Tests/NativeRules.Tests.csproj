@@ -10,5 +10,6 @@
     <Compile Include="../../Source/PlantFormMath.cs" Link="PlantFormMath.cs" />
     <Compile Include="../../Source/OrganSpriteMath.cs" Link="OrganSpriteMath.cs" />
     <Compile Include="../../Source/DevelopmentalPhenotype.cs" Link="DevelopmentalPhenotype.cs" />
+    <Compile Include="../../Source/WindHabitMath.cs" Link="WindHabitMath.cs" />
   </ItemGroup>
 </Project>

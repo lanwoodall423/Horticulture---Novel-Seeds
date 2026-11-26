@@ -51,7 +51,13 @@ namespace HorticultureNovelSeeds
         private static int panel, frames, captureAge;
         private static string capture;
         private static bool active;
-        private static bool patternGarden, catalogGarden, creativeGarden, cultivarGarden, formGarden, organGarden, developmentGarden;
+        private static bool patternGarden, catalogGarden, creativeGarden, cultivarGarden, formGarden, organGarden, developmentGarden, windGarden;
+        private const int WindFrames = 12;
+        private static readonly string[] WindTraits = { "RigidHabit", "SuppleHabit", "Flutterleaf", "NoddingHabit", "SweepingHabit" };
+        private static readonly List<string> WindEvidence = new();
+        private static int windSampledPanel=-1, windInitialMaterialCount;
+        private static float lastWindHead;
+        private static bool previousWindPref;
         private static readonly string[] DevelopmentTraits = { "BronzeFlush", "Frostbud", "AutumnCrown", "RipeningBlush", "MaturingVariegation" };
         private static readonly float[] DevelopmentGrowth = { .30f, .60f, 1f };
         private static readonly string[] OrganTraits = { "PlumpFruit", "LongFruit", "BroadFruit", "ClusteredFruit", "ThickStalk" };
@@ -62,7 +68,7 @@ namespace HorticultureNovelSeeds
         private static readonly string[] CreativeTraits = { "Velvetleaf", "Lacquered", "Dustbloom", "Silvered", "HaloEdged", "Netveined", "Tigerstriped", "Marbled", "Opaline", "Crystalline", "Bioluminescent", "NebulaMottle", "Coralbranch", "Prismatic", "Saltbloom", "Ashen", "Boggloss", "Waxbound", "Peatstained", "ScorchedMargins", "Variegated", "Anthocyanin", "MoonFrost", "GoldFreckled", "AuroraVeins" };
         private static readonly string[] CreativeCrops = { "Plant_Corn", "Plant_Cotton", "Plant_Strawberry" };
         private static List<List<VarietyTraitDef>> catalogCases;
-        private static int PanelCount => developmentGarden ? 3 : organGarden ? 2 : formGarden ? 2 : catalogGarden ? 6 : cultivarGarden ? 3 : creativeGarden ? 5 : SpeciesOptions.Length;
+        private static int PanelCount => windGarden ? WindFrames : developmentGarden ? 3 : organGarden ? 2 : formGarden ? 2 : catalogGarden ? 6 : cultivarGarden ? 3 : creativeGarden ? 5 : SpeciesOptions.Length;
         private static readonly string[] CatalogCrops = {
             "Plant_Rice","Plant_Cotton","Plant_Corn", "Plant_Potato","Plant_Cotton","Plant_Hops",
             "Plant_Cotton","Plant_Healroot","Plant_Strawberry", "Plant_Corn","Plant_Corn","Plant_Corn",
@@ -95,7 +101,7 @@ namespace HorticultureNovelSeeds
             var all = DefDatabase<VarietyTraitDef>.AllDefsListForReading.Where(t => t.defName.StartsWith("HNS_", StringComparison.Ordinal)).ToList();
             Require(all.All(t => TraitAppearanceCatalog.TryGet(t, out _)), "all loaded HNS definitions have appearance rules");
             var singles = result.Where(x=>x.Count==1).Select(x=>x[0]).ToHashSet();
-            Require(all.Where(t=>!t.configRoot && !t.generated && !ProceduralPhenotypeUtility.IsCreativeMode(t.proceduralPhenotype) && !ProceduralPhenotypeUtility.IsCultivarMode(t.proceduralPhenotype) && t.plantForm == PlantFormKind.None && t.organForm == OrganFormKind.None && !DevelopmentalPhenotype.IsMode((int)t.proceduralPhenotype)).All(singles.Contains), "every baseline authored concrete trait has an individual fixture; creative candidates use CreativeGarden");
+            Require(all.Where(t=>!t.configRoot && !t.generated && !ProceduralPhenotypeUtility.IsCreativeMode(t.proceduralPhenotype) && !ProceduralPhenotypeUtility.IsCultivarMode(t.proceduralPhenotype) && t.plantForm == PlantFormKind.None && t.organForm == OrganFormKind.None && t.windHabit == WindHabitKind.None && !DevelopmentalPhenotype.IsMode((int)t.proceduralPhenotype)).All(singles.Contains), "every baseline authored concrete trait has an individual fixture; creative candidates use CreativeGarden");
             var manifest = new List<string> { "Trait ID\tLabel\tGenerated\tConfig root\tTier\tMotif\tPattern\tStrength\tScale\tWidth\tHeight\tDensity\tSampled individually" };
             foreach (var t in all.OrderBy(t=>t.defName))
             {
@@ -122,9 +128,9 @@ namespace HorticultureNovelSeeds
             if (active) legacy.Add(plant.thingIDNumber);
         }
 
-        internal static void Begin(string path, Action<string> stage, Action<string,string> completed, bool procedural = false, bool catalog = false, bool creative = false, bool cultivar = false, bool form = false, bool organ = false, bool development = false)
+        internal static void Begin(string path, Action<string> stage, Action<string,string> completed, bool procedural = false, bool catalog = false, bool creative = false, bool cultivar = false, bool form = false, bool organ = false, bool development = false, bool wind = false)
         {
-            patternGarden = procedural || creative || cultivar || form || organ || development; catalogGarden = catalog; creativeGarden = creative; cultivarGarden = cultivar; formGarden = form; organGarden = organ; developmentGarden = development;
+            patternGarden = procedural || creative || cultivar || form || organ || development || wind; catalogGarden = catalog; creativeGarden = creative; cultivarGarden = cultivar; formGarden = form; organGarden = organ; developmentGarden = development; windGarden = wind;
             root = path; onStage = stage; finish = completed;
             try
             {
@@ -133,6 +139,16 @@ namespace HorticultureNovelSeeds
                 WaylithPhenotypeShader.Enabled = !organGarden;
                 PlantFormMesh.Enabled = formGarden;
                 OrganSpriteExperiment.Enabled = organGarden;
+                WindHabitUtility.Enabled=windGarden;
+                if(windGarden)
+                {
+                    previousWindPref=Prefs.PlantWindSway;
+                    Prefs.PlantWindSway=true; // isolated process only, restored at End
+                    var defs=DefDatabase<VarietyTraitDef>.AllDefsListForReading.Where(t=>WindHabitMath.Valid(t.windHabit)).ToList();
+                    Require(defs.Count==5 && defs.All(t=>t.commonality==0f && TraitAppearanceCatalog.TryGet(t,out _)), "five neutral wind alleles");
+                    Require(TraitCatalogValidation.Validate(DefDatabase<VarietyTraitDef>.AllDefsListForReading).Count==0,"trait catalog validation");
+                    WindEvidence.Add("Frame\tSpecies\tColumn\tPlant ID\tTrait\tWind head\tWind speed\tExposure\tX\tZ\tRate\tFlutter\tMaterial ID");
+                }
                 if (developmentGarden)
                 {
                     var defs=DefDatabase<VarietyTraitDef>.AllDefsListForReading.Where(t=>DevelopmentalPhenotype.IsMode((int)t.proceduralPhenotype)).ToList();
@@ -191,7 +207,7 @@ namespace HorticultureNovelSeeds
                     p.Position.x >= start.x - 7 && p.Position.x <= start.x + 22 &&
                     p.Position.z >= start.z - 7 && p.Position.z <= start.z + 16).ToArray();
                 foreach (var plant in vegetation) if (plant.Spawned) plant.Destroy(DestroyMode.Vanish);
-                if (creativeGarden || cultivarGarden || formGarden || organGarden || developmentGarden)
+                if (creativeGarden || cultivarGarden || formGarden || organGarden || developmentGarden || windGarden)
                 {
                     // Remove dropped starter supplies only from this disposable visual plot.
                     var items = map.listerThings.AllThings.Where(t => t.def.category == ThingCategory.Item &&
@@ -245,6 +261,7 @@ namespace HorticultureNovelSeeds
         {
             // Deliberate extremes of real trait definitions; no changes to trait
             // defs/settings and no claims about natural mutation eligibility.
+            if (windGarden) return col==0 ? new() : new() { Trait(WindTraits[col-1]) };
             if (developmentGarden) return col==0 ? new() : new() { Trait(DevelopmentTraits[col-1]) };
             if (organGarden) return col==0 ? new() : new() { Trait(OrganTraits[col-1]) };
             if (formGarden) return col==0 ? new() : row<3 ? new() { Trait(FormTraits[col-1]) } : new() { Trait(FormTraits[col-1]), Trait(FormPigments[col-1]) };
@@ -271,9 +288,9 @@ namespace HorticultureNovelSeeds
             Require(registry != null, "registry");
             for (int r = 0; r < 3; r++)
             {
-                var def = organGarden ? Choose(OrganCrops[panel*3+r]) : (creativeGarden || cultivarGarden || formGarden || developmentGarden) ? DefDatabase<ThingDef>.GetNamed(CreativeCrops[r]) : catalogGarden ? DefDatabase<ThingDef>.GetNamed(CatalogCrops[panel*3+r]) : Choose(patternGarden && panel == 3 && r == 1 ? "Plant_Haygrass" : SpeciesOptions[panel][r]);
+                var def = organGarden ? Choose(OrganCrops[panel*3+r]) : (creativeGarden || cultivarGarden || formGarden || developmentGarden || windGarden) ? DefDatabase<ThingDef>.GetNamed(CreativeCrops[r]) : catalogGarden ? DefDatabase<ThingDef>.GetNamed(CatalogCrops[panel*3+r]) : Choose(patternGarden && panel == 3 && r == 1 ? "Plant_Haygrass" : SpeciesOptions[panel][r]);
                 Require(HorticulturePlantPolicy.IsSupported(def), "supported garden crop");
-                if (catalogGarden || creativeGarden || cultivarGarden || formGarden || developmentGarden) chosen.Add(def);
+                if (catalogGarden || creativeGarden || cultivarGarden || formGarden || developmentGarden || windGarden) chosen.Add(def);
                 // Prewarm actual resolved masks before rendering. If shared
                 // manual or seasonal materials cannot use the experimental
                 // backend, their existing CPU path is intentionally retained.
@@ -317,7 +334,14 @@ namespace HorticultureNovelSeeds
             {
                 frames++;
                 if (Find.WindowStack.TryRemove(typeof(EditWindow_Log), false)) { frames = 0; return; }
-                if (capture == null && frames >= 100 && current.All(p => custom.Contains(p.thingIDNumber) || vanilla.Contains(p.thingIDNumber)) &&
+                if(windGarden && windSampledPanel!=panel && frames>=100 && inventory.Where(r=>r.Panel==1 && r.Cultivar!=null).All(r=>WaylithPhenotypeShader.WindPrints.ContainsKey(r.Plant.thingIDNumber)))
+                {
+                    SampleWind();
+                    windSampledPanel=panel;
+                    frames=92; // let the real renderer consume updated uniforms
+                    return;
+                }
+                if (capture == null && frames >= 100 && (!windGarden || windSampledPanel==panel) && current.All(p => custom.Contains(p.thingIDNumber) || vanilla.Contains(p.thingIDNumber)) &&
                     (!developmentGarden || inventory.Where(r=>r.Panel==panel+1 && r.Cultivar!=null).All(r=>WaylithPhenotypeShader.DevelopmentalPrints.Contains((r.Plant.thingIDNumber,panel)))))
                 {
                     capture = Path.Combine(root, "HNS-garden-panel-" + (panel+1) + ".png");
@@ -333,7 +357,13 @@ namespace HorticultureNovelSeeds
                     {
                         WriteInventory();
                         onStage("GardenInventory");
-                        End("PASS", developmentGarden ? "18 same plants across three growth stages; 45 verified cultivar-stage GPU prints; 30 automatic mesh invalidations; three daylight screenshots" : organGarden ? "36 plants; 30 organ-form cases; eligible components composited; uncertain organs fall back; two daylight screenshots" : formGarden ? "36 plants; 30 genetically deformed cultivars; 15 pure morphology and 15 morphology plus pigmentation; two daylight screenshots" : cultivarGarden ? "54 plants; 15 organ-aware botanical candidates across three species; three daylight screenshots; 45 mask-free GPU cultivars" : creativeGarden ? "90 garden plants; 25 refined botanical traits across three species; five daylight screenshots; 75 mask-free GPU cultivars" : catalogGarden ? "108 garden plants; 90 baseline trait cases; six daylight screenshots; every loaded HNS appearance rule covered" : "72 garden plants, 60 registered cultivars, 12 species, four daylight screenshots");
+                        End("PASS", windGarden ? "18 same mature plants; 15 genetic wind materials; 12 actual wind-phase captures; 180 material-phase checks" : developmentGarden ? "18 same plants across three growth stages; 45 verified cultivar-stage GPU prints; 30 automatic mesh invalidations; three daylight screenshots" : organGarden ? "36 plants; 30 organ-form cases; eligible components composited; uncertain organs fall back; two daylight screenshots" : formGarden ? "36 plants; 30 genetically deformed cultivars; 15 pure morphology and 15 morphology plus pigmentation; two daylight screenshots" : cultivarGarden ? "54 plants; 15 organ-aware botanical candidates across three species; three daylight screenshots; 45 mask-free GPU cultivars" : creativeGarden ? "90 garden plants; 25 refined botanical traits across three species; five daylight screenshots; 75 mask-free GPU cultivars" : catalogGarden ? "108 garden plants; 90 baseline trait cases; six daylight screenshots; every loaded HNS appearance rule covered" : "72 garden plants, 60 registered cultivars, 12 species, four daylight screenshots");
+                        return;
+                    }
+                    if(windGarden)
+                    {
+                        frames=0; captureAge=0; capture=null;
+                        foreach(var row in inventory.Where(r=>r.Panel==1).ToArray()) inventory.Add(row with { Panel=panel+1 });
                         return;
                     }
                     if (developmentGarden)
@@ -361,9 +391,38 @@ namespace HorticultureNovelSeeds
             catch (Exception e) { End("FAIL", e.ToString()); }
         }
 
+        private static void SampleWind()
+        {
+            var styled=inventory.Where(r=>r.Panel==1 && r.Cultivar!=null).ToArray();
+            Require(styled.Length==15 && Prefs.PlantWindSway,"wind fixture state");
+            var first=WaylithPhenotypeShader.WindPrints[styled[0].Plant.thingIDNumber];
+            if(panel==0) windInitialMaterialCount=WaylithPhenotypeShader.MaterialCount;
+            // Invoke the native wind manager while gameplay is paused. No plant
+            // growth, time-speed changes, or direct shader phase injection.
+            float before=first.GetFloat("_SwayHead");
+            int count=0;
+            do { map.windManager.WindManagerTick(); count++; }
+            while(first.GetFloat("_SwayHead")<before+3.5f && count<250);
+            float head=first.GetFloat("_SwayHead");
+            Require(float.IsFinite(head) && head>before && (panel==0||head>lastWindHead),"native wind phase advanced");
+            Require(WaylithPhenotypeShader.MaterialCount==windInitialMaterialCount,"no new phase materials");
+            lastWindHead=head;
+            foreach(var r in styled)
+            {
+                var mat=WaylithPhenotypeShader.WindPrints[r.Plant.thingIDNumber];
+                var trait=r.Cultivar.traits.Single();
+                var controls=WindHabitUtility.Controls(trait.windHabit);
+                Require(mat.shader==DefDatabase<ShaderDef>.GetNamed(WaylithPhenotypeShader.WindDefName).Shader && mat.GetVector("_HnsWind")==controls && mat.GetFloat("_SwayHead")==head,"actual genetic material and synchronized phase");
+                Require(PlantUtility.GetWindExposure(r.Plant)>0,"nonzero original plant exposure");
+                WindEvidence.Add(string.Join("\t",panel+1,r.Plant.def.defName,r.Column,r.Plant.thingIDNumber,trait.defName,head.ToString("R",CultureInfo.InvariantCulture),map.windManager.WindSpeed.ToString("R",CultureInfo.InvariantCulture),PlantUtility.GetWindExposure(r.Plant),controls.x,controls.y,controls.z,controls.w,mat.GetInstanceID()));
+            }
+            Log.Message("[HNS Wind] frame="+(panel+1)+"; head="+head+"; native manager updates="+count+"; materials="+windInitialMaterialCount);
+        }
+
         private static string Backend(Plant p)
         {
             int id = p.thingIDNumber;
+            if (WaylithPhenotypeShader.WindPrints.ContainsKey(id)) return "GPU genetic wind";
             if (OrganSpriteExperiment.PrintedPlants.Contains(id)) return "Organ composite, original shader";
             if (OrganSpriteExperiment.FallbackPlants.Contains(id)) return "Organ unavailable, original path";
             bool gpu = WaylithPhenotypeShader.PrintedPlants.Contains(id), cpu = legacy.Contains(id);
@@ -382,6 +441,16 @@ namespace HorticultureNovelSeeds
                     string.Join(" + ",entry.Cultivar?.traits.Select(t=>TraitAppearanceCatalog.TryGet(t,out var p)?p.Motif:"External") ?? Enumerable.Empty<string>()),
                     PlantFormMesh.PrintedPlants.Contains(entry.Plant.thingIDNumber) ? "Deformed" : "Original"));
             File.WriteAllLines(Path.Combine(root,"HNS-garden-inventory.tsv"),lines);
+            if(windGarden)
+            {
+                var styled=inventory.Where(r=>r.Cultivar!=null).ToList();
+                Require(inventory.Count==18*WindFrames && styled.Count==15*WindFrames && inventory.Select(r=>r.Plant.thingIDNumber).Distinct().Count()==18,"same plants across 12 phases");
+                Require(styled.All(r=>Backend(r.Plant)=="GPU genetic wind") && inventory.Where(r=>r.Cultivar==null).All(r=>Backend(r.Plant)=="Vanilla"),"15 wind cultivars and three original controls");
+                Require(WindEvidence.Count==1+15*WindFrames && WaylithPhenotypeShader.MaskCount==0 && WaylithPhenotypeShader.MaterialCount==windInitialMaterialCount,"complete phase evidence without material growth");
+                File.WriteAllLines(Path.Combine(root,"HNS-garden-wind.tsv"),WindEvidence);
+                Log.Message("[HNS Wind] verified phases="+(WindEvidence.Count-1)+"; materials="+windInitialMaterialCount+"; masks="+WaylithPhenotypeShader.MaskCount);
+                return;
+            }
             if(developmentGarden)
             {
                 var styled=inventory.Where(r=>r.Cultivar!=null).ToList();
@@ -447,6 +516,8 @@ namespace HorticultureNovelSeeds
             WaylithPhenotypeShader.Enabled = false;
             PlantFormMesh.Enabled = false;
             OrganSpriteExperiment.Enabled = false;
+            WindHabitUtility.Enabled=false;
+            if(windGarden) Prefs.PlantWindSway=previousWindPref;
             if (Find.TickManager != null) Find.TickManager.CurTimeSpeed = TimeSpeed.Paused;
             finish(status,message);
         }

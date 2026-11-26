@@ -662,4 +662,60 @@
     <proceduralPhenotype>MaturingVariegation</proceduralPhenotype>
     <proceduralStrength>0.92</proceduralStrength>
   </HorticultureNovelSeeds.VarietyTraitDef>
+  <!-- Experimental genetic wind-response profiles. -->
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_RigidHabit</defName>
+    <label>Rigid Habit</label>
+    <description>A stiff, upright plant with very little wind movement.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>windHabit</li></exclusionTags>
+    <windHabit>RigidHabit</windHabit>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_SuppleHabit</defName>
+    <label>Supple Habit</label>
+    <description>Flexible foliage that sways farther in the breeze.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>windHabit</li></exclusionTags>
+    <windHabit>SuppleHabit</windHabit>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_Flutterleaf</defName>
+    <label>Flutterleaf</label>
+    <description>A light, quick secondary flutter over ordinary swaying.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>windHabit</li></exclusionTags>
+    <windHabit>Flutterleaf</windHabit>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_NoddingHabit</defName>
+    <label>Nodding Habit</label>
+    <description>A gentle forward-and-back nod, with less sideways bending.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>windHabit</li></exclusionTags>
+    <windHabit>NoddingHabit</windHabit>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_SweepingHabit</defName>
+    <label>Sweeping Habit</label>
+    <description>A broad side-to-side sweep of the canopy.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>windHabit</li></exclusionTags>
+    <windHabit>SweepingHabit</windHabit>
+  </HorticultureNovelSeeds.VarietyTraitDef>
 </Defs>

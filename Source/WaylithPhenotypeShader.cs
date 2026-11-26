@@ -11,9 +11,10 @@ namespace HorticultureNovelSeeds
     internal static class WaylithPhenotypeShader
     {
         internal const string DefName = "HNS_PhenotypeOpaque";
+        internal const string WindDefName = "HNS_PhenotypeWind";
         internal const int MaterialLimit = 128, MaskLimit = 64;
         internal static bool Enabled { get; set; }
-        private static bool unavailable;
+        private static bool unavailable, windUnavailable;
         private static readonly Dictionary<MaterialKey, Material> materials = new();
         private static readonly Dictionary<(ThingDef, int), PreparedMask> masks = new();
         internal static int MaterialCount => materials.Count;
@@ -24,6 +25,7 @@ namespace HorticultureNovelSeeds
         internal static readonly HashSet<int> ProceduralPlants = new();
         internal static readonly HashSet<int> MaskFreeProceduralPlants = new();
         internal static readonly HashSet<(int,int)> DevelopmentalPrints = new();
+        internal static readonly Dictionary<int,Material> WindPrints = new();
 #endif
 
         // Caller must prepare from the main-thread editor/load boundary, not a print.
@@ -51,12 +53,14 @@ namespace HorticultureNovelSeeds
             if (!Enabled || isolatedMaskLayer != -2 || plant == null || source == null) return false;
             var comp = plant.TryGetComp<CompPlantVariety>();
             Vector4 pattern = ProceduralPhenotypeUtility.Resolve(comp);
-            if (!NovelSeedUtility.HasRegionalPlantColor(comp) && (pattern.x > 0f || !PlantMaskUtility.HasActiveMasks(plant.def) || NovelSeedUtility.HasPlantMaskVisual(comp)))
+            var wind = plant.Position.GetSnowDepth(plant.Map) > .8f ? WindHabitKind.None : WindHabitUtility.Resolve(comp);
+            if (!NovelSeedUtility.HasRegionalPlantColor(comp) && (pattern.x > 0f || WindHabitMath.Valid(wind) || !PlantMaskUtility.HasActiveMasks(plant.def) || NovelSeedUtility.HasPlantMaskVisual(comp)))
             {
-                if (!TryGetCore(source, null, visual, PlantVisualParameters.Default, PlantVisualParameters.Default, pattern, out material)) return false;
+                if (!TryGetCore(source, null, visual, PlantVisualParameters.Default, PlantVisualParameters.Default, pattern, out material, wind)) return false;
 #if HNS_NATIVE_FIXTURE
                 if (pattern.x > 0f) { ProceduralPlants.Add(plant.thingIDNumber); MaskFreeProceduralPlants.Add(plant.thingIDNumber); }
                 PrintedPlants.Add(plant.thingIDNumber);
+                if(WindHabitMath.Valid(wind)) WindPrints[plant.thingIDNumber]=material;
                 if (DevelopmentalPhenotype.IsMode((int)pattern.x) && material.GetVector("_HnsPattern").w == pattern.w)
                     DevelopmentalPrints.Add((plant.thingIDNumber, DevelopmentalPhenotype.Band(plant.Growth)));
 #endif
@@ -65,7 +69,7 @@ namespace HorticultureNovelSeeds
             var layers = PlantMaskUtility.LayersForVariation(plant.def, variationIndex, false);
             if (layers == null)
             {
-                if (!TryGetCore(source, null, visual, PlantVisualParameters.Default, PlantVisualParameters.Default, pattern, out material)) return false;
+                if (!TryGetCore(source, null, visual, PlantVisualParameters.Default, PlantVisualParameters.Default, pattern, out material, wind)) return false;
             }
             else
             {
@@ -77,7 +81,7 @@ namespace HorticultureNovelSeeds
 #if HNS_NATIVE_FIXTURE
                 NativeShaderProbe.TryOverrideMaskStyles(plant, ref a, ref b, ref c);
 #endif
-                if (!TryGetCore(source, prepared.Texture, a, b, c, pattern, out material)) return false;
+                if (!TryGetCore(source, prepared.Texture, a, b, c, pattern, out material, wind)) return false;
 #if HNS_NATIVE_FIXTURE
                 MaskedPlants.Add(plant.thingIDNumber);
 #endif
@@ -100,22 +104,23 @@ namespace HorticultureNovelSeeds
         }
 
         internal static bool TryGetCore(Material source, Texture2D mask, PlantVisualParameters a,
-            PlantVisualParameters b, PlantVisualParameters c, Vector4 pattern, out Material material)
+            PlantVisualParameters b, PlantVisualParameters c, Vector4 pattern, out Material material, WindHabitKind wind = WindHabitKind.None)
         {
             material = null;
-            if (!Enabled || unavailable || source == null || source.shader != ShaderDatabase.CutoutPlant ||
+            bool motion=WindHabitMath.Valid(wind);
+            if (!Enabled || (motion ? windUnavailable : unavailable) || source == null || source.shader != ShaderDatabase.CutoutPlant ||
                 source.mainTexture is not Texture2D texture || !source.HasProperty("_FallBehaviorEnabled") ||
                 source.GetFloat("_FallBehaviorEnabled") != 0f || a.opacity != 1f || b.opacity != 1f || c.opacity != 1f) return false;
             var s0 = new Style(a); var s1 = new Style(b); var s2 = new Style(c);
             if (!s0.Valid || !s1.Valid || !s2.Valid || !Finite(pattern)) return false;
             var key = new MaterialKey(source, texture, source.renderQueue, source.mainTextureScale,
-                source.mainTextureOffset, mask, s0, s1, s2, pattern);
+                source.mainTextureOffset, mask, s0, s1, s2, pattern, wind);
             if (materials.TryGetValue(key, out material)) return true;
             if (materials.Count >= MaterialLimit) return false;
             Material candidate = null;
             try
             {
-                var def = DefDatabase<ShaderDef>.GetNamedSilentFail(DefName);
+                var def = DefDatabase<ShaderDef>.GetNamedSilentFail(motion ? WindDefName : DefName);
                 Shader shader = def?.Shader;
                 if (shader == null || shader == ShaderDatabase.CutoutPlant ||
                     !shader.HasProperty(Shader.PropertyToID("_HnsControls")) ||
@@ -130,7 +135,8 @@ namespace HorticultureNovelSeeds
                     !shader.HasProperty(Shader.PropertyToID("_HnsControls2")) ||
                     !shader.HasProperty(Shader.PropertyToID("_HnsDullness2")) ||
                     !shader.HasProperty(Shader.PropertyToID("_HnsPattern")) ||
-                    !shader.HasProperty(Shader.PropertyToID("_SwayHead")))
+                    !shader.HasProperty(Shader.PropertyToID("_SwayHead")) ||
+                    (motion && !shader.HasProperty(Shader.PropertyToID("_HnsWind"))))
                     throw new InvalidOperationException("Phenotype shader or material layout unavailable.");
                 candidate = new Material(shader)
                 {
@@ -141,6 +147,7 @@ namespace HorticultureNovelSeeds
                     renderQueue = source.renderQueue
                 };
                 candidate.SetVector("_HnsPattern", pattern);
+                if(motion) candidate.SetVector("_HnsWind",WindHabitUtility.Controls(wind));
                 s0.Apply(candidate, "");
                 s1.Apply(candidate, "1");
                 s2.Apply(candidate, "2");
@@ -154,7 +161,7 @@ namespace HorticultureNovelSeeds
             }
             catch (Exception e)
             {
-                unavailable = true;
+                if(motion) windUnavailable=true; else unavailable = true;
                 if (candidate != null) UnityEngine.Object.Destroy(candidate);
                 Log.WarningOnce("[Horticulture] Experimental phenotype shader unavailable; using legacy renderer. " + e.Message, 174329020);
                 return false;
@@ -176,7 +183,7 @@ namespace HorticultureNovelSeeds
             }
         }
         private readonly record struct MaterialKey(Material Source, Texture2D Texture, int Queue, Vector2 Scale,
-            Vector2 Offset, Texture2D Mask, Style A, Style B, Style C, Vector4 Pattern);
+            Vector2 Offset, Texture2D Mask, Style A, Style B, Style C, Vector4 Pattern, WindHabitKind Wind);
         private sealed record PreparedMask(Texture2D Source, Texture2D Texture, VisualMaskLayerRecord[] Layers, int[] Hashes)
         {
             internal bool Matches(Texture source, IReadOnlyList<VisualMaskLayerRecord> layers)
