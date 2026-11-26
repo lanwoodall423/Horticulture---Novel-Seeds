@@ -1,0 +1,91 @@
+Panel	Row	Column	Species	Cultivar	Trait IDs	Renderer	Automatic mask sources	Trait labels	Tiers	Motifs
+1	1	1	Plant_Corn	Vanilla control		Vanilla	not styled			
+1	1	2	Plant_Corn	Garden corn plant 1	HNS_Velvetleaf	GPU procedural, no mask	0:none	Velvetleaf	Uncommon	Deep moss and forest-green foliage with softly shaded velvet-like tissue.
+1	1	3	Plant_Corn	Garden corn plant 2	HNS_Lacquered	GPU procedural, no mask	0:none	Lacquered	Uncommon	Dark glossy-looking green foliage with intermittent pale reflections.
+1	1	4	Plant_Corn	Garden corn plant 3	HNS_Dustbloom	GPU procedural, no mask	0:none	Dustbloom	Uncommon	Soft chalk and warm sage powder concentrated in irregular leaf patches.
+1	1	5	Plant_Corn	Garden corn plant 4	HNS_Silvered	GPU procedural, no mask	1:none	Silvered	Uncommon	Silver-sage leaf tissue with directional pale highlights.
+1	1	6	Plant_Corn	Garden corn plant 5	HNS_HaloEdged	GPU procedural, no mask	0:none	Halo-Edged	Rare	Ivory inner leaf margins with a predominantly natural green interior.
+1	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled			
+1	2	2	Plant_Cotton	Garden cotton plant 1	HNS_Velvetleaf	GPU procedural, no mask	1:none	Velvetleaf	Uncommon	Deep moss and forest-green foliage with softly shaded velvet-like tissue.
+1	2	3	Plant_Cotton	Garden cotton plant 2	HNS_Lacquered	GPU procedural, no mask	1:none	Lacquered	Uncommon	Dark glossy-looking green foliage with intermittent pale reflections.
+1	2	4	Plant_Cotton	Garden cotton plant 3	HNS_Dustbloom	GPU procedural, no mask	0:none	Dustbloom	Uncommon	Soft chalk and warm sage powder concentrated in irregular leaf patches.
+1	2	5	Plant_Cotton	Garden cotton plant 4	HNS_Silvered	GPU procedural, no mask	0:none	Silvered	Uncommon	Silver-sage leaf tissue with directional pale highlights.
+1	2	6	Plant_Cotton	Garden cotton plant 5	HNS_HaloEdged	GPU procedural, no mask	0:none	Halo-Edged	Rare	Ivory inner leaf margins with a predominantly natural green interior.
+1	3	1	Plant_Strawberry	Vanilla control		Vanilla	not styled			
+1	3	2	Plant_Strawberry	Garden strawberry plant 1	HNS_Velvetleaf	GPU procedural, no mask	0:none	Velvetleaf	Uncommon	Deep moss and forest-green foliage with softly shaded velvet-like tissue.
+1	3	3	Plant_Strawberry	Garden strawberry plant 2	HNS_Lacquered	GPU procedural, no mask	0:none	Lacquered	Uncommon	Dark glossy-looking green foliage with intermittent pale reflections.
+1	3	4	Plant_Strawberry	Garden strawberry plant 3	HNS_Dustbloom	GPU procedural, no mask	0:none	Dustbloom	Uncommon	Soft chalk and warm sage powder concentrated in irregular leaf patches.
+1	3	5	Plant_Strawberry	Garden strawberry plant 4	HNS_Silvered	GPU procedural, no mask	0:none	Silvered	Uncommon	Silver-sage leaf tissue with directional pale highlights.
+1	3	6	Plant_Strawberry	Garden strawberry plant 5	HNS_HaloEdged	GPU procedural, no mask	0:none	Halo-Edged	Rare	Ivory inner leaf margins with a predominantly natural green interior.
+2	1	1	Plant_Corn	Vanilla control		Vanilla	not styled			
+2	1	2	Plant_Corn	Garden corn plant 1	HNS_Netveined	GPU procedural, no mask	0:none	Netveined	Rare	Pale yellow-green reticulated markings within natural foliage.
+2	1	3	Plant_Corn	Garden corn plant 2	HNS_Tigerstriped	GPU procedural, no mask	0:none	Tigerstriped	Rare	Broken ochre and muted brown bands interspersed with green tissue.
+2	1	4	Plant_Corn	Garden corn plant 3	HNS_Marbled	GPU procedural, no mask	0:none	Marbled	Rare	Organic sage and cream marbling, with original green visible between sectors.
+2	1	5	Plant_Corn	Garden corn plant 4	HNS_Opaline	GPU procedural, no mask	1:none	Opaline	Exceptional	Subtle rose, sage and pearl highlights; a static iridescence illusion.
+2	1	6	Plant_Corn	Garden corn plant 5	HNS_Crystalline	GPU procedural, no mask	0:none	Crystalline	Exceptional	Angular pale mineral-like markings concentrated at foliage tips; no physical crystals.
+2	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled			
+2	2	2	Plant_Cotton	Garden cotton plant 1	HNS_Netveined	GPU procedural, no mask	1:none	Netveined	Rare	Pale yellow-green reticulated markings within natural foliage.
+2	2	3	Plant_Cotton	Garden cotton plant 2	HNS_Tigerstriped	GPU procedural, no mask	1:none	Tigerstriped	Rare	Broken ochre and muted brown bands interspersed with green tissue.
+2	2	4	Plant_Cotton	Garden cotton plant 3	HNS_Marbled	GPU procedural, no mask	0:none	Marbled	Rare	Organic sage and cream marbling, with original green visible between sectors.
+2	2	5	Plant_Cotton	Garden cotton plant 4	HNS_Opaline	GPU procedural, no mask	0:none	Opaline	Exceptional	Subtle rose, sage and pearl highlights; a static iridescence illusion.
+2	2	6	Plant_Cotton	Garden cotton plant 5	HNS_Crystalline	GPU procedural, no mask	0:none	Crystalline	Exceptional	Angular pale mineral-like markings concentrated at foliage tips; no physical crystals.
+2	3	1	Plant_Strawberry	Vanilla control		Vanilla	not styled			
+2	3	2	Plant_Strawberry	Garden strawberry plant 1	HNS_Netveined	GPU procedural, no mask	0:none	Netveined	Rare	Pale yellow-green reticulated markings within natural foliage.
+2	3	3	Plant_Strawberry	Garden strawberry plant 2	HNS_Tigerstriped	GPU procedural, no mask	0:none	Tigerstriped	Rare	Broken ochre and muted brown bands interspersed with green tissue.
+2	3	4	Plant_Strawberry	Garden strawberry plant 3	HNS_Marbled	GPU procedural, no mask	0:none	Marbled	Rare	Organic sage and cream marbling, with original green visible between sectors.
+2	3	5	Plant_Strawberry	Garden strawberry plant 4	HNS_Opaline	GPU procedural, no mask	0:none	Opaline	Exceptional	Subtle rose, sage and pearl highlights; a static iridescence illusion.
+2	3	6	Plant_Strawberry	Garden strawberry plant 5	HNS_Crystalline	GPU procedural, no mask	0:none	Crystalline	Exceptional	Angular pale mineral-like markings concentrated at foliage tips; no physical crystals.
+3	1	1	Plant_Corn	Vanilla control		Vanilla	not styled			
+3	1	2	Plant_Corn	Garden corn plant 1	HNS_Bioluminescent	GPU procedural, no mask	0:none	Bioluminescent	Exceptional	Sparse pale lime and mint flecks on green tissue; a pigment illusion, not emitted light.
+3	1	3	Plant_Corn	Garden corn plant 2	HNS_NebulaMottle	GPU procedural, no mask	0:none	Nebula Mottle	Exceptional	Patchy wine-purple and olive mottling with pale speckles.
+3	1	4	Plant_Corn	Garden corn plant 3	HNS_Coralbranch	GPU procedural, no mask	0:none	Coralbranch	Exceptional	Muted salmon and copper branching markings on green tissue.
+3	1	5	Plant_Corn	Garden corn plant 4	HNS_Prismatic	GPU procedural, no mask	1:none	Prismatic	Exceptional	Muted olive, copper and plum pigmentation in neighboring highlights.
+3	1	6	Plant_Corn	Garden corn plant 5	HNS_Saltbloom	GPU procedural, no mask	0:none	Saltbloom	Uncommon	Intermittent chalk-white deposits at foliage margins.
+3	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled			
+3	2	2	Plant_Cotton	Garden cotton plant 1	HNS_Bioluminescent	GPU procedural, no mask	1:none	Bioluminescent	Exceptional	Sparse pale lime and mint flecks on green tissue; a pigment illusion, not emitted light.
+3	2	3	Plant_Cotton	Garden cotton plant 2	HNS_NebulaMottle	GPU procedural, no mask	1:none	Nebula Mottle	Exceptional	Patchy wine-purple and olive mottling with pale speckles.
+3	2	4	Plant_Cotton	Garden cotton plant 3	HNS_Coralbranch	GPU procedural, no mask	0:none	Coralbranch	Exceptional	Muted salmon and copper branching markings on green tissue.
+3	2	5	Plant_Cotton	Garden cotton plant 4	HNS_Prismatic	GPU procedural, no mask	0:none	Prismatic	Exceptional	Muted olive, copper and plum pigmentation in neighboring highlights.
+3	2	6	Plant_Cotton	Garden cotton plant 5	HNS_Saltbloom	GPU procedural, no mask	0:none	Saltbloom	Uncommon	Intermittent chalk-white deposits at foliage margins.
+3	3	1	Plant_Strawberry	Vanilla control		Vanilla	not styled			
+3	3	2	Plant_Strawberry	Garden strawberry plant 1	HNS_Bioluminescent	GPU procedural, no mask	0:none	Bioluminescent	Exceptional	Sparse pale lime and mint flecks on green tissue; a pigment illusion, not emitted light.
+3	3	3	Plant_Strawberry	Garden strawberry plant 2	HNS_NebulaMottle	GPU procedural, no mask	0:none	Nebula Mottle	Exceptional	Patchy wine-purple and olive mottling with pale speckles.
+3	3	4	Plant_Strawberry	Garden strawberry plant 3	HNS_Coralbranch	GPU procedural, no mask	0:none	Coralbranch	Exceptional	Muted salmon and copper branching markings on green tissue.
+3	3	5	Plant_Strawberry	Garden strawberry plant 4	HNS_Prismatic	GPU procedural, no mask	0:none	Prismatic	Exceptional	Muted olive, copper and plum pigmentation in neighboring highlights.
+3	3	6	Plant_Strawberry	Garden strawberry plant 5	HNS_Saltbloom	GPU procedural, no mask	0:none	Saltbloom	Uncommon	Intermittent chalk-white deposits at foliage margins.
+4	1	1	Plant_Corn	Vanilla control		Vanilla	not styled			
+4	1	2	Plant_Corn	Garden corn plant 1	HNS_Ashen	GPU procedural, no mask	0:none	Ashen	Uncommon	Soft gray-green dusty tissue with retained plant shading.
+4	1	3	Plant_Corn	Garden corn plant 2	HNS_Boggloss	GPU procedural, no mask	0:none	Boggloss	Uncommon	Dark olive and jade wet-looking patches with subtle pale reflections.
+4	1	4	Plant_Corn	Garden corn plant 3	HNS_Waxbound	GPU procedural, no mask	0:none	Waxbound	Uncommon	Warm jade and yellow-green waxy highlights.
+4	1	5	Plant_Corn	Garden corn plant 4	HNS_Peatstained	GPU procedural, no mask	1:none	Peatstained	Uncommon	Earthy brown and olive pigment concentrated toward lower foliage.
+4	1	6	Plant_Corn	Garden corn plant 5	HNS_ScorchedMargins	GPU procedural, no mask	0:none	Scorched Margins	Uncommon	Copper-brown dry leaf rims and tips with retained green interior.
+4	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled			
+4	2	2	Plant_Cotton	Garden cotton plant 1	HNS_Ashen	GPU procedural, no mask	1:none	Ashen	Uncommon	Soft gray-green dusty tissue with retained plant shading.
+4	2	3	Plant_Cotton	Garden cotton plant 2	HNS_Boggloss	GPU procedural, no mask	1:none	Boggloss	Uncommon	Dark olive and jade wet-looking patches with subtle pale reflections.
+4	2	4	Plant_Cotton	Garden cotton plant 3	HNS_Waxbound	GPU procedural, no mask	0:none	Waxbound	Uncommon	Warm jade and yellow-green waxy highlights.
+4	2	5	Plant_Cotton	Garden cotton plant 4	HNS_Peatstained	GPU procedural, no mask	0:none	Peatstained	Uncommon	Earthy brown and olive pigment concentrated toward lower foliage.
+4	2	6	Plant_Cotton	Garden cotton plant 5	HNS_ScorchedMargins	GPU procedural, no mask	0:none	Scorched Margins	Uncommon	Copper-brown dry leaf rims and tips with retained green interior.
+4	3	1	Plant_Strawberry	Vanilla control		Vanilla	not styled			
+4	3	2	Plant_Strawberry	Garden strawberry plant 1	HNS_Ashen	GPU procedural, no mask	0:none	Ashen	Uncommon	Soft gray-green dusty tissue with retained plant shading.
+4	3	3	Plant_Strawberry	Garden strawberry plant 2	HNS_Boggloss	GPU procedural, no mask	0:none	Boggloss	Uncommon	Dark olive and jade wet-looking patches with subtle pale reflections.
+4	3	4	Plant_Strawberry	Garden strawberry plant 3	HNS_Waxbound	GPU procedural, no mask	0:none	Waxbound	Uncommon	Warm jade and yellow-green waxy highlights.
+4	3	5	Plant_Strawberry	Garden strawberry plant 4	HNS_Peatstained	GPU procedural, no mask	0:none	Peatstained	Uncommon	Earthy brown and olive pigment concentrated toward lower foliage.
+4	3	6	Plant_Strawberry	Garden strawberry plant 5	HNS_ScorchedMargins	GPU procedural, no mask	0:none	Scorched Margins	Uncommon	Copper-brown dry leaf rims and tips with retained green interior.
+5	1	1	Plant_Corn	Vanilla control		Vanilla	not styled			
+5	1	2	Plant_Corn	Garden corn plant 1	HNS_Variegated	GPU procedural, no mask	0:none	Ivory Variegation	Exceptional	Cream and sage sectors concentrated on foliage; contrasting fruit and stems remain recognizable.
+5	1	3	Plant_Corn	Garden corn plant 2	HNS_Anthocyanin	GPU procedural, no mask	0:none	Crimson Blush	Exceptional	Wine-red and dusky rose foliage blush, strongest on selected tips.
+5	1	4	Plant_Corn	Garden corn plant 3	HNS_MoonFrost	GPU procedural, no mask	0:none	Moonfrost	Exceptional	Cool sage-silver wax bloom with restrained pale margins.
+5	1	5	Plant_Corn	Garden corn plant 4	HNS_GoldFreckled	GPU procedural, no mask	1:none	Goldfreckled	Exceptional	Ochre freckles and irregular gold mottling on foliage.
+5	1	6	Plant_Corn	Garden corn plant 5	HNS_AuroraVeins	GPU procedural, no mask	0:none	Aurora Veins	Exceptional	Pale mint branching pigmentation over natural leaf tissue; no emitted light.
+5	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled			
+5	2	2	Plant_Cotton	Garden cotton plant 1	HNS_Variegated	GPU procedural, no mask	1:none	Ivory Variegation	Exceptional	Cream and sage sectors concentrated on foliage; contrasting fruit and stems remain recognizable.
+5	2	3	Plant_Cotton	Garden cotton plant 2	HNS_Anthocyanin	GPU procedural, no mask	1:none	Crimson Blush	Exceptional	Wine-red and dusky rose foliage blush, strongest on selected tips.
+5	2	4	Plant_Cotton	Garden cotton plant 3	HNS_MoonFrost	GPU procedural, no mask	0:none	Moonfrost	Exceptional	Cool sage-silver wax bloom with restrained pale margins.
+5	2	5	Plant_Cotton	Garden cotton plant 4	HNS_GoldFreckled	GPU procedural, no mask	0:none	Goldfreckled	Exceptional	Ochre freckles and irregular gold mottling on foliage.
+5	2	6	Plant_Cotton	Garden cotton plant 5	HNS_AuroraVeins	GPU procedural, no mask	0:none	Aurora Veins	Exceptional	Pale mint branching pigmentation over natural leaf tissue; no emitted light.
+5	3	1	Plant_Strawberry	Vanilla control		Vanilla	not styled			
+5	3	2	Plant_Strawberry	Garden strawberry plant 1	HNS_Variegated	GPU procedural, no mask	0:none	Ivory Variegation	Exceptional	Cream and sage sectors concentrated on foliage; contrasting fruit and stems remain recognizable.
+5	3	3	Plant_Strawberry	Garden strawberry plant 2	HNS_Anthocyanin	GPU procedural, no mask	0:none	Crimson Blush	Exceptional	Wine-red and dusky rose foliage blush, strongest on selected tips.
+5	3	4	Plant_Strawberry	Garden strawberry plant 3	HNS_MoonFrost	GPU procedural, no mask	0:none	Moonfrost	Exceptional	Cool sage-silver wax bloom with restrained pale margins.
+5	3	5	Plant_Strawberry	Garden strawberry plant 4	HNS_GoldFreckled	GPU procedural, no mask	0:none	Goldfreckled	Exceptional	Ochre freckles and irregular gold mottling on foliage.
+5	3	6	Plant_Strawberry	Garden strawberry plant 5	HNS_AuroraVeins	GPU procedural, no mask	0:none	Aurora Veins	Exceptional	Pale mint branching pigmentation over natural leaf tissue; no emitted light.
