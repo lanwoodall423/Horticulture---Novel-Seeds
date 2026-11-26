@@ -89,6 +89,21 @@ namespace HorticultureNovelSeeds
             ["HNS_Waxbound"] = new("Uncommon", "Warm jade and yellow-green waxy highlights.", 1f, 1f, 1f, 1f, 33, 0.7f, 1f, 1f, 0f),
             ["HNS_Peatstained"] = new("Uncommon", "Earthy brown and olive pigment concentrated toward lower foliage.", 1f, 1f, 1f, 1f, 34, 0.7f, 1f, 1f, 0f),
             ["HNS_ScorchedMargins"] = new("Uncommon", "Copper-brown dry leaf rims and tips with retained green interior.", 1f, 1f, 1f, 1f, 35, 0.77f, 1f, 1f, 0f),
+            ["HNS_HoneyHarvest"] = new("Uncommon", "Honey-gold pigmentation in contrasting fruit, seed or flower tissue; foliage remains green.", 1f, 1f, 1f, 1f, 36, 0.85f, 1f, 1f, 0f),
+            ["HNS_IvoryHarvest"] = new("Rare", "Cream-white reproductive tissue with retained natural shading.", 1f, 1f, 1f, 1f, 37, 0.92f, 1f, 1f, 0f),
+            ["HNS_MulberryHarvest"] = new("Rare", "Deep mulberry and plum pigmentation in contrasting fruit or flower tissue.", 1f, 1f, 1f, 1f, 38, 0.93f, 1f, 1f, 0f),
+            ["HNS_RoseHarvest"] = new("Rare", "Soft rose-colored fruit and flower tissue, distinct from green foliage.", 1f, 1f, 1f, 1f, 39, 0.9f, 1f, 1f, 0f),
+            ["HNS_BicolorHarvest"] = new("Exceptional", "Cream and red-blushed sectors in contrasting fruit or flower tissue.", 1f, 1f, 1f, 1f, 40, 0.95f, 1f, 1f, 0f),
+            ["HNS_CreamMargins"] = new("Rare", "Irregular cream leaf margins with a retained green center.", 1f, 1f, 1f, 1f, 41, 0.91f, 1f, 1f, 0f),
+            ["HNS_LimeHeart"] = new("Uncommon", "Yellow-green leaf centers and darker outer foliage.", 1f, 1f, 1f, 1f, 42, 0.83f, 1f, 1f, 0f),
+            ["HNS_CopperTips"] = new("Uncommon", "Bronze and copper pigmentation concentrated in upper foliage.", 1f, 1f, 1f, 1f, 43, 0.86f, 1f, 1f, 0f),
+            ["HNS_IvorySpeckle"] = new("Rare", "Scattered ivory leaf spots with irregular natural spacing.", 1f, 1f, 1f, 1f, 44, 0.91f, 1f, 1f, 0f),
+            ["HNS_BurgundyMargins"] = new("Rare", "Wine-red leaf margins and dark green interior tissue.", 1f, 1f, 1f, 1f, 45, 0.92f, 1f, 1f, 0f),
+            ["HNS_RubyStalk"] = new("Uncommon", "Wine-red pigmentation concentrated in lower central green tissue; approximate stalk targeting.", 1f, 1f, 1f, 1f, 46, 0.91f, 1f, 1f, 0f),
+            ["HNS_AmberStalk"] = new("Uncommon", "Golden ochre lower central tissue with naturally green outer leaves.", 1f, 1f, 1f, 1f, 47, 0.9f, 1f, 1f, 0f),
+            ["HNS_StripedStalk"] = new("Rare", "Alternating wine and green markings on lower central tissue.", 1f, 1f, 1f, 1f, 48, 0.94f, 1f, 1f, 0f),
+            ["HNS_BlueJade"] = new("Uncommon", "Muted blue-green foliage with jade highlights, retaining original fruit colors.", 1f, 1f, 1f, 1f, 49, 0.85f, 1f, 1f, 0f),
+            ["HNS_TwoToneCanopy"] = new("Rare", "Deep green lower foliage with lighter lime-green upper growth.", 1f, 1f, 1f, 1f, 50, 0.91f, 1f, 1f, 0f),
         };
 
         internal static bool TryGet(VarietyTraitDef trait, out Profile profile)

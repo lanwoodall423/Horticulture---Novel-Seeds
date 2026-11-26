@@ -26,7 +26,22 @@ namespace HorticultureNovelSeeds
         Boggloss = 32,
         Waxbound = 33,
         Peatstained = 34,
-        ScorchedMargins = 35
+        ScorchedMargins = 35,
+        HoneyHarvest = 36,
+        IvoryHarvest = 37,
+        MulberryHarvest = 38,
+        RoseHarvest = 39,
+        BicolorHarvest = 40,
+        CreamMargins = 41,
+        LimeHeart = 42,
+        CopperTips = 43,
+        IvorySpeckle = 44,
+        BurgundyMargins = 45,
+        RubyStalk = 46,
+        AmberStalk = 47,
+        StripedStalk = 48,
+        BlueJade = 49,
+        TwoToneCanopy = 50
     }
 
     // Stable species/allele seed; no per-instance materials, random tick state,
@@ -34,8 +49,9 @@ namespace HorticultureNovelSeeds
     internal static class ProceduralPhenotypeUtility
     {
         internal static bool IsExplicitMode(ProceduralPhenotype mode) =>
-            ((int)mode >= 1 && (int)mode <= 5) || ((int)mode >= 16 && (int)mode <= 35);
+            ((int)mode >= 1 && (int)mode <= 5) || ((int)mode >= 16 && (int)mode <= 50);
         internal static bool IsCreativeMode(ProceduralPhenotype mode) => (int)mode >= 16 && (int)mode <= 35;
+        internal static bool IsCultivarMode(ProceduralPhenotype mode) => (int)mode >= 36 && (int)mode <= 50;
 
         internal static Vector4 Resolve(CompPlantVariety comp)
         {

@@ -303,4 +303,185 @@
     <proceduralPhenotype>ScorchedMargins</proceduralPhenotype>
     <proceduralStrength>0.77</proceduralStrength>
   </HorticultureNovelSeeds.VarietyTraitDef>
+  <!-- Organ-aware botanical cultivar candidates. -->
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_HoneyHarvest</defName>
+    <label>Honey Harvest</label>
+    <description>Honey-gold pigmentation in contrasting fruit, seed or flower tissue; foliage remains green.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
+    <proceduralPhenotype>HoneyHarvest</proceduralPhenotype>
+    <proceduralStrength>0.85</proceduralStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_IvoryHarvest</defName>
+    <label>Ivory Harvest</label>
+    <description>Cream-white reproductive tissue with retained natural shading.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
+    <proceduralPhenotype>IvoryHarvest</proceduralPhenotype>
+    <proceduralStrength>0.92</proceduralStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_MulberryHarvest</defName>
+    <label>Mulberry Harvest</label>
+    <description>Deep mulberry and plum pigmentation in contrasting fruit or flower tissue.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
+    <proceduralPhenotype>MulberryHarvest</proceduralPhenotype>
+    <proceduralStrength>0.93</proceduralStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_RoseHarvest</defName>
+    <label>Rose Harvest</label>
+    <description>Soft rose-colored fruit and flower tissue, distinct from green foliage.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
+    <proceduralPhenotype>RoseHarvest</proceduralPhenotype>
+    <proceduralStrength>0.9</proceduralStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_BicolorHarvest</defName>
+    <label>Bicolor Harvest</label>
+    <description>Cream and red-blushed sectors in contrasting fruit or flower tissue.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
+    <proceduralPhenotype>BicolorHarvest</proceduralPhenotype>
+    <proceduralStrength>0.95</proceduralStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_CreamMargins</defName>
+    <label>Cream Margins</label>
+    <description>Irregular cream leaf margins with a retained green center.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
+    <proceduralPhenotype>CreamMargins</proceduralPhenotype>
+    <proceduralStrength>0.91</proceduralStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_LimeHeart</defName>
+    <label>Lime Heart</label>
+    <description>Yellow-green leaf centers and darker outer foliage.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
+    <proceduralPhenotype>LimeHeart</proceduralPhenotype>
+    <proceduralStrength>0.83</proceduralStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_CopperTips</defName>
+    <label>Copper Tips</label>
+    <description>Bronze and copper pigmentation concentrated in upper foliage.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
+    <proceduralPhenotype>CopperTips</proceduralPhenotype>
+    <proceduralStrength>0.86</proceduralStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_IvorySpeckle</defName>
+    <label>Ivory Speckle</label>
+    <description>Scattered ivory leaf spots with irregular natural spacing.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
+    <proceduralPhenotype>IvorySpeckle</proceduralPhenotype>
+    <proceduralStrength>0.91</proceduralStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_BurgundyMargins</defName>
+    <label>Burgundy Margins</label>
+    <description>Wine-red leaf margins and dark green interior tissue.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
+    <proceduralPhenotype>BurgundyMargins</proceduralPhenotype>
+    <proceduralStrength>0.92</proceduralStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_RubyStalk</defName>
+    <label>Ruby Stalk</label>
+    <description>Wine-red pigmentation concentrated in lower central green tissue; approximate stalk targeting.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
+    <proceduralPhenotype>RubyStalk</proceduralPhenotype>
+    <proceduralStrength>0.91</proceduralStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_AmberStalk</defName>
+    <label>Amber Stalk</label>
+    <description>Golden ochre lower central tissue with naturally green outer leaves.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
+    <proceduralPhenotype>AmberStalk</proceduralPhenotype>
+    <proceduralStrength>0.9</proceduralStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_StripedStalk</defName>
+    <label>Striped Stalk</label>
+    <description>Alternating wine and green markings on lower central tissue.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
+    <proceduralPhenotype>StripedStalk</proceduralPhenotype>
+    <proceduralStrength>0.94</proceduralStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_BlueJade</defName>
+    <label>Blue Jade</label>
+    <description>Muted blue-green foliage with jade highlights, retaining original fruit colors.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
+    <proceduralPhenotype>BlueJade</proceduralPhenotype>
+    <proceduralStrength>0.85</proceduralStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_TwoToneCanopy</defName>
+    <label>Two-Tone Canopy</label>
+    <description>Deep green lower foliage with lighter lime-green upper growth.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
+    <proceduralPhenotype>TwoToneCanopy</proceduralPhenotype>
+    <proceduralStrength>0.91</proceduralStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
 </Defs>

@@ -131,6 +131,41 @@ float hnsTissueAffinity(vec3 src, vec3 regions)
     return clamp(affinity,0.0,1.0);
 }
 
+// Reproductive-color affinity: a soft palette heuristic, not a claim that
+// every warm or pale pixel is fruit. Shadows and green tissue are excluded.
+// When an already-active automatic mask is available, use its produce region.
+float hnsHarvestAffinity(vec3 src, vec3 regions)
+{
+    float hi=max(src.r,max(src.g,src.b)), lo=min(src.r,min(src.g,src.b));
+    float chroma=(hi-lo)/max(hi,.001);
+    float warm=smoothstep(-.055,.13,(src.r-src.g)/max(hi,.001)) *
+        smoothstep(.15,.46,(src.r-src.b)/max(hi,.001)) *
+        smoothstep(.26,.57,hi);
+    float pale=(1.0-smoothstep(.07,.24,chroma))*smoothstep(.48,.78,hi);
+    float green=smoothstep(.015,.12,(src.g-max(src.r,src.b))/max(hi,.001));
+    float amount=max(warm,pale)*(1.0-green);
+    if (uMaterial._HnsMaskEnabled >= .5)
+    {
+        if (regions.r>.5) amount=max(amount,.82);
+        else amount*=.10;
+    }
+    return clamp(amount,0.0,1.0);
+}
+// A lower-central sprite proxy for stalks. Green-color affinity still gates
+// it; this cannot identify individual stems on a dense canopy.
+float hnsStalkAffinity(vec2 uv, float leafAffinity, vec3 regions)
+{
+    float central=1.0-smoothstep(.085,.25,abs(uv.x-.5));
+    float lower=1.0-smoothstep(.42,.73,uv.y);
+    float proxy=central*lower*leafAffinity;
+    if (uMaterial._HnsMaskEnabled >= .5)
+    {
+        if (regions.b>.5) return .92;
+        return proxy*.15;
+    }
+    return proxy;
+}
+
 vec3 hnsPattern(vec3 rgb, vec4 src, vec2 localUv, vec2 sampleUv, vec3 regions)
 {
     vec4 p = uMaterial._HnsPattern;
@@ -408,6 +443,81 @@ vec3 hnsPattern(vec3 rgb, vec4 src, vec2 localUv, vec2 sampleUv, vec3 regions)
         float burn = max(edge*.82,tip*.67)*mix(.47,1.0,n);
         target = mix(vec3(.22,.095,.045),vec3(.88,.48,.19),lightness);
         blend = .05+.95*burn;
+    }
+    else if (p.x < 40.5) // Reproductive organ palette, 36..40
+    {
+        affinity = hnsHarvestAffinity(src.rgb,regions);
+        // Preserve source variation on berries, corn kernels and pale bolls.
+        float tissue = clamp(.34+.78*value,0.0,1.0);
+        if (p.x < 36.5) target = vec3(.99,.78,.23)*tissue;
+        else if (p.x < 37.5) target = vec3(.99,.96,.78)*tissue;
+        else if (p.x < 38.5) target = mix(vec3(.22,.075,.22),vec3(.63,.30,.47),value);
+        else if (p.x < 39.5) target = vec3(.98,.61,.66)*tissue;
+        else
+        {
+            float sector=smoothstep(.22,.73,hnsNoise(q*9.0)+.22*fine);
+            target=mix(vec3(.99,.95,.75),vec3(.83,.23,.29),sector)*tissue;
+        }
+        blend=.96;
+    }
+    else if (p.x < 41.5) // Cream Margins
+    {
+        float rim=hnsRim(sampleUv,2.1);
+        float patches=smoothstep(.17,.60,n+.21*fine);
+        target=vec3(.98,.94,.71)*lightness;
+        blend=rim*mix(.32,1.0,patches);
+    }
+    else if (p.x < 42.5) // Lime Heart
+    {
+        float inner=1.0-hnsRim(sampleUv,2.5);
+        float heart=smoothstep(.12,.76,inner*.73+n*.27);
+        target=mix(vec3(.16,.36,.12),vec3(.82,.89,.28),heart)*lightness;
+        blend=.30+.70*heart;
+    }
+    else if (p.x < 43.5) // Copper Tips
+    {
+        float tips=smoothstep(.43,.88,localUv.y+.28*(n-.5));
+        target=mix(vec3(.38,.19,.10),vec3(.93,.57,.28),value);
+        blend=tips*mix(.52,1.0,fine);
+    }
+    else if (p.x < 44.5) // Ivory Speckle
+    {
+        vec2 st=q*8.0, id=floor(st);
+        vec2 delta=fract(st)-(.22+.56*hnsPoint(id));
+        float radius=.12+.12*hnsHash(id+vec2(2,8));
+        float spot=(1.0-smoothstep(radius-.04,radius+.05,length(delta)))*step(.24,hnsHash(id));
+        target=vec3(.97,.93,.73)*lightness;
+        blend=spot;
+    }
+    else if (p.x < 45.5) // Burgundy Margins
+    {
+        float rim=hnsRim(sampleUv,2.8);
+        float patches=smoothstep(.14,.72,n+.18*fine);
+        target=mix(vec3(.26,.055,.13),vec3(.69,.23,.37),value);
+        blend=rim*mix(.55,1.0,patches);
+    }
+    else if (p.x < 48.5) // Lower-central stalk palette
+    {
+        affinity=hnsStalkAffinity(localUv,affinity,regions);
+        if (p.x < 46.5) target=mix(vec3(.30,.075,.12),vec3(.77,.28,.30),value);
+        else if (p.x < 47.5) target=vec3(.89,.61,.22)*lightness;
+        else
+        {
+            float bands=smoothstep(-.22,.20,sin((localUv.y*7.0+n*.16)*6.283185));
+            target=mix(rgb,vec3(.72,.20,.29)*lightness,bands);
+        }
+        blend=.98;
+    }
+    else if (p.x < 49.5) // Blue Jade
+    {
+        target=mix(vec3(.095,.29,.28),vec3(.41,.71,.61),smoothstep(.14,.85,value));
+        blend=.88;
+    }
+    else if (p.x < 50.5) // Two-Tone Canopy
+    {
+        float young=smoothstep(.25,.77,localUv.y+.18*(n-.5));
+        target=mix(vec3(.09,.30,.18),vec3(.77,.88,.28),young)*lightness;
+        blend=mix(.65,.92,young);
     }
     // Keep texture value structure even in the most striking cosmetic motifs.
     float targetV = max(target.r,max(target.g,target.b));
