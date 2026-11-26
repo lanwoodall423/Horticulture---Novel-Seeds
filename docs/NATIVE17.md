@@ -492,3 +492,54 @@ Inventory SHA256: 53DF2752229EDC7B733397C9D85BA3A96668B154F482D400B839ADBEF301AA
 Reproduce with RimWorld closed:
 
     powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -CreativeGarden
+
+## Organ-selective botanical cultivar candidates (2026-11-25)
+
+Owner approved the botanical direction and requested additional ideas.
+Commit 591cb28cc4088f8c82ce7ccf476bf4aff1bd4c9d adds 15 zero-default-weight
+cosmetic candidates with stable modes 36..50. Honey Harvest, Ivory Harvest,
+Mulberry Harvest, Rose Harvest and Bicolor Harvest target contrasting
+warm or pale reproductive tissue. Cream Margins, Lime Heart, Copper Tips,
+Ivory Speckle and Burgundy Margins target foliage. Ruby Stalk, Amber Stalk,
+Striped Stalk, Blue Jade and Two-Tone Canopy vary stalk or canopy coloration.
+The existing 25 cosmetic motifs and mechanical trait modes are retained.
+No existing gameplay mechanics, weights, trait identities or 1.6 assets changed.
+
+Reproductive targeting uses continuous source-color affinity; stalk
+targeting uses a lower-central UV proxy gated by foliage color. Already
+active automatic regions guide targeting; no new manual or automatic
+mask preparation is needed on the mask-free path. The proxy is not exact
+anatomy, and warm/pale nonfruit tissue or central foliage may respond.
+Compact species cannot be assumed to have an individually recognized stem.
+
+Native AllPerformance run 9edeefb5083a405388cb989c31e8c4ff, RimWorld
+1.7.5014 rev1195: all six stages passed, 54 mature plants, 45 registered
+single-trait cultivars, nine controls. Every candidate on corn, cotton,
+strawberry; 45/45 mask-free GPU, 48 cached materials, zero prepared masks.
+Three actual noon captures, sky glow 1. Both fixture and ordinary builds
+clean; all 12 journal rule tests passed. No relevant HNS error identified
+in captured log. All player preservation and cleanup checks passed.
+The fruit/flower colors were particularly distinct; stalk variants on
+corn are readable, on strawberry more like localized canopy coloration.
+Cream margins and ivory speckle remain subtle at normal zoom.
+
+Gallery, labeled crops, untouched original screenshots and inventory:
+https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/faf282efaf1269b5a4168ff56071af487fa2de5a
+
+The existing CreativeGarden continues testing the previous 25 candidates;
+CultivarGarden independently qualifies these 15. CatalogGarden still
+covers baseline concrete traits and checks appearance rules for all loaded
+definitions. The prior full catalog has not been rerun after these changes.
+Harvested item coloring, combinations, other species, natural mutation,
+breeding, performance, editor previews and ordinary shader activation
+are not qualified by this test. Candidates remain experimental until
+owner visual review and the gameplay trait audit.
+
+DLL SHA256: 317C813708BF5C3836501172F7D0BBFD0307527C7A5FF80656F4C9E8B2C1D3F1.
+Receipt SHA256: 25484D8ED7A6E0CD1F11E9965E4EDFAA9705B60D81B61D5F0DECFE54126D0213.
+Player log SHA256: 765BECC5ACE743E0F61CA2D0D7DDE089E260C4785977770483BE6A5B2FE7FE8C.
+Inventory SHA256: F0106B07F9358D56320611A1A511C981DF619F88FA9C1BBBBD0D529963CFF2C8.
+
+Reproduce with RimWorld closed:
+
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -CultivarGarden
