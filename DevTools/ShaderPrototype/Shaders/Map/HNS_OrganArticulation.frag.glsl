@@ -18,7 +18,9 @@ void main()
     if(uMaterial._HnsPose.y>0.5)phase=0.5+0.5*sin(uMaterial._SwayHead*0.65);
     float frame=floor(clamp(phase,0.0,1.0)*8.0+0.5);
     vec2 pad=uMaterial._HnsAtlas.xy*0.5;
-    vec2 uv=clamp(vUv,pad,vec2(1.0)-pad);
+    // Atlas source pixels came through native Blit/ReadPixels. Its local Y
+    // orientation is independent of the reversed atlas row addressing.
+    vec2 uv=clamp(vec2(vUv.x,1.0-vUv.y),pad,vec2(1.0)-pad);
     // Waylith samples Texture2D rows in reverse upload order; verified by GPU swatches.
     vec2 cell=vec2(mod(frame,3.0),2.0-floor(frame/3.0));
     vec4 src=texture(_MainTex,(cell+uv)/3.0);

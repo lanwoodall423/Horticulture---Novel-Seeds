@@ -182,7 +182,7 @@ namespace HorticultureNovelSeeds
                     var defs=DefDatabase<VarietyTraitDef>.AllDefsListForReading.Where(t=>ResponsiveHabitMath.Valid(t.responsiveHabit)&&ArticulationMath.Valid(t.responsiveHabit)==articulationGarden).ToList();
                     Require(defs.Count==5&&defs.All(t=>t.commonality==0f&&TraitAppearanceCatalog.TryGet(t,out _)),"five neutral pose alleles");
                     Require(TraitCatalogValidation.Validate(DefDatabase<VarietyTraitDef>.AllDefsListForReading).Count==0,"trait catalog validation");
-                    if(articulationGarden)VerifyArticulationAtlasPixels();
+                    if(articulationGarden){ArticulationAtlas.DiagnosticRoot=root;VerifyArticulationAtlasPixels();}
                     PoseEvidence.Add("Panel\tSpecies\tColumn\tPlant ID\tTrait\tLocal hour\tWeather\tSky glow\tRain rate\tFlipped\tHeight\tContraction\tLean\tDroop\tMaterial ID");
                 }
                 if(architectureGarden)
@@ -624,6 +624,7 @@ namespace HorticultureNovelSeeds
         {
             Require(inventory.Where(r=>r.Cultivar==null).All(r=>Backend(r.Plant)=="Vanilla"),"vanilla controls");
             Require(ArticulationEvidence.Count==1+15*PoseFrames&&ResponsiveHabitExperiment.MaterialCount==poseInitialMaterials&&WaylithPhenotypeShader.MaterialCount==0&&WaylithPhenotypeShader.MaskCount==0,"complete local articulation evidence without material growth or GPU masks");
+            Require(ArticulationAtlas.OrientationEvidence.Count==1+ArticulationAtlas.Count,"all prepared source atlases preserve the original sprite orientation");
             File.WriteAllLines(Path.Combine(root,"HNS-garden-articulation.tsv"),ArticulationEvidence);
             File.WriteAllLines(Path.Combine(root,"HNS-garden-articulation-preparation.tsv"),new[]{"Species\tVariation\tSource\tTrait\tWidth\tHeight\tOrgans\tRecovered pixels\tMin change\tMax change\tAlpha preserved"}.Concat(ArticulationAtlas.Preparation));
             Log.Message("[HNS Articulation] rendered="+ResponsiveHabitExperiment.PrintedPlants.Count+"; verified="+(ArticulationEvidence.Count-1)+"; materials="+poseInitialMaterials+"; atlases="+ArticulationAtlas.Count);

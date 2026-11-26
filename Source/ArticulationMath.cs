@@ -27,6 +27,9 @@ namespace HorticultureNovelSeeds
         }
         internal static int Frame(float phase)=>(int)MathF.Floor(Math.Clamp(float.IsFinite(phase)?phase:0f,0f,1f)*(Frames-1)+.5f);
         internal static int WindFrame(float head)=>Frame(.5f+.5f*MathF.Sin(head*.65f));
+        internal static int NeutralFrame(ResponsiveHabitKind kind)=>
+            kind==ResponsiveHabitKind.DawnPetals||kind==ResponsiveHabitKind.DuskPetals?Frames-1:
+            kind==ResponsiveHabitKind.RainPendant?0:(Frames-1)/2;
         internal sealed record Organ(OrganSpriteMath.Part Part,bool[] Mask);
         internal sealed record Prepared(Pixel[] Original,Pixel[] Base,Organ[] Organs,int W,int H,int Recovered);
         internal static Prepared Prepare(Pixel[] p,int w,int h)
@@ -93,8 +96,7 @@ namespace HorticultureNovelSeeds
         internal static Pixel[] Compose(Prepared src,ResponsiveHabitKind kind,int frame)
         {
             int w=src.W,h=src.H;float t=Math.Clamp(frame,0,Frames-1)/(float)(Frames-1);
-            bool neutral=(kind==ResponsiveHabitKind.DawnPetals||kind==ResponsiveHabitKind.DuskPetals)?frame==Frames-1:
-                kind==ResponsiveHabitKind.RainPendant?frame==0:frame==(Frames-1)/2;
+            bool neutral=frame==NeutralFrame(kind);
             if(!Valid(kind)||neutral)return (Pixel[])src.Original.Clone();
             var dst=(Pixel[])src.Base.Clone();
             foreach(var organ in src.Organs)
