@@ -1167,3 +1167,37 @@ Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/d6ae6
 Reproduce with RimWorld closed:
 
     powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -NeighborhoodGarden
+
+### Botanical chronicles: persistent growth history
+
+Five additional zero-weight cosmetic candidates: Crooked Chronicle,
+Ringed Habit, Asymmetric Whorls, Release Crown and Stretch Bands.
+A compact plant-component integer stores the first observed lateral
+neighborhood at 40%, 65% and 90% growth. Unobserved bands are not invented;
+recorded bands cannot be overwritten. Existing growth setter/TickLong
+hooks invoke the opt-in chronicle sampler. The historical mesh uses an
+8x8 subdivision grid, preserves the original root row, material, UVs and
+wind payload. No custom textures or GPU materials required.
+
+Source d4c1f005b3b07f84bdd688c162f6ce7117f083ed, AllPerformance run
+d5c47558b71a40cb9d0f7b0e8524ba0f (RimWorld 1.7.5014 rev1195):
+all eight stages passed, 90 mature subjects including 15 controls and 75
+historical morphologies, the same 15 registered cultivars across five
+growing histories. Actual growth setter drove 225 checkpoint observations;
+all final plots were isolated. 75 standalone native Scribe value
+roundtrips, 75 anchored grid prints, 6,075 vertices, original materials.
+Both builds and geometry rule tests passed. Normal game data unchanged
+and test process/package cleaned up.
+
+Crooked Chronicle is especially readable on corn, with a lasting
+directional bend and a visible alternating curve. This is a three-sample
+historical visual model, not a complete tissue-growth simulation.
+Natural cultivation, long-tick path, full colony reload, ordinary
+activation, combined traits and dense-field performance remain unqualified.
+Earlier systems remain in their separate experimental modes.
+
+Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/8baf180910986effddb6fc436c6cd216a362df2f
+
+Reproduce with RimWorld closed:
+
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -ChronicleGarden
