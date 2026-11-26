@@ -235,7 +235,6 @@ namespace HorticultureNovelSeeds
         public int reused;
         public int localReused;
         public int bundled;
-        public int manualSkipped;
         public int lowConfidence;
         public int failed;
         public int workItems;
@@ -331,9 +330,9 @@ namespace HorticultureNovelSeeds
         internal static IEnumerable<AutoPlantMaskRecord> LocalRecords => Records.Values;
         internal static IEnumerable<AutoPlantMaskRecord> BundledRecordsForExport => BundledRecords.Values;
 
-        public static string RecordSource(ThingDef plantDef, int variationIndex)
+        public static string RecordSource(ThingDef plantDef, int variationIndex, bool allowIdentityGeneration = true)
         {
-            AutoPlantMaskRecord record = GetRecord(plantDef, variationIndex, false, true);
+            AutoPlantMaskRecord record = GetRecord(plantDef, variationIndex, false, allowIdentityGeneration);
             if (record == null) return "none";
             return IsBundledRecord(record) ? "bundled" : "local";
         }
@@ -384,7 +383,7 @@ namespace HorticultureNovelSeeds
                 lastBatchResult = result;
                 generationQueued = false;
                 Log.Message("[Horticulture - Novel Seeds] Auto masks: generated " + result.generated + ", reused " + result.reused
-                    + ", bundled " + result.bundled + ", manual " + result.manualSkipped + ", review " + result.lowConfidence
+                    + ", bundled " + result.bundled + ", review " + result.lowConfidence
                     + ", failed " + result.failed + ".");
             }, "HNS_GeneratingAutoMasks", false, exception =>
             {
@@ -425,11 +424,6 @@ namespace HorticultureNovelSeeds
                 int count = PlantMaskUtility.VariationCount(plant);
                 for (int variation = 0; variation < count; variation++)
                 {
-                    if (HorticultureNovelSeedsMod.Settings?.GetPlantSettings(plant, false)?.HasManualPlantMask(variation) == true)
-                    {
-                        result.manualSkipped++;
-                        continue;
-                    }
                     AutoPlantMaskRecord existing = regenerateAutomatic ? null : GetRecord(plant, variation, false, true);
                     if (existing != null)
                     {
@@ -611,8 +605,7 @@ namespace HorticultureNovelSeeds
                     for (int variation = 0; variation < PlantMaskUtility.VariationCount(plant); variation++)
                     {
                         string key = RecordKey(plant.defName, variation);
-                        if (HorticultureNovelSeedsMod.Settings?.GetPlantSettings(plant, false)?.HasManualPlantMask(variation) != true)
-                            currentKeys.Add(key);
+                        currentKeys.Add(key);
                     }
                 }
                 List<AutoPlantMaskRecord> records = effective
@@ -1540,9 +1533,55 @@ namespace HorticultureNovelSeeds
             }
             source.PaintPixel(140, 120, true);
             pixels[(resolution - 1 - 120) * resolution + 140] = branch;
-            List<int> region = Dialog_PlantMasks.ConnectedMaskedRegion(pixels, source, 60, 120, 0.08f);
+            List<int> region = ConnectedMaskedRegion(pixels, source, 60, 120, 0.08f);
             return region.Count == 57 && region.Any(index => index % resolution == 96)
                 && region.All(index => index % resolution != 140);
+        }
+
+        internal static List<int> ConnectedMaskedRegion(Color32[] pixels, VisualMaskLayerRecord sourceLayer,
+            int seedX, int seedTopY, float tolerance)
+        {
+            int resolution = VisualMaskLayerRecord.Resolution;
+            var region = new List<int>();
+            if (pixels?.Length != resolution * resolution || sourceLayer == null ||
+                !sourceLayer.IsPainted(seedX, seedTopY)) return region;
+            int seedY = resolution - 1 - seedTopY;
+            int seedIndex = seedY * resolution + seedX;
+            Color32 seed = pixels[seedIndex];
+            if (seed.a < 16) return region;
+            bool[] visited = new bool[pixels.Length];
+            Queue<int> pending = new Queue<int>();
+            visited[seedIndex] = true; pending.Enqueue(seedIndex);
+            while (pending.Count > 0)
+            {
+                int index = pending.Dequeue(); int x = index % resolution; int y = index / resolution;
+                int topY = resolution - 1 - y;
+                Color32 candidate = pixels[index];
+                if (!sourceLayer.IsPainted(x, topY) || candidate.a < 16 || ColorDistance(seed, candidate) > tolerance) continue;
+                region.Add(index);
+                EnqueueWandNeighbor(x - 1, y, resolution, visited, pending);
+                EnqueueWandNeighbor(x + 1, y, resolution, visited, pending);
+                EnqueueWandNeighbor(x, y - 1, resolution, visited, pending);
+                EnqueueWandNeighbor(x, y + 1, resolution, visited, pending);
+            }
+            return region;
+        }
+
+        private static void EnqueueWandNeighbor(int x, int y, int resolution, bool[] visited, Queue<int> pending)
+        {
+            if (x < 0 || x >= resolution || y < 0 || y >= resolution) return;
+            int index = y * resolution + x;
+            if (visited[index]) return;
+            visited[index] = true;
+            pending.Enqueue(index);
+        }
+
+        private static float ColorDistance(Color32 first, Color32 second)
+        {
+            float red = (first.r - second.r) / 255f;
+            float green = (first.g - second.g) / 255f;
+            float blue = (first.b - second.b) / 255f;
+            return Mathf.Sqrt(red * red + green * green + blue * blue) / 1.7320508f;
         }
 
         internal static bool LayerAbsenceRegression()

@@ -33,6 +33,14 @@ namespace HorticultureNovelSeeds
         private static readonly List<Row> inventory = new();
         private static readonly HashSet<int> custom = new(), legacy = new(), vanilla = new();
         private static readonly HashSet<ThingDef> chosen = new();
+        private static readonly Dictionary<int, HashSet<string>> maskSources = new();
+        internal static void RecordMaskSource(Plant plant, int variation)
+        {
+            if (!active || plant == null) return;
+            if (!maskSources.TryGetValue(plant.thingIDNumber, out var sources)) maskSources.Add(plant.thingIDNumber, sources = new());
+            var layers = PlantMaskUtility.LayersForVariation(plant.def, variation, false);
+            sources.Add(variation + ":" + (layers == null ? "none" : PlantAutoMaskCache.RecordSource(plant.def, variation, false)));
+        }
         private static Map map;
         private static IntVec3 start;
         private static string root;
@@ -224,12 +232,13 @@ namespace HorticultureNovelSeeds
         }
         private static void WriteInventory()
         {
-            var lines = new List<string> { "Panel\tRow\tColumn\tSpecies\tCultivar\tTrait IDs\tRenderer" };
+            var lines = new List<string> { "Panel\tRow\tColumn\tSpecies\tCultivar\tTrait IDs\tRenderer\tAutomatic mask sources" };
             foreach (var entry in inventory)
                 lines.Add(string.Join("\t", entry.Panel, entry.RowNumber, entry.Column, entry.Plant.def.defName,
-                    entry.Cultivar?.customName ?? "Vanilla control", string.Join(", ",entry.Cultivar?.traits.Select(t=>t.defName) ?? Enumerable.Empty<string>()), Backend(entry.Plant)));
+                    entry.Cultivar?.customName ?? "Vanilla control", string.Join(", ",entry.Cultivar?.traits.Select(t=>t.defName) ?? Enumerable.Empty<string>()), Backend(entry.Plant), maskSources.TryGetValue(entry.Plant.thingIDNumber, out var sources) ? string.Join(", ", sources.OrderBy(x => x)) : "not styled"));
             File.WriteAllLines(Path.Combine(root,"HNS-garden-inventory.tsv"),lines);
             Require(inventory.Count == 72 && inventory.Count(r=>r.Cultivar != null)==60 && chosen.Count == 12,"complete garden inventory");
+            Require(inventory.Where(r=>r.Cultivar != null).All(r=>maskSources.TryGetValue(r.Plant.thingIDNumber, out var sources) && sources.All(x=>x.EndsWith(":local") || x.EndsWith(":bundled") || x.EndsWith(":none"))), "automatic-only provenance for all cultivars");
             Log.Message("[HNS Garden] renderer counts: " + string.Join("; ",inventory.GroupBy(r=>Backend(r.Plant)).Select(g=>g.Key+"="+g.Count())));
         }
         private static void Require(bool value, string label) { if (!value) throw new InvalidOperationException(label); }

@@ -377,12 +377,6 @@ namespace HorticultureNovelSeeds
 
         internal IEnumerable<PlantSettingsRecord> PlantSettingsRecords => plantSettings ?? Enumerable.Empty<PlantSettingsRecord>();
 
-        internal void ClearAllMasks()
-        {
-            foreach (PlantSettingsRecord record in PlantSettingsRecords.Where(item => item != null)) record.ClearMasks();
-            ClearVisualCache();
-            ProduceMaskRenderer.ClearAll();
-        }
         public IReadOnlyList<PlantGroupRecord> PlantGroups => plantGroups;
 
         public void EnsureDefaultPlantGroups()
@@ -1334,26 +1328,14 @@ namespace HorticultureNovelSeeds
         public float mutationChance = NovelSeedUtility.SpontaneousMutationChance;
         public bool useCustomCrossPollinationChance;
         public float crossPollinationChance = NovelSeedUtility.DefaultCrossPollinationChance;
-        public bool usePlantMasks;
         public bool disableAutoPlantMasks;
-        private List<VisualMaskLayerRecord> plantMaskLayers = new List<VisualMaskLayerRecord>();
-        private List<PlantMaskVariationRecord> plantMaskVariations = new List<PlantMaskVariationRecord>();
-        public bool useProduceMasks;
         public bool unrestrictedColors;
-        private List<VisualMaskLayerRecord> produceMaskLayers = new List<VisualMaskLayerRecord>();
         private List<CategorySettingsRecord> traitGroupSettings = new List<CategorySettingsRecord>();
         private List<TraitSettingsRecord> traitSettings = new List<TraitSettingsRecord>();
         [Unsaved(false)] private Dictionary<string, CategorySettingsRecord> traitGroupSettingsCache;
         [Unsaved(false)] private Dictionary<string, TraitSettingsRecord> traitSettingsCache;
 
         public string PlantDefName => plantDefName;
-        public List<VisualMaskLayerRecord> PlantMaskLayers => plantMaskLayers ?? (plantMaskLayers = new List<VisualMaskLayerRecord>());
-        public List<VisualMaskLayerRecord> ProduceMaskLayers => produceMaskLayers ?? (produceMaskLayers = new List<VisualMaskLayerRecord>());
-        public bool HasActivePlantMasks => usePlantMasks;
-        public bool HasAnyManualPlantMask => PlantMaskLayers.Any(layer => layer.HasPixels)
-            || (plantMaskVariations?.Any(record => record.Layers.Any(layer => layer.HasPixels)) == true);
-        public bool HasActiveProduceMasks => useProduceMasks;
-
         public PlantSettingsRecord()
         {
         }
@@ -1375,13 +1357,8 @@ namespace HorticultureNovelSeeds
             Scribe_Values.Look(ref mutationChance, "mutationChance", NovelSeedUtility.SpontaneousMutationChance);
             Scribe_Values.Look(ref useCustomCrossPollinationChance, "useCustomCrossPollinationChance", false);
             Scribe_Values.Look(ref crossPollinationChance, "crossPollinationChance", NovelSeedUtility.DefaultCrossPollinationChance);
-            Scribe_Values.Look(ref usePlantMasks, "usePlantMasks", false);
             Scribe_Values.Look(ref disableAutoPlantMasks, "disableAutoPlantMasks", false);
-            Scribe_Collections.Look(ref plantMaskLayers, "plantMaskLayers", LookMode.Deep);
-            Scribe_Collections.Look(ref plantMaskVariations, "plantMaskVariations", LookMode.Deep);
-            Scribe_Values.Look(ref useProduceMasks, "useProduceMasks", false);
             Scribe_Values.Look(ref unrestrictedColors, "unrestrictedColors", false);
-            Scribe_Collections.Look(ref produceMaskLayers, "produceMaskLayers", LookMode.Deep);
             Scribe_Collections.Look(ref traitGroupSettings, "traitGroupSettings", LookMode.Deep);
             Scribe_Collections.Look(ref traitSettings, "traitSettings", LookMode.Deep);
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
@@ -1391,9 +1368,6 @@ namespace HorticultureNovelSeeds
                     traitSettings = new List<TraitSettingsRecord>();
                 }
                 if (traitGroupSettings == null) traitGroupSettings = new List<CategorySettingsRecord>();
-                if (plantMaskLayers == null) plantMaskLayers = new List<VisualMaskLayerRecord>();
-                if (plantMaskVariations == null) plantMaskVariations = new List<PlantMaskVariationRecord>();
-                if (produceMaskLayers == null) produceMaskLayers = new List<VisualMaskLayerRecord>();
                 Normalize();
             }
         }
@@ -1402,12 +1376,6 @@ namespace HorticultureNovelSeeds
         {
             mutationChance = Mathf.Clamp01(mutationChance);
             crossPollinationChance = Mathf.Clamp01(crossPollinationChance);
-            NormalizeFixedMasks(PlantMaskLayers, "Produce", "Leaves", "Stem");
-            if (plantMaskVariations == null) plantMaskVariations = new List<PlantMaskVariationRecord>();
-            plantMaskVariations.RemoveAll(record => record == null);
-            foreach (PlantMaskVariationRecord record in plantMaskVariations) record.Normalize();
-            plantMaskVariations = plantMaskVariations.GroupBy(record => record.VariationIndex).Select(group => group.First()).OrderBy(record => record.VariationIndex).ToList();
-            NormalizeFixedMasks(ProduceMaskLayers, "Produce", "Leaves", "Container");
             if (traitGroupSettings == null) traitGroupSettings = new List<CategorySettingsRecord>();
             traitGroupSettings.RemoveAll(record => record == null || record.Key.NullOrEmpty());
             if (traitSettings == null)
@@ -1420,7 +1388,6 @@ namespace HorticultureNovelSeeds
                 record.Normalize();
             }
             RebuildTraitCaches();
-            SharedManualMaskCache.Invalidate();
         }
 
         public void ResetToDefaults()
@@ -1429,13 +1396,8 @@ namespace HorticultureNovelSeeds
             mutationChance = NovelSeedUtility.SpontaneousMutationChance;
             useCustomCrossPollinationChance = false;
             crossPollinationChance = NovelSeedUtility.DefaultCrossPollinationChance;
-            usePlantMasks = false;
             disableAutoPlantMasks = false;
-            PlantMaskLayers.Clear();
-            plantMaskVariations.Clear();
-            useProduceMasks = false;
             unrestrictedColors = false;
-            ProduceMaskLayers.Clear();
             if (traitSettings == null)
             {
                 traitSettings = new List<TraitSettingsRecord>();
@@ -1444,124 +1406,8 @@ namespace HorticultureNovelSeeds
             traitGroupSettings.Clear();
             traitSettings.Clear();
             RebuildTraitCaches();
-            SharedManualMaskCache.Invalidate();
         }
 
-        private static void NormalizeFixedMasks(List<VisualMaskLayerRecord> layers, string firstName, string secondName, string thirdName)
-        {
-            layers.RemoveAll(layer => layer == null);
-            while (layers.Count < 3) layers.Add(new VisualMaskLayerRecord());
-            if (layers.Count > 3) layers.RemoveRange(3, layers.Count - 3);
-            layers[0].name = firstName;
-            layers[1].name = secondName;
-            layers[2].name = thirdName;
-            layers[0].Normalize();
-            layers[1].Normalize();
-            layers[2].Normalize();
-        }
-
-        public List<VisualMaskLayerRecord> PlantMaskLayersForVariation(int variationIndex, bool create = true)
-        {
-            if (variationIndex <= 0) return PlantMaskLayers;
-            if (plantMaskVariations == null) plantMaskVariations = new List<PlantMaskVariationRecord>();
-            PlantMaskVariationRecord record = plantMaskVariations.FirstOrDefault(item => item.VariationIndex == variationIndex);
-            if (record == null && create)
-            {
-                record = new PlantMaskVariationRecord(variationIndex, PlantMaskLayers);
-                plantMaskVariations.Add(record);
-            }
-            return record?.Layers ?? PlantMaskLayers;
-        }
-
-        public List<VisualMaskLayerRecord> ManualPlantMaskLayersForVariation(int variationIndex)
-        {
-            if (variationIndex <= 0) return PlantMaskLayers;
-            return plantMaskVariations?.FirstOrDefault(item => item.VariationIndex == variationIndex)?.Layers ?? PlantMaskLayers;
-        }
-
-        public bool HasManualPlantMask(int variationIndex)
-        {
-            return ManualPlantMaskLayersForVariation(variationIndex)?.Any(layer => layer?.HasPixels == true) == true;
-        }
-
-        public List<VisualMaskLayerRecord> SetManualPlantMask(int variationIndex, IEnumerable<VisualMaskLayerRecord> source)
-        {
-            List<VisualMaskLayerRecord> replacement = source?.Select(layer => layer?.Clone()).Where(layer => layer != null).ToList()
-                ?? new List<VisualMaskLayerRecord>();
-            NormalizeFixedMasks(replacement, "Produce", "Leaves", "Stem");
-            if (variationIndex <= 0) plantMaskLayers = replacement;
-            else
-            {
-                if (plantMaskVariations == null) plantMaskVariations = new List<PlantMaskVariationRecord>();
-                plantMaskVariations.RemoveAll(record => record.VariationIndex == variationIndex);
-                plantMaskVariations.Add(new PlantMaskVariationRecord(variationIndex, replacement));
-            }
-            usePlantMasks = true;
-            disableAutoPlantMasks = false;
-            SharedManualMaskCache.Invalidate();
-            return ManualPlantMaskLayersForVariation(variationIndex);
-        }
-
-        public void RemoveManualPlantMask(int variationIndex)
-        {
-            if (variationIndex <= 0)
-            {
-                foreach (VisualMaskLayerRecord layer in PlantMaskLayers) layer.Clear();
-            }
-            else
-            {
-                if (plantMaskVariations == null) plantMaskVariations = new List<PlantMaskVariationRecord>();
-                plantMaskVariations.RemoveAll(record => record.VariationIndex == variationIndex);
-                plantMaskVariations.Add(new PlantMaskVariationRecord(variationIndex, new[]
-                {
-                    new VisualMaskLayerRecord { name = "Produce" },
-                    new VisualMaskLayerRecord { name = "Leaves" },
-                    new VisualMaskLayerRecord { name = "Stem" }
-                }));
-            }
-            SharedManualMaskCache.Invalidate();
-        }
-
-        public void EnsurePlantMaskVariationCount(int count)
-        {
-            for (int i = 1; i < Mathf.Max(1, count); i++) PlantMaskLayersForVariation(i);
-        }
-
-        public bool AnyPlantMaskLayerHasPixels(int layerIndex)
-        {
-            int index = Mathf.Clamp(layerIndex, 0, 2);
-            if (PlantMaskLayers[index].HasPixels) return true;
-            return plantMaskVariations != null && plantMaskVariations.Any(record => record.Layers[index].HasPixels);
-        }
-
-        public IEnumerable<List<VisualMaskLayerRecord>> AllPlantMaskVariations()
-        {
-            yield return PlantMaskLayers;
-            if (plantMaskVariations != null)
-                foreach (PlantMaskVariationRecord record in plantMaskVariations.OrderBy(item => item.VariationIndex)) yield return record.Layers;
-        }
-        internal IEnumerable<PlantMaskVariationRecord> PlantMaskVariationRecords => plantMaskVariations ?? Enumerable.Empty<PlantMaskVariationRecord>();
-
-        internal bool HasMaskData => usePlantMasks || useProduceMasks || PlantMaskLayers.Any(layer => layer.HasPixels)
-            || ProduceMaskLayers.Any(layer => layer.HasPixels)
-            || PlantMaskVariationRecords.Any(record => record.Layers.Any(layer => layer.HasPixels));
-
-        internal void ReplaceMasks(bool enablePlantMasks, IEnumerable<VisualMaskLayerRecord> plantLayers,
-            IEnumerable<PlantMaskVariationRecord> variations, bool enableProduceMasks, IEnumerable<VisualMaskLayerRecord> produceLayers)
-        {
-            usePlantMasks = enablePlantMasks;
-            plantMaskLayers = plantLayers?.Select(layer => layer?.Clone()).Where(layer => layer != null).ToList() ?? new List<VisualMaskLayerRecord>();
-            plantMaskVariations = variations?.Where(record => record != null)
-                .Select(record => new PlantMaskVariationRecord(record.VariationIndex, record.Layers)).ToList() ?? new List<PlantMaskVariationRecord>();
-            useProduceMasks = enableProduceMasks;
-            produceMaskLayers = produceLayers?.Select(layer => layer?.Clone()).Where(layer => layer != null).ToList() ?? new List<VisualMaskLayerRecord>();
-            Normalize();
-        }
-
-        internal void ClearMasks()
-        {
-            ReplaceMasks(false, null, null, false, null);
-        }
         public CategorySettingsRecord GetTraitGroupSettings(string key, bool create = true)
         {
             if (key.NullOrEmpty()) return null;

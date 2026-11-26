@@ -11,28 +11,6 @@ using Verse.AI;
 
 namespace HorticultureNovelSeeds
 {
-    [HarmonyPatch(typeof(Plant), nameof(Plant.GetGizmos))]
-    public static class Plant_GetGizmos_MaskEditor_Patch
-    {
-        public static IEnumerable<Gizmo> Postfix(IEnumerable<Gizmo> values, Plant __instance)
-        {
-            foreach (Gizmo gizmo in values ?? Enumerable.Empty<Gizmo>()) yield return gizmo;
-            if (!Prefs.DevMode || __instance?.Spawned != true || Find.Selector.SingleSelectedThing != __instance) yield break;
-            yield return new Command_Action
-            {
-                defaultLabel = "DEV: Edit Plant Mask",
-                defaultDesc = "Open the mask editor for this plant and its currently displayed texture variation.",
-                icon = __instance.def.uiIcon,
-                action = delegate
-                {
-                    Material material = __instance.Graphic?.MatSingleFor(__instance);
-                    int variation = PlantMaskUtility.VariationIndexForTexture(__instance.def, material?.mainTexture, 0);
-                    Find.WindowStack.Add(new Dialog_PlantMasks(__instance.def, false, variation));
-                }
-            };
-        }
-    }
-
     [HarmonyPatch(typeof(DefGenerator), nameof(DefGenerator.GenerateImpliedDefs_PreResolve))]
     public static class DefGenerator_AddPlantMutationComps_Patch
     {

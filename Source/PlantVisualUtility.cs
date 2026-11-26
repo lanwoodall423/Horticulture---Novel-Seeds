@@ -296,6 +296,9 @@ namespace HorticultureNovelSeeds
 
         private static Material GetStyledMaterial(Material source, PlantVisualParameters visual, Plant plant, out bool preservesWind, int isolatedMaskLayer = -2, int variationIndex = 0)
         {
+#if HNS_NATIVE_FIXTURE
+            NativeGardenProbe.RecordMaskSource(plant, variationIndex);
+#endif
             if (WaylithPhenotypeShader.TryForPlant(source, visual, plant, isolatedMaskLayer, variationIndex, out var shaderMaterial))
             {
                 preservesWind = true;

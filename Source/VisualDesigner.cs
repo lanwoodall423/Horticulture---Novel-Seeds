@@ -474,19 +474,8 @@ namespace HorticultureNovelSeeds
             if (context?.plant != null) return context;
             List<ThingDef> maskedPlants = DefDatabase<ThingDef>.AllDefsListForReading
                 .Where(NovelSeedUtility.IsGrowableCrop)
-                .Where(def =>
-                {
-                    PlantSettingsRecord record = HorticultureNovelSeedsMod.Settings?.GetPlantSettings(def, false);
-                    return PlantMaskUtility.HasActiveMasks(def) || record?.HasActiveProduceMasks == true;
-                })
-                .OrderBy(def => def.label)
-                .ToList();
-            ThingDef fullyMasked = maskedPlants.FirstOrDefault(def =>
-            {
-                PlantSettingsRecord record = HorticultureNovelSeedsMod.Settings?.GetPlantSettings(def, false);
-                return PlantMaskUtility.HasActiveMasks(def) && record?.HasActiveProduceMasks == true;
-            });
-            if (fullyMasked != null) return fullyMasked;
+                .Where(def => PlantMaskUtility.HasActiveMasks(def))
+                .OrderBy(def => def.label).ToList();
             if (maskedPlants.Count > 0) return maskedPlants[0];
             return DefDatabase<ThingDef>.GetNamedSilentFail("Plant_Rice")
                 ?? DefDatabase<ThingDef>.AllDefsListForReading.FirstOrDefault(NovelSeedUtility.IsGrowableCrop);
@@ -584,14 +573,14 @@ namespace HorticultureNovelSeeds
             set
             {
                 int first = editingProduce ? 3 : 0;
-                selectedMask = Mathf.Clamp(value, first, first + 2);
+                selectedMask = editingProduce ? 3 : Mathf.Clamp(value, first, first + 2);
                 ClearPreviewMaskTexture();
             }
         }
 
         IReadOnlyList<string> IHorticultureVisualDesignerSurface.MaskOptions =>
             editingProduce
-                ? new[] { "Produce", "Leaves", "Container" }
+                ? new[] { "Whole harvested item" }
                 : new[] { "Produce", "Leaves", "Stem" };
 
         IReadOnlyList<string> IHorticultureVisualDesignerSurface.PreviewPlantOptions =>
@@ -764,7 +753,7 @@ namespace HorticultureNovelSeeds
                 : plantRecord.useCustomVisual
                     ? plantRecord.usePerMaskVisuals
                     : inheritedVisuals.Count == 6 && inheritedVisuals[0].instanceName.StartsWith("Plant:");
-        private bool PreviewUsesMask => CurrentUsesPerMaskVisuals;
+        private bool PreviewUsesMask => !editingProduce && CurrentUsesPerMaskVisuals;
 
         private bool UsingProduceMaskVisual => editingProduce && CurrentUsesPerMaskVisuals;
 
@@ -902,7 +891,7 @@ namespace HorticultureNovelSeeds
             }
             string note = PreviewUsesMask
                 ? string.Equals(activeSection, "Color", StringComparison.OrdinalIgnoreCase)
-                    ? maskShown ? "Color preview is limited to " + MaskLabels[selectedMask] + "." : "The selected mask has no painted area; its color is not shown."
+                    ? maskShown ? "Color preview is limited to " + MaskLabels[selectedMask] + "." : "The automatic analysis has no reliable region here; its color is not shown."
                     : "Shape and Effects apply to the whole plant. Masks affect Color only."
                 : "Preview approximates map rendering. Texture styling is baked and cached in play.";
             Widgets.Label(new Rect(inner.x + 8f, inner.yMax - 42f, inner.width - 16f, 38f), note);
@@ -1042,35 +1031,6 @@ namespace HorticultureNovelSeeds
                 && Mathf.Approximately(a.scaleVariation, b.scaleVariation) && Mathf.Approximately(a.offsetX, b.offsetX)
                 && Mathf.Approximately(a.offsetZ, b.offsetZ);
         }
-        private bool TryDrawPerMaskProducePreview(Rect stage, Texture texture, out bool maskShown)
-        {
-            maskShown = false;
-            PlantSettingsRecord settings = HorticultureNovelSeedsMod.Settings?.GetPlantSettings(previewPlant, false);
-            if (!CurrentUsesPerMaskVisuals || settings?.HasActiveProduceMasks != true || texture == null) return false;
-
-            int focusedLayer = Mathf.Clamp(selectedMask - 3, 0, 2);
-            List<VisualMaskLayerRecord> masks = settings.ProduceMaskLayers;
-            VisualSettingsRecord[] visuals = { VisualForMaskIndex(3), VisualForMaskIndex(4), VisualForMaskIndex(5) };
-            VisualSettingsRecord[] neutralVisuals = { new VisualSettingsRecord(), new VisualSettingsRecord(), new VisualSettingsRecord() };
-            IReadOnlyList<VisualSettingsRecord> focusedStyles = SharedVisual.applyToProduce ? visuals : neutralVisuals;
-            int compositeHash = unchecked(CompositePreviewHash(visuals, MaskListHash(masks)) * 31 + focusedLayer + (SharedVisual.applyToProduce ? 101 : 0));
-            if (compositeHash != styledPreviewHash)
-            {
-                ClearStyledPreviewTextures();
-                styledPreviewHash = compositeHash;
-            }
-
-            DrawProducePreviewMeshes(stage, WholeVisual, GetCompositePreviewTexture(texture, neutralVisuals, masks, -1));
-            for (int layer = 0; layer < 3; layer++)
-            {
-                if (!masks[layer].HasPixels) continue;
-                IReadOnlyList<VisualSettingsRecord> layerStyles = layer == focusedLayer ? focusedStyles : neutralVisuals;
-                DrawProducePreviewMeshes(stage, WholeVisual, GetCompositePreviewTexture(texture, layerStyles, masks, layer));
-            }
-            maskShown = masks[focusedLayer].HasPixels;
-            return true;
-        }
-
         private static int ProducePreviewCount(float density)
         {
             return Mathf.Clamp(1 + Mathf.RoundToInt((density - 1f) * 4f), 1, PreviewOffsets.Length);
@@ -1113,7 +1073,7 @@ namespace HorticultureNovelSeeds
 
             Texture texture = product?.uiIcon ?? previewPlant?.uiIcon;
             bool maskShown = false;
-            if (texture != null && !TryDrawPerMaskProducePreview(stage, texture, out maskShown))
+            if (texture != null)
             {
                 int count = ProducePreviewCount(v.density);
                 float baseSize = Mathf.Min(stage.width, stage.height) * 0.62f * v.scale;
@@ -1142,7 +1102,7 @@ namespace HorticultureNovelSeeds
                 ? "Produce inheritance is disabled for this trait."
                 : PreviewUsesMask
                 ? string.Equals(activeSection, "Color", StringComparison.OrdinalIgnoreCase)
-                        ? maskShown ? "Color preview is limited to " + MaskLabels[selectedMask] + "." : "The selected mask has no painted area; its color is not shown."
+                        ? maskShown ? "Color preview is limited to " + MaskLabels[selectedMask] + "." : "The automatic analysis has no reliable region here; its color is not shown."
                         : "Shape and Effects apply to the whole produce graphic. Masks affect Color only."
                     : "Produce has an independent Color, Shape, and Effects profile.";
             Widgets.Label(new Rect(inner.x + 8f, inner.yMax - 48f, inner.width - 16f, 42f), note);
@@ -1373,9 +1333,8 @@ namespace HorticultureNovelSeeds
         private VisualMaskLayerRecord SelectedPreviewMaskLayer()
         {
             if (!PreviewUsesMask || previewPlant == null) return null;
-            PlantSettingsRecord settings = HorticultureNovelSeedsMod.Settings?.GetPlantSettings(previewPlant, false);
-            if (settings == null) return null;
-            return selectedMask < 3 ? settings.PlantMaskLayers[selectedMask] : settings.ProduceMaskLayers[selectedMask - 3];
+            var layers = PlantMaskUtility.LayersForVariation(previewPlant, PlantMaskUtility.VariationIndexForTexture(previewPlant, previewPlant.uiIcon), false);
+            return layers != null && selectedMask >= 0 && selectedMask < layers.Count ? layers[selectedMask] : null;
         }
 
         private void ClearPreviewMaskTexture()

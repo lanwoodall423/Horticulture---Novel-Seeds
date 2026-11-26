@@ -380,12 +380,10 @@ namespace HorticultureNovelSeeds
                 }, true));
             y += 42f;
             PlantSettingsRecord personalSettings = settings.GetPlantSettings(plantDef);
-            string maskStatus = "Plant: " + (personalSettings.usePlantMasks ? "On" : "Off") + (hasProduce ? "    Produce: " + (personalSettings.useProduceMasks ? "On" : "Off") : "    No harvested produce");
-            if (Widgets.ButtonText(new Rect(0f, y, 120f, 30f), "Masks")) Find.WindowStack.Add(new Dialog_PlantMasks(plantDef));
-            if (Widgets.ButtonText(new Rect(130f, y, 110f, 30f), "Export")) Find.WindowStack.Add(new Dialog_ExportPlantMasks(settings, plantDef));
-            if (Widgets.ButtonText(new Rect(250f, y, 110f, 30f), "Import")) Find.WindowStack.Add(new Dialog_ImportPlantMaskForPlant(settings, plantDef));
-            DrawMutedLabel(new Rect(374f, y + 5f, view.width - 374f, 24f), maskStatus);
-            y += 42f;
+            bool previousAutoMask = personalSettings.disableAutoPlantMasks;
+            Widgets.CheckboxLabeled(new Rect(0f, y, view.width, 28f), "Disable automatic anatomical targeting", ref personalSettings.disableAutoPlantMasks);
+            if (previousAutoMask != personalSettings.disableAutoPlantMasks) settings.ClearVisualCache();
+            y += 38f;
             Widgets.CheckboxLabeled(new Rect(0f, y, view.width, 28f), "Use Unrestricted Colors", ref personalSettings.unrestrictedColors);
             TooltipHandler.TipRegion(new Rect(0f, y, view.width, 28f), "New saves may use the full hue wheel for this species instead of staying near its configured base color.");
             y += 38f;
@@ -510,13 +508,12 @@ namespace HorticultureNovelSeeds
         private void DrawProfilesPage(Rect rect, NovelSeedsSettings settings)
         {
             List<SettingsProfileInfo> profiles = SettingsProfileManager.Profiles.ToList();
-            List<PlantMaskFileInfo> maskFiles = PlantMaskFileManager.Files.ToList();
-            float contentHeight = 510f + profiles.Count * 62f + maskFiles.Count * 62f;
+            float contentHeight = 360f + profiles.Count * 62f;
             BeginPage(rect, contentHeight, out Rect view);
             float y = 0f;
-            DrawPageTitle(view, ref y, "Configuration Profiles", "Save complete configurations or transfer only the painted masks for every plant.");
+            DrawPageTitle(view, ref y, "Configuration Profiles", "Save complete genetics and visual-effect configurations.");
             if (Widgets.ButtonText(new Rect(0f, y, 210f, 32f), "Save Current Configuration")) Find.WindowStack.Add(new Dialog_SaveSettingsProfile(settings));
-            if (Widgets.ButtonText(new Rect(220f, y, 130f, 32f), "Use Defaults")) Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation("Switch all active settings and masks to the bundled mod defaults? Saved profiles will be kept.", delegate { ApplyDefaults(settings); }, true));
+            if (Widgets.ButtonText(new Rect(220f, y, 130f, 32f), "Use Defaults")) Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation("Switch all active settings to the bundled mod defaults? Saved profiles will be kept.", delegate { ApplyDefaults(settings); }, true));
             y += 42f;
             if (Widgets.ButtonText(new Rect(0f, y, 210f, 32f), "Export As Mod Default")) ConfirmExportPublisherDefault(settings);
             if (Widgets.ButtonText(new Rect(220f, y, 170f, 32f), "Open Export Folder") && !SettingsProfileManager.OpenPublisherDirectory(out string openError)) Messages.Message("Could not open the publisher export folder: " + openError, MessageTypeDefOf.RejectInput, false);
@@ -542,45 +539,15 @@ namespace HorticultureNovelSeeds
                 }
             }
 
-            DrawSectionHeader(view, ref y, "Plant Mask Files");
-            if (Widgets.ButtonText(new Rect(0f, y, 176f, 32f), "Export Masks")) Find.WindowStack.Add(new Dialog_ExportPlantMasks(settings));
-            if (Widgets.ButtonText(new Rect(186f, y, 126f, 32f), "Open Folder"))
-            {
-                if (!PlantMaskFileManager.OpenDirectory(out string error)) Messages.Message("Could not open the plant mask folder: " + error, MessageTypeDefOf.RejectInput, false);
-            }
-            if (Widgets.ButtonText(new Rect(322f, y, 100f, 32f), "Refresh")) PlantMaskFileManager.Refresh();
-            if (Widgets.ButtonText(new Rect(432f, y, 230f, 32f), "Generate Missing Auto-Masks"))
+            DrawSectionHeader(view, ref y, "Automatic anatomy");
+            if (Widgets.ButtonText(new Rect(0f, y, 260f, 32f), "Generate Missing Auto-Masks"))
             {
                 PlantAutoMaskCache.InitializeAndGenerateMissing();
                 AutoMaskBatchResult result = PlantAutoMaskCache.LastBatchResult;
-                Messages.Message(result.workItems > 0
-                    ? "Auto-mask generation queued for " + result.workItems + " plant variations."
-                    : "Auto masks are already current (" + result.reused + " cached, " + result.manualSkipped + " manual skipped).",
-                    MessageTypeDefOf.TaskCompletion, false);
+                Messages.Message(result.workItems > 0 ? "Automatic analysis queued for " + result.workItems + " variations." : "Automatic masks are current.", MessageTypeDefOf.TaskCompletion, false);
             }
-            if (Widgets.ButtonText(new Rect(432f, y + 36f, 230f, 32f), "Review Mask Queue"))
-                Find.WindowStack.Add(new Dialog_MaskReviewQueue());
-            y += 80f;
-            DrawMutedLabel(new Rect(0f, y, view.width, 38f), PlantMaskFileManager.DirectoryPath);
-            y += 46f;
-            if (maskFiles.Count == 0)
-            {
-                DrawMutedLabel(new Rect(0f, y + 8f, view.width, 32f), "No plant mask files found.", TextAnchor.MiddleCenter);
-                y += 48f;
-            }
-            else
-            {
-                foreach (PlantMaskFileInfo file in maskFiles)
-                {
-                    Rect row = new Rect(0f, y, view.width, 58f);
-                    Widgets.DrawHighlightIfMouseover(row);
-                    Widgets.Label(new Rect(8f, y + 6f, view.width - 218f, 24f), file.Name + ".xml");
-                    DrawMutedLabel(new Rect(8f, y + 30f, view.width - 218f, 22f), "Modified " + file.Modified.ToString("g"));
-                    if (Widgets.ButtonText(new Rect(view.width - 200f, y + 13f, 88f, 30f), "Import")) ConfirmImportMasks(file, settings);
-                    if (Widgets.ButtonText(new Rect(view.width - 102f, y + 13f, 88f, 30f), "Delete")) ConfirmDeleteMasks(file);
-                    y += 62f;
-                }
-            }
+            y += 42f;
+            DrawMutedLabel(new Rect(0f, y, view.width, 48f), "No manual artwork required. Low-confidence masks use the fallback renderer.");
             EndPage();
         }
         private void ConfirmLoadProfile(SettingsProfileInfo profile, NovelSeedsSettings settings)
@@ -598,7 +565,7 @@ namespace HorticultureNovelSeeds
 
         private void ConfirmExportPublisherDefault(NovelSeedsSettings settings)
         {
-            Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation("Export all current settings and masks as the publisher default? This replaces the previous export. Copy DefaultConfiguration.xml into 1.7/Defaults before packaging or uploading the mod.", delegate
+            Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation("Export all current settings as the publisher default? This replaces the previous export. Copy DefaultConfiguration.xml into 1.7/Defaults before packaging or uploading the mod.", delegate
             {
                 if (SettingsProfileManager.ExportPublisherDefault(settings, out string error)) Messages.Message("Publisher default exported to " + SettingsProfileManager.PublisherExportPath, MessageTypeDefOf.TaskCompletion, false);
                 else Messages.Message("Could not export the publisher default: " + error, MessageTypeDefOf.RejectInput, false);
@@ -620,18 +587,6 @@ namespace HorticultureNovelSeeds
             Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation("Delete saved configuration '" + profile.Name + "'?", delegate
             {
                 if (!SettingsProfileManager.Delete(profile, out string error)) Messages.Message("Could not delete configuration: " + error, MessageTypeDefOf.RejectInput, false);
-            }, true));
-        }
-        private void ConfirmImportMasks(PlantMaskFileInfo file, NovelSeedsSettings settings)
-        {
-            Find.WindowStack.Add(new Dialog_ImportPlantMasks(file, settings));
-        }
-
-        private void ConfirmDeleteMasks(PlantMaskFileInfo file)
-        {
-            Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation("Delete plant mask file '" + file.Name + ".xml'?", delegate
-            {
-                if (!PlantMaskFileManager.Delete(file, out string error)) Messages.Message("Could not delete plant mask file: " + error, MessageTypeDefOf.RejectInput, false);
             }, true));
         }
         private void DrawGlobalTraitGroups(Rect view, ref float y, List<VarietyTraitDef> traits, NovelSeedsSettings settings)

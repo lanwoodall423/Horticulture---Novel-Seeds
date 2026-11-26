@@ -80,6 +80,13 @@ try {
     foreach($d in @('Defs','Languages','AutoMasks','Defaults')){
         Copy-Item -LiteralPath (Join-Path $repo ('1.6\'+$d)) -Destination (Join-Path $stage '1.7') -Recurse
     }
+    # Strip only retired manual payloads from the staged 1.7 defaults.
+    $defaults=Join-Path $stage '1.7\Defaults\DefaultConfiguration.xml'
+    $doc=New-Object Xml.XmlDocument; $doc.PreserveWhitespace=$true; $doc.Load($defaults)
+    $nodes=@($doc.SelectNodes('//plantMaskLayers|//plantMaskVariations|//produceMaskLayers|//usePlantMasks|//useProduceMasks'))
+    foreach($node in $nodes){$null=$node.ParentNode.RemoveChild($node)}
+    $doc.Save($defaults)
+    $receipt.retiredManualDefaultNodes=$nodes.Count
     Copy-Item -LiteralPath (Join-Path $repo '1.7\Defs\ThingDefs_Items.xml') -Destination (Join-Path $stage '1.7\Defs\ThingDefs_Items.xml') -Force
     if($ShaderProbe -or $GardenProbe){
         Copy-Item -LiteralPath (Join-Path $repo 'DevTools\ShaderPrototype\Defs\HNS_PhenotypeShaders.xml') -Destination (Join-Path $stage '1.7\Defs')

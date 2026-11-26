@@ -63,11 +63,11 @@ namespace HorticultureNovelSeeds
                 try
                 {
                     GUI.enabled = previous && surface.CanEdit;
-                    NativeUi.Toggle(view, ref ry, "Per-mask visuals", surface.PerMaskEnabled, v => surface.PerMaskEnabled = v);
-                    if (surface.PerMaskEnabled)
+                    if (!surface.EditingProduce) NativeUi.Toggle(view, ref ry, "Regional color effects", surface.PerMaskEnabled, v => surface.PerMaskEnabled = v);
+                    if (surface.PerMaskEnabled && !surface.EditingProduce)
                     {
                         int offset = surface.EditingProduce ? 3 : 0;
-                        string[] labels = surface.EditingProduce ? new[] { "Produce", "Leaves", "Container" } : new[] { "Produce", "Leaves", "Stem" };
+                        string[] labels = new[] { "Produce", "Leaves", "Stem" };
                         NativeUi.Choice(view, ref ry, "Channel", labels, surface.SelectedMask - offset, i => surface.SelectedMask = i + offset);
                     }
                     NativeUi.Choice(view, ref ry, "Section", SectionIds, Array.IndexOf(SectionIds.ToArray(), section), i => SelectSection(SectionIds[i]));
@@ -91,7 +91,7 @@ namespace HorticultureNovelSeeds
                         NativeUi.Toggle(view, ref ry, "Spikes", surface.GetValue("effects.spikes") > .5f, v => surface.SetValue("effects.spikes", v ? 1 : 0));
                     }
                     NativeUi.Button(view, ref ry, "Reset current section", () => surface.ResetSection(section));
-                    NativeUi.Button(view, ref ry, "Reset current mask", surface.ResetCurrentMask);
+                    if (!surface.EditingProduce && surface.PerMaskEnabled) NativeUi.Button(view, ref ry, "Reset current region", surface.ResetCurrentMask);
                     NativeUi.Button(view, ref ry, "Restore XML/default", surface.RestoreXmlDefault);
                 }
                 finally { GUI.enabled = previous; }
