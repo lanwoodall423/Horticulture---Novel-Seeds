@@ -601,4 +601,65 @@
     <exclusionTags><li>organForm</li></exclusionTags>
     <organForm>ThickStalk</organForm>
   </HorticultureNovelSeeds.VarietyTraitDef>
+  <!-- Developmental visual expression candidates. -->
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_BronzeFlush</defName>
+    <label>Bronze Flush</label>
+    <description>Copper-bronze juvenile leaves that mature into deep green foliage.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
+    <proceduralPhenotype>BronzeFlush</proceduralPhenotype>
+    <proceduralStrength>0.91</proceduralStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_Frostbud</defName>
+    <label>Frostbud</label>
+    <description>Cream-white juvenile tips and pale leaf margins which gradually green as the plant develops.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
+    <proceduralPhenotype>Frostbud</proceduralPhenotype>
+    <proceduralStrength>0.92</proceduralStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_AutumnCrown</defName>
+    <label>Autumn Crown</label>
+    <description>Green juvenile foliage that develops golden and russet upper growth at maturity.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
+    <proceduralPhenotype>AutumnCrown</proceduralPhenotype>
+    <proceduralStrength>0.94</proceduralStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_RipeningBlush</defName>
+    <label>Ripening Blush</label>
+    <description>Contrasting reproductive tissue ripens from pale honey to rose and mulberry tones.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
+    <proceduralPhenotype>RipeningBlush</proceduralPhenotype>
+    <proceduralStrength>0.95</proceduralStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_MaturingVariegation</defName>
+    <label>Maturing Variegation</label>
+    <description>Green young leaves gradually develop irregular cream and sage variegation.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
+    <proceduralPhenotype>MaturingVariegation</proceduralPhenotype>
+    <proceduralStrength>0.92</proceduralStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
 </Defs>

@@ -9,9 +9,10 @@ param(
     [switch]$CreativeGarden,
     [switch]$CultivarGarden,
     [switch]$FormGarden,
-    [switch]$OrganGarden
+    [switch]$OrganGarden,
+    [switch]$DevelopmentGarden
 )
-if($PatternGarden -or $CatalogGarden -or $CreativeGarden -or $CultivarGarden -or $FormGarden -or $OrganGarden){$GardenProbe=$true}
+if($PatternGarden -or $CatalogGarden -or $CreativeGarden -or $CultivarGarden -or $FormGarden -or $OrganGarden -or $DevelopmentGarden){$GardenProbe=$true}
 $ErrorActionPreference='Stop'
 $repo=Split-Path -Parent $PSScriptRoot
 $game='C:\Games\Steam\steamapps\common\RimWorld'
@@ -26,7 +27,7 @@ $temp=Join-Path ([IO.Path]::GetTempPath()) ('hns-native-'+$run)
 $stage=Join-Path $repo ('DevTools\Staged\Native17Package-'+$run)
 $installed=Join-Path $game ('Mods\HNS-NativeFixture-'+$run)
 $outDir=Join-Path $repo ('DevTools\TestResults\native-'+$run)
-$receipt=[ordered]@{schemaVersion=1;run=$run;loadout=$Loadout;shaderProbe=[bool]$ShaderProbe;gardenProbe=[bool]$GardenProbe;patternGarden=[bool]$PatternGarden;catalogGarden=[bool]$CatalogGarden;creativeGarden=[bool]$CreativeGarden;cultivarGarden=[bool]$CultivarGarden;formGarden=[bool]$FormGarden;organGarden=[bool]$OrganGarden;status='BLOCKED';reason='NOT_STARTED';sourceHead=$null;version=$null;assemblySha256=$null;activePackages=@();optimizerIdentities=@();stages=@();fixtureLine=$null;processId=$null;testProcessStopped=$false;testPackageRemoved=$false;normalConfigUnchanged=$null;normalPrefsUnchanged=$null;normalSavesUnchanged=$null;isolatedSaveDirectory=$temp;startedUtc=$null;finishedUtc=$null}
+$receipt=[ordered]@{schemaVersion=1;run=$run;loadout=$Loadout;shaderProbe=[bool]$ShaderProbe;gardenProbe=[bool]$GardenProbe;patternGarden=[bool]$PatternGarden;catalogGarden=[bool]$CatalogGarden;creativeGarden=[bool]$CreativeGarden;cultivarGarden=[bool]$CultivarGarden;formGarden=[bool]$FormGarden;organGarden=[bool]$OrganGarden;developmentGarden=[bool]$DevelopmentGarden;status='BLOCKED';reason='NOT_STARTED';sourceHead=$null;version=$null;assemblySha256=$null;activePackages=@();optimizerIdentities=@();stages=@();fixtureLine=$null;processId=$null;testProcessStopped=$false;testPackageRemoved=$false;normalConfigUnchanged=$null;normalPrefsUnchanged=$null;normalSavesUnchanged=$null;isolatedSaveDirectory=$temp;startedUtc=$null;finishedUtc=$null}
 $proc=$null; $installedByRun=$false; $before=$null; $started=$null; $capturedPlayerBaseline=$false
 $utf8=New-Object Text.UTF8Encoding($false)
 function Assert-Closed {
@@ -55,7 +56,7 @@ function Assert-NoPackage {
 }
 New-Item -ItemType Directory -Path $outDir | Out-Null
 try {
-    if(($ShaderProbe -and $GardenProbe) -or (@(@($PatternGarden,$CatalogGarden,$CreativeGarden,$CultivarGarden,$FormGarden,$OrganGarden) | Where-Object {$_}).Count -gt 1)){throw "CHOOSE_ONE_PROBE"}
+    if(($ShaderProbe -and $GardenProbe) -or (@(@($PatternGarden,$CatalogGarden,$CreativeGarden,$CultivarGarden,$FormGarden,$OrganGarden,$DevelopmentGarden) | Where-Object {$_}).Count -gt 1)){throw "CHOOSE_ONE_PROBE"}
     Assert-Closed
     Assert-NoPackage
     $head=(& git -C $repo rev-parse HEAD).Trim()
@@ -154,6 +155,7 @@ try {
     if($CultivarGarden){$psi.EnvironmentVariables['HNS_NATIVE_CULTIVAR_GARDEN']='1'}
     if($FormGarden){$psi.EnvironmentVariables['HNS_NATIVE_FORM_GARDEN']='1'}
     if($OrganGarden){$psi.EnvironmentVariables['HNS_NATIVE_ORGAN_GARDEN']='1'}
+    if($DevelopmentGarden){$psi.EnvironmentVariables['HNS_NATIVE_DEVELOPMENT_GARDEN']='1'}
     $receipt.startedUtc=[DateTime]::UtcNow.ToString('o')
     $proc=[Diagnostics.Process]::Start($psi)
     $started=$proc.StartTime
@@ -179,7 +181,7 @@ try {
                 $receipt.fixtureLine=[string]::new(([string]$final).ToCharArray())
                 $result=$final.Substring($final.IndexOf($prefix)+$prefix.Length)
                 if($result -match '^(PASS|FAIL)\s+(.+)$'){$receipt.status=$Matches[1];$receipt.reason=$Matches[2]}
-                $requiredStages=if($FormGarden -or $OrganGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenInventory'}elseif($CultivarGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenPanel3,GardenInventory'}elseif($CatalogGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenPanel3,GardenPanel4,GardenPanel5,GardenPanel6,GardenInventory'}elseif($CreativeGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenPanel3,GardenPanel4,GardenPanel5,GardenInventory'}elseif($GardenProbe){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenPanel3,GardenPanel4,GardenInventory'}elseif($ShaderProbe){'Startup,ShaderPixelParity,ShaderMaskParity,ShaderFallback,ShaderField'}else{'Startup,HarvestAndSeedRecovery,Registration,CultivarHarvest,SaveReload'}
+                $requiredStages=if($DevelopmentGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenPanel3,GardenInventory'}elseif($FormGarden -or $OrganGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenInventory'}elseif($CultivarGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenPanel3,GardenInventory'}elseif($CatalogGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenPanel3,GardenPanel4,GardenPanel5,GardenPanel6,GardenInventory'}elseif($CreativeGarden){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenPanel3,GardenPanel4,GardenPanel5,GardenInventory'}elseif($GardenProbe){'Startup,GardenSetup,GardenPanel1,GardenPanel2,GardenPanel3,GardenPanel4,GardenInventory'}elseif($ShaderProbe){'Startup,ShaderPixelParity,ShaderMaskParity,ShaderFallback,ShaderField'}else{'Startup,HarvestAndSeedRecovery,Registration,CultivarHarvest,SaveReload'}
                 if($receipt.status -eq 'PASS' -and (($receipt.stages -join ',') -ne $requiredStages)){$receipt.status='FAIL';$receipt.reason='INCOMPLETE_STAGE_EVIDENCE'}
                 break
             }

@@ -519,6 +519,47 @@ vec3 hnsPattern(vec3 rgb, vec4 src, vec2 localUv, vec2 sampleUv, vec3 regions)
         target=mix(vec3(.09,.30,.18),vec3(.77,.88,.28),young)*lightness;
         blend=mix(.65,.92,young);
     }
+    else if (p.x < 51.5) // Bronze Flush: juvenile anthocyanin fades
+    {
+        float age=clamp(p.w,0.0,1.0);
+        vec3 bronze=mix(vec3(.31,.14,.12),vec3(.88,.49,.24),value);
+        vec3 mature=mix(vec3(.10,.28,.15),vec3(.40,.65,.29),value);
+        target=mix(bronze,mature,age);
+        blend=mix(.95,.68,age)*mix(.62,1.0,smoothstep(.18,.73,n));
+    }
+    else if (p.x < 52.5) // Frostbud: pale young growth, increasingly green
+    {
+        float age=clamp(p.w,0.0,1.0);
+        float tips=smoothstep(.24,.76,localUv.y+.36*(n-.5));
+        float margin=hnsRim(sampleUv,2.2);
+        target=mix(vec3(.94,.93,.77)*lightness,vec3(.34,.57,.31)*lightness,age);
+        blend=(1.0-age*.78)*max(tips,margin*.85);
+    }
+    else if (p.x < 53.5) // Autumn Crown: mature golden/russet flush
+    {
+        float age=clamp(p.w,0.0,1.0);
+        float upper=smoothstep(.20,.74,localUv.y+.35*(n-.5));
+        vec3 gold=mix(vec3(.53,.23,.10),vec3(.96,.75,.29),smoothstep(.22,.80,value+.14*fine));
+        target=mix(vec3(.38,.67,.25)*lightness,gold,age);
+        blend=mix(.28,.98,age)*upper;
+    }
+    else if (p.x < 54.5) // Ripening Blush: contrasting reproductive tissue
+    {
+        float age=clamp(p.w,0.0,1.0);
+        affinity=hnsHarvestAffinity(src.rgb,regions);
+        vec3 honey=vec3(.98,.89,.56)*lightness;
+        vec3 blush=vec3(.97,.52,.43)*lightness;
+        vec3 plum=mix(vec3(.31,.09,.19),vec3(.77,.31,.43),value);
+        target=age<.5?mix(honey,blush,age*2.0):mix(blush,plum,(age-.5)*2.0);
+        blend=.97;
+    }
+    else if (p.x < 55.5) // Maturing Variegation: increasing cream sectors
+    {
+        float age=clamp(p.w,0.0,1.0);
+        float patch=smoothstep(.77-age*.46,.89-age*.31,n+.13*fine);
+        target=mix(vec3(.62,.76,.44),vec3(.98,.94,.72),patch)*lightness;
+        blend=patch*(.16+.84*age);
+    }
     // Keep texture value structure even in the most striking cosmetic motifs.
     float targetV = max(target.r,max(target.g,target.b));
     float emphasis = smoothstep(.46,.88,p.z);

@@ -41,7 +41,12 @@ namespace HorticultureNovelSeeds
         AmberStalk = 47,
         StripedStalk = 48,
         BlueJade = 49,
-        TwoToneCanopy = 50
+        TwoToneCanopy = 50,
+        BronzeFlush = 51,
+        Frostbud = 52,
+        AutumnCrown = 53,
+        RipeningBlush = 54,
+        MaturingVariegation = 55
     }
 
     // Stable species/allele seed; no per-instance materials, random tick state,
@@ -49,7 +54,7 @@ namespace HorticultureNovelSeeds
     internal static class ProceduralPhenotypeUtility
     {
         internal static bool IsExplicitMode(ProceduralPhenotype mode) =>
-            ((int)mode >= 1 && (int)mode <= 5) || ((int)mode >= 16 && (int)mode <= 50);
+            ((int)mode >= 1 && (int)mode <= 5) || ((int)mode >= 16 && (int)mode <= 55);
         internal static bool IsCreativeMode(ProceduralPhenotype mode) => (int)mode >= 16 && (int)mode <= 35;
         internal static bool IsCultivarMode(ProceduralPhenotype mode) => (int)mode >= 36 && (int)mode <= 50;
 
@@ -72,7 +77,8 @@ namespace HorticultureNovelSeeds
                 uint hash = 2166136261;
                 foreach (char c in (comp.parent?.def?.defName ?? "") + ":" + chosen.defName)
                     hash = (hash ^ c) * 16777619u;
-                return new Vector4(mode, (hash & 65535u) / 65535f, strength, 1f);
+                float phase = DevelopmentalPhenotype.IsMode(mode) && comp.parent is RimWorld.Plant plant ? DevelopmentalPhenotype.Phase(plant.Growth) : 1f;
+                return new Vector4(mode, (hash & 65535u) / 65535f, strength, phase);
             }
         }
     }

@@ -23,6 +23,7 @@ namespace HorticultureNovelSeeds
         internal static readonly HashSet<int> MaskedPlants = new();
         internal static readonly HashSet<int> ProceduralPlants = new();
         internal static readonly HashSet<int> MaskFreeProceduralPlants = new();
+        internal static readonly HashSet<(int,int)> DevelopmentalPrints = new();
 #endif
 
         // Caller must prepare from the main-thread editor/load boundary, not a print.
@@ -56,6 +57,8 @@ namespace HorticultureNovelSeeds
 #if HNS_NATIVE_FIXTURE
                 if (pattern.x > 0f) { ProceduralPlants.Add(plant.thingIDNumber); MaskFreeProceduralPlants.Add(plant.thingIDNumber); }
                 PrintedPlants.Add(plant.thingIDNumber);
+                if (DevelopmentalPhenotype.IsMode((int)pattern.x) && material.GetVector("_HnsPattern").w == pattern.w)
+                    DevelopmentalPrints.Add((plant.thingIDNumber, DevelopmentalPhenotype.Band(plant.Growth)));
 #endif
                 return true;
             }

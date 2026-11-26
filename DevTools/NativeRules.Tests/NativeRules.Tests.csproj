@@ -9,5 +9,6 @@
     <Compile Include="../../Source/CultivationFacts.cs" Link="CultivationFacts.cs" />
     <Compile Include="../../Source/PlantFormMath.cs" Link="PlantFormMath.cs" />
     <Compile Include="../../Source/OrganSpriteMath.cs" Link="OrganSpriteMath.cs" />
+    <Compile Include="../../Source/DevelopmentalPhenotype.cs" Link="DevelopmentalPhenotype.cs" />
   </ItemGroup>
 </Project>

@@ -81,3 +81,8 @@ Console.WriteLine("Plant form geometry tests passed.");
     Require(OrganSpriteMath.Parts(Enumerable.Repeat(true,n*n).ToArray(),n,n,n*n,false).Count==0,"whole sprite rejected");
     Require(OrganSpriteMath.Compose(p,n,n,new(),OrganFormKind.PlumpFruit).SequenceEqual(p),"missing organ unchanged");
 }
+
+Require(DevelopmentalPhenotype.Band(.39f)==0 && DevelopmentalPhenotype.Band(.4f)==1 && DevelopmentalPhenotype.Band(.8f)==2,"three developmental boundaries");
+Require(!DevelopmentalPhenotype.Crossed(.42f,.78f)&&DevelopmentalPhenotype.Crossed(.8f,.3f),"stable within band and reset crossing");
+Require(DevelopmentalPhenotype.Phase(float.NaN)==0f&&DevelopmentalPhenotype.Phase(1f)==1f,"bounded finite phase");
+Require(!DevelopmentalPhenotype.IsMode(50)&&DevelopmentalPhenotype.IsMode(51)&&DevelopmentalPhenotype.IsMode(55)&&!DevelopmentalPhenotype.IsMode(56),"isolated mode range");
