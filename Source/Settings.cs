@@ -23,6 +23,7 @@ namespace HorticultureNovelSeeds
         public float exceptionalVarietyChance = 0.08f;
         public bool enableProduceVisuals = true;
         public bool enableBotanicalExpression = false;
+        public bool enableIndependentOrnamentalInheritance = false;
         public int minimumPaletteSize = 2;
         public int maximumPaletteSize = 5;
         public float allowedHueRangeDegrees = 140f;
@@ -67,6 +68,7 @@ namespace HorticultureNovelSeeds
             Scribe_Values.Look(ref exceptionalVarietyChance, "exceptionalVarietyChance", 0.08f);
             Scribe_Values.Look(ref enableProduceVisuals, "enableProduceVisuals", true);
             Scribe_Values.Look(ref enableBotanicalExpression, "enableBotanicalExpression", false);
+            Scribe_Values.Look(ref enableIndependentOrnamentalInheritance, "enableIndependentOrnamentalInheritance", false);
             Scribe_Values.Look(ref minimumPaletteSize, "minimumPaletteSize", 2);
             Scribe_Values.Look(ref maximumPaletteSize, "maximumPaletteSize", 5);
             Scribe_Values.Look(ref allowedHueRangeDegrees, "allowedHueRangeDegrees", 140f);
@@ -117,6 +119,7 @@ namespace HorticultureNovelSeeds
             exceptionalVarietyChance = other.exceptionalVarietyChance;
             enableProduceVisuals = other.enableProduceVisuals;
             enableBotanicalExpression = other.enableBotanicalExpression;
+            enableIndependentOrnamentalInheritance = other.enableIndependentOrnamentalInheritance;
             minimumPaletteSize = other.minimumPaletteSize;
             maximumPaletteSize = other.maximumPaletteSize;
             allowedHueRangeDegrees = other.allowedHueRangeDegrees;
@@ -202,6 +205,7 @@ namespace HorticultureNovelSeeds
 
         public void ResetAll()
         {
+            enableIndependentOrnamentalInheritance=false;
             globalMutationChance = NovelSeedUtility.SpontaneousMutationChance;
             globalCrossPollinationChance = NovelSeedUtility.DefaultCrossPollinationChance;
             minimumDonorGrowth = NovelSeedUtility.DefaultMinimumDonorGrowth;

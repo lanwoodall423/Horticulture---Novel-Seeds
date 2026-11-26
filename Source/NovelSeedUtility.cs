@@ -280,24 +280,37 @@ namespace HorticultureNovelSeeds
             if (nutritious != null) replacements.Add(nutritious);
             replacements.AddRange(CrossPollinationCosmeticTraits(selected.traits, donor.traits, plant.def));
 
-            List<VarietyTraitDef> candidates = donor.traits
-                .Where(trait => trait != null && ExpressionEligible(trait,plant.def,settings) && !IsCosmeticCrossPollinationTrait(trait)
-                    && !selected.traits.Any(existing => SameConfigGroup(existing, trait))
-                    && !replacements.Any(existing => SameConfigGroup(existing, trait))).Distinct().ToList();
-            int usedMechanicalSlots = MechanicalCrossPollinationTraitCount(new[] { nutritious });
-            List<VarietyTraitDef> additions = replacements.ToList();
-            List<VarietyTraitDef> inheritedForBalance = selected.traits
-                .Where(existing => !replacements.Any(replacement => SameConfigGroup(existing, replacement)))
-                .Concat(replacements).ToList();
-            if (usedMechanicalSlots < Mathf.Clamp(maximumSlots, 1, 10) && candidates.Count > 0)
-                additions.AddRange(CrossPollinatedTraitSubset(inheritedForBalance, candidates, maximumSlots,
-                    usedMechanicalSlots, settings, exceptional));
+            List<VarietyTraitDef> additions = CrossPollinationAdditions(selected.traits,donor.traits,plant.def,settings,exceptional,maximumSlots,nutritious,replacements);
             if (additions.Count == 0) return false;
             List<VarietyTraitDef> combined = selected.traits.Where(existing => !replacements.Any(replacement => SameConfigGroup(existing, replacement)))
                 .Concat(additions).Where(trait => trait != null).Distinct().ToList();
             if (GameComponent_NovelSeeds.Instance?.FindMatchingVariety(plant.def, combined) != null) return false;
             comp.SetCrossPollinatedTraits(additions, donor);
             return comp.CrossPollinated;
+        }
+
+        // Keep the legacy selection path identical while the independent
+        // option is off. Resolve mechanical slots first, so ornamental donors
+        // do not change the choices or RNG draws in that event's mechanical path.
+        internal static List<VarietyTraitDef> CrossPollinationAdditions(List<VarietyTraitDef> selected,List<VarietyTraitDef> donor,ThingDef crop,NovelSeedsSettings settings,bool exceptional,int maximumSlots,VarietyTraitDef nutritious,List<VarietyTraitDef> replacements)
+        {
+            var candidates=donor.Where(trait=>trait!=null&&ExpressionEligible(trait,crop,settings)&&!IsCosmeticCrossPollinationTrait(trait)
+                &&!selected.Any(existing=>SameConfigGroup(existing,trait))&&!replacements.Any(existing=>SameConfigGroup(existing,trait))).Distinct().ToList();
+            int usedMechanicalSlots=MechanicalCrossPollinationTraitCount(new[]{nutritious});
+            var additions=replacements.ToList();
+            var inherited=selected.Where(existing=>!replacements.Any(replacement=>SameConfigGroup(existing,replacement))).Concat(replacements).ToList();
+            bool independent=OrnamentalInheritance.Enabled(settings,crop);
+            var mechanical=independent?candidates.Where(t=>!OrnamentalInheritance.Pure(t)).ToList():candidates;
+            if(usedMechanicalSlots<Mathf.Clamp(maximumSlots,1,10)&&mechanical.Count>0)
+                additions.AddRange(CrossPollinatedTraitSubset(inherited,mechanical,maximumSlots,usedMechanicalSlots,settings,exceptional));
+            if(independent)
+            {
+                var existing=inherited.Concat(additions).Distinct().ToList();
+                var ornamental=candidates.Where(OrnamentalInheritance.Pure).Where(t=>!existing.Any(e=>SameConfigGroup(e,t))).ToList();
+                if(ornamental.Count>0)
+                    additions.AddRange(CrossPollinatedTraitSubset(existing,ornamental,OrnamentalInheritance.MaximumAdditions,0,settings,exceptional));
+            }
+            return additions;
         }
 
         private static List<CrossPollinationDonorCandidate> CollectCrossPollinationDonors(Plant recipient,

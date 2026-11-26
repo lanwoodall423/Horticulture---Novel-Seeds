@@ -162,8 +162,8 @@ namespace HorticultureNovelSeeds
             List<string> categories = settings.TraitGroupNames().ToList();
             List<VarietyTraitDef> shownTraits = FilterTraits(allTraits, globalTraitSearch, settings);
             float contentHeight = showAdvancedGeneralSettings
-                ? 1220f + Mathf.CeilToInt(categories.Count / 2f) * 32f + TraitGroupsHeight(shownTraits, settings, OpenGlobalCategories, expandedGlobalTrait, ExpandedGlobalHeight, 124f, globalTraitSearch)
-                : 450f;
+                ? 1280f + Mathf.CeilToInt(categories.Count / 2f) * 32f + TraitGroupsHeight(shownTraits, settings, OpenGlobalCategories, expandedGlobalTrait, ExpandedGlobalHeight, 124f, globalTraitSearch)
+                : 510f;
             BeginPage(rect, contentHeight, out Rect view);
             float y = 0f;
             DrawPageTitle(view, ref y, "HNS_SettingsTitle".Translate(), "HNS_SettingsSubtitle".Translate());
@@ -183,6 +183,11 @@ namespace HorticultureNovelSeeds
             var expressionToggle=new Rect(0f,y,view.width,28f);
             Widgets.CheckboxLabeled(expressionToggle,"Botanical Expression (beta)",ref settings.enableBotanicalExpression);
             TooltipHandler.TipRegion(expressionToggle,"Enable qualified multi-channel appearance genetics for corn, cotton and daylily. Legacy appearances and gameplay effects are retained. Other species and experimental traits are deferred.");
+            y+=36f;
+            var ornamentToggle=new Rect(0f,y,view.width,28f);
+            if(settings.enableBotanicalExpression)Widgets.CheckboxLabeled(ornamentToggle,"Independent ornamental inheritance (beta)",ref settings.enableIndependentOrnamentalInheritance);
+            else Widgets.Label(ornamentToggle,"Independent ornamental inheritance requires Botanical Expression.");
+            TooltipHandler.TipRegion(ornamentToggle,"On a successful cross of qualified species, allow one compatible, purely ornamental donor trait separately from the existing mechanical budget. The event chance, color inheritance, balance rules and additional mechanical slot chances remain unchanged. Existing cultivars are not rewritten.");
             y+=36f;
             Rect advancedButton = new Rect(0f, y, view.width, 32f);
             if (Widgets.ButtonText(advancedButton, (showAdvancedGeneralSettings ? "HNS_SettingsAdvancedHide" : "HNS_SettingsAdvancedShow").Translate()))
