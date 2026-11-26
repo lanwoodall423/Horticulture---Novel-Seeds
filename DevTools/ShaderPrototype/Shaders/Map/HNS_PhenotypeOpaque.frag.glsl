@@ -1,6 +1,6 @@
 #version 450
-// Opaque, nonseasonal whole-plant prototype. Existing CPU path owns masked,
-// translucent and seasonal sources. The vertex stage is the installed Core program.
+// Opaque nonseasonal phenotype. R/G/B mask channels are mutually exclusive.
+// The installed vanilla plant vertex stage preserves the wind inputs.
 layout(location = 1) in vec2 vUv;
 layout(location = 0) out vec4 outColor;
 layout(set = 2, binding = 0) uniform MaterialUniforms
@@ -11,10 +11,17 @@ layout(set = 2, binding = 0) uniform MaterialUniforms
     vec4 _HnsTint; // @default = vec4(1.0, 1.0, 1.0, 1.0)
     vec4 _HnsControls; // @default = vec4(0.0, 1.0, 1.0, 1.0)
     float _HnsDullness; // @default = 0.0
+    float _HnsMaskEnabled; // @default = 0.0
+    vec4 _HnsTint1;
+    vec4 _HnsControls1;
+    float _HnsDullness1;
+    vec4 _HnsTint2;
+    vec4 _HnsControls2;
+    float _HnsDullness2;
 } uMaterial;
 layout(set = 2, binding = 1) uniform sampler2D _MainTex;
+layout(set = 2, binding = 2) uniform sampler2D _HnsMask;
 
-// Match PlantVisualColorUtility's HSV and outline-strength semantics.
 vec3 toHsv(vec3 rgb)
 {
     float hi = max(rgb.r, max(rgb.g, rgb.b));
@@ -37,13 +44,9 @@ vec3 fromHsv(vec3 hsv)
     return hsv.z * mix(vec3(1.0), wave, hsv.y);
 }
 
-void main()
+vec3 compose(vec3 src, vec3 tint, vec4 controls, float dullness)
 {
-    vec4 src = texture(_MainTex, vUv * uMaterial._MainTex_ST.zw + uMaterial._MainTex_ST.xy);
-    if (src.a < 0.35) discard;
-    vec3 hsv = toHsv(src.rgb);
-    vec4 controls = uMaterial._HnsControls;
-    vec3 tint = uMaterial._HnsTint.rgb;
+    vec3 hsv = toHsv(src);
     float h = fract(hsv.x + controls.x);
     float s = clamp(hsv.y * controls.y, 0.0, 1.0);
     float tintMax = max(tint.r, max(tint.g, tint.b));
@@ -53,11 +56,34 @@ void main()
     {
         vec3 th = toHsv(clamp(tint, 0.0, 1.0));
         float delta = fract(th.x - h + 0.5) - 0.5;
+        if (delta == -0.5) delta = 0.5; // Mathf.DeltaAngle tie convention
         h = fract(h + delta * chroma);
         s = mix(s, max(s, th.y), chroma);
     }
-    s *= mix(1.0, 0.35, clamp(uMaterial._HnsDullness, 0.0, 1.0));
+    s *= mix(1.0, 0.35, clamp(dullness, 0.0, 1.0));
     float v = clamp(((hsv.z - 0.5) * controls.w + 0.5) * controls.z * max(0.0, tintMax), 0.0, 1.0);
     float outline = mix(0.12, 1.0, smoothstep(0.06, 0.34, hsv.z));
-    outColor = vec4(mix(src.rgb, fromHsv(vec3(h, clamp(s, 0.0, 1.0), v)), outline), src.a);
+    return mix(src, fromHsv(vec3(h, clamp(s, 0.0, 1.0), v)), outline);
+}
+
+void main()
+{
+    vec2 uv = vUv * uMaterial._MainTex_ST.zw + uMaterial._MainTex_ST.xy;
+    vec4 src = texture(_MainTex, uv);
+    if (src.a < 0.35) discard;
+    vec3 rgb = src.rgb;
+    if (uMaterial._HnsMaskEnabled < 0.5)
+        rgb = compose(rgb, uMaterial._HnsTint.rgb, uMaterial._HnsControls, uMaterial._HnsDullness);
+    else
+    {
+        vec3 mask = texture(_HnsMask, uv).rgb;
+        if (mask.r > 0.5)
+            rgb = compose(rgb, uMaterial._HnsTint.rgb, uMaterial._HnsControls, uMaterial._HnsDullness);
+        else if (mask.g > 0.5)
+            rgb = compose(rgb, uMaterial._HnsTint1.rgb, uMaterial._HnsControls1, uMaterial._HnsDullness1);
+        else if (mask.b > 0.5)
+            rgb = compose(rgb, uMaterial._HnsTint2.rgb, uMaterial._HnsControls2, uMaterial._HnsDullness2);
+        // Unassigned pixels remain exactly as in the source.
+    }
+    outColor = vec4(rgb, src.a);
 }

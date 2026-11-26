@@ -1,53 +1,101 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using RimWorld;
 using UnityEngine;
 using Verse;
 
 namespace HorticultureNovelSeeds
 {
-    // Experimental, opt-in only from the isolated native fixture. No default
-    // activation or shader assets in the ordinary candidate.
+    // Experimental, opt-in only from the isolated native fixture.
     internal static class WaylithPhenotypeShader
     {
         internal const string DefName = "HNS_PhenotypeOpaque";
-        internal const int MaterialLimit = 128;
+        internal const int MaterialLimit = 128, MaskLimit = 64;
         internal static bool Enabled { get; set; }
         private static bool unavailable;
         private static readonly Dictionary<MaterialKey, Material> materials = new();
+        private static readonly Dictionary<(ThingDef, int), PreparedMask> masks = new();
         internal static int MaterialCount => materials.Count;
+        internal static int MaskCount => masks.Count;
 #if HNS_NATIVE_FIXTURE
         internal static readonly HashSet<int> PrintedPlants = new();
+        internal static readonly HashSet<int> MaskedPlants = new();
 #endif
+
+        // Caller must prepare from the main-thread editor/load boundary, not a print.
+        internal static bool PrepareMask(ThingDef crop, int variation)
+        {
+            if (!Enabled || crop == null || masks.Count >= MaskLimit) return false;
+            var key = (crop, variation);
+            if (masks.ContainsKey(key)) return false; // no disposal/eviction of referenced textures
+            var layers = PlantMaskUtility.LayersForVariation(crop, variation, false);
+            var source = PlantMaskUtility.TextureForVariation(crop, variation) as Texture2D;
+            if (source == null || layers == null || layers.Count != 3 || layers.Any(l => l == null)) return false;
+            // Shared-manual resolution returns clones; do not qualify a mutable
+            // or ambiguous identity by hash alone.
+            var repeated = PlantMaskUtility.LayersForVariation(crop, variation, false);
+            if (repeated == null || repeated.Count != 3 || Enumerable.Range(0, 3).Any(i => !ReferenceEquals(repeated[i], layers[i]))) return false;
+            var texture = PackedPhenotypeMask.Create(layers);
+            masks.Add(key, new PreparedMask(source, texture, layers.ToArray(), layers.Select(l => l.ContentHash).ToArray()));
+            return true;
+        }
 
         internal static bool TryForPlant(Material source, PlantVisualParameters visual, Plant plant,
             int isolatedMaskLayer, int variationIndex, out Material material)
         {
             material = null;
-            if (!Enabled || isolatedMaskLayer != -2 || plant == null) return false;
-            // A mask changes the meaning of unassigned pixels. Never substitute
-            // whole-plant color just because shader materials are available.
-            if (PlantMaskUtility.LayersForVariation(plant.def, variationIndex, false) != null) return false;
-            if (!TryGet(source, visual, out material)) return false;
+            if (!Enabled || isolatedMaskLayer != -2 || plant == null || source == null) return false;
+            var layers = PlantMaskUtility.LayersForVariation(plant.def, variationIndex, false);
+            if (layers == null)
+            {
+                if (!TryGet(source, visual, out material)) return false;
+            }
+            else
+            {
+                if (!masks.TryGetValue((plant.def, variationIndex), out var prepared) ||
+                    !prepared.Matches(source.mainTexture, layers)) return false;
+                var comp = plant.TryGetComp<CompPlantVariety>();
+                var a = NovelSeedUtility.ResolvePlantTextureParameters(comp, 0);
+                var b = NovelSeedUtility.ResolvePlantTextureParameters(comp, 1);
+                var c = NovelSeedUtility.ResolvePlantTextureParameters(comp, 2);
+#if HNS_NATIVE_FIXTURE
+                NativeShaderProbe.TryOverrideMaskStyles(plant, ref a, ref b, ref c);
+#endif
+                if (!TryGetMasked(source, prepared.Texture, a, b, c, out material)) return false;
+#if HNS_NATIVE_FIXTURE
+                MaskedPlants.Add(plant.thingIDNumber);
+#endif
+            }
 #if HNS_NATIVE_FIXTURE
             PrintedPlants.Add(plant.thingIDNumber);
 #endif
             return true;
         }
 
-        internal static bool TryGet(Material source, PlantVisualParameters visual, out Material material)
+        internal static bool TryGet(Material source, PlantVisualParameters visual, out Material material) =>
+            TryGetCore(source, null, visual, PlantVisualParameters.Default, PlantVisualParameters.Default, out material);
+
+        internal static bool TryGetMasked(Material source, Texture2D mask, PlantVisualParameters a,
+            PlantVisualParameters b, PlantVisualParameters c, out Material material)
+        {
+            material = null;
+            return mask != null && TryGetCore(source, mask, a, b, c, out material);
+        }
+
+        private static bool TryGetCore(Material source, Texture2D mask, PlantVisualParameters a,
+            PlantVisualParameters b, PlantVisualParameters c, out Material material)
         {
             material = null;
             if (!Enabled || unavailable || source == null || source.shader != ShaderDatabase.CutoutPlant ||
                 source.mainTexture is not Texture2D texture || !source.HasProperty("_FallBehaviorEnabled") ||
-                source.GetFloat("_FallBehaviorEnabled") != 0f || visual.opacity != 1f) return false;
-            var tint = new Vector4(visual.tintRed, visual.tintGreen, visual.tintBlue, 1f);
-            var controls = new Vector4(visual.hueShift, visual.saturation, visual.brightness, visual.contrast);
-            if (!Finite(tint) || !Finite(controls) || !float.IsFinite(visual.dullness)) return false;
+                source.GetFloat("_FallBehaviorEnabled") != 0f || a.opacity != 1f || b.opacity != 1f || c.opacity != 1f) return false;
+            var s0 = new Style(a); var s1 = new Style(b); var s2 = new Style(c);
+            if (!s0.Valid || !s1.Valid || !s2.Valid) return false;
             var key = new MaterialKey(source, texture, source.renderQueue, source.mainTextureScale,
-                source.mainTextureOffset, tint, controls, visual.dullness);
+                source.mainTextureOffset, mask, s0, s1, s2);
             if (materials.TryGetValue(key, out material)) return true;
-            if (materials.Count >= MaterialLimit) return false; // bounded lifetime: wind registry retains materials
+            if (materials.Count >= MaterialLimit) return false;
             Material candidate = null;
             try
             {
@@ -57,6 +105,14 @@ namespace HorticultureNovelSeeds
                     !shader.HasProperty(Shader.PropertyToID("_HnsControls")) ||
                     !shader.HasProperty(Shader.PropertyToID("_HnsTint")) ||
                     !shader.HasProperty(Shader.PropertyToID("_HnsDullness")) ||
+                    !shader.HasProperty(Shader.PropertyToID("_HnsMaskEnabled")) ||
+                    !shader.HasProperty(Shader.PropertyToID("_HnsMask")) ||
+                    !shader.HasProperty(Shader.PropertyToID("_HnsTint1")) ||
+                    !shader.HasProperty(Shader.PropertyToID("_HnsControls1")) ||
+                    !shader.HasProperty(Shader.PropertyToID("_HnsDullness1")) ||
+                    !shader.HasProperty(Shader.PropertyToID("_HnsTint2")) ||
+                    !shader.HasProperty(Shader.PropertyToID("_HnsControls2")) ||
+                    !shader.HasProperty(Shader.PropertyToID("_HnsDullness2")) ||
                     !shader.HasProperty(Shader.PropertyToID("_SwayHead")))
                     throw new InvalidOperationException("Phenotype shader or material layout unavailable.");
                 candidate = new Material(shader)
@@ -67,11 +123,12 @@ namespace HorticultureNovelSeeds
                     mainTextureOffset = source.mainTextureOffset,
                     renderQueue = source.renderQueue
                 };
-                candidate.SetVector("_HnsTint", tint);
-                candidate.SetVector("_HnsControls", controls);
-                candidate.SetFloat("_HnsDullness", visual.dullness);
+                s0.Apply(candidate, "");
+                s1.Apply(candidate, "1");
+                s2.Apply(candidate, "2");
+                candidate.SetFloat("_HnsMaskEnabled", mask == null ? 0f : 1f);
+                candidate.SetTexture("_HnsMask", mask == null ? texture : mask);
                 candidate.SetFloat("_SwayHead", source.GetFloat("_SwayHead"));
-                // MaterialPool only registers vanilla CutoutPlant/TransparentPlant.
                 WindManager.Notify_PlantMaterialCreated(candidate);
                 materials.Add(key, candidate);
                 material = candidate;
@@ -88,7 +145,31 @@ namespace HorticultureNovelSeeds
 
         private static bool Finite(Vector4 value) => float.IsFinite(value.x) && float.IsFinite(value.y) &&
             float.IsFinite(value.z) && float.IsFinite(value.w);
+        private readonly record struct Style(Vector4 Tint, Vector4 Controls, float Dullness)
+        {
+            internal Style(PlantVisualParameters v) : this(new Vector4(v.tintRed, v.tintGreen, v.tintBlue, 1f),
+                new Vector4(v.hueShift, v.saturation, v.brightness, v.contrast), v.dullness) { }
+            internal bool Valid => Finite(Tint) && Finite(Controls) && float.IsFinite(Dullness);
+            internal void Apply(Material m, string suffix)
+            {
+                m.SetVector("_HnsTint" + suffix, Tint);
+                m.SetVector("_HnsControls" + suffix, Controls);
+                m.SetFloat("_HnsDullness" + suffix, Dullness);
+            }
+        }
         private readonly record struct MaterialKey(Material Source, Texture2D Texture, int Queue, Vector2 Scale,
-            Vector2 Offset, Vector4 Tint, Vector4 Controls, float Dullness);
+            Vector2 Offset, Texture2D Mask, Style A, Style B, Style C);
+        private sealed record PreparedMask(Texture2D Source, Texture2D Texture, VisualMaskLayerRecord[] Layers, int[] Hashes)
+        {
+            internal bool Matches(Texture source, IReadOnlyList<VisualMaskLayerRecord> layers)
+            {
+                if (!ReferenceEquals(Source, source) || layers.Count != 3) return false;
+                for (int i = 0; i < 3; i++)
+                    // Conservative: shared resolver clones are not eligible. Changed or
+                    // replaced layers fail closed until explicit re-preparation.
+                    if (!ReferenceEquals(layers[i], Layers[i]) || layers[i].ContentHash != Hashes[i]) return false;
+                return true;
+            }
+        }
     }
 }

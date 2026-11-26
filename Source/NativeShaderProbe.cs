@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using RimWorld;
+using LudeonTK;
 using UnityEngine;
 using Verse;
 
 namespace HorticultureNovelSeeds
 {
     // An actual graphics-mode probe; no player settings or assets are touched.
+    [StaticConstructorOnStartup]
     internal static class NativeShaderProbe
     {
         private static readonly Dictionary<int, PlantVisualParameters> visuals = new();
@@ -22,6 +24,7 @@ namespace HorticultureNovelSeeds
         private static Map map;
         private static readonly List<Plant> probePlants = new();
         private static Material fieldMaterial;
+        private static readonly HashSet<int> maskedPlantIds = new();
         internal static bool TryGetVisual(Plant plant, out PlantVisualParameters visual) =>
             visuals.TryGetValue(plant.thingIDNumber, out visual);
 
@@ -33,6 +36,8 @@ namespace HorticultureNovelSeeds
                 WaylithPhenotypeShader.Enabled = true;
                 PixelProbe(root);
                 onStage("ShaderPixelParity");
+                MaskProbe(root);
+                onStage("ShaderMaskParity");
                 FallbackProbe();
                 onStage("ShaderFallback");
                 map = Find.CurrentMap;
@@ -51,29 +56,46 @@ namespace HorticultureNovelSeeds
                     record.disableAutoPlantMasks = prior;
                 }
                 Require(def != null, "a mask-free fixture crop");
+                ThingDef maskedDef = null;
+                int prepared = 0;
+                foreach (string name in new[] { "Plant_Corn", "Plant_Strawberry", "Plant_Rice", "Plant_Cotton", "Plant_Healroot", "Plant_Psychoid" })
+                {
+                    var option = DefDatabase<ThingDef>.GetNamedSilentFail(name);
+                    if (option == null || option == def || !PlantMaskUtility.HasActiveMasks(option)) continue;
+                    var normal = Enumerable.Range(0, PlantMaskUtility.VariationCount(option)).Where(i => PlantMaskUtility.VariationLabel(option, i).StartsWith("Normal", StringComparison.Ordinal)).ToArray();
+                    if (normal.Length == 0) continue;
+                    int count = normal.Count(i => WaylithPhenotypeShader.PrepareMask(option, i));
+                    if (count != normal.Length) continue;
+                    maskedDef = option; prepared = count; break;
+                }
+                Require(maskedDef != null && prepared > 0, "stable resolved crop masks");
                 var origin = map.mapPawns.FreeColonistsSpawned.First().Position;
                 var start = GenRadial.RadialCellsAround(origin, 35, true).First(c =>
-                    Enumerable.Range(0, 6).All(i => Available(c + new IntVec3(i % 3 * 2, 0, i / 3 * 2))));
+                    Enumerable.Range(0, 12).All(i => Available(c + new IntVec3(i % 3 * 2, 0, i / 3 * 2))));
                 var color = PlantVisualParameters.Default;
                 color.tintRed = .94f; color.tintGreen = .16f; color.tintBlue = .83f;
                 color.saturation = 1.25f;
-                for (int i = 0; i < 6; i++)
+                for (int i = 0; i < 12; i++)
                 {
-                    var plant = (Plant)ThingMaker.MakeThing(def);
-                    plant.sown = true; plant.Growth = i == 2 || i == 5 ? .45f : 1f;
+                    var plant = (Plant)ThingMaker.MakeThing(i < 6 ? def : maskedDef);
+                    plant.sown = true; plant.Growth = i < 6 && i % 3 == 2 ? .45f : 1f;
                     GenSpawn.Spawn(plant, start + new IntVec3(i % 3 * 2, 0, i / 3 * 2), map);
-                    if (i < 3) continue; // untouched vanilla comparison row
+                    if (i < 3 || (i >= 6 && i < 9)) continue; // vanilla comparison rows
+                    if (i >= 9) maskedPlantIds.Add(plant.thingIDNumber);
                     probePlants.Add(plant); visuals.Add(plant.thingIDNumber, color);
                     plant.DirtyMapMesh(map);
                 }
                 var mat = probePlants[0].Graphic.MatSingleFor(probePlants[0]);
                 Require(WaylithPhenotypeShader.TryGet(mat, color, out fieldMaterial), "crop shader material");
                 Require(ReferenceEquals(fieldMaterial.mainTexture, mat.mainTexture), "base texture retained");
-                CameraJumper.TryJumpAndSelect(probePlants[1]);
+                Find.WindowStack.TryRemove(typeof(EditWindow_Log), false);
+                Find.Selector.ClearSelection();
+                Find.CameraDriver.JumpToCurrentMapLoc(start + new IntVec3(2,0,3));
+                Find.CameraDriver.SetRootSize(10f);
                 capturePath = Path.Combine(root, "HNS-shader-field.png");
                 Find.TickManager.CurTimeSpeed = TimeSpeed.Normal;
                 active = true;
-                Log.Message("[HNS ShaderProbe] field crop=" + def.defName + "; styled=3; vanilla=3");
+                Log.Message("[HNS ShaderProbe] field crop=" + def.defName + "; whole=3; masked=" + maskedDef.defName + "; styledMasked=3; vanilla=6; preparedMasks=" + prepared);
             }
             catch (Exception e) { End("FAIL", e.ToString()); }
         }
@@ -87,10 +109,11 @@ namespace HorticultureNovelSeeds
             try
             {
                 frames++;
-                if (!requested && frames >= 90 && probePlants.All(p => WaylithPhenotypeShader.PrintedPlants.Contains(p.thingIDNumber)))
+                if (!requested && frames >= 90 && probePlants.All(p => WaylithPhenotypeShader.PrintedPlants.Contains(p.thingIDNumber)) && maskedPlantIds.All(id => WaylithPhenotypeShader.MaskedPlants.Contains(id)))
                 {
                     Require(WaylithPhenotypeShader.MaterialCount <= WaylithPhenotypeShader.MaterialLimit, "bounded shader materials");
                     Find.TickManager.CurTimeSpeed = TimeSpeed.Paused;
+                    if (Find.WindowStack.TryRemove(typeof(EditWindow_Log), false)) { frames = 0; return; }
                     ScreenCapture.CaptureScreenshot(capturePath);
                     requested = true;
                     Log.Message("[HNS ShaderProbe] requested field capture; materials=" + WaylithPhenotypeShader.MaterialCount +
@@ -99,7 +122,7 @@ namespace HorticultureNovelSeeds
                 if (requested && File.Exists(capturePath) && new FileInfo(capturePath).Length > 1000)
                 {
                     onStage("ShaderField");
-                    End("PASS", "GPU pixel parity, guarded fallback, field material and screenshot");
+                    End("PASS", "GPU pixel parity, packed mask parity, guarded fallback, field material and screenshot");
                 }
                 else if (frames > 900) throw new InvalidOperationException("field print or screenshot timeout");
             }
@@ -181,6 +204,55 @@ namespace HorticultureNovelSeeds
         }
 
         private static float Distance(Color a, Color b) => Math.Max(Math.Abs(a.r-b.r), Math.Max(Math.Abs(a.g-b.g), Math.Abs(a.b-b.b)));
+
+        private static PlantVisualParameters[] MaskStyles()
+        {
+            var a = PlantVisualParameters.Default; a.tintRed = .95f; a.tintGreen = .12f; a.tintBlue = .12f;
+            var b = PlantVisualParameters.Default; b.tintRed = .13f; b.tintGreen = .20f; b.tintBlue = .95f;
+            var c = PlantVisualParameters.Default; c.tintRed = .95f; c.tintGreen = .85f; c.tintBlue = .12f;
+            return new[] { a, b, c };
+        }
+        internal static void TryOverrideMaskStyles(Plant plant, ref PlantVisualParameters a, ref PlantVisualParameters b, ref PlantVisualParameters c)
+        {
+            if (!maskedPlantIds.Contains(plant.thingIDNumber)) return;
+            var styles = MaskStyles(); a = styles[0]; b = styles[1]; c = styles[2];
+        }
+
+        private static void MaskProbe(string root)
+        {
+            var layers = new[] { new VisualMaskLayerRecord(), new VisualMaskLayerRecord(), new VisualMaskLayerRecord() };
+            int n = VisualMaskLayerRecord.Resolution;
+            for (int y = 0; y < n; y++)
+                for (int x = 0; x < n; x++)
+                {
+                    int channel = (x >= n / 2 ? 1 : 0) + (y < n / 2 ? 2 : 0);
+                    if (channel < 3) layers[channel].PaintPixel(x, y, true);
+                    if (channel == 0) layers[1].PaintPixel(x, y, true); // precedence
+                }
+            var mask = PackedPhenotypeMask.Create(layers);
+            var tex = new Texture2D(64, 64, TextureFormat.RGBA32, false, true) { filterMode = FilterMode.Point };
+            tex.SetPixels(Enumerable.Repeat(new Color(.20f,.72f,.24f,1f), 64 * 64).ToArray()); tex.Apply();
+            var source = new Material(ShaderDatabase.CutoutPlant) { mainTexture = tex, renderQueue = 2900 };
+            source.SetFloat("_FallBehaviorEnabled", 0f);
+            var styles = MaskStyles();
+            Require(WaylithPhenotypeShader.TryGetMasked(source, mask, styles[0], styles[1], styles[2], out var material), "packed mask shader");
+            Require(ReferenceEquals(tex, material.mainTexture) && ReferenceEquals(mask, material.GetTexture("_HnsMask")), "shared source and mask textures");
+            var result = Render(tex, material, Path.Combine(root, "HNS-shader-mask.png"));
+            var input = (Color)(Color32)new Color(.20f,.72f,.24f,1f);
+            float error = 0;
+            for (int i = 0; i < 4; i++)
+            {
+                var v = i < 3 ? styles[i] : PlantVisualParameters.Default;
+                var expected = i == 3 ? input : PlantVisualColorUtility.Apply(input, v.tintRed, v.tintGreen,
+                    v.tintBlue, v.hueShift, v.saturation, v.brightness, v.contrast, v.opacity, v.dullness);
+                error = Math.Max(error, Distance(expected, result[i]));
+            }
+            Log.Message("[HNS ShaderProbe] packed mask maxError=" + error.ToString("0.000") +
+                "; result=" + string.Join(" | ", result.Select(c => c.ToString())));
+            Require(error <= .06f, "packed mask RGB/neutral/overlap/Y mapping parity");
+            var transparent = styles[1]; transparent.opacity = .5f;
+            Require(!WaylithPhenotypeShader.TryGetMasked(source, mask, styles[0], transparent, styles[2], out _), "masked translucency fallback");
+        }
 
         private static void FallbackProbe()
         {
