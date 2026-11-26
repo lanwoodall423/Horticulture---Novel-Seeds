@@ -1359,3 +1359,25 @@ run e164fcfe4d584245a6adb6383cdeddd4; no new animation evidence.
 Normal game data preserved. Multi-frame path remains unqualified.
 
 Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/5c43ca65373a5724a00384786b5ed6a2c5919aa7
+
+### Botanical Sculpture: five parametric branch rigs
+
+Five zero-weight cosmetic candidates (Circinate Frond, Climbing Helix,
+Umbel Crown, Pendant Raceme, Crested Fan) add species-colored curved
+stems, leaf blades, and source-derived reproductive stamps on a bounded
+padded canvas, retaining original occupied sprite pixels. Shared native
+atlas materials and a 1.5x expanded plane; no extra mesh planes.
+
+Full-window capture in run 2337343640c446598abd406c920cd010 timed out.
+Replacement native GPU readback run e3c7d60e2b694baaaff9ce482d4fdb0a,
+source 4ec61e5, passed all 12 stages: 18 same plants, 15 modified,
+135 accepted shader/phase states and 135 real GPU frames, 15 matched
+source controls, nine distinct frame hashes per specimen. Source
+orientation and direct interior RGB error passed (max 0.00008807305).
+Both builds/rule tests passed; player data preserved. GIFs are
+off-screen material readbacks at nine accelerated controlled phases,
+not map screenshots or natural growth. Ordinary gameplay activation,
+combined effects, wind/camera behavior and dense fields unqualified.
+Some extended branches reach the bounded canvas and can look stylized.
+
+Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/055bf31cac961922adde18bc4b63c6a279686e8f
