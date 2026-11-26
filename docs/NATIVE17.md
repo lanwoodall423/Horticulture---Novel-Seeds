@@ -344,3 +344,51 @@ Player log SHA256: 9F8459281A8328060A9760D008ED1715425630DF280848C784490A3A27C41
 Reproduce with RimWorld closed:
 
     powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -PatternGarden
+
+## Full standing-plant visual catalog (2026-11-25)
+
+Owner requested restrained common traits and more dramatic rare/powerful
+traits, before a later gameplay catalog audit. Commit
+f89c6a92b9f394c2bba54851998c4bab3753b79c introduces appearance-only profiles
+for all 54 authored definitions and shared rules for generated colors,
+nutrition and synergy. No mechanical trait definitions or mutation weights
+changed. Art tiers are not new probability classes. Legacy publisher
+visual presets are stripped from the staged native package (180 nodes);
+explicit saved overrides are not rewritten. Dominant procedural motif
+combines with resolved geometry and regional color. No production shader
+activation or release.
+
+RimWorld 1.7.5014 rev1195, native AllPerformance run
+1fa9a2511a834db2aea32f76f36accd8: all nine stages passed. All 872 loaded
+HNS definitions have appearance profiles (54 authored, 818 generated).
+90 styled cases and 18 controls, 108 plants, six noon screenshots.
+Every concrete authored trait individually tested, all 20 nutrition
+levels, five synergy stat types, 15 representative color alleles, and
+five combined cultivars. Configuration roots are not assigned as cultivars.
+All 65 expected procedural cases reached GPU; 64 mask-free and one masked.
+Total renderer counts: 18 vanilla, 3 geometry/effects, 64 mask-free GPU
+procedural, 7 GPU whole, 16 GPU masked. 104 shader materials, 15 prepared
+mask textures. No Horticulture-specific error identified in the captured
+log. Build clean; 12 journal tests passed. All normal player preservation
+and test cleanup booleans true.
+
+Gallery and original screenshots, exact inventory and full appearance
+catalog:
+https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/0de7a6a7def8cfe59ce077305311bc3bac636f3e
+
+Labeled sheets crop the actual screenshots; no artwork retouched. Some
+incidental map items obscure plants; generated color/companion variants
+are sampled, not individually rendered exhaustively. Habitat and resource
+requirements were not gameplay-qualified by this garden. Standing-plant
+rendering is the scope; harvested produce, editor parity, natural breeding,
+ordinary activation and performance remain open. Owner visual approval and
+mechanical trait audit remain separate.
+
+DLL SHA256: 5DAC5D9DB7C631A6F936F4BBD4FF75BCBEACABF805E2B65EA8243149E81F3208.
+Receipt SHA256: 8824A8A0C3FCBAA007F4DC2EBA629C8B394A5EB05BCA46FBB9B3AEF6B58C55B6.
+Player log SHA256: 8F4E4694C7326EF1C23DD9E424D8963A37A1216F0FBACE2A3B506D53580A4A36.
+Catalog SHA256: 4DBFEEB2B5EC1922C9BA8B83E9B8A63F311EECBA55DE7822C5B21EA6EEB09449.
+
+Reproduce with RimWorld closed:
+
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -CatalogGarden
