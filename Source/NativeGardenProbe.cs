@@ -600,9 +600,10 @@ namespace HorticultureNovelSeeds
                     Log.Message("[HNS Garden] screenshot " + (panel+1) + "; local hour=" + GenLocalDate.HourOfDay(map) +
                         "; sky glow=" + map.skyManager.CurSkyGlow + "; shader materials=" + WaylithPhenotypeShader.MaterialCount +
                         "; prepared masks=" + WaylithPhenotypeShader.MaskCount);
-                    ScreenCapture.CaptureScreenshot(capture);
+                    if(sculptureGarden)capture=CaptureSculptureGpu();
+                    else ScreenCapture.CaptureScreenshot(capture);
                 }
-                if (capture != null && File.Exists(capture) && new FileInfo(capture).Length > 1000 && ++captureAge >= 30)
+                if (capture != null && File.Exists(capture) && new FileInfo(capture).Length > (sculptureGarden?500:1000) && ++captureAge >= 30)
                 {
                     if(panel==PanelCount-1&&(formGarden||mosaicGarden||groundGarden))
                     {
@@ -645,7 +646,7 @@ namespace HorticultureNovelSeeds
                     {
                         WriteInventory();
                         onStage("GardenInventory");
-                        End("PASS", sculptureGarden ? "five branch rigs; nine actual native developmental frames" : lifeSuiteGarden ? "20 experimental visual candidates; 4 paired gardens; actual renderer and layer acceptance" : vascularGarden ? "18 same plants; 45 live tissue render states; bounded anatomy maps; native day/night/day controls" : chronicleGarden ? "90 mature plants in identical empty plots; 75 historical morphologies; 225 actual growth-band observations; Scribe values" : neighborhoodGarden ? "18 same plants; five lateral neighbor states; native rooted mesh response and automatic invalidation" : mosaicGarden ? "90 plants; 75 same-cultivar instances; per-organ mosaics, native mesh seed and remesh stability" : articulationGarden ? "18 same plants; five native light/rain/wind states; local organ atlas material checks; explicit fallbacks" : groundGarden ? "36 plants; 26 ground detail planes, four explicit nonflower fallbacks; two daylight screenshots" : poseGarden ? "18 same plants; five actual light/rain states; 75 pose material checks and stable IDs" : architectureGarden ? "36 plants; 30 modular canopy cases on six species; two daylight screenshots; explicit fallback for unsupported modules" : detailGarden ? "18 same plants; 12 topology cases and three night overlays; day-night-day screenshots" : surfaceGarden ? "18 same mature plants; 15 surface finishes; four native lighting/weather states; 60 verified material states" : windGarden ? "18 same mature plants; 15 genetic wind materials; 12 actual wind-phase captures; 180 material-phase checks" : developmentGarden ? "18 same plants across three growth stages; 45 verified cultivar-stage GPU prints; 30 automatic mesh invalidations; three daylight screenshots" : organGarden ? "36 plants; 30 organ-form cases; eligible components composited; uncertain organs fall back; two daylight screenshots" : formGarden ? "36 plants; 30 genetically deformed cultivars; 15 pure morphology and 15 morphology plus pigmentation; two daylight screenshots" : cultivarGarden ? "54 plants; 15 organ-aware botanical candidates across three species; three daylight screenshots; 45 mask-free GPU cultivars" : creativeGarden ? "90 garden plants; 25 refined botanical traits across three species; five daylight screenshots; 75 mask-free GPU cultivars" : catalogGarden ? "108 garden plants; 90 baseline trait cases; six daylight screenshots; every loaded HNS appearance rule covered" : "72 garden plants, 60 registered cultivars, 12 species, four daylight screenshots");
+                        End("PASS", sculptureGarden ? "five branch rigs; nine native GPU developmental previews and live material acceptance" : lifeSuiteGarden ? "20 experimental visual candidates; 4 paired gardens; actual renderer and layer acceptance" : vascularGarden ? "18 same plants; 45 live tissue render states; bounded anatomy maps; native day/night/day controls" : chronicleGarden ? "90 mature plants in identical empty plots; 75 historical morphologies; 225 actual growth-band observations; Scribe values" : neighborhoodGarden ? "18 same plants; five lateral neighbor states; native rooted mesh response and automatic invalidation" : mosaicGarden ? "90 plants; 75 same-cultivar instances; per-organ mosaics, native mesh seed and remesh stability" : articulationGarden ? "18 same plants; five native light/rain/wind states; local organ atlas material checks; explicit fallbacks" : groundGarden ? "36 plants; 26 ground detail planes, four explicit nonflower fallbacks; two daylight screenshots" : poseGarden ? "18 same plants; five actual light/rain states; 75 pose material checks and stable IDs" : architectureGarden ? "36 plants; 30 modular canopy cases on six species; two daylight screenshots; explicit fallback for unsupported modules" : detailGarden ? "18 same plants; 12 topology cases and three night overlays; day-night-day screenshots" : surfaceGarden ? "18 same mature plants; 15 surface finishes; four native lighting/weather states; 60 verified material states" : windGarden ? "18 same mature plants; 15 genetic wind materials; 12 actual wind-phase captures; 180 material-phase checks" : developmentGarden ? "18 same plants across three growth stages; 45 verified cultivar-stage GPU prints; 30 automatic mesh invalidations; three daylight screenshots" : organGarden ? "36 plants; 30 organ-form cases; eligible components composited; uncertain organs fall back; two daylight screenshots" : formGarden ? "36 plants; 30 genetically deformed cultivars; 15 pure morphology and 15 morphology plus pigmentation; two daylight screenshots" : cultivarGarden ? "54 plants; 15 organ-aware botanical candidates across three species; three daylight screenshots; 45 mask-free GPU cultivars" : creativeGarden ? "90 garden plants; 25 refined botanical traits across three species; five daylight screenshots; 75 mask-free GPU cultivars" : catalogGarden ? "108 garden plants; 90 baseline trait cases; six daylight screenshots; every loaded HNS appearance rule covered" : "72 garden plants, 60 registered cultivars, 12 species, four daylight screenshots");
                         return;
                     }
                     if(neighborhoodGarden)
@@ -708,7 +709,7 @@ namespace HorticultureNovelSeeds
                     MakePanel();
                     return;
                 }
-                if(sculptureGarden&&capture!=null&&!File.Exists(capture)&&frames%120==0)ScreenCapture.CaptureScreenshot(capture);
+
                 if (frames > 1200) throw new InvalidOperationException("garden print/capture timeout " + (panel+1));
             }
             catch (Exception e) { End("FAIL", e.ToString()); }
@@ -1058,6 +1059,87 @@ namespace HorticultureNovelSeeds
             Log.Message("[HNS LifeMotion] "+(panel+1)+"; "+LifeMotionFrames+" native frames");
             return true;
         }
+        private static readonly List<string> SculptureGpuEvidence=new(){"Frame\tSpecies\tColumn\tPlant ID\tMode\tWidth\tHeight\tSource RGB error\tMirrored source RGB error\tColored pixels\tSHA256"};
+        private static readonly Dictionary<int,HashSet<string>> SculptureGpuFrames=new();
+        private static readonly Dictionary<int,Color32[]> SculptureGpuOriginal=new();
+        private static Color32[] SculptureReadback(Texture source,Material mat,int w,int h,string path)
+        {
+            var old=RenderTexture.active;
+            var rt=RenderTexture.GetTemporary(w,h,0,RenderTextureFormat.ARGB32);
+            Texture2D read=null;
+            try
+            {
+                Graphics.Blit(Texture2D.blackTexture,rt);
+                Graphics.Blit(source,rt,mat,0);
+                RenderTexture.active=rt;
+                read=new Texture2D(w,h,TextureFormat.RGBA32,false);
+                read.ReadPixels(new Rect(0,0,w,h),0,0,false);read.Apply();
+                File.WriteAllBytes(path,read.EncodeToPNG());
+                return read.GetPixels32();
+            }
+            finally
+            {
+                RenderTexture.active=old;RenderTexture.ReleaseTemporary(rt);
+                if(read!=null)UnityEngine.Object.Destroy(read);
+            }
+        }
+        private static float SculptureSourceError(Color32[] src,Color32[] dst,int sw,int sh,int dw,int dh,bool flip)
+        {
+            int ox=(dw-sw)/2,oy=(dh-sh)/2,n=0;long e=0;
+            for(int y=1;y<sh-1;y++)for(int x=1;x<sw-1;x++)
+            {
+                var a=src[y*sw+x];
+                if(a.r+a.g+a.b<24)continue;
+                // Ignore cutout antialiasing at the silhouette margin.
+                if(src[y*sw+x-1].r+src[y*sw+x-1].g+src[y*sw+x-1].b<24||
+                   src[y*sw+x+1].r+src[y*sw+x+1].g+src[y*sw+x+1].b<24||
+                   src[(y-1)*sw+x].r+src[(y-1)*sw+x].g+src[(y-1)*sw+x].b<24||
+                   src[(y+1)*sw+x].r+src[(y+1)*sw+x].g+src[(y+1)*sw+x].b<24)continue;
+                var b=dst[(oy+(flip?sh-1-y:y))*dw+ox+x];
+                e+=Math.Max(Math.Abs(a.r-b.r),Math.Max(Math.Abs(a.g-b.g),Math.Abs(a.b-b.b)));n++;
+            }
+            return n==0?1f:e/(255f*n);
+        }
+        private static string CaptureSculptureGpu()
+        {
+            string first=null;
+            foreach(var row in inventory.Where(r=>r.Panel==panel+1&&r.Cultivar!=null))
+            {
+                var p=row.Plant;int id=p.thingIDNumber;
+                var pr=LifeSuiteExperiment.Prints[id];var m=pr.Base;
+                var source=m.mainTexture;int sw=source.width,sh=source.height,w=SculptureMath.Side(sw),h=SculptureMath.Side(sh);
+                string tag=p.def.defName+"-"+row.Column;
+                // These are real shader readbacks, not map screenshots. Freeze
+                // wind in the preview copy only; the live material was checked.
+                if(!SculptureGpuOriginal.TryGetValue(id,out var original))
+                {
+                    var control=new Material(ShaderDatabase.CutoutPlant){mainTexture=source,renderQueue=2900};
+                    control.SetFloat("_FallBehaviorEnabled",0f);control.SetFloat("_SwayHead",0f);
+                    try{original=SculptureReadback(source,control,sw,sh,Path.Combine(root,"HNS-garden-sculpture-control-"+tag+".png"));}
+                    finally{UnityEngine.Object.Destroy(control);}
+                    SculptureGpuOriginal.Add(id,original);
+                    SculptureGpuFrames.Add(id,new HashSet<string>());
+                }
+                string path=Path.Combine(root,$"HNS-garden-sculpture-gpu-{panel+1:D2}-{tag}.png");
+                var preview=new Material(m);preview.SetFloat("_SwayHead",0f);
+                Color32[] result;
+                try{result=SculptureReadback(source,preview,w,h,path);}
+                finally{UnityEngine.Object.Destroy(preview);}
+                float direct=SculptureSourceError(original,result,sw,sh,w,h,false);
+                float mirrored=SculptureSourceError(original,result,sw,sh,w,h,true);
+                int colored=result.Count(c=>c.r+c.g+c.b>24);
+                string sha=Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(File.ReadAllBytes(path)));
+                Require(colored>30&&File.Exists(path)&&new FileInfo(path).Length>500,"nonblank native GPU frame");
+                Require(direct<.16f&&direct<=mirrored+.025f,"native GPU foreground orientation and color "+tag+" direct="+direct+" mirror="+mirrored);
+                SculptureGpuFrames[id].Add(sha);
+                SculptureGpuEvidence.Add(string.Join("\t",panel+1,p.def.defName,row.Column,id,pr.Mode,w,h,direct,mirrored,colored,sha));
+                first??=path;
+            }
+            File.WriteAllLines(Path.Combine(root,"HNS-garden-sculpture-gpu.tsv"),SculptureGpuEvidence);
+            Log.Message("[HNS Sculpture] native GPU readback phase="+(panel+1)+" count="+(SculptureGpuEvidence.Count-1));
+            return first;
+        }
+
         private static readonly List<string> SculptureEvidence=new(){"Frame\tSpecies\tColumn\tPlant ID\tTrait\tMode\tMaterial ID\tAtlas width\tAtlas height\tPhase\tNative wind head\tDescription"};
         private static readonly Dictionary<int,int> SculptureMaterials=new();
         private static void SetSculpturePhase()
@@ -1097,6 +1179,7 @@ namespace HorticultureNovelSeeds
         {
             Require(inventory.Count==162&&inventory.Select(r=>r.Plant.thingIDNumber).Distinct().Count()==18&&SculptureEvidence.Count==136,"nine rendered states of eighteen same specimens");
             Require(inventory.Where(r=>r.Cultivar==null).All(r=>Backend(r.Plant)=="Vanilla"),"vanilla controls remain original");
+            Require(SculptureGpuEvidence.Count==136&&SculptureGpuFrames.Count==15&&SculptureGpuFrames.Values.All(x=>x.Count>=2),"all 135 native GPU samples and distinct phase renders");
             File.WriteAllLines(Path.Combine(root,"HNS-garden-sculpture.tsv"),SculptureEvidence);
             File.WriteAllLines(Path.Combine(root,"HNS-garden-sculpture-preparation.tsv"),new[]{"Species\tVariation\tSource\tAtlas mode\tFoliage territories\tOrgan count\tOrgan pixels\tDistinct frames\tAdded pixels"}.Concat(LifeSuiteExperiment.Preparation));
         }
