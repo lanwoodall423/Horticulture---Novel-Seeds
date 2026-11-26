@@ -1,0 +1,37 @@
+Panel	Row	Column	Species	Cultivar	Trait IDs	Renderer	Automatic mask sources	Trait labels	Tiers	Motifs	Form mesh
+1	1	1	Plant_Corn	Vanilla control		Vanilla	not styled				Original
+1	1	2	Plant_Corn	Garden corn plant 1	HNS_Rootflare	Botanical ground plane	not styled	Rootflare	Rare	Visible, branching surface roots around the base of a mature plant.	Original
+1	1	3	Plant_Corn	Garden corn plant 2	HNS_RunnerHabit	Botanical ground plane	not styled	Runner Habit	Rare	Low creeping stems with small leafy daughter shoots.	Original
+1	1	4	Plant_Corn	Garden corn plant 3	HNS_BasalCarpet	Botanical ground plane	not styled	Basal Carpet	Uncommon	A low rosette of broad leaves surrounding the main stem.	Original
+1	1	5	Plant_Corn	Garden corn plant 4	HNS_LeafLitter	Botanical ground plane	not styled	Leaf Litter	Uncommon	A few naturally shed, differently oriented leaves near the plant.	Original
+1	1	6	Plant_Corn	Garden corn plant 5	HNS_PetalDrift	Ground detail unavailable, original path	not styled	Petal Drift	Rare	Scattered colorful petals beneath flowering plants.	Original
+1	2	1	Plant_Cotton	Vanilla control		Vanilla	not styled				Original
+1	2	2	Plant_Cotton	Garden cotton plant 1	HNS_Rootflare	Botanical ground plane	not styled	Rootflare	Rare	Visible, branching surface roots around the base of a mature plant.	Original
+1	2	3	Plant_Cotton	Garden cotton plant 2	HNS_RunnerHabit	Botanical ground plane	not styled	Runner Habit	Rare	Low creeping stems with small leafy daughter shoots.	Original
+1	2	4	Plant_Cotton	Garden cotton plant 3	HNS_BasalCarpet	Botanical ground plane	not styled	Basal Carpet	Uncommon	A low rosette of broad leaves surrounding the main stem.	Original
+1	2	5	Plant_Cotton	Garden cotton plant 4	HNS_LeafLitter	Botanical ground plane	not styled	Leaf Litter	Uncommon	A few naturally shed, differently oriented leaves near the plant.	Original
+1	2	6	Plant_Cotton	Garden cotton plant 5	HNS_PetalDrift	Ground detail unavailable, original path	not styled	Petal Drift	Rare	Scattered colorful petals beneath flowering plants.	Original
+1	3	1	Plant_Strawberry	Vanilla control		Vanilla	not styled				Original
+1	3	2	Plant_Strawberry	Garden strawberry plant 1	HNS_Rootflare	Botanical ground plane	not styled	Rootflare	Rare	Visible, branching surface roots around the base of a mature plant.	Original
+1	3	3	Plant_Strawberry	Garden strawberry plant 2	HNS_RunnerHabit	Botanical ground plane	not styled	Runner Habit	Rare	Low creeping stems with small leafy daughter shoots.	Original
+1	3	4	Plant_Strawberry	Garden strawberry plant 3	HNS_BasalCarpet	Botanical ground plane	not styled	Basal Carpet	Uncommon	A low rosette of broad leaves surrounding the main stem.	Original
+1	3	5	Plant_Strawberry	Garden strawberry plant 4	HNS_LeafLitter	Botanical ground plane	not styled	Leaf Litter	Uncommon	A few naturally shed, differently oriented leaves near the plant.	Original
+1	3	6	Plant_Strawberry	Garden strawberry plant 5	HNS_PetalDrift	Ground detail unavailable, original path	not styled	Petal Drift	Rare	Scattered colorful petals beneath flowering plants.	Original
+2	1	1	Plant_Rose	Vanilla control		Vanilla	not styled				Original
+2	1	2	Plant_Rose	Garden rose 1	HNS_Rootflare	Botanical ground plane	not styled	Rootflare	Rare	Visible, branching surface roots around the base of a mature plant.	Original
+2	1	3	Plant_Rose	Garden rose 2	HNS_RunnerHabit	Botanical ground plane	not styled	Runner Habit	Rare	Low creeping stems with small leafy daughter shoots.	Original
+2	1	4	Plant_Rose	Garden rose 3	HNS_BasalCarpet	Botanical ground plane	not styled	Basal Carpet	Uncommon	A low rosette of broad leaves surrounding the main stem.	Original
+2	1	5	Plant_Rose	Garden rose 4	HNS_LeafLitter	Botanical ground plane	not styled	Leaf Litter	Uncommon	A few naturally shed, differently oriented leaves near the plant.	Original
+2	1	6	Plant_Rose	Garden rose 5	HNS_PetalDrift	Botanical ground plane	not styled	Petal Drift	Rare	Scattered colorful petals beneath flowering plants.	Original
+2	2	1	Plant_Daylily	Vanilla control		Vanilla	not styled				Original
+2	2	2	Plant_Daylily	Garden daylily 1	HNS_Rootflare	Botanical ground plane	not styled	Rootflare	Rare	Visible, branching surface roots around the base of a mature plant.	Original
+2	2	3	Plant_Daylily	Garden daylily 2	HNS_RunnerHabit	Botanical ground plane	not styled	Runner Habit	Rare	Low creeping stems with small leafy daughter shoots.	Original
+2	2	4	Plant_Daylily	Garden daylily 3	HNS_BasalCarpet	Botanical ground plane	not styled	Basal Carpet	Uncommon	A low rosette of broad leaves surrounding the main stem.	Original
+2	2	5	Plant_Daylily	Garden daylily 4	HNS_LeafLitter	Botanical ground plane	not styled	Leaf Litter	Uncommon	A few naturally shed, differently oriented leaves near the plant.	Original
+2	2	6	Plant_Daylily	Garden daylily 5	HNS_PetalDrift	Botanical ground plane	not styled	Petal Drift	Rare	Scattered colorful petals beneath flowering plants.	Original
+2	3	1	Plant_Hops	Vanilla control		Vanilla	not styled				Original
+2	3	2	Plant_Hops	Garden hop plant 1	HNS_Rootflare	Botanical ground plane	not styled	Rootflare	Rare	Visible, branching surface roots around the base of a mature plant.	Original
+2	3	3	Plant_Hops	Garden hop plant 2	HNS_RunnerHabit	Botanical ground plane	not styled	Runner Habit	Rare	Low creeping stems with small leafy daughter shoots.	Original
+2	3	4	Plant_Hops	Garden hop plant 3	HNS_BasalCarpet	Botanical ground plane	not styled	Basal Carpet	Uncommon	A low rosette of broad leaves surrounding the main stem.	Original
+2	3	5	Plant_Hops	Garden hop plant 4	HNS_LeafLitter	Botanical ground plane	not styled	Leaf Litter	Uncommon	A few naturally shed, differently oriented leaves near the plant.	Original
+2	3	6	Plant_Hops	Garden hop plant 5	HNS_PetalDrift	Ground detail unavailable, original path	not styled	Petal Drift	Rare	Scattered colorful petals beneath flowering plants.	Original

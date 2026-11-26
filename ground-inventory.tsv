@@ -1,0 +1,37 @@
+Panel	Row	Column	Species	Plant ID	Trait	Renderer	Ground material ID	Altitude	Size
+1	1	1	Plant_Corn	17038	Control	Vanilla	0	0	0
+1	1	2	Plant_Corn	17039	HNS_Rootflare	Botanical ground plane	-16074	2.926829	1.55
+1	1	3	Plant_Corn	17040	HNS_RunnerHabit	Botanical ground plane	-16076	2.926829	1.55
+1	1	4	Plant_Corn	17041	HNS_BasalCarpet	Botanical ground plane	-16078	2.926829	1.55
+1	1	5	Plant_Corn	17042	HNS_LeafLitter	Botanical ground plane	-16080	2.926829	1.55
+1	1	6	Plant_Corn	17043	HNS_PetalDrift	Ground detail unavailable, original path	0	0	0
+1	2	1	Plant_Cotton	17044	Control	Vanilla	0	0	0
+1	2	2	Plant_Cotton	17045	HNS_Rootflare	Botanical ground plane	-16104	2.926829	1.533
+1	2	3	Plant_Cotton	17046	HNS_RunnerHabit	Botanical ground plane	-16106	2.926829	1.533
+1	2	4	Plant_Cotton	17047	HNS_BasalCarpet	Botanical ground plane	-16108	2.926829	1.533
+1	2	5	Plant_Cotton	17048	HNS_LeafLitter	Botanical ground plane	-16110	2.926829	1.533
+1	2	6	Plant_Cotton	17049	HNS_PetalDrift	Ground detail unavailable, original path	0	0	0
+1	3	1	Plant_Strawberry	17050	Control	Vanilla	0	0	0
+1	3	2	Plant_Strawberry	17051	HNS_Rootflare	Botanical ground plane	-16114	2.926829	1.533
+1	3	3	Plant_Strawberry	17052	HNS_RunnerHabit	Botanical ground plane	-16116	2.926829	1.533
+1	3	4	Plant_Strawberry	17053	HNS_BasalCarpet	Botanical ground plane	-16118	2.926829	1.533
+1	3	5	Plant_Strawberry	17054	HNS_LeafLitter	Botanical ground plane	-16120	2.926829	1.533
+1	3	6	Plant_Strawberry	17055	HNS_PetalDrift	Ground detail unavailable, original path	0	0	0
+2	1	1	Plant_Rose	17056	Control	Vanilla	0	0	0
+2	1	2	Plant_Rose	17057	HNS_Rootflare	Botanical ground plane	-16461	2.926829	1.533
+2	1	3	Plant_Rose	17058	HNS_RunnerHabit	Botanical ground plane	-16463	2.926829	1.533
+2	1	4	Plant_Rose	17059	HNS_BasalCarpet	Botanical ground plane	-16465	2.926829	1.533
+2	1	5	Plant_Rose	17060	HNS_LeafLitter	Botanical ground plane	-16467	2.926829	1.533
+2	1	6	Plant_Rose	17061	HNS_PetalDrift	Botanical ground plane	-16469	2.926829	1.533
+2	2	1	Plant_Daylily	17062	Control	Vanilla	0	0	0
+2	2	2	Plant_Daylily	17063	HNS_Rootflare	Botanical ground plane	-16485	2.926829	1.533
+2	2	3	Plant_Daylily	17064	HNS_RunnerHabit	Botanical ground plane	-16487	2.926829	1.533
+2	2	4	Plant_Daylily	17065	HNS_BasalCarpet	Botanical ground plane	-16489	2.926829	1.533
+2	2	5	Plant_Daylily	17066	HNS_LeafLitter	Botanical ground plane	-16491	2.926829	1.533
+2	2	6	Plant_Daylily	17067	HNS_PetalDrift	Botanical ground plane	-16493	2.926829	1.533
+2	3	1	Plant_Hops	17068	Control	Vanilla	0	0	0
+2	3	2	Plant_Hops	17069	HNS_Rootflare	Botanical ground plane	-16497	2.926829	1.533
+2	3	3	Plant_Hops	17070	HNS_RunnerHabit	Botanical ground plane	-16499	2.926829	1.533
+2	3	4	Plant_Hops	17071	HNS_BasalCarpet	Botanical ground plane	-16501	2.926829	1.533
+2	3	5	Plant_Hops	17072	HNS_LeafLitter	Botanical ground plane	-16503	2.926829	1.533
+2	3	6	Plant_Hops	17073	HNS_PetalDrift	Ground detail unavailable, original path	0	0	0
