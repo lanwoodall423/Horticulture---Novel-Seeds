@@ -65,6 +65,7 @@ namespace HorticultureNovelSeeds
             int hash=plant.Position.GetHashCode()&0x7fffffff;
             float angle=hash%360;
             Printer_Plane.PrintPlane(layer,center,new Vector2(size,size),mat,angle,false,null,null,0f,0f);
+            PhenotypeObservation.For(plant)?.Add(PhenotypeVocabulary.Ground(kind));
 #if HNS_NATIVE_FIXTURE
             PrintedPlants[plant.thingIDNumber]=(mat,center,size);
 #endif

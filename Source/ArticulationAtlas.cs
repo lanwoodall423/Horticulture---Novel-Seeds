@@ -13,6 +13,14 @@ namespace HorticultureNovelSeeds
         private const int Limit=48,MaxSide=192;
         private static readonly Dictionary<(ThingDef,Texture,ResponsiveHabitKind),Texture2D> atlases=new();
         internal static int Count=>atlases.Count;
+        internal readonly record struct FrameFacts(int ChangedPixels,int ChangedOrgans,int TotalOrgans,int States);
+        private static readonly Dictionary<Texture,FrameFacts[]> frameFacts=new();
+        internal static bool TryFrameFacts(Texture atlas,int frame,out FrameFacts info)
+        {
+            info=default;
+            if(atlas==null||!frameFacts.TryGetValue(atlas,out var frames)||frame<0||frame>=frames.Length)return false;
+            info=frames[frame];return true;
+        }
 #if HNS_NATIVE_FIXTURE
         internal static readonly List<string> Preparation=new();
         internal static readonly List<string> MosaicPreparation=new(){"Species\tVariation\tSource\tTrait\tFrame\tChanged organs\tChanged pixels\tAlpha preserved"};
@@ -118,10 +126,11 @@ namespace HorticultureNovelSeeds
 #if HNS_NATIVE_FIXTURE
                 var mosaicRows=new List<string>();
 #endif
+                var metadata=new FrameFacts[ArticulationMath.Frames];
                 for(int f=0;f<ArticulationMath.Frames;f++)
                 {
-                    int changedOrgans=0;
-                    var frame=mosaic?MosaicMath.Compose(organs,kind,f,out changedOrgans):ArticulationMath.Compose(organs,kind,f);int diff=0;
+                    int changedOrgans=0,changedStates=0;
+                    var frame=mosaic?MosaicMath.Compose(organs,kind,f,out changedOrgans,out changedStates):ArticulationMath.Compose(organs,kind,f);int diff=0;
                     for(int y=0;y<h;y++)for(int x=0;x<w;x++)
                     {
                         int i=y*w+x;var p=frame[i];
@@ -129,6 +138,7 @@ namespace HorticultureNovelSeeds
                         if(p.A<pixels[i].A)preserved=false;
                         cells[(y+f/g*h)*g*w+x+f%g*w]=new Color32(p.R,p.G,p.B,p.A);
                     }
+                    metadata[f]=new(diff,changedOrgans,organs.Organs.Length,changedStates);
                     minDiff=Math.Min(minDiff,diff);maxDiff=Math.Max(maxDiff,diff);
                     if(mosaic&&f>0)
                     {
@@ -142,7 +152,7 @@ namespace HorticultureNovelSeeds
                 if(!preserved||maxDiff<12||minDiff!=0||mosaic&&(!everyVariantChanged||variants.Count<2))continue;
                 var atlas=new Texture2D(g*w,g*h,TextureFormat.RGBA32,false)
                 {name=source.name+"_HNS_Articulation_"+kind,filterMode=source.filterMode,wrapMode=TextureWrapMode.Clamp};
-                atlas.SetPixels32(cells);atlas.Apply(false,true);atlases.Add(key,atlas);
+                atlas.SetPixels32(cells);atlas.Apply(false,true);atlases.Add(key,atlas);frameFacts.Add(atlas,metadata);
 #if HNS_NATIVE_FIXTURE
                 VerifyOrientation(crop,variation,source,atlas,kind,pixels,w,h);
                 if(mosaic)MosaicPreparation.AddRange(mosaicRows);

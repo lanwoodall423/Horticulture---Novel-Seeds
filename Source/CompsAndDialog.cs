@@ -20,6 +20,7 @@ namespace HorticultureNovelSeeds
     {
         private string varietyId;
         private int visualChronicle;
+        [Unsaved(false)] internal PhenotypeObservation VisualObservation;
         internal int VisualChronicle {get=>visualChronicle;set=>visualChronicle=ChronicleMath.Sanitize(value);}
         private List<VarietyTraitDef> transientTraits;
         private bool pendingDiscovery;
@@ -173,6 +174,10 @@ namespace HorticultureNovelSeeds
             }
 
             Plant plant = parent as Plant;
+            if(plant?.Spawned==true&&HasAnyTraits)
+            {
+                yield return new Command_Action{defaultLabel="Field notes",defaultDesc="Read this individual's rendered phenotype, recorded growth history and documented cultivar potential.",icon=plant.def.uiIcon??BaseContent.BadTex,action=()=>Find.WindowStack.Add(new Dialog_MessageBox(PhenotypeObservation.Notes(this)))};
+            }
             if (!PendingDiscovery || plant?.Spawned != true || plant.Growth < 0.999f || plant.Blighted)
             {
                 yield break;
@@ -217,6 +222,7 @@ namespace HorticultureNovelSeeds
 
         private void InvalidateTraitCache()
         {
+            VisualObservation = null;
             activeTraitsCache = null;
             requiredResourceTraitCache = null;
         }
@@ -319,6 +325,8 @@ namespace HorticultureNovelSeeds
                 HorticulturePresentationPolicy.ForCultivar(variety, null, true);
             string traitText = policy == null ? "Traits unknown until the cultivar is documented." : policy.TraitText;
             string text = "HNS_PlantVariety".Translate() + ": " + name + "\n" + "HNS_Traits".Translate() + ": " + traitText;
+            string observed=VisualObservation?.Prose();
+            if(!string.IsNullOrEmpty(observed))text+="\nAppearance: "+observed;
             if (PendingDiscovery) text += "\nObservable novel variation is not yet a documented cultivar.";
             if (NeedsResource)
             {

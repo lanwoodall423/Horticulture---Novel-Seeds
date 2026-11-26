@@ -323,3 +323,40 @@ Require(SurfaceFinishMath.Environment(.5f,1f,.01f).Rain==.03125f,"quantized weat
     Require(ChronicleMath.Warp(PlantFormKind.CrookedChronicle,1f,.5f,1f,82).X>.8f,"two early left pressures persist");
     Require(ChronicleMath.Warp(PlantFormKind.ReleaseCrown,1f,1f,1f,100).X>1.3f,"release crown expands late");
 }
+
+{
+    var v=typeof(PhenotypeVocabulary);
+    var f=PhenotypeVocabulary.Form(PlantFormKind.FanCrowned,1,default,0);
+    var p=PhenotypeVocabulary.Pigment(39,1f);
+    var languageFacts=new[]{f,p,f,PhenotypeVocabulary.F(PhenotypeVocabulary.Region.Habit,"shape","conflicting low-priority profile",10)};
+    string prose=PhenotypeVocabulary.Prose(languageFacts);
+    Require(prose.Contains("fan-shaped crown")&&prose.Contains("rose reproductive pigment")&&!prose.Contains("conflicting"),"language combines geometry and pigment and resolves conflicts");
+    Require(prose==PhenotypeVocabulary.Prose(languageFacts.Reverse()),"stable language independent of ordering");
+    Require(PhenotypeVocabulary.Resolve(languageFacts).Length==2,"language deduplicates repeated renderer languageFacts");
+    Require(PhenotypeVocabulary.Prose(new[]{PhenotypeVocabulary.Form(PlantFormKind.GapSeeker,1,default,0)})=="","no latent neighbor effect");
+    Require(PhenotypeVocabulary.Form(PlantFormKind.GapSeeker,1,new(1,0),0).Phrase.Contains("right")&&PhenotypeVocabulary.Form(PlantFormKind.GapSeeker,1,new(0,1),0).Phrase.Contains("left"),"individual directional expression");
+    Require(PhenotypeVocabulary.Form(PlantFormKind.CrookedChronicle,1,default,73).Phrase==null&&PhenotypeVocabulary.Form(PlantFormKind.CrookedChronicle,1,default,82).Phrase!=null,"history-dependent actual expression");
+    Require(PhenotypeVocabulary.History(0)==""&&PhenotypeVocabulary.History(82).Contains("Early growth: competition on the left"),"unknown history is not invented");
+    Require(PhenotypeVocabulary.Surface(SurfaceFinishKind.RainBeads,false).Phrase==null&&PhenotypeVocabulary.Surface(SurfaceFinishKind.RainBeads,true).Phrase!=null,"rain beads described only while active");
+    Require(PhenotypeVocabulary.Pose(ResponsiveHabitKind.DawnPetals,8,0,0,0).Phrase==null&&PhenotypeVocabulary.Pose(ResponsiveHabitKind.DawnPetals,0,0,0,0).Phrase!=null,"neutral articulation not described");
+    Require(PhenotypeVocabulary.Pigment(51,0).Phrase!=PhenotypeVocabulary.Pigment(51,1).Phrase,"growth-stage vocabulary");
+    Require(PhenotypeVocabulary.Mosaic(1<<(int)MosaicMath.OrganState.Bud,1,4).Phrase.Contains("one localized")&&!PhenotypeVocabulary.Mosaic(1<<(int)MosaicMath.OrganState.Bud,1,4).Phrase.Contains("stout"),"mosaic vocabulary reflects actual changed states");
+    Require(PhenotypeVocabulary.Pose(ResponsiveHabitKind.None,0,0,0,0).Phrase==null&&PhenotypeVocabulary.Ground(GroundHabitKind.None).Phrase==null,"unexpressed paths produce no observations");
+    foreach(var k in Enum.GetValues<PlantFormKind>().Where(k=>k!=PlantFormKind.None))
+        Require(PhenotypeVocabulary.Form(k,1,default,0,true).Phrase!=null,"form vocabulary "+k);
+    foreach(var k in Enum.GetValues<ResponsiveHabitKind>().Where(k=>k!=ResponsiveHabitKind.None))
+        Require(PhenotypeVocabulary.Pose(k,4,0,0,0,true).Phrase!=null,"pose vocabulary "+k);
+    foreach(var k in Enum.GetValues<GroundHabitKind>().Where(k=>k!=GroundHabitKind.None))
+        Require(PhenotypeVocabulary.Ground(k).Phrase!=null,"ground vocabulary "+k);
+    foreach(var k in Enum.GetValues<OrganFormKind>().Where(k=>k!=OrganFormKind.None))
+        Require(PhenotypeVocabulary.Organ(k).Phrase!=null,"organ vocabulary "+k);
+    foreach(var k in Enum.GetValues<CanopyArchitectureKind>().Where(k=>k!=CanopyArchitectureKind.None))
+        Require(PhenotypeVocabulary.Architecture(k).Phrase!=null,"canopy vocabulary "+k);
+    foreach(var k in Enum.GetValues<BotanicalDetailKind>().Where(k=>k!=BotanicalDetailKind.None))
+        Require(PhenotypeVocabulary.Detail(k).Phrase!=null,"botanical vocabulary "+k);
+    foreach(var k in Enum.GetValues<SurfaceFinishKind>().Where(k=>k!=SurfaceFinishKind.None))
+        Require(PhenotypeVocabulary.Surface(k,true,true).Phrase!=null,"surface vocabulary "+k);
+    foreach(var k in Enum.GetValues<WindHabitKind>().Where(k=>k!=WindHabitKind.None))
+        Require(PhenotypeVocabulary.Wind(k).Phrase!=null,"wind vocabulary "+k);
+    for(int mode=1;mode<=55;mode++)Require(PhenotypeVocabulary.Pigment(mode,1).Phrase!=null,"procedural vocabulary "+mode);
+}

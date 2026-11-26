@@ -362,6 +362,8 @@ namespace HorticultureNovelSeeds
     {
         public static bool Prefix(Plant __instance, SectionLayer layer)
         {
+            var observationComp=__instance.TryGetComp<CompPlantVariety>();
+            if(observationComp!=null)observationComp.VisualObservation=null;
 #if HNS_NATIVE_FIXTURE
             if (NativeShaderProbe.TryGetVisual(__instance, out var probeVisual))
                 return PlantVisualUtility.PrintScaledPlant(__instance, layer, probeVisual);

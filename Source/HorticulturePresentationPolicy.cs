@@ -29,6 +29,7 @@ namespace HorticultureNovelSeeds
         public bool HasKnownTraits => true;
         public bool HasKnownProducts => Authority.cropDef?.plant?.harvestedThingDef != null;
         public string TraitText => AuthorizedTraits.Count == 0 ? "No documented traits" : string.Join(", ", TraitNames);
+        public string PotentialAppearance => PhenotypeObservation.Potential(AuthorizedTraits);
         public string TraitDescriptionText => string.Join("; ", AuthorizedTraits.Select(TraitColorUI.Description));
         public string ModifierText => "Genetic modifiers: yield " + Delta(NovelSeedUtility.YieldFactor(AuthorizedTraits)) +
             ", growth rate " + Delta(NovelSeedUtility.GrowthRateFactor(AuthorizedTraits)) +

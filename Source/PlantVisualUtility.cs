@@ -22,6 +22,7 @@ namespace HorticultureNovelSeeds
             NativeGardenProbe.RecordPrint(plant, true);
 #endif
             var comp = plant.TryGetComp<CompPlantVariety>();
+            if(comp?.HasAnyTraits==true)comp.VisualObservation=new PhenotypeObservation();
             bool procedural = WaylithPhenotypeShader.Enabled && ProceduralPhenotypeUtility.Resolve(comp).x > 0f;
             bool wind = WaylithPhenotypeShader.Enabled && WindHabitUtility.Resolve(comp)!=WindHabitKind.None;
             bool surface=WaylithPhenotypeShader.Enabled && SurfaceFinishUtility.Resolve(comp)!=SurfaceFinishKind.None;
@@ -80,13 +81,14 @@ namespace HorticultureNovelSeeds
                     groundSource??=originalMaterial;
                     Vector2[] uvs = null;
                     if(ResponsiveHabitExperiment.TryMaterial(plant,material,pose,flipped,out var poseMaterial))
-                    { material=poseMaterial; PlantUtility.SetWindExposureColors(WorkingColors,plant); }
+                    { material=poseMaterial; PlantUtility.SetWindExposureColors(WorkingColors,plant); comp?.VisualObservation?.AddPose(pose,material,plant.HashOffset()%1024); }
                     else if(BotanicalDetailExperiment.TryMaterial(plant,material,detail,out var detailMaterial))
-                    { material=detailMaterial; PlantUtility.SetWindExposureColors(WorkingColors,plant); }
+                    { material=detailMaterial; PlantUtility.SetWindExposureColors(WorkingColors,plant); comp?.VisualObservation?.Add(PhenotypeVocabulary.Detail(detail)); }
                     else if (OrganSpriteExperiment.TryMaterial(plant,material,organ,out var organMaterial))
                     {
                         material=organMaterial;
                         PlantUtility.SetWindExposureColors(WorkingColors,plant);
+                        comp?.VisualObservation?.Add(PhenotypeVocabulary.Organ(organ));
                     }
                     else if (ground==GroundHabitKind.None && architecture==CanopyArchitectureKind.None && (procedural || wind || surface || NeedsStyledMaterial(visual) || (NovelSeedUtility.HasPlantMaskVisual(comp) && PlantMaskUtility.HasActiveMasks(plant.def))))
                     {
@@ -111,6 +113,7 @@ namespace HorticultureNovelSeeds
                     }
                 }
 
+                PhenotypeObservation.Geometry(plant,visual,meshCount);
                 GroundHabitExperiment.Print(plant,layer,groundSource,ground,graphicSize);
                 float effectSize = Mathf.Max(graphicSize.x * visual.width, graphicSize.y * visual.height);
                 if (visual.radiance > 0f) PrintEffect(plant, layer, effectSize, visual.radiance, visual.radianceScale, visual.RadianceColor, false, visual.offsetX, visual.offsetZ);
@@ -153,6 +156,7 @@ namespace HorticultureNovelSeeds
             PrintIsolatedPlantLayer(plant, layer, baseVisual, -1, true, true);
             for (int i = 0; i < maskVisuals.Length; i++)
                 if (PlantMaskUtility.AnyResolvedLayerHasPixels(plant.def, i)) PrintIsolatedPlantLayer(plant, layer, maskVisuals[i], i, false, false);
+            PhenotypeObservation.Geometry(plant,baseVisual,Mathf.Max(1,Mathf.CeilToInt(plant.Growth*plant.def.plant.maxMeshCount*baseVisual.density)));
             PrintExternalEffects(plant, layer, wholeVisual);
             return true;
         }
@@ -331,6 +335,7 @@ namespace HorticultureNovelSeeds
             if (WaylithPhenotypeShader.TryForPlant(source, visual, plant, isolatedMaskLayer, variationIndex, out var shaderMaterial))
             {
                 preservesWind = true;
+                PhenotypeObservation.Styled(plant,shaderMaterial,visual,variationIndex,isolatedMaskLayer,true);
                 return shaderMaterial;
             }
 #if HNS_NATIVE_FIXTURE
@@ -342,6 +347,7 @@ namespace HorticultureNovelSeeds
             if (StyledMaterials.TryGetValue(key, out Material cached))
             {
                 preservesWind = cached.shader == source.shader;
+                PhenotypeObservation.Styled(plant,cached,visual,variationIndex,isolatedMaskLayer,false);
                 return cached;
             }
             if (sourceTexture != null)
@@ -364,6 +370,7 @@ namespace HorticultureNovelSeeds
                         preservesWind = true;
                     }
                     StyledMaterials.Add(key, material);
+                    PhenotypeObservation.Styled(plant,material,visual,variationIndex,isolatedMaskLayer,false);
                     return material;
                 }
                 catch (Exception exception)
@@ -453,6 +460,7 @@ namespace HorticultureNovelSeeds
             Vector3 center = plant.TrueCenter().WithYOffset(-Altitudes.AltInc / 2f);
             center.x += offsetX; center.z += offsetZ;
             Printer_Plane.PrintPlane(layer, center, new Vector2(size, size), material, 0f, false, null, WhiteColors);
+            PhenotypeObservation.For(plant)?.Add(PhenotypeVocabulary.F(PhenotypeVocabulary.Region.Light,dense?"gloom":"radiance",dense?"a subdued shadow-like halo":"a soft surrounding glow"));
         }
 
         private static void PrintOverlay(Plant plant, SectionLayer layer, float graphicSize, PlantVisualParameters visual, float offsetX, float offsetZ)
@@ -468,6 +476,7 @@ namespace HorticultureNovelSeeds
             Vector3 center = plant.TrueCenter().WithYOffset(-Altitudes.AltInc / 3f);
             center.x += offsetX; center.z += offsetZ;
             Printer_Plane.PrintPlane(layer, center, new Vector2(size, size), material, visual.rotation, false, null, WhiteColors);
+            PhenotypeObservation.For(plant)?.Add(PhenotypeVocabulary.F(PhenotypeVocabulary.Region.General,"overlay","a patterned surrounding accent"));
         }
 
         private static Texture2D CreateRadialTexture(int size, Color color, float strength, bool dense)

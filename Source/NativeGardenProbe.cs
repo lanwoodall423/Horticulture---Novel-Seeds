@@ -430,6 +430,46 @@ namespace HorticultureNovelSeeds
             Log.Message("[HNS Garden] panel=" + (panel+1) + "; species=" + string.Join(", ",current.Select(p=>p.def.defName).Distinct()));
         }
 
+        private static readonly List<string> DescriptionEvidence=new(){"Panel\tSpecies\tColumn\tPlant ID\tCultivar\tFacts\tIndividual phenotype\tBotanical observations\tRecorded history\tCultivar potential"};
+        private static void SampleDescriptions()
+        {
+            foreach(var r in inventory.Where(r=>r.Panel==panel+1))
+            {
+                var c=r.Plant.TryGetComp<CompPlantVariety>();
+                var o=c.VisualObservation;var fs=o?.Facts()??Array.Empty<PhenotypeVocabulary.Fact>();
+                string prose=o?.Prose()??"",detail=o?.Detail()??"",history=PhenotypeObservation.History(c);
+                var policy=HorticulturePresentationPolicy.ForCultivar(c.Variety);
+                string potential=policy?.PotentialAppearance??"";
+                if(r.Cultivar==null)Require(fs.Length==0&&history.Length==0&&potential.Length==0,"no fabricated observations or potential on controls");
+                else
+                {
+                    Require(prose.Length==0||c.CompInspectStringExtra().Contains(prose),"actual plant inspect phenotype");
+                    Require(c.CompGetGizmosExtra().OfType<Command_Action>().Any(g=>g.defaultLabel=="Field notes"),"actual field notes command");
+                    Require(potential.Length>0||!formGarden,"documented cultivar potential");
+                    string notes=PhenotypeObservation.Notes(c);
+                    Require(notes.Contains("Individual phenotype")&&(prose.Length==0||notes.Contains(prose))&&(history.Length==0||notes.Contains(history)),"field notes content");
+                    if(formGarden&&!neighborhoodGarden&&!chronicleGarden)
+                    {
+                        Require(fs.Any(f=>f.Region==PhenotypeVocabulary.Region.Habit&&f.Slot=="shape"),"actual deformed geometry described");
+                        if(panel==1)Require(fs.Any(f=>f.Slot=="pigment"),"combined rendered pigment and form described");
+                        else Require(!fs.Any(f=>f.Slot=="pigment"),"no invented pigment in pure-form case");
+                    }
+                    if(groundGarden)
+                        Require(fs.Any(f=>f.Region==PhenotypeVocabulary.Region.Ground)==GroundHabitExperiment.PrintedPlants.ContainsKey(r.Plant.thingIDNumber),"ground expression follows actual renderer acceptance");
+                    if(mosaicGarden)
+                        Require(fs.Any(f=>f.Region==PhenotypeVocabulary.Region.Reproductive&&f.Slot=="pose"&&f.Phrase.Contains("native growth")),"actual mosaic metadata described");
+                    if(chronicleGarden)
+                    {
+                        Require(history==PhenotypeVocabulary.History(c.VisualChronicle)&&history.Contains("Early growth"),"actual historical growth described");
+                        if(panel==0)Require(!fs.Any(f=>f.Slot=="shape"),"open growth does not invent historical deformation");
+                    }
+                }
+                DescriptionEvidence.Add(string.Join("\t",panel+1,r.Plant.def.defName,r.Column,r.Plant.thingIDNumber,r.Cultivar?.id??"Vanilla",fs.Length,prose,detail,history,potential));
+            }
+            File.WriteAllLines(Path.Combine(root,"HNS-garden-phenotype-language.tsv"),DescriptionEvidence);
+            Log.Message("[HNS Language] panel="+(panel+1)+"; observation rows="+(DescriptionEvidence.Count-1));
+        }
+
         internal static void Update()
         {
             if (!active) return;
@@ -468,6 +508,7 @@ namespace HorticultureNovelSeeds
                 if (capture == null && frames >= 100 && (!windGarden || windSampledPanel==panel) && (!surfaceGarden || surfaceSampledPanel==panel) && (!detailGarden||detailSampledPanel==panel) && (!poseGarden||poseSampledPanel==panel) && (!neighborhoodGarden||neighborhoodSampledPanel==panel) && (!chronicleGarden||chronicleSampledPanel==panel) && current.All(p => custom.Contains(p.thingIDNumber) || vanilla.Contains(p.thingIDNumber)) &&
                     (!developmentGarden || inventory.Where(r=>r.Panel==panel+1 && r.Cultivar!=null).All(r=>WaylithPhenotypeShader.DevelopmentalPrints.Contains((r.Plant.thingIDNumber,panel)))))
                 {
+                    SampleDescriptions();
                     capture = Path.Combine(root, "HNS-garden-panel-" + (panel+1) + ".png");
                     Log.Message("[HNS Garden] screenshot " + (panel+1) + "; local hour=" + GenLocalDate.HourOfDay(map) +
                         "; sky glow=" + map.skyManager.CurSkyGlow + "; shader materials=" + WaylithPhenotypeShader.MaterialCount +

@@ -129,6 +129,7 @@ namespace HorticultureNovelSeeds
                 Printer_Plane.PrintPlane(layer,point,moduleSize,mat,angle,flipped,null,subColors,Plant.TopVerticesAltitudeBias,plant.HashOffset()%1024);
                 printed++;
             }
+            if(printed>0)PhenotypeObservation.For(plant)?.Add(PhenotypeVocabulary.Architecture(kind));
 #if HNS_NATIVE_FIXTURE
             if(printed>0){PrintedPlants.Add(plant.thingIDNumber);PlaneCounts[plant.thingIDNumber]=printed;}
             else FallbackPlants.Add(plant.thingIDNumber);

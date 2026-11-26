@@ -46,10 +46,11 @@ namespace HorticultureNovelSeeds
             byte C(byte source,float t)=>(byte)Math.Clamp((int)MathF.Round(source*(1f-target.mix)+255f*lum*t*target.mix),0,255);
             return new Pixel(C(p.R,target.r),C(p.G,target.g),C(p.B,target.b),p.A);
         }
-        internal static Pixel[] Compose(ArticulationMath.Prepared src,ResponsiveHabitKind kind,int frame,out int changedOrgans)
+        internal static Pixel[] Compose(ArticulationMath.Prepared src,ResponsiveHabitKind kind,int frame,out int changedOrgans)=>Compose(src,kind,frame,out changedOrgans,out _);
+        internal static Pixel[] Compose(ArticulationMath.Prepared src,ResponsiveHabitKind kind,int frame,out int changedOrgans,out int changedStates)
         {
             var dst=(Pixel[])src.Original.Clone();
-            changedOrgans=0;
+            changedOrgans=0;changedStates=0;
             int w=src.W,h=src.H;
             if(!Valid(kind)||frame<=0||src.Organs.Length<2)return dst;
             // Adjacent position order gives a coherent lineage sector rather than
@@ -96,7 +97,7 @@ namespace HorticultureNovelSeeds
                     var next=OrganSpriteMath.Over(dst[k],Shade(src.Original[i],state,frame));
                     changed|=next!=dst[k];dst[k]=next;
                 }
-                if(changed)changedOrgans++;
+                if(changed){changedOrgans++;changedStates|=1<<(int)state;}
             }
             return dst;
         }

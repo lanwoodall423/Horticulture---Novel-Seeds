@@ -105,6 +105,7 @@ namespace HorticultureNovelSeeds
                     sub.tris.Add(k);sub.tris.Add(k+stride);sub.tris.Add(k+stride+1);
                     sub.tris.Add(k);sub.tris.Add(k+stride+1);sub.tris.Add(k+1);
                 }
+            PhenotypeObservation.For(plant)?.Add(PhenotypeVocabulary.Form(form.Kind,form.Strength,form.Pressure,form.Chronicle));
 #if HNS_NATIVE_FIXTURE
             PrintedPlants.Add(plant.thingIDNumber); Meshes++; Vertices+=count; Triangles+=2*n*n;
             if(ChronicleMath.Valid(form.Kind))

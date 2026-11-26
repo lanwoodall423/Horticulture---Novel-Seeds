@@ -95,6 +95,7 @@ namespace HorticultureNovelSeeds
                 WindManager.Notify_PlantMaterialCreated(mat);glows.Add(source,mat);
             }
             Printer_Plane.PrintPlane(layer,center.WithYOffset(Altitudes.AltInc/100f),size,mat,rotation,flipped,null,colors,Plant.TopVerticesAltitudeBias,plant.HashOffset()%1024);
+            PhenotypeObservation.For(plant)?.AddGlow(mat);
 #if HNS_NATIVE_FIXTURE
             GlowPlants[plant.thingIDNumber]=mat;
 #endif
