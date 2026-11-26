@@ -739,3 +739,42 @@ Wind inventory SHA256: 59A2D5E5E60DE174B2A45B75230BA8264D75271E0FB0A0E186C52BF0F
 Reproduce with RimWorld closed:
 
     powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -WindGarden
+
+## Environment-responsive genetic surface materials (2026-11-25)
+
+Source 84d0d06e04a82b7b366e910f52e89005a29f4a89 adds independent
+neutral zero-default-weight Satin Cuticle, Velvet Nap, Silver Bloom,
+Rain Beads and Pearl Cuticle alleles. The fragment shader estimates
+approximate relief from source luminance, simulates directional sheen
+and scattering, and uses actual rain rate for droplets. Shared quantized
+environment uniforms refresh at the current map sky update; weather
+does not enter the material key. No extra textures, manual masks,
+physical normals or actual scene-light integration. Existing pigment,
+wind, form, organ and developmental prototypes retained.
+
+Native AllPerformance run d954993b2d4f4e5a92e968cb2c1f1c8d, RimWorld
+1.7.5014 rev1195: all seven stages passed. 18 mature plants, 15 cultivars
+and three controls, same positions and IDs; 09:00 clear, 15:00 clear,
+15:00 rain, 15:00 clear. Native sky and weather state changed in fixture.
+All 60 surface material/environment states verified, 15 cached materials
+throughout, zero prepared masks. Sky glow stayed 1 in all captures.
+Both builds clean and all earlier plus four environment math tests passed.
+No relevant HNS error identified in captured log. Preservation and owned
+process/package cleanup passed. Actual screenshots and exact evidence:
+https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/ebcca51bebce9f3c7c74f71bcde91984c1b1842a
+
+Visual results are restrained, especially on compact plants. Silver
+and pearlescent highlights are clearer on corn; rain droplets are difficult
+to see under vanilla rain overlays. Pawn labels remain in some crops.
+No independent roof-transition test, natural weather/time progression,
+variable sky brightness, seasonal/snow, combinations, save/reload, field
+performance or ordinary activation qualified. No mechanics or 1.6 changes.
+
+DLL SHA256: 8681D73016D1FF84CDB94CFE7E58538F5B9026117751C2D7BF5FD9AC61FEAC37.
+Receipt SHA256: 439EA7C102ACEFBFB435AC9C3BA40F891480D3FB35733807DC4E2E00EC33716B.
+Log SHA256: ED255C7C6F7759050F26901B9621ABAF29CFABAA4E0CC5A8ECF7F9407B237BB1.
+Surface inventory SHA256: 0C07978CC93E2008D185C02794463F03E0C523ACD573B854ECBA04AB88F69AF5.
+
+Reproduce with RimWorld closed:
+
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -SurfaceGarden
