@@ -5,302 +5,302 @@
   <HorticultureNovelSeeds.VarietyTraitDef>
     <defName>HNS_Variegated</defName>
     <label>Ivory Variegation</label>
-    <description>Cream-colored sectors and marbled highlights across the plant.</description>
+    <description>Cream and sage sectors concentrated on foliage; contrasting fruit and stems remain recognizable.</description>
     <commonality>0</commonality>
     <balanceValue>0</balanceValue>
     <balanceValueExplicit>true</balanceValueExplicit>
     <configCategory>Appearance</configCategory>
     <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
     <proceduralPhenotype>Variegated</proceduralPhenotype>
-    <proceduralStrength>0.86</proceduralStrength>
+    <proceduralStrength>0.84</proceduralStrength>
   </HorticultureNovelSeeds.VarietyTraitDef>
   <HorticultureNovelSeeds.VarietyTraitDef>
     <defName>HNS_Anthocyanin</defName>
     <label>Crimson Blush</label>
-    <description>A wine-red and violet pigment gradient, strongest near the tips.</description>
+    <description>Wine-red and dusky rose foliage blush, strongest on selected tips.</description>
     <commonality>0</commonality>
     <balanceValue>0</balanceValue>
     <balanceValueExplicit>true</balanceValueExplicit>
     <configCategory>Appearance</configCategory>
     <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
     <proceduralPhenotype>Anthocyanin</proceduralPhenotype>
-    <proceduralStrength>0.92</proceduralStrength>
+    <proceduralStrength>0.84</proceduralStrength>
   </HorticultureNovelSeeds.VarietyTraitDef>
   <HorticultureNovelSeeds.VarietyTraitDef>
     <defName>HNS_MoonFrost</defName>
     <label>Moonfrost</label>
-    <description>Blue-silver wax bloom with pale rim highlights.</description>
+    <description>Cool sage-silver wax bloom with restrained pale margins.</description>
     <commonality>0</commonality>
     <balanceValue>0</balanceValue>
     <balanceValueExplicit>true</balanceValueExplicit>
     <configCategory>Appearance</configCategory>
     <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
     <proceduralPhenotype>MoonFrost</proceduralPhenotype>
-    <proceduralStrength>0.92</proceduralStrength>
+    <proceduralStrength>0.84</proceduralStrength>
   </HorticultureNovelSeeds.VarietyTraitDef>
   <HorticultureNovelSeeds.VarietyTraitDef>
     <defName>HNS_GoldFreckled</defName>
     <label>Goldfreckled</label>
-    <description>Golden freckles and organic mottling across the plant.</description>
+    <description>Ochre freckles and irregular gold mottling on foliage.</description>
     <commonality>0</commonality>
     <balanceValue>0</balanceValue>
     <balanceValueExplicit>true</balanceValueExplicit>
     <configCategory>Appearance</configCategory>
     <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
     <proceduralPhenotype>GoldFreckled</proceduralPhenotype>
-    <proceduralStrength>0.9</proceduralStrength>
+    <proceduralStrength>0.86</proceduralStrength>
   </HorticultureNovelSeeds.VarietyTraitDef>
   <HorticultureNovelSeeds.VarietyTraitDef>
     <defName>HNS_AuroraVeins</defName>
     <label>Aurora Veins</label>
-    <description>Turquoise luminous-looking branching markings over dark jade tissue. Cosmetic only; does not emit light.</description>
+    <description>Pale mint branching pigmentation over natural leaf tissue; no emitted light.</description>
     <commonality>0</commonality>
     <balanceValue>0</balanceValue>
     <balanceValueExplicit>true</balanceValueExplicit>
     <configCategory>Appearance</configCategory>
     <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
     <proceduralPhenotype>AuroraVeins</proceduralPhenotype>
-    <proceduralStrength>0.95</proceduralStrength>
+    <proceduralStrength>0.89</proceduralStrength>
   </HorticultureNovelSeeds.VarietyTraitDef>
   <!-- Creative showcase: surface, exotic and ecology concepts. -->
   <HorticultureNovelSeeds.VarietyTraitDef>
     <defName>HNS_Velvetleaf</defName>
     <label>Velvetleaf</label>
-    <description>Deep forest-green velvet with soft mauve shading.</description>
+    <description>Deep moss and forest-green foliage with softly shaded velvet-like tissue.</description>
     <commonality>0</commonality>
     <balanceValue>0</balanceValue>
     <balanceValueExplicit>true</balanceValueExplicit>
     <configCategory>Appearance</configCategory>
     <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
     <proceduralPhenotype>Velvetleaf</proceduralPhenotype>
-    <proceduralStrength>0.78</proceduralStrength>
+    <proceduralStrength>0.72</proceduralStrength>
   </HorticultureNovelSeeds.VarietyTraitDef>
   <HorticultureNovelSeeds.VarietyTraitDef>
     <defName>HNS_Lacquered</defName>
     <label>Lacquered</label>
-    <description>Glossy dark emerald tissue with thin wet-looking highlights.</description>
+    <description>Dark glossy-looking green foliage with intermittent pale reflections.</description>
     <commonality>0</commonality>
     <balanceValue>0</balanceValue>
     <balanceValueExplicit>true</balanceValueExplicit>
     <configCategory>Appearance</configCategory>
     <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
     <proceduralPhenotype>Lacquered</proceduralPhenotype>
-    <proceduralStrength>0.78</proceduralStrength>
+    <proceduralStrength>0.74</proceduralStrength>
   </HorticultureNovelSeeds.VarietyTraitDef>
   <HorticultureNovelSeeds.VarietyTraitDef>
     <defName>HNS_Dustbloom</defName>
     <label>Dustbloom</label>
-    <description>Warm chalky powder with soft pale deposits.</description>
+    <description>Soft chalk and warm sage powder concentrated in irregular leaf patches.</description>
     <commonality>0</commonality>
     <balanceValue>0</balanceValue>
     <balanceValueExplicit>true</balanceValueExplicit>
     <configCategory>Appearance</configCategory>
     <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
     <proceduralPhenotype>Dustbloom</proceduralPhenotype>
-    <proceduralStrength>0.72</proceduralStrength>
+    <proceduralStrength>0.68</proceduralStrength>
   </HorticultureNovelSeeds.VarietyTraitDef>
   <HorticultureNovelSeeds.VarietyTraitDef>
     <defName>HNS_Silvered</defName>
     <label>Silvered</label>
-    <description>Brushed pewter and silver tissue with directional highlights.</description>
+    <description>Silver-sage leaf tissue with directional pale highlights.</description>
     <commonality>0</commonality>
     <balanceValue>0</balanceValue>
     <balanceValueExplicit>true</balanceValueExplicit>
     <configCategory>Appearance</configCategory>
     <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
     <proceduralPhenotype>Silvered</proceduralPhenotype>
-    <proceduralStrength>0.77</proceduralStrength>
+    <proceduralStrength>0.74</proceduralStrength>
   </HorticultureNovelSeeds.VarietyTraitDef>
   <HorticultureNovelSeeds.VarietyTraitDef>
     <defName>HNS_HaloEdged</defName>
     <label>Halo-Edged</label>
-    <description>Dark tissue with warm ivory inner margins.</description>
+    <description>Ivory inner leaf margins with a predominantly natural green interior.</description>
     <commonality>0</commonality>
     <balanceValue>0</balanceValue>
     <balanceValueExplicit>true</balanceValueExplicit>
     <configCategory>Appearance</configCategory>
     <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
     <proceduralPhenotype>HaloEdged</proceduralPhenotype>
-    <proceduralStrength>0.9</proceduralStrength>
+    <proceduralStrength>0.84</proceduralStrength>
   </HorticultureNovelSeeds.VarietyTraitDef>
   <HorticultureNovelSeeds.VarietyTraitDef>
     <defName>HNS_Netveined</defName>
     <label>Netveined</label>
-    <description>Gold-green reticulated cell walls on deep emerald tissue.</description>
+    <description>Pale yellow-green reticulated markings within natural foliage.</description>
     <commonality>0</commonality>
     <balanceValue>0</balanceValue>
     <balanceValueExplicit>true</balanceValueExplicit>
     <configCategory>Appearance</configCategory>
     <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
     <proceduralPhenotype>Netveined</proceduralPhenotype>
-    <proceduralStrength>0.9</proceduralStrength>
+    <proceduralStrength>0.86</proceduralStrength>
   </HorticultureNovelSeeds.VarietyTraitDef>
   <HorticultureNovelSeeds.VarietyTraitDef>
     <defName>HNS_Tigerstriped</defName>
     <label>Tigerstriped</label>
-    <description>Ochre and deep aubergine tiger bands.</description>
+    <description>Broken ochre and muted brown bands interspersed with green tissue.</description>
     <commonality>0</commonality>
     <balanceValue>0</balanceValue>
     <balanceValueExplicit>true</balanceValueExplicit>
     <configCategory>Appearance</configCategory>
     <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
     <proceduralPhenotype>Tigerstriped</proceduralPhenotype>
-    <proceduralStrength>0.92</proceduralStrength>
+    <proceduralStrength>0.88</proceduralStrength>
   </HorticultureNovelSeeds.VarietyTraitDef>
   <HorticultureNovelSeeds.VarietyTraitDef>
     <defName>HNS_Marbled</defName>
     <label>Marbled</label>
-    <description>Flowing sage and pale lavender marbling.</description>
+    <description>Organic sage and cream marbling, with original green visible between sectors.</description>
     <commonality>0</commonality>
     <balanceValue>0</balanceValue>
     <balanceValueExplicit>true</balanceValueExplicit>
     <configCategory>Appearance</configCategory>
     <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
     <proceduralPhenotype>Marbled</proceduralPhenotype>
-    <proceduralStrength>0.9</proceduralStrength>
+    <proceduralStrength>0.86</proceduralStrength>
   </HorticultureNovelSeeds.VarietyTraitDef>
   <HorticultureNovelSeeds.VarietyTraitDef>
     <defName>HNS_Opaline</defName>
     <label>Opaline</label>
-    <description>Pearlescent pastel interference bands; static iridescence illusion.</description>
+    <description>Subtle rose, sage and pearl highlights; a static iridescence illusion.</description>
     <commonality>0</commonality>
     <balanceValue>0</balanceValue>
     <balanceValueExplicit>true</balanceValueExplicit>
     <configCategory>Appearance</configCategory>
     <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
     <proceduralPhenotype>Opaline</proceduralPhenotype>
-    <proceduralStrength>0.96</proceduralStrength>
+    <proceduralStrength>0.87</proceduralStrength>
   </HorticultureNovelSeeds.VarietyTraitDef>
   <HorticultureNovelSeeds.VarietyTraitDef>
     <defName>HNS_Crystalline</defName>
     <label>Crystalline</label>
-    <description>Cool faceted mineral-like tissue and angular highlights.</description>
+    <description>Angular pale mineral-like markings concentrated at foliage tips; no physical crystals.</description>
     <commonality>0</commonality>
     <balanceValue>0</balanceValue>
     <balanceValueExplicit>true</balanceValueExplicit>
     <configCategory>Appearance</configCategory>
     <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
     <proceduralPhenotype>Crystalline</proceduralPhenotype>
-    <proceduralStrength>0.96</proceduralStrength>
+    <proceduralStrength>0.88</proceduralStrength>
   </HorticultureNovelSeeds.VarietyTraitDef>
   <HorticultureNovelSeeds.VarietyTraitDef>
     <defName>HNS_Bioluminescent</defName>
     <label>Bioluminescent</label>
-    <description>Midnight blue with bright mint-colored luminous-looking islands. Does not emit light.</description>
+    <description>Sparse pale lime and mint flecks on green tissue; a pigment illusion, not emitted light.</description>
     <commonality>0</commonality>
     <balanceValue>0</balanceValue>
     <balanceValueExplicit>true</balanceValueExplicit>
     <configCategory>Appearance</configCategory>
     <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
     <proceduralPhenotype>Bioluminescent</proceduralPhenotype>
-    <proceduralStrength>0.97</proceduralStrength>
+    <proceduralStrength>0.9</proceduralStrength>
   </HorticultureNovelSeeds.VarietyTraitDef>
   <HorticultureNovelSeeds.VarietyTraitDef>
     <defName>HNS_NebulaMottle</defName>
     <label>Nebula Mottle</label>
-    <description>Indigo and magenta clouds with star-like pinpoints.</description>
+    <description>Patchy wine-purple and olive mottling with pale speckles.</description>
     <commonality>0</commonality>
     <balanceValue>0</balanceValue>
     <balanceValueExplicit>true</balanceValueExplicit>
     <configCategory>Appearance</configCategory>
     <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
     <proceduralPhenotype>NebulaMottle</proceduralPhenotype>
-    <proceduralStrength>0.96</proceduralStrength>
+    <proceduralStrength>0.88</proceduralStrength>
   </HorticultureNovelSeeds.VarietyTraitDef>
   <HorticultureNovelSeeds.VarietyTraitDef>
     <defName>HNS_Coralbranch</defName>
     <label>Coralbranch</label>
-    <description>Vivid coral-pink branching markings with warm tips.</description>
+    <description>Muted salmon and copper branching markings on green tissue.</description>
     <commonality>0</commonality>
     <balanceValue>0</balanceValue>
     <balanceValueExplicit>true</balanceValueExplicit>
     <configCategory>Appearance</configCategory>
     <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
     <proceduralPhenotype>Coralbranch</proceduralPhenotype>
-    <proceduralStrength>0.95</proceduralStrength>
+    <proceduralStrength>0.9</proceduralStrength>
   </HorticultureNovelSeeds.VarietyTraitDef>
   <HorticultureNovelSeeds.VarietyTraitDef>
     <defName>HNS_Prismatic</defName>
     <label>Prismatic</label>
-    <description>Spectral ribbons interrupted by organic texture.</description>
+    <description>Muted olive, copper and plum pigmentation in neighboring highlights.</description>
     <commonality>0</commonality>
     <balanceValue>0</balanceValue>
     <balanceValueExplicit>true</balanceValueExplicit>
     <configCategory>Appearance</configCategory>
     <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
     <proceduralPhenotype>Prismatic</proceduralPhenotype>
-    <proceduralStrength>0.96</proceduralStrength>
+    <proceduralStrength>0.88</proceduralStrength>
   </HorticultureNovelSeeds.VarietyTraitDef>
   <HorticultureNovelSeeds.VarietyTraitDef>
     <defName>HNS_Saltbloom</defName>
     <label>Saltbloom</label>
-    <description>Chalk-white salt-like margins on olive tissue.</description>
+    <description>Intermittent chalk-white deposits at foliage margins.</description>
     <commonality>0</commonality>
     <balanceValue>0</balanceValue>
     <balanceValueExplicit>true</balanceValueExplicit>
     <configCategory>Appearance</configCategory>
     <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
     <proceduralPhenotype>Saltbloom</proceduralPhenotype>
-    <proceduralStrength>0.72</proceduralStrength>
+    <proceduralStrength>0.68</proceduralStrength>
   </HorticultureNovelSeeds.VarietyTraitDef>
   <HorticultureNovelSeeds.VarietyTraitDef>
     <defName>HNS_Ashen</defName>
     <label>Ashen</label>
-    <description>Cool charcoal and grey dusty striations.</description>
+    <description>Soft gray-green dusty tissue with retained plant shading.</description>
     <commonality>0</commonality>
     <balanceValue>0</balanceValue>
     <balanceValueExplicit>true</balanceValueExplicit>
     <configCategory>Appearance</configCategory>
     <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
     <proceduralPhenotype>Ashen</proceduralPhenotype>
-    <proceduralStrength>0.78</proceduralStrength>
+    <proceduralStrength>0.7</proceduralStrength>
   </HorticultureNovelSeeds.VarietyTraitDef>
   <HorticultureNovelSeeds.VarietyTraitDef>
     <defName>HNS_Boggloss</defName>
     <label>Boggloss</label>
-    <description>Dark olive and teal wet-looking patches.</description>
+    <description>Dark olive and jade wet-looking patches with subtle pale reflections.</description>
     <commonality>0</commonality>
     <balanceValue>0</balanceValue>
     <balanceValueExplicit>true</balanceValueExplicit>
     <configCategory>Appearance</configCategory>
     <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
     <proceduralPhenotype>Boggloss</proceduralPhenotype>
-    <proceduralStrength>0.79</proceduralStrength>
+    <proceduralStrength>0.72</proceduralStrength>
   </HorticultureNovelSeeds.VarietyTraitDef>
   <HorticultureNovelSeeds.VarietyTraitDef>
     <defName>HNS_Waxbound</defName>
     <label>Waxbound</label>
-    <description>Warm jade wax and broad pale reflections.</description>
+    <description>Warm jade and yellow-green waxy highlights.</description>
     <commonality>0</commonality>
     <balanceValue>0</balanceValue>
     <balanceValueExplicit>true</balanceValueExplicit>
     <configCategory>Appearance</configCategory>
     <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
     <proceduralPhenotype>Waxbound</proceduralPhenotype>
-    <proceduralStrength>0.76</proceduralStrength>
+    <proceduralStrength>0.7</proceduralStrength>
   </HorticultureNovelSeeds.VarietyTraitDef>
   <HorticultureNovelSeeds.VarietyTraitDef>
     <defName>HNS_Peatstained</defName>
     <label>Peatstained</label>
-    <description>Earthy brown and olive patches concentrated toward the base.</description>
+    <description>Earthy brown and olive pigment concentrated toward lower foliage.</description>
     <commonality>0</commonality>
     <balanceValue>0</balanceValue>
     <balanceValueExplicit>true</balanceValueExplicit>
     <configCategory>Appearance</configCategory>
     <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
     <proceduralPhenotype>Peatstained</proceduralPhenotype>
-    <proceduralStrength>0.74</proceduralStrength>
+    <proceduralStrength>0.7</proceduralStrength>
   </HorticultureNovelSeeds.VarietyTraitDef>
   <HorticultureNovelSeeds.VarietyTraitDef>
     <defName>HNS_ScorchedMargins</defName>
     <label>Scorched Margins</label>
-    <description>Copper-brown dry rims and tip burn with a retained green interior.</description>
+    <description>Copper-brown dry leaf rims and tips with retained green interior.</description>
     <commonality>0</commonality>
     <balanceValue>0</balanceValue>
     <balanceValueExplicit>true</balanceValueExplicit>
     <configCategory>Appearance</configCategory>
     <exclusionTags><li>proceduralPigmentation</li></exclusionTags>
     <proceduralPhenotype>ScorchedMargins</proceduralPhenotype>
-    <proceduralStrength>0.84</proceduralStrength>
+    <proceduralStrength>0.77</proceduralStrength>
   </HorticultureNovelSeeds.VarietyTraitDef>
 </Defs>

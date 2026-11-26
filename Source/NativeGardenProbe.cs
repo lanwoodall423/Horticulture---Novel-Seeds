@@ -52,10 +52,10 @@ namespace HorticultureNovelSeeds
         private static string capture;
         private static bool active;
         private static bool patternGarden, catalogGarden, creativeGarden;
-        private static readonly string[] CreativeTraits = { "Velvetleaf", "Lacquered", "Dustbloom", "Silvered", "HaloEdged", "Netveined", "Tigerstriped", "Marbled", "Opaline", "Crystalline", "Bioluminescent", "NebulaMottle", "Coralbranch", "Prismatic", "Saltbloom", "Ashen", "Boggloss", "Waxbound", "Peatstained", "ScorchedMargins" };
+        private static readonly string[] CreativeTraits = { "Velvetleaf", "Lacquered", "Dustbloom", "Silvered", "HaloEdged", "Netveined", "Tigerstriped", "Marbled", "Opaline", "Crystalline", "Bioluminescent", "NebulaMottle", "Coralbranch", "Prismatic", "Saltbloom", "Ashen", "Boggloss", "Waxbound", "Peatstained", "ScorchedMargins", "Variegated", "Anthocyanin", "MoonFrost", "GoldFreckled", "AuroraVeins" };
         private static readonly string[] CreativeCrops = { "Plant_Corn", "Plant_Cotton", "Plant_Strawberry" };
         private static List<List<VarietyTraitDef>> catalogCases;
-        private static int PanelCount => catalogGarden ? 6 : SpeciesOptions.Length;
+        private static int PanelCount => catalogGarden ? 6 : creativeGarden ? 5 : SpeciesOptions.Length;
         private static readonly string[] CatalogCrops = {
             "Plant_Rice","Plant_Cotton","Plant_Corn", "Plant_Potato","Plant_Cotton","Plant_Hops",
             "Plant_Cotton","Plant_Healroot","Plant_Strawberry", "Plant_Corn","Plant_Corn","Plant_Corn",
@@ -130,6 +130,7 @@ namespace HorticultureNovelSeeds
                     var all = DefDatabase<VarietyTraitDef>.AllDefsListForReading.Where(t => ProceduralPhenotypeUtility.IsCreativeMode(t.proceduralPhenotype)).ToList();
                     Require(all.Count == 20 && all.All(t => t.commonality == 0f && TraitAppearanceCatalog.TryGet(t, out _)), "20 neutral creative definitions");
                     Require(all.Select(t => t.proceduralPhenotype).Distinct().Count() == 20, "distinct creative modes");
+                    Require(CreativeTraits.Length == 25 && CreativeTraits.Select(Trait).All(t => ProceduralPhenotypeUtility.IsExplicitMode(t.proceduralPhenotype)), "all 25 explicit botanical motifs");
                     Require(TraitCatalogValidation.Validate(DefDatabase<VarietyTraitDef>.AllDefsListForReading).Count == 0, "trait catalog validation");
                 }
                 // Noon in local solar time, not merely the global time of day.
@@ -291,7 +292,7 @@ namespace HorticultureNovelSeeds
                     {
                         WriteInventory();
                         onStage("GardenInventory");
-                        End("PASS", creativeGarden ? "72 garden plants; 20 creative traits across three species; four daylight screenshots; 60 mask-free GPU cultivars" : catalogGarden ? "108 garden plants; 90 baseline trait cases; six daylight screenshots; every loaded HNS appearance rule covered" : "72 garden plants, 60 registered cultivars, 12 species, four daylight screenshots");
+                        End("PASS", creativeGarden ? "90 garden plants; 25 refined botanical traits across three species; five daylight screenshots; 75 mask-free GPU cultivars" : catalogGarden ? "108 garden plants; 90 baseline trait cases; six daylight screenshots; every loaded HNS appearance rule covered" : "72 garden plants, 60 registered cultivars, 12 species, four daylight screenshots");
                         return;
                     }
                     foreach (var plant in current) if (plant.Spawned) plant.Destroy(DestroyMode.Vanish);
@@ -322,7 +323,7 @@ namespace HorticultureNovelSeeds
                     string.Join(" + ",entry.Cultivar?.traits.Select(t=>TraitAppearanceCatalog.TryGet(t,out var p)?p.Tier:"External") ?? Enumerable.Empty<string>()),
                     string.Join(" + ",entry.Cultivar?.traits.Select(t=>TraitAppearanceCatalog.TryGet(t,out var p)?p.Motif:"External") ?? Enumerable.Empty<string>())));
             File.WriteAllLines(Path.Combine(root,"HNS-garden-inventory.tsv"),lines);
-            Require(inventory.Count == (catalogGarden ? 108 : 72) && inventory.Count(r=>r.Cultivar != null)==(catalogGarden ? 90 : 60) && (catalogGarden || chosen.Count == (creativeGarden ? 3 : 12)),"complete garden inventory");
+            Require(inventory.Count == (catalogGarden ? 108 : creativeGarden ? 90 : 72) && inventory.Count(r=>r.Cultivar != null)==(catalogGarden ? 90 : creativeGarden ? 75 : 60) && (catalogGarden || chosen.Count == (creativeGarden ? 3 : 12)),"complete garden inventory");
             if (catalogGarden)
             {
                 // Geometry-only traits need no texture treatment. For actual
@@ -339,7 +340,7 @@ namespace HorticultureNovelSeeds
                 Require(WaylithPhenotypeShader.MaskCount == 0, "no prepared masks in pattern garden");
                 if (creativeGarden)
                 {
-                    Require(inventory.Where(r=>r.Cultivar != null).GroupBy(r=>r.Cultivar.traits.Single().proceduralPhenotype).Count() == 20, "all creative motifs sampled");
+                    Require(inventory.Where(r=>r.Cultivar != null).GroupBy(r=>r.Cultivar.traits.Single().proceduralPhenotype).Count() == 25, "all botanical motifs sampled");
                     Require(inventory.Where(r=>r.Cultivar != null).GroupBy(r=>r.Cultivar.traits.Single().proceduralPhenotype).All(g=>g.Count()==3 && g.Select(r=>r.Plant.def).Distinct().Count()==3), "each motif on all three species");
                 }
             }
