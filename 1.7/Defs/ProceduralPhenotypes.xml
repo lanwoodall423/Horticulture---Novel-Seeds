@@ -998,4 +998,59 @@
     <exclusionTags><li>groundHabit</li></exclusionTags>
     <groundHabit>PetalDrift</groundHabit>
   </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_DawnPetals</defName>
+    <label>Dawn Petals</label>
+    <description>Individual reproductive organs open with daylight.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>responsiveHabit</li></exclusionTags>
+    <responsiveHabit>DawnPetals</responsiveHabit>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_DuskPetals</defName>
+    <label>Dusk Petals</label>
+    <description>Individual reproductive organs open after dark.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>responsiveHabit</li></exclusionTags>
+    <responsiveHabit>DuskPetals</responsiveHabit>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_RainPendant</defName>
+    <label>Rain Pendant</label>
+    <description>Reproductive organs droop independently under rain.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>responsiveHabit</li></exclusionTags>
+    <responsiveHabit>RainPendant</responsiveHabit>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_SolarTilt</defName>
+    <label>Solar Tilt</label>
+    <description>Individual reproductive organs tilt with daytime light direction.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>responsiveHabit</li></exclusionTags>
+    <responsiveHabit>SolarTilt</responsiveHabit>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_SilkFlutter</defName>
+    <label>Silk Flutter</label>
+    <description>Reproductive organs flutter independently of the wind-bent plant.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>responsiveHabit</li></exclusionTags>
+    <responsiveHabit>SilkFlutter</responsiveHabit>
+  </HorticultureNovelSeeds.VarietyTraitDef>
 </Defs>

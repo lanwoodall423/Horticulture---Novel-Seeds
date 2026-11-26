@@ -215,3 +215,27 @@ Require(SurfaceFinishMath.Environment(.5f,1f,.01f).Rain==.03125f,"quantized weat
     }
     Require(GroundHabitMath.Generate(GroundHabitKind.PetalDrift,pal with {HasPetal=false},72).All(c=>c.A==0),"uncertain petal palette falls back");
 }
+
+{
+    const int n=64;
+    var green=new OrganSpriteMath.Pixel(38,138,46,255);
+    var gold=new OrganSpriteMath.Pixel(216,172,30,255);
+    var p=new OrganSpriteMath.Pixel[n*n];
+    for(int y=10;y<52;y++)for(int x=14;x<48;x++)p[y*n+x]=green;
+    for(int y=29;y<42;y++)for(int x=23;x<32;x++)p[y*n+x]=gold;
+    for(int y=34;y<39;y++)for(int x=53;x<58;x++)p[y*n+x]=gold;
+    var before=(OrganSpriteMath.Pixel[])p.Clone();
+    var src=ArticulationMath.Prepare(p,n,n);
+    Require(src!=null&&src.Organs.Length==1&&src.Recovered>=117,"only attached reproductive component articulated");
+    foreach(var k in Enum.GetValues<ResponsiveHabitKind>().Where(ArticulationMath.Valid))
+    {
+        var frames=Enumerable.Range(0,ArticulationMath.Frames).Select(i=>ArticulationMath.Compose(src,k,i)).ToArray();
+        Require(frames.Any(f=>f.SequenceEqual(p))&&frames.Any(f=>!f.SequenceEqual(p)),k+" native source pose and real organ change");
+        Require(frames.All(f=>f.Length==p.Length&&Enumerable.Range(0,p.Length).All(i=>f[i].A>=p[i].A)),k+" no anatomical alpha holes");
+        Require(frames.All(f=>f[36*n+55]==gold&&f[12*n+25]==green),k+" detached organ and stationary foliage preserved");
+    }
+    Require(before.SequenceEqual(p),"immutable source art");
+    Require(ArticulationMath.Frame(ArticulationMath.Phase(ResponsiveHabitKind.DawnPetals,.5f,1f,0f,false,false))==8&&ArticulationMath.Frame(ArticulationMath.Phase(ResponsiveHabitKind.DawnPetals,0f,0f,0f,false,false))==0,"day and night local opening");
+    Require(ArticulationMath.Frame(ArticulationMath.Phase(ResponsiveHabitKind.RainPendant,.5f,1f,.5f,true,false))==0,"shelter suppresses rain articulation");
+    Require(ArticulationMath.WindFrame(0)!=ArticulationMath.WindFrame(2),"native wind phase changes organ frame");
+}

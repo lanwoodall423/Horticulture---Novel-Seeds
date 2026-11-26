@@ -41,4 +41,14 @@
       <renderQueue>2900</renderQueue>
     </shaderProgram>
   </ShaderDef>
+  <ShaderDef>
+    <defName>HNS_OrganArticulation</defName>
+    <shaderProgram>
+      <vertexShaderFileName>PlantWindSway.vert.glsl</vertexShaderFileName>
+      <fragmentShaderFileName>HNS_OrganArticulation.frag.glsl</fragmentShaderFileName>
+      <transparent>true</transparent>
+      <depthWrite>true</depthWrite>
+      <renderQueue>2900</renderQueue>
+    </shaderProgram>
+  </ShaderDef>
 </Defs>
