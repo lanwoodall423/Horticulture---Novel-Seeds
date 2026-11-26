@@ -484,4 +484,65 @@
     <proceduralPhenotype>TwoToneCanopy</proceduralPhenotype>
     <proceduralStrength>0.91</proceduralStrength>
   </HorticultureNovelSeeds.VarietyTraitDef>
+  <!-- Experimental independent morphology alleles. -->
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_Arching</defName>
+    <label>Arching</label>
+    <description>A gently curved, asymmetric upright growth habit.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>plantForm</li></exclusionTags>
+    <plantForm>Arching</plantForm>
+    <plantFormStrength>0.9</plantFormStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_FanCrowned</defName>
+    <label>Fan-Crowned</label>
+    <description>A broad spreading upper canopy with a narrower base.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>plantForm</li></exclusionTags>
+    <plantForm>FanCrowned</plantForm>
+    <plantFormStrength>0.9</plantFormStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_Rounded</defName>
+    <label>Rounded</label>
+    <description>A fuller middle canopy with compact rounded upper growth.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>plantForm</li></exclusionTags>
+    <plantForm>Rounded</plantForm>
+    <plantFormStrength>0.9</plantFormStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_Weeping</defName>
+    <label>Weeping</label>
+    <description>A spreading canopy with drooping outer foliage.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>plantForm</li></exclusionTags>
+    <plantForm>Weeping</plantForm>
+    <plantFormStrength>0.95</plantFormStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
+  <HorticultureNovelSeeds.VarietyTraitDef>
+    <defName>HNS_Spired</defName>
+    <label>Spired</label>
+    <description>A tapered, elongated upright canopy with narrow upper growth.</description>
+    <commonality>0</commonality>
+    <balanceValue>0</balanceValue>
+    <balanceValueExplicit>true</balanceValueExplicit>
+    <configCategory>Appearance</configCategory>
+    <exclusionTags><li>plantForm</li></exclusionTags>
+    <plantForm>Spired</plantForm>
+    <plantFormStrength>0.94</plantFormStrength>
+  </HorticultureNovelSeeds.VarietyTraitDef>
 </Defs>

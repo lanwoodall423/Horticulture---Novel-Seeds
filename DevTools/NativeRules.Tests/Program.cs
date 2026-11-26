@@ -27,3 +27,35 @@ restored.recentEvents = new List<string> { null, "", "a", "a", new string('x', 2
 restored.Normalize();
 Require(restored.recentEvents.SequenceEqual(new[] { "a" }), "corrupt duplicate identities normalized");
 Console.WriteLine("Native rule tests passed. JSON round-trip is not RimWorld Scribe evidence.");
+
+// Verify the geometry contract independently of Unity, including orientation,
+// base anchoring and non-folding triangles at maximum strength.
+foreach (PlantFormKind kind in Enum.GetValues<PlantFormKind>().Where(k=>k!=PlantFormKind.None))
+{
+    foreach(bool flip in new[]{false,true})
+    {
+        const int n=PlantFormMath.Subdivisions;
+        for(int i=0;i<=n;i++)
+        {
+            float x=i/(float)n;
+            Require(PlantFormMath.Warp(kind,1f,x,0f,flip)==(x,0f),kind+" base anchor");
+        }
+        var grid=new (float X,float Y)[n+1,n+1];
+        for(int j=0;j<=n;j++)for(int i=0;i<=n;i++)
+        {
+            var q=PlantFormMath.Warp(kind,1f,i/(float)n,j/(float)n,flip);
+            if(!float.IsFinite(q.X)||!float.IsFinite(q.Y)||q.X<-.5f||q.X>1.5f||q.Y<0f||q.Y>1.3f)throw new Exception(kind+" bounds");
+            grid[i,j]=q;
+        }
+        static float Area((float X,float Y)a,(float X,float Y)b,(float X,float Y)c)=>
+            (b.X-a.X)*(c.Y-a.Y)-(b.Y-a.Y)*(c.X-a.X);
+        for(int j=0;j<n;j++)for(int i=0;i<n;i++)
+        {
+            var a=grid[i,j];var b=grid[i+1,j];var c=grid[i+1,j+1];var d=grid[i,j+1];
+            if(Area(a,b,c)<=.0001f||Area(a,c,d)<=.0001f)throw new Exception(kind+" folded triangle");
+        }
+        Require(grid[0,n]!=(0f,1f)||grid[n,n]!=(1f,1f),kind+" actual bounded deformation");
+    }
+}
+Require(PlantFormMath.Warp(PlantFormKind.Weeping,float.NaN,.3f,.8f,false)==(.3f,.8f),"invalid form falls back");
+Console.WriteLine("Plant form geometry tests passed.");

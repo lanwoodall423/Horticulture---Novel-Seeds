@@ -27,6 +27,9 @@ namespace HorticultureNovelSeeds
             if (!proceduralOnly && TryPrintIndependentMaskLayers(plant, layer, visual)) return false;
             Vector3 trueCenter = plant.TrueCenter();
             bool wantSnowOverlay = plant.Position.GetSnowDepth(plant.Map) > 0.8f;
+            // Snow-overlay alignment and independently transformed mask layers
+            // are deliberately outside this initial form proof.
+            var form = wantSnowOverlay ? default : PlantFormMesh.Resolve(comp);
             Rand.PushState();
             Rand.Seed = plant.Position.GetHashCode();
             try
@@ -77,7 +80,7 @@ namespace HorticultureNovelSeeds
                         PlantUtility.SetWindExposureColors(WorkingColors, plant);
                     }
 
-                    Printer_Plane.PrintPlane(layer, adjustedCenter, planeSize, material, rotation, flipUv: flipped, uvs: uvs, colors: WorkingColors, topVerticesAltitudeBias: Plant.TopVerticesAltitudeBias, uvzPayload: plant.HashOffset() % 1024);
+                    PlantFormMesh.Print(plant, layer, adjustedCenter, planeSize, material, rotation, flipped, uvs, WorkingColors, Plant.TopVerticesAltitudeBias, plant.HashOffset() % 1024, form);
 
                     if (wantSnowOverlay && snowMaterial != null)
                     {

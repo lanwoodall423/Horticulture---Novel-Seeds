@@ -97,6 +97,8 @@ namespace HorticultureNovelSeeds
         public float commonality = 1f;
         public ProceduralPhenotype proceduralPhenotype;
         public float proceduralStrength = 1f;
+        public PlantFormKind plantForm;
+        public float plantFormStrength = 1f;
         public float visualScale = 1f;
         public float yieldFactor = 1f;
         public float growthRateFactor = 1f;

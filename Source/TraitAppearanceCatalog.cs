@@ -104,6 +104,11 @@ namespace HorticultureNovelSeeds
             ["HNS_StripedStalk"] = new("Rare", "Alternating wine and green markings on lower central tissue.", 1f, 1f, 1f, 1f, 48, 0.94f, 1f, 1f, 0f),
             ["HNS_BlueJade"] = new("Uncommon", "Muted blue-green foliage with jade highlights, retaining original fruit colors.", 1f, 1f, 1f, 1f, 49, 0.85f, 1f, 1f, 0f),
             ["HNS_TwoToneCanopy"] = new("Rare", "Deep green lower foliage with lighter lime-green upper growth.", 1f, 1f, 1f, 1f, 50, 0.91f, 1f, 1f, 0f),
+            ["HNS_Arching"] = new("Uncommon", "A gently curved, asymmetric upright growth habit.", 1f, 1f, 1f, 1f, 0, 0f, 1f, 1f, 0f),
+            ["HNS_FanCrowned"] = new("Uncommon", "A broad spreading upper canopy with a narrower base.", 1f, 1f, 1f, 1f, 0, 0f, 1f, 1f, 0f),
+            ["HNS_Rounded"] = new("Common", "A fuller middle canopy with compact rounded upper growth.", 1f, 1f, 1f, 1f, 0, 0f, 1f, 1f, 0f),
+            ["HNS_Weeping"] = new("Rare", "A spreading canopy with drooping outer foliage.", 1f, 1f, 1f, 1f, 0, 0f, 1f, 1f, 0f),
+            ["HNS_Spired"] = new("Rare", "A tapered, elongated upright canopy with narrow upper growth.", 1f, 1f, 1f, 1f, 0, 0f, 1f, 1f, 0f),
         };
 
         internal static bool TryGet(VarietyTraitDef trait, out Profile profile)
