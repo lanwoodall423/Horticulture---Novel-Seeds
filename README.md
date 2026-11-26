@@ -11,3 +11,5 @@ Source f172d6e (native 1.7.5014 rev1195); isolated run 7f21c769241c44d6812f1d36c
 - Original game settings and saves were not used by the fixture.
 
 Files: source frames, GIFs, gallery generator, inherited-trait and mesh TSVs, measured update intervals and preparation costs. Update intervals reflect paused isolated test conditions, not a general gameplay FPS benchmark.
+
+Final receipt: BLOCKED / FIXTURE_TIMEOUT after passing Startup, ExpressionInheritance, ExpressionShowcase and ExpressionDenseField. Full save/reload did not finish. Test process stopped and test package removed; normal config, preferences and saves unchanged. This is partial validation of the opt-in beta, not a release qualification.
