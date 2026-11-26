@@ -1290,3 +1290,30 @@ yield, seed/produce detail UI, other scales and translated body text
 remain separately unqualified. Reference art remains reference art.
 
 Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/15464abc2bf88f45240b8e715c7f148a7532fc83
+
+### Living Tissue Atlases: art-derived internal foliage anatomy
+
+Five zero-weight cosmetic botanical detail candidates: Ivory Nerves,
+Crimson Network, Living Glass, Vascular Chimera and Bronze Reticulum.
+Conservative green-tissue classification excludes likely reproductive
+pixels. Chamfer distance fields and geodesic territory assignment derive
+local axes, vein strength, thin-tissue weights and territory variation.
+One bounded shared data map per source, shared source/allele materials,
+original texture and alpha, native wind stage, no extra planes. The
+fragment shader also guards against non-green source color. Live sky/rain
+uniforms change without remeshing. Phenotype observations come from
+accepted material paths; Living Glass is not described in darkness.
+
+Native Vascular Garden 352baae65378456ca0b8d11b70eda47f, source c130d80,
+RimWorld 1.7.5014 rev1195 AllPerformance: all six stages passed, 18
+same plants across noon/night/noon, 15 modified individuals, three
+controls, 45 native accepted material states, zero fallbacks, five
+64x64 anatomy maps with 13-21 inferred regions, 15 stable materials.
+Anatomy regression tests, existing rules and builds passed. Normal
+saves/config/preferences unchanged and temporary test cleaned up.
+Art-derived proxy, not exact anatomical segmentation or true optical
+transmission. Fine marks are subtle at ordinary zoom. Wet-weather
+response, same-cultivar individual variation, combined effects, natural
+activation and dense-field performance remain unqualified.
+
+Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/161a3a19bb2464ee1b6c017274b5bcec6f08e314
