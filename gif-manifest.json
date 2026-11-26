@@ -1,0 +1,38 @@
+[
+  {
+    "file": "field-guide-tour.gif",
+    "frames": 6,
+    "source_capture_indices": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "bytes": 223310
+  },
+  {
+    "file": "discovery-to-cultivar.gif",
+    "frames": 5,
+    "source_capture_indices": [
+      3,
+      7,
+      8,
+      9,
+      10
+    ],
+    "bytes": 138694
+  },
+  {
+    "file": "collection-and-breeding.gif",
+    "frames": 4,
+    "source_capture_indices": [
+      2,
+      4,
+      5,
+      6
+    ],
+    "bytes": 168289
+  }
+]

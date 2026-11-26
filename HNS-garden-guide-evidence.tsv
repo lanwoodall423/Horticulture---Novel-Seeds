@@ -1,0 +1,11 @@
+Stage	Discovery count	Ready	Packs	Page	Repaint count	Screenshot
+01-empty	0	0	0	Overview	52	HNS-garden-guide-01-empty.png
+02-overview	4	1	1	Overview	102	HNS-garden-guide-02-overview.png
+03-inbox	4	1	1	Discoveries	153	HNS-garden-guide-03-inbox.png
+04-cultivar	4	1	1	Cultivars	203	HNS-garden-guide-04-cultivar.png
+05-compare	4	1	1	Compare	253	HNS-garden-guide-05-compare.png
+06-breeding	4	1	1	Breeding	304	HNS-garden-guide-06-breeding.png
+07-preserved	4	0	1	Discoveries	354	HNS-garden-guide-07-preserved.png
+08-recovered	4	0	2	Discoveries	426	HNS-garden-guide-08-recovered.png
+09-naming	4	0	2	Discoveries	476	HNS-garden-guide-09-naming.png
+10-documented	3	0	1	Cultivars	568	HNS-garden-guide-10-documented.png

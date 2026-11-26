@@ -1,0 +1,110 @@
+{
+    "schemaVersion":  1,
+    "run":  "5a14900f207e4b9eb4b197c22089673a",
+    "loadout":  "AllPerformance",
+    "shaderProbe":  false,
+    "gardenProbe":  false,
+    "patternGarden":  false,
+    "catalogGarden":  false,
+    "creativeGarden":  false,
+    "cultivarGarden":  false,
+    "formGarden":  false,
+    "organGarden":  false,
+    "developmentGarden":  false,
+    "windGarden":  false,
+    "surfaceGarden":  false,
+    "detailGarden":  false,
+    "vascularGarden":  false,
+    "lifeSuiteGarden":  false,
+    "lifeSuiteMotion":  false,
+    "sculptureGarden":  false,
+    "forgeGarden":  false,
+    "expressionGarden":  false,
+    "expressionProduction":  false,
+    "fieldGuide":  true,
+    "architectureGarden":  false,
+    "poseGarden":  false,
+    "articulationGarden":  false,
+    "mosaicGarden":  false,
+    "neighborhoodGarden":  false,
+    "chronicleGarden":  false,
+    "groundGarden":  false,
+    "status":  "PASS",
+    "reason":  "actual native field guide pages and real preserve-harvest-seed-pack-documentation loop",
+    "sourceHead":  "8db1733eeab21820d8dc4a837ee313676fd10c03",
+    "version":  "0.1.0-alpha+g8db1733eeab2",
+    "assemblySha256":  "DE59E1C7DE83529222A62435DCD8C1598F45D6DD1F77CE654AE070E15296F814",
+    "activePackages":  [
+                           "brrainz.harmony",
+                           "aruclya.rimworldloadingoptimizer",
+                           "taranchuk.fastergameloading",
+                           "ludeon.rimworld",
+                           "lan.horticulture.novelseeds",
+                           "vr.missilegirl"
+                       ],
+    "optimizerIdentities":  [
+                                {
+                                    "packageId":  "aruclya.rimworldloadingoptimizer",
+                                    "workshopId":  "3817423183",
+                                    "version":  "5.4.0",
+                                    "declaredVersions":  [
+                                                             "1.6",
+                                                             "1.7"
+                                                         ],
+                                    "versionFolder":  "1.7",
+                                    "metadataException":  false,
+                                    "aboutSha256":  "B97AF5328C8F01B476FEBDE0AE268D174F6D2775405CAB1EF2460F2B7AF83798",
+                                    "assemblySha256":  "82DBC0F18445D72C6509B5A1907A1AF0E3B470C4FE61E6238D94638C69DE61C3"
+                                },
+                                {
+                                    "packageId":  "taranchuk.fastergameloading",
+                                    "workshopId":  "3652938473",
+                                    "version":  "2026.11.15.1",
+                                    "declaredVersions":  [
+                                                             "1.6",
+                                                             "1.7"
+                                                         ],
+                                    "versionFolder":  "1.7",
+                                    "metadataException":  false,
+                                    "aboutSha256":  "3A6FEF6F4180FAF0809CB1C8C7A8E4BE82A5D441B35343DCFBD1D9322347BA15",
+                                    "assemblySha256":  "189939F39C58A41617DFBA3BD8362243361C16E9368DAD28FB3E2429584D442C"
+                                },
+                                {
+                                    "packageId":  "vr.missilegirl",
+                                    "workshopId":  "3712928623",
+                                    "version":  "",
+                                    "declaredVersions":  [
+                                                             "1.6"
+                                                         ],
+                                    "versionFolder":  "1.6",
+                                    "metadataException":  true,
+                                    "aboutSha256":  "E292D36EEFF64475CF19CC28DCE1EA57835B66FE78A76096FF3543E74B8C14AE",
+                                    "assemblySha256":  "1E9DDB56998F7B963962095944AF3AEABBC90826E55BD53CB8083D3CC7E4B0B3",
+                                    "loadFoldersSha256":  "EB693CECC562ED566B5DDA8195625B1208A8F3A5AC4035C964A9D48D5A027DBA"
+                                }
+                            ],
+    "stages":  [
+                   "Startup",
+                   "GuideEmpty",
+                   "GuideOverview",
+                   "GuideInbox",
+                   "GuideCultivar",
+                   "GuideComparison",
+                   "GuideBreeding",
+                   "GuidePreservation",
+                   "GuideDocumentation"
+               ],
+    "fixtureLine":  "2026-11-26 12:20:31.739  INFO [Verse] [HNS NativeFixture] 5a14900f207e4b9eb4b197c22089673a 0.1.0-alpha+g8db1733eeab2 PASS actual native field guide pages and real preserve-harvest-seed-pack-documentation loop",
+    "processId":  48960,
+    "testProcessStopped":  true,
+    "testPackageRemoved":  true,
+    "normalConfigUnchanged":  true,
+    "normalPrefsUnchanged":  true,
+    "normalSavesUnchanged":  true,
+    "isolatedSaveDirectory":  "C:\\Users\\Lan\\AppData\\Local\\Temp\\hns-native-5a14900f207e4b9eb4b197c22089673a",
+    "startedUtc":  "2026-11-26T17:19:37.4431565Z",
+    "finishedUtc":  "2026-11-26T17:20:32.9322693Z",
+    "gameVersion":  "1.7.5014 rev1195",
+    "retiredManualDefaultNodes":  271,
+    "retiredLegacyVisualNodes":  180
+}
