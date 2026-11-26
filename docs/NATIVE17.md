@@ -93,7 +93,7 @@ Printer_Plane. Do not repurpose those channels blindly.
 The next isolated shader proof should retain vanilla wind and alpha/seasonal
 behavior while adding controlled phenotype parameters, compare against the
 existing CPU compositor, and only then introduce masks/procedural patterns.
-Shader code, visual comparisons and batching are not yet implemented or
+At the time of this investigation, shader code, visual comparisons and batching were not yet implemented or
 qualified. No Core shader files were changed.
 
 ## Verified baseline retest (2026-11-25)
@@ -122,7 +122,7 @@ registration must be explicit for non-vanilla shader identities. The cache is
 bounded to 128 materials for the process lifetime; it does not evict materials
 that remain in the engine's wind registry.
 
-Activation is limited to the isolated native shader fixture. Seasonal sources,
+The initial unmasked proof was limited to the isolated native shader fixture. Seasonal sources,
 translucency, other shaders, semantic/isolated mask layers and unavailable
 layouts continue through the existing CPU path. No Core files are changed.
 No new CPU readback is performed on the shader material path. The fixture
@@ -136,3 +136,74 @@ Run it separately, with the game closed:
 Shader files are staged only for that switch. Ordinary gameplay candidates
 remain on the existing renderer. Full seasonal/mask/produce/preview semantics,
 artist controls, batching and performance remain unqualified.
+
+## Verified shader proof and packed semantic masks (2026-11-25)
+
+Both runs used the installed RimWorld 1.7.5014 rev1195, the Minimal loadout
+(Core, Harmony, Horticulture), and the isolated shader-probe runner. Both
+completed with a PASS receipt and all five cleanup/preservation booleans true
+(process stopped, temporary package removed, normal configuration, preferences,
+and save inventory unchanged). Workshop duplicate-package scan messages and
+unrelated Vulkan/Steam startup diagnostics remain present; no HNS-specific
+shader/seed texture/null-material errors were identified in the captured logs.
+
+### Whole-plant proof
+
+Commit: 81313f65199da5646fe02cabec188c5cb7ab7a8f.
+Run: 571f5baa040644e68e6b2dbffd2acbd8.
+All four stages passed: Startup, ShaderPixelParity, ShaderFallback, ShaderField.
+GPU readback of three opaque swatches and one cutout matched the CPU reference
+with maximum absolute RGB channel error 0.002 (normalized 0-1); maximum
+color change 0.612. Three styled potato plants were printed, with three vanilla
+controls. Four materials were cached and the sway uniform updated to 44.
+The screenshot was captured but the debug log overlay obstructed the test
+field, so it is not an independent visual acceptance pass.
+
+- DLL SHA256: EE9F30858344CD12E453D04F3F170A6AD012257CCB2092CBD79A696C235AC60D
+- Receipt SHA256: 6D6AE155444BDFE6831CAC5C1E3EA1069C5A7C0CEA9D496F1C16108821209B85
+- Player log SHA256: 5D1E794E9F4DEBFC4B6DAC8B128332CCC69960ECC2DFB0BB4A779FFAC930C7E1
+
+### Three-channel proof
+
+Commit: 62af5800b9540c7254e137f36cf7d55941b32150.
+Run: be0ad6af74f848cab899867fb20d9aa4.
+All five stages passed: Startup, ShaderPixelParity, ShaderMaskParity,
+ShaderFallback, ShaderField. Both whole-plant and packed-mask swatch tests
+reported maximum RGB error 0.002. Mask tests included overlapping source
+layers, all three region styles, neutral/unassigned pixels, and guarded
+translucency fallback. The field printed three whole-plant potatoes,
+three masked corn plants, and six vanilla comparison plants, using two
+prepared masks and seven cached shader materials. Sway uniform 26.04455.
+The unobstructed 1280x720 screenshot was inspected: visibly colored plants
+are present in the field, though nighttime/dim lighting and tree shadow
+limit detailed visual assessment. This is proof of concept, not full
+art-direction or seasonal/wind-animation visual approval.
+
+- DLL SHA256: AD00442112D9653EC1B4C773E29849AEF8B224E84C57A2CC8959F01DD3734B76
+- Receipt SHA256: 36D46AA3516B09EC0B6939E8089671F4BB297527A337A7118D8344CCE7816BDF
+- Player log SHA256: AE2E5C0956A46E64CA7E1B90C4D47758771223496E1B5A2F3C5C70871191D0F2
+- Field screenshot SHA256: ED588434EC0261803A0D25567276C00B32EF146AE1ECD5556C284122B750C9A4
+- Packed-mask swatch screenshot SHA256: 103F847B878783CD5E8E09B58F87F167FB00ABDFDCD97997832ABC49FC797FF3
+
+The packed representation is a 256x256 linear, point-filtered RGBA32
+texture without mipmaps, with one-hot RGB for Produce, Leaves and Stem
+respectively (alpha constant 255). The existing LayerAt priority and Y
+orientation are retained; unassigned pixels use the source unchanged.
+Preparation is explicit before map printing, bounded to 64 masks; the
+shader material cache remains bounded to 128. No new readback or mask
+texture construction occurs on the shader Print path. Prepared masks are
+accepted only when source identity and stable resolved layer references
+and hashes match. Shared manual resolver clones, unavailable/stale masks,
+seasonal sources, non-opaque styles and independent geometry fall back to
+the legacy renderer. These are conservative experimental choices, not
+production cache lifecycle or invalidation guarantees. No automatic mask
+algorithm or persisted mask format was replaced.
+
+Next: qualify cache ownership, invalidation and destruction with the engine
+wind registry, broaden texture variants and shared/manual masks, test
+daylight and seasonal visuals, enable an explicitly reversible renderer
+setting only after qualification, integrate designer/produce parity, and
+measure batching, VRAM and frame time before making performance claims.
+Procedural patterns and shader-driven anatomical classification remain
+unimplemented. Keep the existing CPU renderer and the 1.6 release intact.
+Artifacts remain local under DevTools/TestResults/native-<run>.

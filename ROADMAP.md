@@ -2,7 +2,7 @@
 
 **Updated:** 2026-11-25
 **Target:** standalone RimWorld 1.7 / Waylith development
-**Status:** standalone .NET 10 candidate compiles; native UI and journal implemented in first pass; five-stage native gameplay fixture and full preservation receipt passed; opt-in opaque phenotype shader proof in development; full runtime and rendering qualification pending. See [native development notes](docs/NATIVE17.md).
+**Status:** standalone .NET 10 candidate compiles; native UI and journal implemented in first pass; five-stage native gameplay fixture and full preservation receipt passed; isolated whole-plant and RGB semantic-mask shader proofs passed GPU swatch parity and field rendering; production shader integration and full runtime/rendering qualification pending. See [native development notes](docs/NATIVE17.md).
 
 This is the canonical forward-looking development plan. [The release checklist](RELEASE_CHECKLIST.md), [current architecture](architect.md), [compatibility policy](docs/COMPATIBILITY.md), and [RC test plan](docs/RC_TEST_PLAN.md) describe the existing 1.6 release baseline unless explicitly updated for 1.7. Do not interpret this roadmap as a support declaration, completed implementation, or permission to publish a release.
 
