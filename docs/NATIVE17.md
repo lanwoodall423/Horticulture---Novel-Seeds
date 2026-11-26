@@ -1098,3 +1098,41 @@ five traits upright in five states. No changes to previous approved
 render paths. Earlier inverted gallery superseded.
 
 Upright evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/f3345d5617ae2a47ab6f7b971037bea83f893dc1
+
+### Living mosaics: individual organ expression
+
+Five additional zero-weight cosmetic candidates: Succession Bloom,
+Sector Sport, Biform Harvest, Sister Buds and Ripening Mosaic.
+An attached reproductive-component classifier feeds organ-local shape
+and pigment expression; at least one organ remains native. Eight
+seed-selected atlas slots plus frame zero (exact original) share the
+corrected organ-articulation shader. Native mesh UV.z (HashOffset modulo
+1024) selects a stable bounded variant without unique per-instance
+textures/materials or new geometry. Each source has at least two
+distinct variants; slots can repeat. A conservative fallback is retained
+for uncertain or insufficient anatomy. Prior responsive and articulated
+experiments retain separate fixture switches.
+
+Source 2fb821f9a20a802574f5dbe3b1de2fc236ac7de4, AllPerformance run
+6ba33ad75b3342c9b5dfd1f26f08b84e (RimWorld 1.7.5014 rev1195):
+all eight stages passed; 90 plants, 75 modified individuals, 15 controls,
+five individuals of one registered cultivar in each species/trait group.
+All 75 printed with verified native quad UV.z and stable seed/material
+on remesh. 30 shared materials and atlases; 240 prepared non-neutral
+slots; 30 original-source orientation comparisons; nine GPU frame
+indices passed. Both builds clean, all previous and 132 new CPU rules
+passed. Normal saves/config/preferences and test cleanup passed.
+
+Sector Sport, Ripening Mosaic and Succession Bloom show clear local
+differences, especially on flowering crops; Sister Buds and Biform
+Harvest are subtler. These are static mature visual mosaics, not real
+developmental timing or gameplay mutation. Other crops, save/reload,
+growth-stage transitions, combined effects, performance and ordinary
+activation remain unqualified. No manual masks, extra geometry, new
+mechanics or changes to legacy 1.6 data.
+
+Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/9cf2b754ec9f86d210981711a8d3c90bc590f095
+
+Reproduce with RimWorld closed:
+
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -MosaicGarden
