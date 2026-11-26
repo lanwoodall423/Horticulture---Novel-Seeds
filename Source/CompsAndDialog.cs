@@ -176,7 +176,7 @@ namespace HorticultureNovelSeeds
             Plant plant = parent as Plant;
             if(plant?.Spawned==true&&HasAnyTraits)
             {
-                yield return new Command_Action{defaultLabel="Field notes",defaultDesc="Read this individual's rendered phenotype, recorded growth history and documented cultivar potential.",icon=plant.def.uiIcon??BaseContent.BadTex,action=()=>Find.WindowStack.Add(new Dialog_MessageBox(PhenotypeObservation.Notes(this)))};
+                yield return new Command_Action{defaultLabel="Field notes",defaultDesc="Read this individual's rendered phenotype, recorded growth history and documented cultivar potential.",icon=plant.def.uiIcon??BaseContent.BadTex,action=()=>Find.WindowStack.Add(new Dialog_PhenotypeNotes(this))};
             }
             if (!PendingDiscovery || plant?.Spawned != true || plant.Growth < 0.999f || plant.Blighted)
             {

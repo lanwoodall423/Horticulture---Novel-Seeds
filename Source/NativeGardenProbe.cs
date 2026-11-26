@@ -50,6 +50,8 @@ namespace HorticultureNovelSeeds
         private static Action<string,string> finish;
         private static int panel, frames, captureAge;
         private static string capture;
+        private static int notesCaptureAge;
+        private static bool notesOpened;
         private static bool active;
         private static bool patternGarden, catalogGarden, creativeGarden, cultivarGarden, formGarden, organGarden, developmentGarden, windGarden, surfaceGarden, detailGarden, architectureGarden, poseGarden, groundGarden;
         private static readonly string[] GroundTraits={"Rootflare","RunnerHabit","BasalCarpet","LeafLitter","PetalDrift"};
@@ -517,6 +519,23 @@ namespace HorticultureNovelSeeds
                 }
                 if (capture != null && File.Exists(capture) && new FileInfo(capture).Length > 1000 && ++captureAge >= 30)
                 {
+                    if(panel==PanelCount-1&&(formGarden||mosaicGarden||groundGarden))
+                    {
+                        string notesPath=Path.Combine(root,"HNS-garden-field-notes.png");
+                        if(!notesOpened)
+                        {
+                            var subject=inventory.Where(r=>r.Panel==panel+1&&r.Cultivar!=null)
+                                .OrderByDescending(r=>r.Plant.TryGetComp<CompPlantVariety>().VisualObservation?.Prose().Length??0).First();
+                            var c=subject.Plant.TryGetComp<CompPlantVariety>();
+                            var command=c.CompGetGizmosExtra().OfType<Command_Action>().Single(g=>g.defaultLabel=="Field notes");
+                            command.action();notesOpened=true;notesCaptureAge=0;
+                            File.WriteAllText(Path.Combine(root,"HNS-garden-field-notes.txt"),subject.Plant.LabelCap+"\n\n"+PhenotypeObservation.Notes(c));
+                            return;
+                        }
+                        if(++notesCaptureAge==15){ScreenCapture.CaptureScreenshot(notesPath);return;}
+                        if(notesCaptureAge<30||!File.Exists(notesPath)||new FileInfo(notesPath).Length<1000)return;
+                        Find.WindowStack.TryRemove(typeof(Dialog_PhenotypeNotes),false);
+                    }
                     onStage("GardenPanel" + (panel+1));
                     if (++panel == PanelCount)
                     {

@@ -161,7 +161,10 @@ namespace HorticultureNovelSeeds
             var v = selectedCultivar;
             var info = HorticulturePresentationPolicy.ForCultivar(v);
             if (info == null) { Widgets.Label(rect, "Select a documented cultivar."); return; }
-            var view = NativeUi.Scroll(rect, ref rightScroll, 720 + info.AuthorizedTraits.Count * 66 + (lineage ? 128 * 34 : 0));
+            string potential=info.PotentialAppearance;
+            string potentialText=string.IsNullOrEmpty(potential)?null:"Potential appearance (genetic tendencies; expression varies):\n"+potential;
+            float potentialHeight=potentialText==null?0f:Mathf.Max(48f,Text.CalcHeight(potentialText,Mathf.Max(1f,rect.width-18f))+8f);
+            var view = NativeUi.Scroll(rect, ref rightScroll, 580 + potentialHeight + info.AuthorizedTraits.Count * 66 + (lineage ? 128 * 34 : 0));
             try
             {
                 float y = 0;
@@ -169,7 +172,7 @@ namespace HorticultureNovelSeeds
                 NativeUi.Label(view, ref y, v.FirstDiscoveredInfo, 42);
                 NativeUi.Label(view, ref y, info.Origin);
                 NativeUi.Label(view, ref y, info.ModifierText, 64);
-                if(!string.IsNullOrEmpty(info.PotentialAppearance))NativeUi.Label(view,ref y,"Potential appearance (genetic tendencies; expression varies):\n"+info.PotentialAppearance,126);
+                if(potentialText!=null)NativeUi.Label(view,ref y,potentialText,potentialHeight);
                 foreach (var trait in info.AuthorizedTraits)
                     NativeUi.Label(view, ref y, TraitColorUI.Label(trait) + ": " + TraitColorUI.Description(trait), 62);
                 DrawJournal(view, ref y, info.Journal);
