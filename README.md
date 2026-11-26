@@ -1,3 +1,5 @@
+> **Superseded diagnostic gallery:** a follow-up native GPU swatch test found that the original shader reverses the outer atlas rows. The images below are authentic captures but do not demonstrate correct phase-to-pose mapping. See [failed parity evidence](gpu-parity-before-fix.tsv) (run a0e0a175ebf14d5aa7771a58e5fecbfb, source b03730c).
+
 # Horticulture - independent reproductive organ articulation
 
 Actual RimWorld 1.7.5014 rev1195, AllPerformance run
