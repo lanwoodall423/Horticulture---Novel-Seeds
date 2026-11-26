@@ -74,7 +74,7 @@ namespace HorticultureNovelSeeds
         // to bypass the tradeoff policy for actual mechanical traits.
         private static bool ValidProceduralCosmetic(VarietyTraitDef t)
         {
-            return t.proceduralPhenotype >= ProceduralPhenotype.Variegated && t.proceduralPhenotype <= ProceduralPhenotype.AuroraVeins
+            return ProceduralPhenotypeUtility.IsExplicitMode(t.proceduralPhenotype)
                 && float.IsFinite(t.proceduralStrength) && t.proceduralStrength > 0f && t.proceduralStrength <= 1f
                 && t.balanceValueExplicit && t.balanceValue == 0f && !t.positive && !t.produceOnlyVisual && !t.inheritToProduce
                 && t.yieldFactor == 1f && t.growthRateFactor == 1f && t.workFactor == 1f

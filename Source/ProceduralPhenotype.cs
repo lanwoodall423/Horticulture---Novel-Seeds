@@ -6,13 +6,37 @@ namespace HorticultureNovelSeeds
 {
     public enum ProceduralPhenotype
     {
-        None = 0, Variegated = 1, Anthocyanin = 2, MoonFrost = 3, GoldFreckled = 4, AuroraVeins = 5
+        None = 0, Variegated = 1, Anthocyanin = 2, MoonFrost = 3, GoldFreckled = 4, AuroraVeins = 5,
+        Velvetleaf = 16,
+        Lacquered = 17,
+        Dustbloom = 18,
+        Silvered = 19,
+        HaloEdged = 20,
+        Netveined = 21,
+        Tigerstriped = 22,
+        Marbled = 23,
+        Opaline = 24,
+        Crystalline = 25,
+        Bioluminescent = 26,
+        NebulaMottle = 27,
+        Coralbranch = 28,
+        Prismatic = 29,
+        Saltbloom = 30,
+        Ashen = 31,
+        Boggloss = 32,
+        Waxbound = 33,
+        Peatstained = 34,
+        ScorchedMargins = 35
     }
 
     // Stable species/allele seed; no per-instance materials, random tick state,
     // baked textures or manual anatomy. Genetic conflicts resolve deterministically.
     internal static class ProceduralPhenotypeUtility
     {
+        internal static bool IsExplicitMode(ProceduralPhenotype mode) =>
+            ((int)mode >= 1 && (int)mode <= 5) || ((int)mode >= 16 && (int)mode <= 35);
+        internal static bool IsCreativeMode(ProceduralPhenotype mode) => (int)mode >= 16 && (int)mode <= 35;
+
         internal static Vector4 Resolve(CompPlantVariety comp)
         {
             if (comp?.ActiveTraits == null) return Vector4.zero;

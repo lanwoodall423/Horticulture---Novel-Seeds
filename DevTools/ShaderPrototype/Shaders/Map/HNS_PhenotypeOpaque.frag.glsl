@@ -82,6 +82,32 @@ float hnsNoise(vec2 p)
     return mix(mix(hnsHash(i),hnsHash(i+vec2(1,0)),f.x),
                mix(hnsHash(i+vec2(0,1)),hnsHash(i+vec2(1,1)),f.x),f.y);
 }
+// Local sprite rim and a bounded cellular feature search.
+float hnsRim(vec2 uv, float pixels)
+{
+    vec2 d = pixels/vec2(textureSize(_MainTex,0));
+    return clamp(1.0-min(min(texture(_MainTex,uv+vec2(d.x,0)).a,texture(_MainTex,uv-vec2(d.x,0)).a),
+                         min(texture(_MainTex,uv+vec2(0,d.y)).a,texture(_MainTex,uv-vec2(0,d.y)).a)),0.0,1.0);
+}
+vec2 hnsPoint(vec2 id)
+{
+    return vec2(hnsHash(id+vec2(5,13)),hnsHash(id+vec2(11,2)));
+}
+vec2 hnsCells(vec2 uv)
+{
+    vec2 cell = floor(uv), pos = fract(uv);
+    float a = 8.0, b = 8.0;
+    for (int y=-1;y<=1;y++)
+        for (int x=-1;x<=1;x++)
+        {
+            vec2 off=vec2(x,y);
+            float dist=length(off+.16+.68*hnsPoint(cell+off)-pos);
+            if (dist<a) { b=a; a=dist; }
+            else b=min(b,dist);
+        }
+    return vec2(a,b);
+}
+
 vec3 hnsPattern(vec3 rgb, vec4 src, vec2 localUv, vec2 sampleUv)
 {
     vec4 p = uMaterial._HnsPattern;
@@ -189,7 +215,7 @@ vec3 hnsPattern(vec3 rgb, vec4 src, vec2 localUv, vec2 sampleUv)
         target = mix(resin*(.48+.52*value),vec3(1.0,.94,.75),gleam*.85);
         blend = .18+.82*bead;
     }
-    else
+    else if (p.x < 15.5)
     {
         vec2 stepUv = 1.5 / vec2(textureSize(_MainTex,0));
         float edge = 1.0-min(min(texture(_MainTex,sampleUv+vec2(stepUv.x,0)).a,texture(_MainTex,sampleUv-vec2(stepUv.x,0)).a),
@@ -197,6 +223,163 @@ vec3 hnsPattern(vec3 rgb, vec4 src, vec2 localUv, vec2 sampleUv)
         float serration = step(.15,sin(localUv.y*63.0+localUv.x*19.0));
         target = mix(vec3(.16,.10,.06),vec3(.66,.49,.26),value);
         blend = .12+.88*edge*serration;
+    }
+    // Creative modes: opaque surface illusions; alpha is never expanded.
+    else if (p.x < 16.5) // Velvetleaf
+    {
+        float nap = hnsNoise(vec2(q.x*28.0,q.y*7.0));
+        vec3 forest = mix(vec3(.035,.075,.075),vec3(.21,.49,.29),pow(value,.75));
+        target = mix(forest,vec3(.40,.24,.41)*lightness,smoothstep(.55,.92,nap)*.38);
+        blend = .91;
+    }
+    else if (p.x < 17.5) // Lacquered
+    {
+        float stripe = abs(fract(localUv.x*2.5+localUv.y*.55+n*.30)-.5);
+        float gloss = 1.0-smoothstep(.025,.095,stripe);
+        target = mix(vec3(.025,.22,.14)*(.45+value),vec3(.92,1.0,.75)*lightness,gloss);
+        blend = .82+.18*gloss;
+    }
+    else if (p.x < 18.5) // Dustbloom
+    {
+        float powder = smoothstep(.22,.75,.55*n+.45*hnsNoise(q*22.0));
+        target = vec3(.89,.81,.66)*(.30+.74*value);
+        blend = .22+.72*powder;
+    }
+    else if (p.x < 19.5) // Silvered
+    {
+        float brushing = hnsNoise(vec2(q.x*40.0,q.y*5.0));
+        float shine = smoothstep(.3,.82,value+.16*(brushing-.5));
+        target = mix(vec3(.19,.25,.30),vec3(.96,.97,.90),shine);
+        blend = .95;
+    }
+    else if (p.x < 20.5) // Halo-Edged
+    {
+        float edge = hnsRim(sampleUv,2.0);
+        float inner = hnsRim(sampleUv,4.0);
+        float rim = clamp(max(edge,.55*inner),0.0,1.0);
+        target = mix(vec3(.075,.16,.095)*(.50+value),vec3(1.0,.92,.52),rim);
+        blend = .64+.36*rim;
+    }
+    else if (p.x < 21.5) // Netveined
+    {
+        vec2 cell = hnsCells(q*5.4);
+        float net = 1.0-smoothstep(.025,.13,cell.y-cell.x);
+        target = mix(vec3(.06,.25,.19)*(.6+value),vec3(.83,1.0,.45)*lightness,net);
+        blend = .58+.42*net;
+    }
+    else if (p.x < 22.5) // Tigerstriped
+    {
+        float wave = sin((localUv.y*4.5+localUv.x*1.7+n*.63)*6.283185);
+        float band = smoothstep(-.20,.35,wave);
+        target = mix(vec3(.14,.065,.15),vec3(1.0,.59,.13),band)*(.35+.75*value);
+        blend = .97;
+    }
+    else if (p.x < 23.5) // Marbled
+    {
+        float flow = sin((localUv.x*2.1+localUv.y*.9+n*2.1+fine*.27)*6.283185);
+        float ribbon = smoothstep(-.20,.48,flow);
+        float seam = 1.0-smoothstep(.025,.14,abs(flow-.17));
+        target = mix(vec3(.22,.60,.44),vec3(.85,.73,.98),ribbon)*lightness;
+        target = mix(target,vec3(.97,.96,.85)*lightness,seam*.68);
+        blend = .90;
+    }
+    else if (p.x < 24.5) // Opaline
+    {
+        float phase = .20+localUv.x*.60+localUv.y*.37+n*.31;
+        vec3 pearl = .73+.24*cos(6.283185*(phase+vec3(0.0,.32,.66)));
+        float lustre = smoothstep(.35,.78,value+.18*fine);
+        target = mix(pearl*.43,pearl, .28+.72*lustre);
+        blend = .95;
+    }
+    else if (p.x < 25.5) // Crystalline
+    {
+        vec2 cell = hnsCells(q*6.0);
+        float rim = 1.0-smoothstep(.012,.095,cell.y-cell.x);
+        float facet = smoothstep(.12,.68,cell.x);
+        vec3 ice = mix(vec3(.12,.27,.57),vec3(.60,.90,.99),facet);
+        target = mix(ice*(.42+.68*value),vec3(.94,1.0,1.0),rim*.83);
+        blend = .97;
+    }
+    else if (p.x < 26.5) // Bioluminescent, painted-light illusion
+    {
+        vec2 st = q*6.0;
+        vec2 id = floor(st);
+        vec2 center = hnsPoint(id)*.55+.22;
+        float dist = length(fract(st)-center);
+        float aura = (1.0-smoothstep(.10,.44,dist))*step(.22,hnsHash(id));
+        float core = (1.0-smoothstep(.08,.17,dist))*step(.22,hnsHash(id));
+        target = mix(vec3(.045,.09,.24)*(.6+value),vec3(.04,.70,.58),aura);
+        target = mix(target,vec3(.87,1.0,.66),core);
+        blend = .91;
+    }
+    else if (p.x < 27.5) // Nebula Mottle
+    {
+        float cloud = smoothstep(.18,.80,hnsNoise(q*3.8+vec2(fine*.32,n*.26)));
+        vec3 nebula = mix(vec3(.045,.06,.29),vec3(.91,.16,.60),cloud);
+        vec2 st = q*11.0;vec2 id = floor(st);
+        float star = (1.0-smoothstep(.08,.20,length(fract(st)-(.18+.64*hnsPoint(id)))))*step(.70,hnsHash(id));
+        target = mix(nebula*(.50+.63*value),vec3(.94,.93,1.0),star);
+        blend = .96;
+    }
+    else if (p.x < 28.5) // Coralbranch
+    {
+        float bend = localUv.x-.5+.09*sin(localUv.y*10.0+seed);
+        float trunk = 1.0-smoothstep(.025,.065,abs(bend));
+        float branches = 1.0-smoothstep(.055,.145,abs(fract(localUv.y*3.8-abs(bend)*2.8+n*.18)-.5));
+        float forks = max(trunk,branches);
+        target = mix(vec3(.30,.075,.14)*(.5+value),vec3(1.0,.46,.26),forks);
+        target = mix(target,vec3(1.0,.82,.52),forks*smoothstep(.55,1.0,localUv.y)*.7);
+        blend = .94;
+    }
+    else if (p.x < 29.5) // Prismatic
+    {
+        float phase = localUv.x*.8+localUv.y*.62+n*.32+p.y;
+        vec3 spectrum = .55+.43*cos(6.283185*(phase+vec3(0.0,.333,.667)));
+        target = spectrum*(.36+.70*value);
+        blend = .97;
+    }
+    else if (p.x < 30.5) // Saltbloom
+    {
+        float edge = hnsRim(sampleUv,2.5);
+        float crust = max(edge*.9,smoothstep(.58,.83,fine)*.6);
+        vec3 olive = vec3(.25,.40,.19)*(.5+value);
+        target = mix(olive,vec3(.96,.94,.80)*lightness,crust);
+        blend = .55+.45*crust;
+    }
+    else if (p.x < 31.5) // Ashen
+    {
+        float grain = hnsNoise(vec2(q.x*21.0,q.y*8.0));
+        float soot = smoothstep(.2,.85,.64*value+.36*grain);
+        target = mix(vec3(.105,.115,.135),vec3(.70,.73,.72),soot);
+        blend = .94;
+    }
+    else if (p.x < 32.5) // Boggloss
+    {
+        float slick = smoothstep(.44,.83,n+.13*fine);
+        float line = 1.0-smoothstep(.03,.13,abs(fract(localUv.y*2.7+localUv.x*.8+n*.41)-.5));
+        target = mix(vec3(.10,.16,.045),vec3(.16,.58,.48),slick)*(.50+.63*value);
+        target = mix(target,vec3(.73,.89,.65)*lightness,line*slick*.68);
+        blend = .87;
+    }
+    else if (p.x < 33.5) // Waxbound
+    {
+        float broad = smoothstep(.1,.9, .63*value+.37*n);
+        target = mix(vec3(.20,.44,.24),vec3(.84,.91,.54),broad);
+        blend = .81;
+    }
+    else if (p.x < 34.5) // Peatstained
+    {
+        float sediment = 1.0-smoothstep(.16,.81,localUv.y+.42*(n-.5));
+        target = mix(vec3(.27,.37,.17),vec3(.38,.19,.075),sediment)*(.45+.74*value);
+        blend = .35+.58*sediment;
+    }
+    else if (p.x < 35.5) // Scorched Margins
+    {
+        float edge = hnsRim(sampleUv,2.0);
+        float tip = smoothstep(.55,.96,localUv.y+.18*(n-.5));
+        float burn = max(edge,tip*.82);
+        target = mix(vec3(.22,.095,.045),vec3(.88,.48,.19),lightness);
+        blend = .05+.95*burn;
     }
     return clamp(mix(rgb,target,clamp(blend*p.z*shade,0.0,1.0)),0.0,1.0);
 }

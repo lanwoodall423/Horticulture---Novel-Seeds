@@ -5,9 +5,10 @@ param(
     [switch]$ShaderProbe,
     [switch]$GardenProbe,
     [switch]$PatternGarden,
-    [switch]$CatalogGarden
+    [switch]$CatalogGarden,
+    [switch]$CreativeGarden
 )
-if($PatternGarden -or $CatalogGarden){$GardenProbe=$true}
+if($PatternGarden -or $CatalogGarden -or $CreativeGarden){$GardenProbe=$true}
 $ErrorActionPreference='Stop'
 $repo=Split-Path -Parent $PSScriptRoot
 $game='C:\Games\Steam\steamapps\common\RimWorld'
@@ -22,7 +23,7 @@ $temp=Join-Path ([IO.Path]::GetTempPath()) ('hns-native-'+$run)
 $stage=Join-Path $repo ('DevTools\Staged\Native17Package-'+$run)
 $installed=Join-Path $game ('Mods\HNS-NativeFixture-'+$run)
 $outDir=Join-Path $repo ('DevTools\TestResults\native-'+$run)
-$receipt=[ordered]@{schemaVersion=1;run=$run;loadout=$Loadout;shaderProbe=[bool]$ShaderProbe;gardenProbe=[bool]$GardenProbe;patternGarden=[bool]$PatternGarden;catalogGarden=[bool]$CatalogGarden;status='BLOCKED';reason='NOT_STARTED';sourceHead=$null;version=$null;assemblySha256=$null;activePackages=@();optimizerIdentities=@();stages=@();fixtureLine=$null;processId=$null;testProcessStopped=$false;testPackageRemoved=$false;normalConfigUnchanged=$null;normalPrefsUnchanged=$null;normalSavesUnchanged=$null;isolatedSaveDirectory=$temp;startedUtc=$null;finishedUtc=$null}
+$receipt=[ordered]@{schemaVersion=1;run=$run;loadout=$Loadout;shaderProbe=[bool]$ShaderProbe;gardenProbe=[bool]$GardenProbe;patternGarden=[bool]$PatternGarden;catalogGarden=[bool]$CatalogGarden;creativeGarden=[bool]$CreativeGarden;status='BLOCKED';reason='NOT_STARTED';sourceHead=$null;version=$null;assemblySha256=$null;activePackages=@();optimizerIdentities=@();stages=@();fixtureLine=$null;processId=$null;testProcessStopped=$false;testPackageRemoved=$false;normalConfigUnchanged=$null;normalPrefsUnchanged=$null;normalSavesUnchanged=$null;isolatedSaveDirectory=$temp;startedUtc=$null;finishedUtc=$null}
 $proc=$null; $installedByRun=$false; $before=$null; $started=$null; $capturedPlayerBaseline=$false
 $utf8=New-Object Text.UTF8Encoding($false)
 function Assert-Closed {
@@ -51,7 +52,7 @@ function Assert-NoPackage {
 }
 New-Item -ItemType Directory -Path $outDir | Out-Null
 try {
-    if(($ShaderProbe -and $GardenProbe) -or ($PatternGarden -and $CatalogGarden)){throw "CHOOSE_ONE_PROBE"}
+    if(($ShaderProbe -and $GardenProbe) -or (@(@($PatternGarden,$CatalogGarden,$CreativeGarden) | Where-Object {$_}).Count -gt 1)){throw "CHOOSE_ONE_PROBE"}
     Assert-Closed
     Assert-NoPackage
     $head=(& git -C $repo rev-parse HEAD).Trim()
@@ -146,6 +147,7 @@ try {
     if($GardenProbe){$psi.EnvironmentVariables['HNS_NATIVE_GARDEN_PROBE']='1'}
     if($PatternGarden){$psi.EnvironmentVariables['HNS_NATIVE_PATTERN_GARDEN']='1'}
     if($CatalogGarden){$psi.EnvironmentVariables['HNS_NATIVE_CATALOG_GARDEN']='1'}
+    if($CreativeGarden){$psi.EnvironmentVariables['HNS_NATIVE_CREATIVE_GARDEN']='1'}
     $receipt.startedUtc=[DateTime]::UtcNow.ToString('o')
     $proc=[Diagnostics.Process]::Start($psi)
     $started=$proc.StartTime

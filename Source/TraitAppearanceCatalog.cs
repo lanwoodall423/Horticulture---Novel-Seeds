@@ -69,6 +69,26 @@ namespace HorticultureNovelSeeds
             ["HNS_MoonFrost"] = new("Exceptional", "Silver-blue bloom", 1f, 1f, 1f, 1f, 3, 0.92f, 1f, 1f, 0f),
             ["HNS_GoldFreckled"] = new("Exceptional", "Gold mottling", 1f, 1f, 1f, 1f, 4, 0.9f, 1f, 1f, 0f),
             ["HNS_AuroraVeins"] = new("Exceptional", "Bright turquoise branching motifs", 1f, 1f, 1f, 1f, 5, 0.95f, 1f, 1f, 0f),
+            ["HNS_Velvetleaf"] = new("Uncommon", "Deep forest-green velvet with soft mauve shading.", 1f, 1f, 1f, 1f, 16, 0.78f, 1f, 1f, 0f),
+            ["HNS_Lacquered"] = new("Uncommon", "Glossy dark emerald tissue with thin wet-looking highlights.", 1f, 1f, 1f, 1f, 17, 0.78f, 1f, 1f, 0f),
+            ["HNS_Dustbloom"] = new("Uncommon", "Warm chalky powder with soft pale deposits.", 1f, 1f, 1f, 1f, 18, 0.72f, 1f, 1f, 0f),
+            ["HNS_Silvered"] = new("Uncommon", "Brushed pewter and silver tissue with directional highlights.", 1f, 1f, 1f, 1f, 19, 0.77f, 1f, 1f, 0f),
+            ["HNS_HaloEdged"] = new("Rare", "Dark tissue with warm ivory inner margins.", 1f, 1f, 1f, 1f, 20, 0.9f, 1f, 1f, 0f),
+            ["HNS_Netveined"] = new("Rare", "Gold-green reticulated cell walls on deep emerald tissue.", 1f, 1f, 1f, 1f, 21, 0.9f, 1f, 1f, 0f),
+            ["HNS_Tigerstriped"] = new("Rare", "Ochre and deep aubergine tiger bands.", 1f, 1f, 1f, 1f, 22, 0.92f, 1f, 1f, 0f),
+            ["HNS_Marbled"] = new("Rare", "Flowing sage and pale lavender marbling.", 1f, 1f, 1f, 1f, 23, 0.9f, 1f, 1f, 0f),
+            ["HNS_Opaline"] = new("Exceptional", "Pearlescent pastel interference bands; static iridescence illusion.", 1f, 1f, 1f, 1f, 24, 0.96f, 1f, 1f, 0f),
+            ["HNS_Crystalline"] = new("Exceptional", "Cool faceted mineral-like tissue and angular highlights.", 1f, 1f, 1f, 1f, 25, 0.96f, 1f, 1f, 0f),
+            ["HNS_Bioluminescent"] = new("Exceptional", "Midnight blue with bright mint-colored luminous-looking islands. Does not emit light.", 1f, 1f, 1f, 1f, 26, 0.97f, 1f, 1f, 0f),
+            ["HNS_NebulaMottle"] = new("Exceptional", "Indigo and magenta clouds with star-like pinpoints.", 1f, 1f, 1f, 1f, 27, 0.96f, 1f, 1f, 0f),
+            ["HNS_Coralbranch"] = new("Exceptional", "Vivid coral-pink branching markings with warm tips.", 1f, 1f, 1f, 1f, 28, 0.95f, 1f, 1f, 0f),
+            ["HNS_Prismatic"] = new("Exceptional", "Spectral ribbons interrupted by organic texture.", 1f, 1f, 1f, 1f, 29, 0.96f, 1f, 1f, 0f),
+            ["HNS_Saltbloom"] = new("Uncommon", "Chalk-white salt-like margins on olive tissue.", 1f, 1f, 1f, 1f, 30, 0.72f, 1f, 1f, 0f),
+            ["HNS_Ashen"] = new("Uncommon", "Cool charcoal and grey dusty striations.", 1f, 1f, 1f, 1f, 31, 0.78f, 1f, 1f, 0f),
+            ["HNS_Boggloss"] = new("Uncommon", "Dark olive and teal wet-looking patches.", 1f, 1f, 1f, 1f, 32, 0.79f, 1f, 1f, 0f),
+            ["HNS_Waxbound"] = new("Uncommon", "Warm jade wax and broad pale reflections.", 1f, 1f, 1f, 1f, 33, 0.76f, 1f, 1f, 0f),
+            ["HNS_Peatstained"] = new("Uncommon", "Earthy brown and olive patches concentrated toward the base.", 1f, 1f, 1f, 1f, 34, 0.74f, 1f, 1f, 0f),
+            ["HNS_ScorchedMargins"] = new("Uncommon", "Copper-brown dry rims and tip burn with a retained green interior.", 1f, 1f, 1f, 1f, 35, 0.84f, 1f, 1f, 0f),
         };
 
         internal static bool TryGet(VarietyTraitDef trait, out Profile profile)
@@ -115,7 +135,7 @@ namespace HorticultureNovelSeeds
             {
                 mode = (int)trait.proceduralPhenotype;
                 strength = float.IsFinite(trait.proceduralStrength) ? Mathf.Clamp01(trait.proceduralStrength) : 0f;
-                return mode >= 1 && mode <= 5 && strength > 0f;
+                return ProceduralPhenotypeUtility.IsExplicitMode(trait.proceduralPhenotype) && strength > 0f;
             }
             if (!TryGet(trait, out var p) || p.Pattern == 0) return false;
             mode = p.Pattern; strength = p.Strength;
