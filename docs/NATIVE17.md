@@ -819,3 +819,49 @@ Preparation SHA256: 3A0AF2C56C7D4ED1CEB17EB0B6F2BF357DC947F7246309830C19BB8E6D00
 Reproduce with RimWorld closed:
 
     powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -DetailGarden
+
+## Modular canopy architecture experiment (2026-11-25)
+
+Owner approved Lantern Buds and found prior leaf topology nearly
+unnoticeable. Retain localized night glow and leave topology experiments
+available for later artistic refinement. New experiment uses modular
+cropped source-art foliage and reproductive structures, with independent
+planes positioned against the source silhouette and original plant retained.
+Five zero-weight neutral candidates: Forked Crown, Tiered Canopy,
+Spreading Rosette, Flower Spray and Abundant Clusters. No manual masks
+or new shader; explicit source preparation, bounded material/module caches.
+
+Initial source 003cbd305a6492ce7bb87f35a0d4ee8504d14d58 captured 28
+variants but failed original-shader assertion (three existing phenotype
+materials). Fix 89ebcec011d1ace2a55592ab7c25655a9e41e7e8 isolates
+base material path; corrected AllPerformance run
+780719be31724cd7b262a63802f57162 on RimWorld 1.7.5014 rev1195 passed
+all five stages. 36 mature plants, six species, six controls and 30
+candidate cases. 28 rendered, two explicit hops reproductive fallbacks,
+98 extra planes, nine source module sets, 15 module materials.
+Zero custom phenotype shader materials and zero prepared GPU masks.
+Both builds clean, prior tests and nine new architecture checks passed.
+All save/config/preferences preservation and owned cleanup checks passed.
+No relevant HNS error identified in the corrected captured log.
+Evidence: https://github.com/lanwoodall423/Horticulture---Novel-Seeds/tree/be2ac3a764b7886e3f07bb3641515a557cd6f751
+
+Visual review: forked corn, spreading strawberry and especially hops
+canopies visibly change silhouette; some flower/fruit differences are
+subtler. Pawns obscure parts of the cotton/daylily comparison. These are
+approximate source-art modules, not exact anatomical parts. Wind disabled
+in fixture; attached motion, compatibility with other visual axes, growth
+transitions, shadows/culling, seasonal art, field performance, editor,
+save/reload, natural breeding and ordinary activation unqualified.
+Current prototype restricted to mature single-plane crops with appropriate
+original cutout material; does not combine with other styled paths yet.
+No yield, balance, 1.6 or approved previous feature changes.
+
+DLL SHA256: 79F08861D37A6409213975A3375ED8664474110C8F23B22D310914C51DADA364.
+Receipt SHA256: 8AE7A815DC9FECF08A0EDE952FCAAA48D4CDF9D478549AFC152D83B462A3198C.
+Log SHA256: E5CA86A642124D84EE12F50276867F6B828EA19B9A64EC71392855C940F3DE49.
+Architecture inventory SHA256: 257575F9CAC98F3F17228AC27E87E56418E25D4287AD231EF73B36738043B232.
+Preparation SHA256: 08F170A7AEA5452FC254C07CC471E5966C13255D5DCFF3DD45713B4757F51A80.
+
+Reproduce with RimWorld closed:
+
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File DevTools/Run-NativeQuicktest.ps1 -Loadout AllPerformance -ArchitectureGarden
