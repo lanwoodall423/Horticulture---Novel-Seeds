@@ -60,3 +60,13 @@ Source 712f4c8738620175e437bd9f22cd0ca90e311570, isolated run 7651faa60355450f98
 The first run's GIFs above are retained unchanged.
 
 Follow-up did not complete: System.InvalidOperationException: actual neighboring test cell  [Ref E9FFCBE4]    at HorticultureNovelSeeds.NativeGardenProbe.Require(Boolean value, String label) in HorticultureNovelSeeds.dll:token 0x600040e+0x9     at HorticultureNovelSeeds.NativeGardenProbe.AdvanceExpressionGrowth() in HorticultureNovelSeeds.dll:token 0x60003f8+0x13d     at HorticultureNovelSeeds.NativeGardenProbe.MakePanel() in HorticultureNovelSeeds.dll:token 0x60003de+0x4e5     at HorticultureNovelSeeds.NativeGardenProbe.Begin(String path, Action`1 stage, Action`2 completed, Boolean procedural, Boolean catalog, Boolean creative, Boolean cultivar, Boolean form, Boolean organ, Boolean development, Boolean wind, Boolean surface, Boolean detail, Boolean architecture, Boolean pose, Boolean ground, Boolean articulation, Boolean mosaic, Boolean neighborhood, Boolean chronicle, Boolean vascular, Boolean lifeSuite) in HorticultureNovelSeeds.dll:token 0x60003d6+0xe70
+
+## Final isolated verification (2026-11-26)
+Source 68c599ac1ca7517c750839d8195442d2c3045257; run 7a7570c2ac4b4fe599f28b1eba679aa9; all nine native stages passed, including aggregate expression checks and nine standalone history-value Scribe round trips. Normal configuration, preferences and saves unchanged; fixture process and package removed. Laboratory and budget evidence:
+`	ext
+Native selected/edited GPU preview API: PASS
+Window contents executed: True
+GUI repaint verified: True
+If false, GUI remains separately unqualified.Source maps=8; shared materials=16; texture bytes=7430144; growth invalidations=90
+``r
+Full save reload and dense-field performance not qualified. GIFs remain from the first six-phase capture; final receipt independently verifies the corrected fixture.

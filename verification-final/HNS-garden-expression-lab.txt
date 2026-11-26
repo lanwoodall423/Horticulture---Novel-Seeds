@@ -1,0 +1,4 @@
+Native selected/edited GPU preview API: PASS
+Window contents executed: True
+GUI repaint verified: True
+If false, GUI remains separately unqualified.
