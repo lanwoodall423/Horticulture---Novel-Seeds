@@ -293,7 +293,7 @@ namespace HorticultureNovelSeeds
                 // Reuse one deliberately cleared, unroofed and obstacle-free test
                 // bed. Remove only vegetation in this disposable map.
                 var candidates = GenRadial.RadialCellsAround(origin, 70, true)
-                    .Where(c => Cells(c).All(x => x.InBounds(map)) && PlantCells(c).All(ClearCell))
+                    .Where(c => Cells(c).All(x => x.InBounds(map)) && PlantCells(c).All(ClearCell) && (!expressionGarden || PlantCells(c).SelectMany(x=>new[]{x+new IntVec3(-1,0,0),x+new IntVec3(1,0,0)}).All(ClearCell)))
                     .Take(120).Select(c => (Cell:c, Score:Cells(c).Count(ClearCell)))
                     .OrderByDescending(c => c.Score).ToArray();
                 Require(candidates.Length > 0, "a visible unroofed plot with 18 clear plant positions");
