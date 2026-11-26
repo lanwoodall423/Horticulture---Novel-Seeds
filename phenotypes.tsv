@@ -1,0 +1,145 @@
+Panel	Species	Column	Plant ID	Cultivar	Facts	Individual phenotype	Botanical observations	Recorded history	Cultivar potential
+1	Plant_Corn	1	20301	Vanilla	0				
+1	Plant_Corn	2	20302	HNS_Plant_Corn_1	1	This specimen displays traveling daylight-sensitive vein highlights.	Foliage: traveling daylight-sensitive vein highlights.		Foliage: traveling daylight-sensitive vein highlights.
+1	Plant_Corn	3	20303	HNS_Plant_Corn_2	0				Growth habit: a folded nighttime crown.
+1	Plant_Corn	4	20304	HNS_Plant_Corn_3	1	This specimen displays heat- or injury-stressed drooping growth.	Growth habit: heat- or injury-stressed drooping growth.		Growth habit: heat- or injury-stressed drooping growth.
+1	Plant_Corn	5	20305	HNS_Plant_Corn_4	1	It also shows small dew-like lens highlights.	Surface: small dew-like lens highlights.		Surface: small dew-like lens highlights.
+1	Plant_Corn	6	20306	HNS_Plant_Corn_5	1	This specimen displays sparse drifting pollen grains.	Reproductive structures: sparse drifting pollen grains.		Reproductive structures: sparse drifting pollen grains.
+1	Plant_Cotton	1	20307	Vanilla	0				
+1	Plant_Cotton	2	20308	HNS_Plant_Cotton_6	1	This specimen displays traveling daylight-sensitive vein highlights.	Foliage: traveling daylight-sensitive vein highlights.		Foliage: traveling daylight-sensitive vein highlights.
+1	Plant_Cotton	3	20309	HNS_Plant_Cotton_7	0				Growth habit: a folded nighttime crown.
+1	Plant_Cotton	4	20310	HNS_Plant_Cotton_8	1	This specimen displays heat- or injury-stressed drooping growth.	Growth habit: heat- or injury-stressed drooping growth.		Growth habit: heat- or injury-stressed drooping growth.
+1	Plant_Cotton	5	20311	HNS_Plant_Cotton_9	1	It also shows small dew-like lens highlights.	Surface: small dew-like lens highlights.		Surface: small dew-like lens highlights.
+1	Plant_Cotton	6	20312	HNS_Plant_Cotton_10	1	This specimen displays sparse drifting pollen grains.	Reproductive structures: sparse drifting pollen grains.		Reproductive structures: sparse drifting pollen grains.
+1	Plant_Daylily	1	20313	Vanilla	0				
+1	Plant_Daylily	2	20314	HNS_Plant_Daylily_11	1	This specimen displays traveling daylight-sensitive vein highlights.	Foliage: traveling daylight-sensitive vein highlights.		Foliage: traveling daylight-sensitive vein highlights.
+1	Plant_Daylily	3	20315	HNS_Plant_Daylily_12	0				Growth habit: a folded nighttime crown.
+1	Plant_Daylily	4	20316	HNS_Plant_Daylily_13	1	This specimen displays heat- or injury-stressed drooping growth.	Growth habit: heat- or injury-stressed drooping growth.		Growth habit: heat- or injury-stressed drooping growth.
+1	Plant_Daylily	5	20317	HNS_Plant_Daylily_14	1	It also shows small dew-like lens highlights.	Surface: small dew-like lens highlights.		Surface: small dew-like lens highlights.
+1	Plant_Daylily	6	20318	HNS_Plant_Daylily_15	1	This specimen displays sparse drifting pollen grains.	Reproductive structures: sparse drifting pollen grains.		Reproductive structures: sparse drifting pollen grains.
+2	Plant_Corn	1	20301	Vanilla	0				
+2	Plant_Corn	2	20302	HNS_Plant_Corn_1	0				Foliage: traveling daylight-sensitive vein highlights.
+2	Plant_Corn	3	20303	HNS_Plant_Corn_2	1	This specimen displays a folded nighttime crown.	Growth habit: a folded nighttime crown.		Growth habit: a folded nighttime crown.
+2	Plant_Corn	4	20304	HNS_Plant_Corn_3	0				Growth habit: heat- or injury-stressed drooping growth.
+2	Plant_Corn	5	20305	HNS_Plant_Corn_4	0				Surface: small dew-like lens highlights.
+2	Plant_Corn	6	20306	HNS_Plant_Corn_5	0				Reproductive structures: sparse drifting pollen grains.
+2	Plant_Cotton	1	20307	Vanilla	0				
+2	Plant_Cotton	2	20308	HNS_Plant_Cotton_6	0				Foliage: traveling daylight-sensitive vein highlights.
+2	Plant_Cotton	3	20309	HNS_Plant_Cotton_7	1	This specimen displays a folded nighttime crown.	Growth habit: a folded nighttime crown.		Growth habit: a folded nighttime crown.
+2	Plant_Cotton	4	20310	HNS_Plant_Cotton_8	0				Growth habit: heat- or injury-stressed drooping growth.
+2	Plant_Cotton	5	20311	HNS_Plant_Cotton_9	0				Surface: small dew-like lens highlights.
+2	Plant_Cotton	6	20312	HNS_Plant_Cotton_10	0				Reproductive structures: sparse drifting pollen grains.
+2	Plant_Daylily	1	20313	Vanilla	0				
+2	Plant_Daylily	2	20314	HNS_Plant_Daylily_11	0				Foliage: traveling daylight-sensitive vein highlights.
+2	Plant_Daylily	3	20315	HNS_Plant_Daylily_12	1	This specimen displays a folded nighttime crown.	Growth habit: a folded nighttime crown.		Growth habit: a folded nighttime crown.
+2	Plant_Daylily	4	20316	HNS_Plant_Daylily_13	0				Growth habit: heat- or injury-stressed drooping growth.
+2	Plant_Daylily	5	20317	HNS_Plant_Daylily_14	0				Surface: small dew-like lens highlights.
+2	Plant_Daylily	6	20318	HNS_Plant_Daylily_15	0				Reproductive structures: sparse drifting pollen grains.
+3	Plant_Corn	1	20319	Vanilla	0				
+3	Plant_Corn	2	20320	HNS_Plant_Corn_16	1	This specimen displays individual cream, green and wine-colored tissue sectors.	Foliage: individual cream, green and wine-colored tissue sectors.		Foliage: individual cream, green and wine-colored tissue sectors.
+3	Plant_Corn	3	20321	HNS_Plant_Corn_17	1	This specimen displays an advancing bronze and gold seasonal color front.	Foliage: an advancing bronze and gold seasonal color front.		Foliage: an advancing bronze and gold seasonal color front.
+3	Plant_Corn	4	20322	HNS_Plant_Corn_18	1	It also shows root-like traces in the surrounding soil.	Ground growth: root-like traces in the surrounding soil.		Ground growth: root-like traces in the surrounding soil.
+3	Plant_Corn	5	20323	HNS_Plant_Corn_19	1	This specimen displays partly skeletal late-season foliage.	Foliage: partly skeletal late-season foliage.		Foliage: partly skeletal late-season foliage.
+3	Plant_Corn	6	20324	HNS_Plant_Corn_20	0				Light effects: localized luminous veins and reproductive tissue.
+3	Plant_Cotton	1	20325	Vanilla	0				
+3	Plant_Cotton	2	20326	HNS_Plant_Cotton_21	1	This specimen displays individual cream, green and wine-colored tissue sectors.	Foliage: individual cream, green and wine-colored tissue sectors.		Foliage: individual cream, green and wine-colored tissue sectors.
+3	Plant_Cotton	3	20327	HNS_Plant_Cotton_22	1	This specimen displays an advancing bronze and gold seasonal color front.	Foliage: an advancing bronze and gold seasonal color front.		Foliage: an advancing bronze and gold seasonal color front.
+3	Plant_Cotton	4	20328	HNS_Plant_Cotton_23	1	It also shows root-like traces in the surrounding soil.	Ground growth: root-like traces in the surrounding soil.		Ground growth: root-like traces in the surrounding soil.
+3	Plant_Cotton	5	20329	HNS_Plant_Cotton_24	1	This specimen displays partly skeletal late-season foliage.	Foliage: partly skeletal late-season foliage.		Foliage: partly skeletal late-season foliage.
+3	Plant_Cotton	6	20330	HNS_Plant_Cotton_25	0				Light effects: localized luminous veins and reproductive tissue.
+3	Plant_Daylily	1	20331	Vanilla	0				
+3	Plant_Daylily	2	20332	HNS_Plant_Daylily_26	1	This specimen displays individual cream, green and wine-colored tissue sectors.	Foliage: individual cream, green and wine-colored tissue sectors.		Foliage: individual cream, green and wine-colored tissue sectors.
+3	Plant_Daylily	3	20333	HNS_Plant_Daylily_27	1	This specimen displays an advancing bronze and gold seasonal color front.	Foliage: an advancing bronze and gold seasonal color front.		Foliage: an advancing bronze and gold seasonal color front.
+3	Plant_Daylily	4	20334	HNS_Plant_Daylily_28	1	It also shows root-like traces in the surrounding soil.	Ground growth: root-like traces in the surrounding soil.		Ground growth: root-like traces in the surrounding soil.
+3	Plant_Daylily	5	20335	HNS_Plant_Daylily_29	1	This specimen displays partly skeletal late-season foliage.	Foliage: partly skeletal late-season foliage.		Foliage: partly skeletal late-season foliage.
+3	Plant_Daylily	6	20336	HNS_Plant_Daylily_30	0				Light effects: localized luminous veins and reproductive tissue.
+4	Plant_Corn	1	20319	Vanilla	0				
+4	Plant_Corn	2	20320	HNS_Plant_Corn_16	1	This specimen displays individual cream, green and wine-colored tissue sectors.	Foliage: individual cream, green and wine-colored tissue sectors.		Foliage: individual cream, green and wine-colored tissue sectors.
+4	Plant_Corn	3	20321	HNS_Plant_Corn_17	1	This specimen displays an advancing bronze and gold seasonal color front.	Foliage: an advancing bronze and gold seasonal color front.		Foliage: an advancing bronze and gold seasonal color front.
+4	Plant_Corn	4	20322	HNS_Plant_Corn_18	1	It also shows root-like traces in the surrounding soil.	Ground growth: root-like traces in the surrounding soil.		Ground growth: root-like traces in the surrounding soil.
+4	Plant_Corn	5	20323	HNS_Plant_Corn_19	1	This specimen displays partly skeletal late-season foliage.	Foliage: partly skeletal late-season foliage.		Foliage: partly skeletal late-season foliage.
+4	Plant_Corn	6	20324	HNS_Plant_Corn_20	1	It also shows localized luminous veins and reproductive tissue.	Light effects: localized luminous veins and reproductive tissue.		Light effects: localized luminous veins and reproductive tissue.
+4	Plant_Cotton	1	20325	Vanilla	0				
+4	Plant_Cotton	2	20326	HNS_Plant_Cotton_21	1	This specimen displays individual cream, green and wine-colored tissue sectors.	Foliage: individual cream, green and wine-colored tissue sectors.		Foliage: individual cream, green and wine-colored tissue sectors.
+4	Plant_Cotton	3	20327	HNS_Plant_Cotton_22	1	This specimen displays an advancing bronze and gold seasonal color front.	Foliage: an advancing bronze and gold seasonal color front.		Foliage: an advancing bronze and gold seasonal color front.
+4	Plant_Cotton	4	20328	HNS_Plant_Cotton_23	1	It also shows root-like traces in the surrounding soil.	Ground growth: root-like traces in the surrounding soil.		Ground growth: root-like traces in the surrounding soil.
+4	Plant_Cotton	5	20329	HNS_Plant_Cotton_24	1	This specimen displays partly skeletal late-season foliage.	Foliage: partly skeletal late-season foliage.		Foliage: partly skeletal late-season foliage.
+4	Plant_Cotton	6	20330	HNS_Plant_Cotton_25	1	It also shows localized luminous veins and reproductive tissue.	Light effects: localized luminous veins and reproductive tissue.		Light effects: localized luminous veins and reproductive tissue.
+4	Plant_Daylily	1	20331	Vanilla	0				
+4	Plant_Daylily	2	20332	HNS_Plant_Daylily_26	1	This specimen displays individual cream, green and wine-colored tissue sectors.	Foliage: individual cream, green and wine-colored tissue sectors.		Foliage: individual cream, green and wine-colored tissue sectors.
+4	Plant_Daylily	3	20333	HNS_Plant_Daylily_27	1	This specimen displays an advancing bronze and gold seasonal color front.	Foliage: an advancing bronze and gold seasonal color front.		Foliage: an advancing bronze and gold seasonal color front.
+4	Plant_Daylily	4	20334	HNS_Plant_Daylily_28	1	It also shows root-like traces in the surrounding soil.	Ground growth: root-like traces in the surrounding soil.		Ground growth: root-like traces in the surrounding soil.
+4	Plant_Daylily	5	20335	HNS_Plant_Daylily_29	1	This specimen displays partly skeletal late-season foliage.	Foliage: partly skeletal late-season foliage.		Foliage: partly skeletal late-season foliage.
+4	Plant_Daylily	6	20336	HNS_Plant_Daylily_30	1	It also shows localized luminous veins and reproductive tissue.	Light effects: localized luminous veins and reproductive tissue.		Light effects: localized luminous veins and reproductive tissue.
+5	Plant_Corn	1	20337	Vanilla	0				
+5	Plant_Corn	2	20338	HNS_Plant_Corn_31	1	Its movement is characterized by differential movement of the crown and reproductive organs.	Movement: differential movement of the crown and reproductive organs.		Movement: differential movement of the crown and reproductive organs.
+5	Plant_Corn	3	20339	HNS_Plant_Corn_32	1	This specimen displays progressively revealed golden branching veins.	Foliage: progressively revealed golden branching veins.		Foliage: progressively revealed golden branching veins.
+5	Plant_Corn	4	20340	HNS_Plant_Corn_33	1	This specimen displays light-brightened reproductive tissue edges.	Reproductive structures: light-brightened reproductive tissue edges.		Reproductive structures: light-brightened reproductive tissue edges.
+5	Plant_Corn	5	20341	HNS_Plant_Corn_34	1	This specimen displays a layered, depth-like foliage canopy.	Growth habit: a layered, depth-like foliage canopy.		Growth habit: a layered, depth-like foliage canopy.
+5	Plant_Corn	6	20342	HNS_Plant_Corn_35	0				Growth habit: a crown inclined into available lateral space.
+5	Plant_Cotton	1	20343	Vanilla	0				
+5	Plant_Cotton	2	20344	HNS_Plant_Cotton_36	1	Its movement is characterized by differential movement of the crown and reproductive organs.	Movement: differential movement of the crown and reproductive organs.		Movement: differential movement of the crown and reproductive organs.
+5	Plant_Cotton	3	20345	HNS_Plant_Cotton_37	1	This specimen displays progressively revealed golden branching veins.	Foliage: progressively revealed golden branching veins.		Foliage: progressively revealed golden branching veins.
+5	Plant_Cotton	4	20346	HNS_Plant_Cotton_38	1	This specimen displays light-brightened reproductive tissue edges.	Reproductive structures: light-brightened reproductive tissue edges.		Reproductive structures: light-brightened reproductive tissue edges.
+5	Plant_Cotton	5	20347	HNS_Plant_Cotton_39	1	This specimen displays a layered, depth-like foliage canopy.	Growth habit: a layered, depth-like foliage canopy.		Growth habit: a layered, depth-like foliage canopy.
+5	Plant_Cotton	6	20348	HNS_Plant_Cotton_40	0				Growth habit: a crown inclined into available lateral space.
+5	Plant_Daylily	1	20349	Vanilla	0				
+5	Plant_Daylily	2	20350	HNS_Plant_Daylily_41	1	Its movement is characterized by differential movement of the crown and reproductive organs.	Movement: differential movement of the crown and reproductive organs.		Movement: differential movement of the crown and reproductive organs.
+5	Plant_Daylily	3	20351	HNS_Plant_Daylily_42	1	This specimen displays progressively revealed golden branching veins.	Foliage: progressively revealed golden branching veins.		Foliage: progressively revealed golden branching veins.
+5	Plant_Daylily	4	20352	HNS_Plant_Daylily_43	1	This specimen displays light-brightened reproductive tissue edges.	Reproductive structures: light-brightened reproductive tissue edges.		Reproductive structures: light-brightened reproductive tissue edges.
+5	Plant_Daylily	5	20353	HNS_Plant_Daylily_44	1	This specimen displays a layered, depth-like foliage canopy.	Growth habit: a layered, depth-like foliage canopy.		Growth habit: a layered, depth-like foliage canopy.
+5	Plant_Daylily	6	20354	HNS_Plant_Daylily_45	0				Growth habit: a crown inclined into available lateral space.
+6	Plant_Corn	1	20337	Vanilla	0				
+6	Plant_Corn	2	20338	HNS_Plant_Corn_31	1	Its movement is characterized by differential movement of the crown and reproductive organs.	Movement: differential movement of the crown and reproductive organs.		Movement: differential movement of the crown and reproductive organs.
+6	Plant_Corn	3	20339	HNS_Plant_Corn_32	1	This specimen displays progressively revealed golden branching veins.	Foliage: progressively revealed golden branching veins.		Foliage: progressively revealed golden branching veins.
+6	Plant_Corn	4	20340	HNS_Plant_Corn_33	1	This specimen displays light-brightened reproductive tissue edges.	Reproductive structures: light-brightened reproductive tissue edges.		Reproductive structures: light-brightened reproductive tissue edges.
+6	Plant_Corn	5	20341	HNS_Plant_Corn_34	1	This specimen displays a layered, depth-like foliage canopy.	Growth habit: a layered, depth-like foliage canopy.		Growth habit: a layered, depth-like foliage canopy.
+6	Plant_Corn	6	20342	HNS_Plant_Corn_35	1	This specimen displays a crown inclined into available lateral space.	Growth habit: a crown inclined into available lateral space.		Growth habit: a crown inclined into available lateral space.
+6	Plant_Cotton	1	20343	Vanilla	0				
+6	Plant_Cotton	2	20344	HNS_Plant_Cotton_36	1	Its movement is characterized by differential movement of the crown and reproductive organs.	Movement: differential movement of the crown and reproductive organs.		Movement: differential movement of the crown and reproductive organs.
+6	Plant_Cotton	3	20345	HNS_Plant_Cotton_37	1	This specimen displays progressively revealed golden branching veins.	Foliage: progressively revealed golden branching veins.		Foliage: progressively revealed golden branching veins.
+6	Plant_Cotton	4	20346	HNS_Plant_Cotton_38	1	This specimen displays light-brightened reproductive tissue edges.	Reproductive structures: light-brightened reproductive tissue edges.		Reproductive structures: light-brightened reproductive tissue edges.
+6	Plant_Cotton	5	20347	HNS_Plant_Cotton_39	1	This specimen displays a layered, depth-like foliage canopy.	Growth habit: a layered, depth-like foliage canopy.		Growth habit: a layered, depth-like foliage canopy.
+6	Plant_Cotton	6	20348	HNS_Plant_Cotton_40	1	This specimen displays a crown inclined into available lateral space.	Growth habit: a crown inclined into available lateral space.		Growth habit: a crown inclined into available lateral space.
+6	Plant_Daylily	1	20349	Vanilla	0				
+6	Plant_Daylily	2	20350	HNS_Plant_Daylily_41	1	Its movement is characterized by differential movement of the crown and reproductive organs.	Movement: differential movement of the crown and reproductive organs.		Movement: differential movement of the crown and reproductive organs.
+6	Plant_Daylily	3	20351	HNS_Plant_Daylily_42	1	This specimen displays progressively revealed golden branching veins.	Foliage: progressively revealed golden branching veins.		Foliage: progressively revealed golden branching veins.
+6	Plant_Daylily	4	20352	HNS_Plant_Daylily_43	1	This specimen displays light-brightened reproductive tissue edges.	Reproductive structures: light-brightened reproductive tissue edges.		Reproductive structures: light-brightened reproductive tissue edges.
+6	Plant_Daylily	5	20353	HNS_Plant_Daylily_44	1	This specimen displays a layered, depth-like foliage canopy.	Growth habit: a layered, depth-like foliage canopy.		Growth habit: a layered, depth-like foliage canopy.
+6	Plant_Daylily	6	20354	HNS_Plant_Daylily_45	1	This specimen displays a crown inclined into available lateral space.	Growth habit: a crown inclined into available lateral space.		Growth habit: a crown inclined into available lateral space.
+7	Plant_Corn	1	20358	Vanilla	0				
+7	Plant_Corn	2	20359	HNS_Plant_Corn_46	1	This specimen displays reproductive clusters at different apparent ripening stages.	Reproductive structures: reproductive clusters at different apparent ripening stages.		Reproductive structures: reproductive clusters at different apparent ripening stages.
+7	Plant_Corn	3	20360	HNS_Plant_Corn_47	0				Foliage: pale frosted foliage markings.
+7	Plant_Corn	4	20361	HNS_Plant_Corn_48	1	It also shows fine pulsing ground connections to neighboring compatible plants.	Ground growth: fine pulsing ground connections to neighboring compatible plants.		Ground growth: fine pulsing ground connections to neighboring compatible plants.
+7	Plant_Corn	5	20362	HNS_Plant_Corn_49	1	This specimen displays later-developing lateral foliage modules.	Growth habit: later-developing lateral foliage modules.		Growth habit: later-developing lateral foliage modules.
+7	Plant_Corn	6	20363	HNS_Plant_Corn_50	0				Growth habit: rain-opened, moisture-darkened foliage.
+7	Plant_Cotton	1	20364	Vanilla	0				
+7	Plant_Cotton	2	20365	HNS_Plant_Cotton_51	1	This specimen displays reproductive clusters at different apparent ripening stages.	Reproductive structures: reproductive clusters at different apparent ripening stages.		Reproductive structures: reproductive clusters at different apparent ripening stages.
+7	Plant_Cotton	3	20366	HNS_Plant_Cotton_52	0				Foliage: pale frosted foliage markings.
+7	Plant_Cotton	4	20367	HNS_Plant_Cotton_53	1	It also shows fine pulsing ground connections to neighboring compatible plants.	Ground growth: fine pulsing ground connections to neighboring compatible plants.		Ground growth: fine pulsing ground connections to neighboring compatible plants.
+7	Plant_Cotton	5	20368	HNS_Plant_Cotton_54	1	This specimen displays later-developing lateral foliage modules.	Growth habit: later-developing lateral foliage modules.		Growth habit: later-developing lateral foliage modules.
+7	Plant_Cotton	6	20369	HNS_Plant_Cotton_55	0				Growth habit: rain-opened, moisture-darkened foliage.
+7	Plant_Daylily	1	20370	Vanilla	0				
+7	Plant_Daylily	2	20371	HNS_Plant_Daylily_56	1	This specimen displays reproductive clusters at different apparent ripening stages.	Reproductive structures: reproductive clusters at different apparent ripening stages.		Reproductive structures: reproductive clusters at different apparent ripening stages.
+7	Plant_Daylily	3	20372	HNS_Plant_Daylily_57	0				Foliage: pale frosted foliage markings.
+7	Plant_Daylily	4	20373	HNS_Plant_Daylily_58	1	It also shows fine pulsing ground connections to neighboring compatible plants.	Ground growth: fine pulsing ground connections to neighboring compatible plants.		Ground growth: fine pulsing ground connections to neighboring compatible plants.
+7	Plant_Daylily	5	20374	HNS_Plant_Daylily_59	1	This specimen displays later-developing lateral foliage modules.	Growth habit: later-developing lateral foliage modules.		Growth habit: later-developing lateral foliage modules.
+7	Plant_Daylily	6	20375	HNS_Plant_Daylily_60	0				Growth habit: rain-opened, moisture-darkened foliage.
+8	Plant_Corn	1	20358	Vanilla	0				
+8	Plant_Corn	2	20359	HNS_Plant_Corn_46	1	This specimen displays reproductive clusters at different apparent ripening stages.	Reproductive structures: reproductive clusters at different apparent ripening stages.		Reproductive structures: reproductive clusters at different apparent ripening stages.
+8	Plant_Corn	3	20360	HNS_Plant_Corn_47	1	This specimen displays pale frosted foliage markings.	Foliage: pale frosted foliage markings.		Foliage: pale frosted foliage markings.
+8	Plant_Corn	4	20361	HNS_Plant_Corn_48	1	It also shows fine pulsing ground connections to neighboring compatible plants.	Ground growth: fine pulsing ground connections to neighboring compatible plants.		Ground growth: fine pulsing ground connections to neighboring compatible plants.
+8	Plant_Corn	5	20362	HNS_Plant_Corn_49	1	This specimen displays later-developing lateral foliage modules.	Growth habit: later-developing lateral foliage modules.		Growth habit: later-developing lateral foliage modules.
+8	Plant_Corn	6	20363	HNS_Plant_Corn_50	1	This specimen displays rain-opened, moisture-darkened foliage.	Growth habit: rain-opened, moisture-darkened foliage.		Growth habit: rain-opened, moisture-darkened foliage.
+8	Plant_Cotton	1	20364	Vanilla	0				
+8	Plant_Cotton	2	20365	HNS_Plant_Cotton_51	1	This specimen displays reproductive clusters at different apparent ripening stages.	Reproductive structures: reproductive clusters at different apparent ripening stages.		Reproductive structures: reproductive clusters at different apparent ripening stages.
+8	Plant_Cotton	3	20366	HNS_Plant_Cotton_52	1	This specimen displays pale frosted foliage markings.	Foliage: pale frosted foliage markings.		Foliage: pale frosted foliage markings.
+8	Plant_Cotton	4	20367	HNS_Plant_Cotton_53	1	It also shows fine pulsing ground connections to neighboring compatible plants.	Ground growth: fine pulsing ground connections to neighboring compatible plants.		Ground growth: fine pulsing ground connections to neighboring compatible plants.
+8	Plant_Cotton	5	20368	HNS_Plant_Cotton_54	1	This specimen displays later-developing lateral foliage modules.	Growth habit: later-developing lateral foliage modules.		Growth habit: later-developing lateral foliage modules.
+8	Plant_Cotton	6	20369	HNS_Plant_Cotton_55	1	This specimen displays rain-opened, moisture-darkened foliage.	Growth habit: rain-opened, moisture-darkened foliage.		Growth habit: rain-opened, moisture-darkened foliage.
+8	Plant_Daylily	1	20370	Vanilla	0				
+8	Plant_Daylily	2	20371	HNS_Plant_Daylily_56	1	This specimen displays reproductive clusters at different apparent ripening stages.	Reproductive structures: reproductive clusters at different apparent ripening stages.		Reproductive structures: reproductive clusters at different apparent ripening stages.
+8	Plant_Daylily	3	20372	HNS_Plant_Daylily_57	1	This specimen displays pale frosted foliage markings.	Foliage: pale frosted foliage markings.		Foliage: pale frosted foliage markings.
+8	Plant_Daylily	4	20373	HNS_Plant_Daylily_58	1	It also shows fine pulsing ground connections to neighboring compatible plants.	Ground growth: fine pulsing ground connections to neighboring compatible plants.		Ground growth: fine pulsing ground connections to neighboring compatible plants.
+8	Plant_Daylily	5	20374	HNS_Plant_Daylily_59	1	This specimen displays later-developing lateral foliage modules.	Growth habit: later-developing lateral foliage modules.		Growth habit: later-developing lateral foliage modules.
+8	Plant_Daylily	6	20375	HNS_Plant_Daylily_60	1	This specimen displays rain-opened, moisture-darkened foliage.	Growth habit: rain-opened, moisture-darkened foliage.		Growth habit: rain-opened, moisture-darkened foliage.

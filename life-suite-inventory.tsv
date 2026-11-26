@@ -1,0 +1,121 @@
+Panel	Species	Column	Plant ID	Trait	Mode	Material ID	Extra material ID	Atlas	Extra planes	Foliage territories	Reproductive components	Light	Wetness	Day	Season input	Growth	Stress input	Lateral links	Active	Description
+1	Plant_Corn	2	20302	PhotosyntheticPulse	1	-16587	0	False	0	13	3	1	0	0.27	0	1	0	0	True	This specimen displays traveling daylight-sensitive vein highlights.
+1	Plant_Corn	3	20303	NyctinasticFolding	2	-16609	0	True	0	13	3	1	0	0.27	0	1	0	0	False	
+1	Plant_Corn	4	20304	HydraulicWilt	3	-16611	0	False	0	13	3	1	0	0.27	0	1	0.9375	0	True	This specimen displays heat- or injury-stressed drooping growth.
+1	Plant_Corn	5	20305	CrystalDewLensing	4	-16613	0	False	0	15	3	1	0	0.27	0	1	0	0	True	It also shows small dew-like lens highlights.
+1	Plant_Corn	6	20306	PollinationCloud	5	-16615	-16616	False	1	13	3	1	0	0.27	0	1	0	0	True	This specimen displays sparse drifting pollen grains.
+1	Plant_Cotton	2	20308	PhotosyntheticPulse	1	-16585	0	False	0	21	7	1	0	0.27	0	1	0	0	True	This specimen displays traveling daylight-sensitive vein highlights.
+1	Plant_Cotton	3	20309	NyctinasticFolding	2	-16599	0	True	0	17	4	1	0	0.27	0	1	0	0	False	
+1	Plant_Cotton	4	20310	HydraulicWilt	3	-16601	0	False	0	21	7	1	0	0.27	0	1	0.9375	0	True	This specimen displays heat- or injury-stressed drooping growth.
+1	Plant_Cotton	5	20311	CrystalDewLensing	4	-16603	0	False	0	17	4	1	0	0.27	0	1	0	0	True	It also shows small dew-like lens highlights.
+1	Plant_Cotton	6	20312	PollinationCloud	5	-16605	-16606	False	1	17	4	1	0	0.27	0	1	0	0	True	This specimen displays sparse drifting pollen grains.
+1	Plant_Daylily	2	20314	PhotosyntheticPulse	1	-16583	0	False	0	14	11	1	0	0.27	0	1	0	0	True	This specimen displays traveling daylight-sensitive vein highlights.
+1	Plant_Daylily	3	20315	NyctinasticFolding	2	-16589	0	True	0	13	11	1	0	0.27	0	1	0	0	False	
+1	Plant_Daylily	4	20316	HydraulicWilt	3	-16591	0	False	0	13	11	1	0	0.27	0	1	0.9375	0	True	This specimen displays heat- or injury-stressed drooping growth.
+1	Plant_Daylily	5	20317	CrystalDewLensing	4	-16593	0	False	0	14	11	1	0	0.27	0	1	0	0	True	It also shows small dew-like lens highlights.
+1	Plant_Daylily	6	20318	PollinationCloud	5	-16595	-16596	False	1	14	11	1	0	0.27	0	1	0	0	True	This specimen displays sparse drifting pollen grains.
+2	Plant_Corn	2	20302	PhotosyntheticPulse	1	-16587	0	False	0	13	3	0	0	1.666667E-05	0	1	0	0	False	
+2	Plant_Corn	3	20303	NyctinasticFolding	2	-16609	0	True	0	13	3	0	0	1.666667E-05	0	1	0	0	True	This specimen displays a folded nighttime crown.
+2	Plant_Corn	4	20304	HydraulicWilt	3	-16611	0	False	0	13	3	0	0	1.666667E-05	0	1	0	0	False	
+2	Plant_Corn	5	20305	CrystalDewLensing	4	-16613	0	False	0	15	3	0	0	1.666667E-05	0	1	0	0	False	
+2	Plant_Corn	6	20306	PollinationCloud	5	-16615	-16616	False	1	13	3	0	0	1.666667E-05	0	1	0	0	False	
+2	Plant_Cotton	2	20308	PhotosyntheticPulse	1	-16585	0	False	0	21	7	0	0	1.666667E-05	0	1	0	0	False	
+2	Plant_Cotton	3	20309	NyctinasticFolding	2	-16599	0	True	0	17	4	0	0	1.666667E-05	0	1	0	0	True	This specimen displays a folded nighttime crown.
+2	Plant_Cotton	4	20310	HydraulicWilt	3	-16601	0	False	0	21	7	0	0	1.666667E-05	0	1	0	0	False	
+2	Plant_Cotton	5	20311	CrystalDewLensing	4	-16603	0	False	0	17	4	0	0	1.666667E-05	0	1	0	0	False	
+2	Plant_Cotton	6	20312	PollinationCloud	5	-16605	-16606	False	1	17	4	0	0	1.666667E-05	0	1	0	0	False	
+2	Plant_Daylily	2	20314	PhotosyntheticPulse	1	-16583	0	False	0	14	11	0	0	1.666667E-05	0	1	0	0	False	
+2	Plant_Daylily	3	20315	NyctinasticFolding	2	-16589	0	True	0	13	11	0	0	1.666667E-05	0	1	0	0	True	This specimen displays a folded nighttime crown.
+2	Plant_Daylily	4	20316	HydraulicWilt	3	-16591	0	False	0	13	11	0	0	1.666667E-05	0	1	0	0	False	
+2	Plant_Daylily	5	20317	CrystalDewLensing	4	-16593	0	False	0	14	11	0	0	1.666667E-05	0	1	0	0	False	
+2	Plant_Daylily	6	20318	PollinationCloud	5	-16595	-16596	False	1	14	11	0	0	1.666667E-05	0	1	0	0	False	
+3	Plant_Corn	2	20320	MosaicOrganism	6	-16942	0	False	0	13	3	1	0	0.4999833	0.87	1	0	0	True	This specimen displays individual cream, green and wine-colored tissue sectors.
+3	Plant_Corn	3	20321	SeasonalColorFront	7	-16969	0	False	0	13	3	1	0	0.4999833	0.87	1	0	0	True	This specimen displays an advancing bronze and gold seasonal color front.
+3	Plant_Corn	4	20322	SubsurfaceRootHalo	8	-16971	-16972	False	1	13	3	1	0	0.4999833	0.87	1	0	0	True	It also shows root-like traces in the surrounding soil.
+3	Plant_Corn	5	20323	LeafSkeletonization	9	-16975	0	False	0	15	3	1	0	0.4999833	0.87	1	0	0	True	This specimen displays partly skeletal late-season foliage.
+3	Plant_Corn	6	20324	BioluminescentSignaling	10	-16977	-16978	False	1	13	3	1	0	0.4999833	0.87	1	0	0	False	
+3	Plant_Cotton	2	20326	MosaicOrganism	6	-16940	0	False	0	21	7	1	0	0.4999833	0.87	1	0	0	True	This specimen displays individual cream, green and wine-colored tissue sectors.
+3	Plant_Cotton	3	20327	SeasonalColorFront	7	-16957	0	False	0	17	4	1	0	0.4999833	0.87	1	0	0	True	This specimen displays an advancing bronze and gold seasonal color front.
+3	Plant_Cotton	4	20328	SubsurfaceRootHalo	8	-16959	-16960	False	1	21	7	1	0	0.4999833	0.87	1	0	0	True	It also shows root-like traces in the surrounding soil.
+3	Plant_Cotton	5	20329	LeafSkeletonization	9	-16963	0	False	0	17	4	1	0	0.4999833	0.87	1	0	0	True	This specimen displays partly skeletal late-season foliage.
+3	Plant_Cotton	6	20330	BioluminescentSignaling	10	-16965	-16966	False	1	17	4	1	0	0.4999833	0.87	1	0	0	False	
+3	Plant_Daylily	2	20332	MosaicOrganism	6	-16938	0	False	0	14	11	1	0	0.4999833	0.87	1	0	0	True	This specimen displays individual cream, green and wine-colored tissue sectors.
+3	Plant_Daylily	3	20333	SeasonalColorFront	7	-16944	0	False	0	13	11	1	0	0.4999833	0.87	1	0	0	True	This specimen displays an advancing bronze and gold seasonal color front.
+3	Plant_Daylily	4	20334	SubsurfaceRootHalo	8	-16946	-16947	False	1	13	11	1	0	0.4999833	0.87	1	0	0	True	It also shows root-like traces in the surrounding soil.
+3	Plant_Daylily	5	20335	LeafSkeletonization	9	-16950	0	False	0	14	11	1	0	0.4999833	0.87	1	0	0	True	This specimen displays partly skeletal late-season foliage.
+3	Plant_Daylily	6	20336	BioluminescentSignaling	10	-16952	-16954	False	1	14	11	1	0	0.4999833	0.87	1	0	0	False	
+4	Plant_Corn	2	20320	MosaicOrganism	6	-16942	0	False	0	13	3	0	0	1.666667E-05	0.98	1	0	0	True	This specimen displays individual cream, green and wine-colored tissue sectors.
+4	Plant_Corn	3	20321	SeasonalColorFront	7	-16969	0	False	0	13	3	0	0	1.666667E-05	0.98	1	0	0	True	This specimen displays an advancing bronze and gold seasonal color front.
+4	Plant_Corn	4	20322	SubsurfaceRootHalo	8	-16971	-16972	False	1	13	3	0	0	1.666667E-05	0.98	1	0	0	True	It also shows root-like traces in the surrounding soil.
+4	Plant_Corn	5	20323	LeafSkeletonization	9	-16975	0	False	0	15	3	0	0	1.666667E-05	0.98	1	0	0	True	This specimen displays partly skeletal late-season foliage.
+4	Plant_Corn	6	20324	BioluminescentSignaling	10	-16977	-16978	False	1	13	3	0	0	1.666667E-05	0.98	1	0	0	True	It also shows localized luminous veins and reproductive tissue.
+4	Plant_Cotton	2	20326	MosaicOrganism	6	-16940	0	False	0	21	7	0	0	1.666667E-05	0.98	1	0	0	True	This specimen displays individual cream, green and wine-colored tissue sectors.
+4	Plant_Cotton	3	20327	SeasonalColorFront	7	-16957	0	False	0	17	4	0	0	1.666667E-05	0.98	1	0	0	True	This specimen displays an advancing bronze and gold seasonal color front.
+4	Plant_Cotton	4	20328	SubsurfaceRootHalo	8	-16959	-16960	False	1	21	7	0	0	1.666667E-05	0.98	1	0	0	True	It also shows root-like traces in the surrounding soil.
+4	Plant_Cotton	5	20329	LeafSkeletonization	9	-16963	0	False	0	17	4	0	0	1.666667E-05	0.98	1	0	0	True	This specimen displays partly skeletal late-season foliage.
+4	Plant_Cotton	6	20330	BioluminescentSignaling	10	-16965	-16966	False	1	17	4	0	0	1.666667E-05	0.98	1	0	0	True	It also shows localized luminous veins and reproductive tissue.
+4	Plant_Daylily	2	20332	MosaicOrganism	6	-16938	0	False	0	14	11	0	0	1.666667E-05	0.98	1	0	0	True	This specimen displays individual cream, green and wine-colored tissue sectors.
+4	Plant_Daylily	3	20333	SeasonalColorFront	7	-16944	0	False	0	13	11	0	0	1.666667E-05	0.98	1	0	0	True	This specimen displays an advancing bronze and gold seasonal color front.
+4	Plant_Daylily	4	20334	SubsurfaceRootHalo	8	-16946	-16947	False	1	13	11	0	0	1.666667E-05	0.98	1	0	0	True	It also shows root-like traces in the surrounding soil.
+4	Plant_Daylily	5	20335	LeafSkeletonization	9	-16950	0	False	0	14	11	0	0	1.666667E-05	0.98	1	0	0	True	This specimen displays partly skeletal late-season foliage.
+4	Plant_Daylily	6	20336	BioluminescentSignaling	10	-16952	-16954	False	1	14	11	0	0	1.666667E-05	0.98	1	0	0	True	It also shows localized luminous veins and reproductive tissue.
+5	Plant_Corn	2	20338	WindDifferentialAnatomy	11	-16985	0	True	0	13	3	1	0	0.3999833	0	1	0	0	True	Its movement is characterized by differential movement of the crown and reproductive organs.
+5	Plant_Corn	3	20339	FractalVenationBloom	12	-17007	0	False	0	13	3	1	0	0.3999833	0	1	0	0	True	This specimen displays progressively revealed golden branching veins.
+5	Plant_Corn	4	20340	TranslucentPetalTissue	13	-17009	0	False	0	13	3	1	0	0.3999833	0	1	0	0	True	This specimen displays light-brightened reproductive tissue edges.
+5	Plant_Corn	5	20341	CanopyVolumeParallax	14	-17011	-17012	False	1	15	3	1	0	0.3999833	0	1	0	0	True	This specimen displays a layered, depth-like foliage canopy.
+5	Plant_Corn	6	20342	MicroHabitatResponse	15	-17015	0	False	0	13	3	1	0	0.3999833	0	1	0	0	False	
+5	Plant_Cotton	2	20344	WindDifferentialAnatomy	11	-16983	0	True	0	21	7	1	0	0.3999833	0	1	0	0	True	Its movement is characterized by differential movement of the crown and reproductive organs.
+5	Plant_Cotton	3	20345	FractalVenationBloom	12	-16997	0	False	0	17	4	1	0	0.3999833	0	1	0	0	True	This specimen displays progressively revealed golden branching veins.
+5	Plant_Cotton	4	20346	TranslucentPetalTissue	13	-16999	0	False	0	21	7	1	0	0.3999833	0	1	0	0	True	This specimen displays light-brightened reproductive tissue edges.
+5	Plant_Cotton	5	20347	CanopyVolumeParallax	14	-17001	-17002	False	1	17	4	1	0	0.3999833	0	1	0	0	True	This specimen displays a layered, depth-like foliage canopy.
+5	Plant_Cotton	6	20348	MicroHabitatResponse	15	-17005	0	False	0	17	4	1	0	0.3999833	0	1	0	0	False	
+5	Plant_Daylily	2	20350	WindDifferentialAnatomy	11	-16981	0	True	0	14	11	1	0	0.3999833	0	1	0	0	True	Its movement is characterized by differential movement of the crown and reproductive organs.
+5	Plant_Daylily	3	20351	FractalVenationBloom	12	-16987	0	False	0	13	11	1	0	0.3999833	0	1	0	0	True	This specimen displays progressively revealed golden branching veins.
+5	Plant_Daylily	4	20352	TranslucentPetalTissue	13	-16989	0	False	0	13	11	1	0	0.3999833	0	1	0	0	True	This specimen displays light-brightened reproductive tissue edges.
+5	Plant_Daylily	5	20353	CanopyVolumeParallax	14	-16991	-16992	False	1	14	11	1	0	0.3999833	0	1	0	0	True	This specimen displays a layered, depth-like foliage canopy.
+5	Plant_Daylily	6	20354	MicroHabitatResponse	15	-16995	0	False	0	14	11	1	0	0.3999833	0	1	0	0	False	
+6	Plant_Corn	2	20338	WindDifferentialAnatomy	11	-16985	0	True	0	13	3	1	0	0.64	0	1	0	0	True	Its movement is characterized by differential movement of the crown and reproductive organs.
+6	Plant_Corn	3	20339	FractalVenationBloom	12	-17007	0	False	0	13	3	1	0	0.64	0	1	0	0	True	This specimen displays progressively revealed golden branching veins.
+6	Plant_Corn	4	20340	TranslucentPetalTissue	13	-17009	0	False	0	13	3	1	0	0.64	0	1	0	0	True	This specimen displays light-brightened reproductive tissue edges.
+6	Plant_Corn	5	20341	CanopyVolumeParallax	14	-17011	-17012	False	1	15	3	1	0	0.64	0	1	0	0	True	This specimen displays a layered, depth-like foliage canopy.
+6	Plant_Corn	6	20342	MicroHabitatResponse	15	-17015	0	False	0	13	3	1	0	0.64	0	1	0	1	True	This specimen displays a crown inclined into available lateral space.
+6	Plant_Cotton	2	20344	WindDifferentialAnatomy	11	-16983	0	True	0	21	7	1	0	0.64	0	1	0	0	True	Its movement is characterized by differential movement of the crown and reproductive organs.
+6	Plant_Cotton	3	20345	FractalVenationBloom	12	-16997	0	False	0	17	4	1	0	0.64	0	1	0	0	True	This specimen displays progressively revealed golden branching veins.
+6	Plant_Cotton	4	20346	TranslucentPetalTissue	13	-16999	0	False	0	21	7	1	0	0.64	0	1	0	0	True	This specimen displays light-brightened reproductive tissue edges.
+6	Plant_Cotton	5	20347	CanopyVolumeParallax	14	-17001	-17002	False	1	17	4	1	0	0.64	0	1	0	0	True	This specimen displays a layered, depth-like foliage canopy.
+6	Plant_Cotton	6	20348	MicroHabitatResponse	15	-17005	0	False	0	17	4	1	0	0.64	0	1	0	1	True	This specimen displays a crown inclined into available lateral space.
+6	Plant_Daylily	2	20350	WindDifferentialAnatomy	11	-16981	0	True	0	14	11	1	0	0.64	0	1	0	0	True	Its movement is characterized by differential movement of the crown and reproductive organs.
+6	Plant_Daylily	3	20351	FractalVenationBloom	12	-16987	0	False	0	13	11	1	0	0.64	0	1	0	0	True	This specimen displays progressively revealed golden branching veins.
+6	Plant_Daylily	4	20352	TranslucentPetalTissue	13	-16989	0	False	0	13	11	1	0	0.64	0	1	0	0	True	This specimen displays light-brightened reproductive tissue edges.
+6	Plant_Daylily	5	20353	CanopyVolumeParallax	14	-16991	-16992	False	1	14	11	1	0	0.64	0	1	0	0	True	This specimen displays a layered, depth-like foliage canopy.
+6	Plant_Daylily	6	20354	MicroHabitatResponse	15	-16995	0	False	0	14	11	1	0	0.64	0	1	0	1	True	This specimen displays a crown inclined into available lateral space.
+7	Plant_Corn	2	20359	FruitRipeningCascade	16	-17021	0	False	0	13	3	1	0	0.5	0	0.72	0	0	True	This specimen displays reproductive clusters at different apparent ripening stages.
+7	Plant_Corn	3	20360	FrostEtching	17	-17043	0	False	0	13	3	1	0	0.5	0	0.72	0	0	False	
+7	Plant_Corn	4	20361	MycelialRelay	18	-17045	-17046	False	1	13	3	1	0	0.5	0	0.72	0	2	True	It also shows fine pulsing ground connections to neighboring compatible plants.
+7	Plant_Corn	5	20362	MorphogeneticReconfiguration	19	-17049	0	True	0	15	3	1	0	0.5	0	0.72	0	0	True	This specimen displays later-developing lateral foliage modules.
+7	Plant_Corn	6	20363	EventDrivenExpression	20	-17051	0	False	0	13	3	1	0	0.5	0	0.72	0	0	False	
+7	Plant_Cotton	2	20365	FruitRipeningCascade	16	-17019	0	False	0	21	7	1	0	0.5	0	0.72	0	0	True	This specimen displays reproductive clusters at different apparent ripening stages.
+7	Plant_Cotton	3	20366	FrostEtching	17	-17033	0	False	0	17	4	1	0	0.5	0	0.72	0	0	False	
+7	Plant_Cotton	4	20367	MycelialRelay	18	-17035	-17036	False	1	21	7	1	0	0.5	0	0.72	0	2	True	It also shows fine pulsing ground connections to neighboring compatible plants.
+7	Plant_Cotton	5	20368	MorphogeneticReconfiguration	19	-17039	0	True	0	17	4	1	0	0.5	0	0.72	0	0	True	This specimen displays later-developing lateral foliage modules.
+7	Plant_Cotton	6	20369	EventDrivenExpression	20	-17041	0	False	0	17	4	1	0	0.5	0	0.72	0	0	False	
+7	Plant_Daylily	2	20371	FruitRipeningCascade	16	-17017	0	False	0	14	11	1	0	0.5	0	0.72	0	0	True	This specimen displays reproductive clusters at different apparent ripening stages.
+7	Plant_Daylily	3	20372	FrostEtching	17	-17023	0	False	0	13	11	1	0	0.5	0	0.72	0	0	False	
+7	Plant_Daylily	4	20373	MycelialRelay	18	-17025	-17026	False	1	13	11	1	0	0.5	0	0.72	0	2	True	It also shows fine pulsing ground connections to neighboring compatible plants.
+7	Plant_Daylily	5	20374	MorphogeneticReconfiguration	19	-17029	0	True	0	14	11	1	0	0.5	0	0.72	0	0	True	This specimen displays later-developing lateral foliage modules.
+7	Plant_Daylily	6	20375	EventDrivenExpression	20	-17031	0	False	0	14	11	1	0	0.5	0	0.72	0	0	False	
+8	Plant_Corn	2	20359	FruitRipeningCascade	16	-17021	0	False	0	13	3	1	1	0.5	0	1	0	0	True	This specimen displays reproductive clusters at different apparent ripening stages.
+8	Plant_Corn	3	20360	FrostEtching	17	-17043	0	False	0	13	3	1	1	0.5	0	1	1	0	True	This specimen displays pale frosted foliage markings.
+8	Plant_Corn	4	20361	MycelialRelay	18	-17045	-17046	False	1	13	3	1	1	0.5	0	1	0	2	True	It also shows fine pulsing ground connections to neighboring compatible plants.
+8	Plant_Corn	5	20362	MorphogeneticReconfiguration	19	-17049	0	True	0	15	3	1	1	0.5	0	1	0	0	True	This specimen displays later-developing lateral foliage modules.
+8	Plant_Corn	6	20363	EventDrivenExpression	20	-17051	0	False	0	13	3	1	1	0.5	0	1	0	0	True	This specimen displays rain-opened, moisture-darkened foliage.
+8	Plant_Cotton	2	20365	FruitRipeningCascade	16	-17019	0	False	0	21	7	1	1	0.5	0	1	0	0	True	This specimen displays reproductive clusters at different apparent ripening stages.
+8	Plant_Cotton	3	20366	FrostEtching	17	-17033	0	False	0	17	4	1	1	0.5	0	1	1	0	True	This specimen displays pale frosted foliage markings.
+8	Plant_Cotton	4	20367	MycelialRelay	18	-17035	-17036	False	1	21	7	1	1	0.5	0	1	0	2	True	It also shows fine pulsing ground connections to neighboring compatible plants.
+8	Plant_Cotton	5	20368	MorphogeneticReconfiguration	19	-17039	0	True	0	17	4	1	1	0.5	0	1	0	0	True	This specimen displays later-developing lateral foliage modules.
+8	Plant_Cotton	6	20369	EventDrivenExpression	20	-17041	0	False	0	17	4	1	1	0.5	0	1	0	0	True	This specimen displays rain-opened, moisture-darkened foliage.
+8	Plant_Daylily	2	20371	FruitRipeningCascade	16	-17017	0	False	0	14	11	1	1	0.5	0	1	0	0	True	This specimen displays reproductive clusters at different apparent ripening stages.
+8	Plant_Daylily	3	20372	FrostEtching	17	-17023	0	False	0	13	11	1	1	0.5	0	1	1	0	True	This specimen displays pale frosted foliage markings.
+8	Plant_Daylily	4	20373	MycelialRelay	18	-17025	-17026	False	1	13	11	1	1	0.5	0	1	0	2	True	It also shows fine pulsing ground connections to neighboring compatible plants.
+8	Plant_Daylily	5	20374	MorphogeneticReconfiguration	19	-17029	0	True	0	14	11	1	1	0.5	0	1	0	0	True	This specimen displays later-developing lateral foliage modules.
+8	Plant_Daylily	6	20375	EventDrivenExpression	20	-17031	0	False	0	14	11	1	1	0.5	0	1	0	0	True	This specimen displays rain-opened, moisture-darkened foliage.
